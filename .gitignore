@@ -20,7 +20,7 @@ env/
 # IDE
 .vscode/
 .idea/
-.github/
+#.github/
 *.swp
 *.swo
 *~
