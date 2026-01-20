@@ -252,26 +252,22 @@ class OVOS:
 			Spin-orbital MO energies, shape (n_spin,)
 		"""
 		n_spatial = len(mo_energy_a)
-		n_spin = 2 * n_spatial
-		
-		# Initialize spin MO energies
-		orbital_energies = np.zeros(n_spin, dtype=np.float64)
-		
-		# Convert using the Fortran logic
-		for p in range(n_spin):
-			# Fortran: (p+1)/2 -> p//2 in Python (0-based indexing)
-			spatial_idx = p // 2
-			
-			# Get spin component
-			spin_p = p % 2  # 0=alpha, 1=beta
-			
-			# Get the appropriate MO energy
-			if spin_p == 0:  # alpha spin
-				orbital_energies[p] = mo_energy_a[spatial_idx]
-			else:  # beta spin
-				orbital_energies[p] = mo_energy_b[spatial_idx]
-		
-		return orbital_energies
+
+		# Create list of (energy, spin, spatial_index)
+		spin_data = []
+		for i in range(n_spatial):
+			spin_data.append((mo_energy_a[i], 0, i))  # alpha
+			spin_data.append((mo_energy_b[i], 1, i))  # beta
+
+		# Sort by energy
+		spin_data.sort(key=lambda x: x[0])
+
+		# Extract arrays
+		orbital_energies = np.array([d[0] for d in spin_data])
+		orbspin = np.array([d[1] for d in spin_data])
+		orb_map = np.array([d[2] for d in spin_data])
+
+		return orbital_energies, orbspin, orb_map
 
 
 
@@ -302,26 +298,61 @@ class OVOS:
 		# Fock matrix in MO basis 
 		Fmo_a = mo_coeffs[0].T @ self.Fao[0] @ mo_coeffs[0]
 		Fmo_b = mo_coeffs[1].T @ self.Fao[1] @ mo_coeffs[1]
-		Fmo = (Fmo_a, Fmo_b)
+
+		# Sanity checks
+			# Check that Fock matrices are finite
+		assert np.all(np.isfinite(Fmo_a)), "Alpha Fock matrix contains non-finite values!"
+		assert np.all(np.isfinite(Fmo_b)), "Beta Fock matrix contains non-finite values!"
+			# Check that Fock matrices are not all zero
+		assert np.count_nonzero(Fmo_a) > 0, "Alpha Fock matrix is all zero!"
+		assert np.count_nonzero(Fmo_b) > 0, "Beta Fock matrix is all zero!"
+			# Check that Fock matrices are Hermitian
+		assert np.allclose(Fmo_a, Fmo_a.T.conj(), atol=1e-10), "Alpha Fock matrix is not Hermitian!"
+		assert np.allclose(Fmo_b, Fmo_b.T.conj(), atol=1e-10), "Beta Fock matrix is not Hermitian!"
+
+
+
+
+
+
 
 			# Convert Fock matrix to spin orbitals
 		Fmo_spin = self.spatial_to_spin_fock(Fmo_a, Fmo_b)
 
-			# Get orbital energies
-		eigval_a, eigvec_a = scipy.linalg.eig(Fmo_a)
-		eigval_b, eigvec_b = scipy.linalg.eig(Fmo_b)
-		sorting_a = np.argsort(eigval_a)
-		sorting_b = np.argsort(eigval_b)
-		mo_energy_a = np.real(eigval_a[sorting_a])
-		mo_energy_b = np.real(eigval_b[sorting_b])
-
-		# Use the new method to convert MO energies to spin orbitals
-		eps = self.spatial_to_spin_mo_energy(mo_energy_a, mo_energy_b)
+		# Sanity checks
+			# Check that Fock matrix is finite
+		assert np.all(np.isfinite(Fmo_spin)), "Spin-orbital Fock matrix contains non-finite values!"
+			# Check that Fock matrix is not all zero
+		assert np.count_nonzero(Fmo_spin) > 0, "Spin-orbital Fock matrix is all zero!"
+			# Check that Fock matrix is Hermitian
+		assert np.allclose(Fmo_spin, Fmo_spin.T.conj(), atol=1e-10), "Spin-orbital Fock matrix is not Hermitian!"
 
 
 
 
 
+
+
+
+		# Get orbital energies
+		eigval_a, eigvec_a = scipy.linalg.eigh(Fmo_a)  # Use eigh for Hermitian matrices
+		eigval_b, eigvec_b = scipy.linalg.eigh(Fmo_b)  # Use eigh for Hermitian matrices
+
+		# Already sorted by eigh
+		mo_energy_a = np.real(eigval_a)
+		mo_energy_b = np.real(eigval_b)
+
+		# Convert to spin orbitals with proper sorting
+		self.eps, self.orbspin, self.orb_map = self.spatial_to_spin_mo_energy(mo_energy_a, mo_energy_b)
+		eps = self.eps
+
+		# Sanity checks
+			# Check that orbital energies are finite
+		assert np.all(np.isfinite(eps)), "Spin-orbital MO energies contain non-finite values!"
+			# Check that orbital energies are not all zero
+		assert np.count_nonzero(eps) > 0, "Spin-orbital MO energies are all zero!"
+			# Check that number of orbital energies matches number of spin orbitals
+		assert len(eps) == self.tot_num_spin_orbs, "Number of spin-orbital MO energies does not match number of spin orbitals!"
 
 
 
@@ -336,7 +367,7 @@ class OVOS:
 				# (alpha alpha | beta beta) integrals
 		eri_aabb = pyscf.ao2mo.kernel(self.eri_4fold_ao, [mo_coeffs[0], mo_coeffs[0], mo_coeffs[1], mo_coeffs[1]], compact=False)
 
-		# 	# reshape AO->MO (chemists' notation)
+		    # reshape AO->MO (chemists' notation)
 		norb_alpha, norb_beta = mo_coeffs[0].shape[1], mo_coeffs[1].shape[1]
 		eri_aaaa = eri_aaaa.reshape((norb_alpha, norb_alpha, norb_alpha, norb_alpha))
 		eri_bbbb = eri_bbbb.reshape((norb_beta,  norb_beta,  norb_beta,  norb_beta))
@@ -347,20 +378,58 @@ class OVOS:
 				# allocate spin-orbital ERI and Fock
 		eri_spin = self.spatial_to_spin_eri(eri_aaaa, eri_aabb, eri_bbbb)
 
+		# Sanity checks 
+			# Check that integrals are finite
+		assert np.all(np.isfinite(eri_spin)), "Spin-orbital integrals contain non-finite values!"
+			# Check that integrals are not all zero
+		assert np.count_nonzero(eri_spin) > 0, "Spin-orbital integrals are all zero!"
+			
+
 
 				# Convert from chemist's to physicist's notation
 					# Chemist's: (pq|rs), Physicist's: <pq|rs> = (pr|qs)
 		eri_phys = eri_spin.transpose(0,2,1,3)  # Swap indices 1 and 2
 
+		# Sanity checks
+			# Check that integrals are finite
+		assert np.all(np.isfinite(eri_phys)), "Physicist's notation integrals contain non-finite values!"
+			# Check that integrals are not all zero
+		assert np.count_nonzero(eri_phys) > 0, "Physicist's notation integrals are all zero!"
+
+
+
 			# Antisymmetrized integrals in physicist's notation
 				# <pq||rs> = <pq|rs> - <pq|sr>
 		eri_as = eri_phys - eri_phys.transpose(0,1,3,2)
 
+		# Sanity checks 
+			# Check that integrals are finite
+		assert np.all(np.isfinite(eri_as)), "Antisymmetrized integrals contain non-finite values!"
+			# Check that integrals are not all zero
+		assert np.count_nonzero(eri_as) > 0, "Antisymmetrized integrals are all zero!"	
 
+
+
+			# Build orbital mapping and spin arrays
 		self.orb_map = np.array([i // 2 for i in range(self.tot_num_spin_orbs)], dtype=int)
 		self.orbspin = np.array([i % 2 for i in range(self.tot_num_spin_orbs)], dtype=int)
+		
 
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -368,47 +437,34 @@ class OVOS:
 		n_spin = self.tot_num_spin_orbs
 		MP1_amplitudes = np.zeros((n_spin, n_spin, n_spin, n_spin), dtype=np.float64)
 
+		# Full computation with spin considerations
 		for a in self.active_inocc_indices:
 			eps_a = eps[a]
-			spin_a = self.orbspin[a]
-
 			for b in self.active_inocc_indices:
 				eps_b = eps[b]
-				spin_b = self.orbspin[b]
-
 				for i in self.active_occ_indices:
 					eps_i = eps[i]
-					spin_i = self.orbspin[i]
-
 					for j in self.active_occ_indices:
 						eps_j = eps[j]
-						spin_j = self.orbspin[j]
 			
 						# Energy denominator: ε_a + ε_b - ε_i - ε_j
 						denominator = eps_a + eps_b - eps_i - eps_j
 						
-						# Determine spin cases
-						same_spin_ij = (spin_i == spin_j)
-						same_spin_ab = (spin_a == spin_b)
-						same_spin_ia = (spin_i == spin_a)
-						
-						# Choose integral based on spin
-						if same_spin_ij and same_spin_ab and same_spin_ia:
-							# Antisymmetrized integral for same-spin pairs
-							integral = eri_as[a, b, i, j]  # <ab||ij>
-						else:
-							# Coulomb integral for different-spin pairs
-							integral = eri_phys[a, b, i, j]  # (ab|ij)
+						# Antisymmetrized integral for same-spin pairs
+							# Simplifies to <ab|ij> for different-spin
+						integral = eri_as[a, b, i, j]  # <ab||ij>
 						
 						# MP1 amplitude: t_{ij}^{ab} = -<ab||ij> / (ε_a + ε_b - ε_i - ε_j)
 						MP1_amplitudes[a, b, i, j] = -integral / denominator
 
-
-
-
-
-
-
+		# Sanity checks
+			# Check that amplitudes are finite
+		assert np.all(np.isfinite(MP1_amplitudes)), "MP1 amplitudes contain non-finite values!"
+			# Check that amplitudes are not all zero
+		assert np.count_nonzero(MP1_amplitudes) > 0, "MP1 amplitudes are all zero!"
+			# Check amplitude antisymmetry: 
+				# t_ij^{ab} = t_ji^{ba}
+		assert np.allclose(MP1_amplitudes, MP1_amplitudes.transpose(1,0,3,2), atol=1e-10), "MP1 amplitudes do not satisfy antisymmetry t_ij^ab = t_ji^ba!"
 
 
 
@@ -453,8 +509,6 @@ class OVOS:
 						spin_b = self.orbspin[b]
 						t_abij = MP1_amplitudes[a, b, i, j]
 						
-						if abs(t_abij) < 1e-12:
-							continue
 						
 						for idx_c, c in enumerate(virt_indices):
 							spin_c = self.orbspin[c]
@@ -465,9 +519,6 @@ class OVOS:
 									
 								spin_d = self.orbspin[d]
 								t_cdij = MP1_amplitudes[c, d, i, j]
-								
-								if abs(t_cdij) < 1e-12:
-									continue
 								
 								# Compute the bracket term
 								bracket = 0.0
@@ -500,23 +551,13 @@ class OVOS:
 				term2 = 0.0
 				
 				for idx_a, a in enumerate(virt_indices):
-					spin_a = self.orbspin[a]
 					
 					for idx_b, b in enumerate(virt_indices):
 						if b <= a:  # a > b restriction
 							continue
 							
-						spin_b = self.orbspin[b]
 						t_abij = MP1_amplitudes[a, b, i, j]
-
-						same_spin_IJ = (spin_i == spin_j)
-						same_spin_AB = (spin_a == spin_b)
-						
-							# In term_b calculation:
-						if same_spin_IJ and same_spin_AB:
-							integral = eri_as[a, b, i, j]  # Antisymmetrized
-						else:
-							integral = eri_phys[a, b, i, j]  # Coulomb in physicist's notation
+						integral = eri_as[a, b, i, j]  
 						
 						term2 += 2.0 * t_abij * integral
 				
@@ -534,12 +575,9 @@ class OVOS:
 		assert J_2 <= 0.0, "MP2 correlation energy is not negative!"
 
 
+		return J_2, MP1_amplitudes, eri_spin, eri_phys, eri_as, Fmo_spin	
 
-
-
-		return J_2, MP1_amplitudes, eri_spin, eri_as, Fmo_spin	
-
-	def orbital_optimization(self, mo_coeffs, MP1_amplitudes, eri_spin, eri_as, Fmo_spin) -> np.ndarray:
+	def orbital_optimization(self, mo_coeffs, MP1_amplitudes, eri_spin, eri_phys, eri_as, Fmo_spin) -> np.ndarray:
 
 		"""
 		Step (v-viii) of the OVOS algorithm: Orbital optimization via orbital rotations.
@@ -556,9 +594,19 @@ class OVOS:
 		First- and second-order derivatives of the second-order Hylleraas functional
 		Equations 11a and 11b in https://pubs.aip.org/aip/jcp/article/86/11/6314/93345/Optimized-virtual-orbital-space-for-high-level
 		"""
+
+		# Is MP2 energy reached?
+			# If full space is used, return original orbitals
+		if len(self.active_inocc_indices) == self.tot_num_spin_orbs - int(self.nelec):
+			return mo_coeffs
+
+
+
 		
-		# Precompute D_ab = sum_{i>j,c} t_{ij}^{ac} * t_{ij}^{bc}
-		D_ab = np.zeros((len(self.active_inocc_indices) * len(self.active_inocc_indices)), dtype=np.float64)
+		# Precompute D_ab as 2D array
+		n_active_virt = len(self.active_inocc_indices)
+		D_ab = np.zeros((n_active_virt, n_active_virt), dtype=np.float64)
+
 		for idx_A, A in enumerate(self.active_inocc_indices):
 			for idx_B, B in enumerate(self.active_inocc_indices):
 				s = 0.0
@@ -567,154 +615,155 @@ class OVOS:
 						if I <= J:
 							continue
 						for C in self.active_inocc_indices:
+							# Use antisymmetric amplitudes
 							t_ACIJ = MP1_amplitudes[A, C, I, J]
 							t_BCIJ = MP1_amplitudes[B, C, I, J]
 							s += t_ACIJ * t_BCIJ
-				idx_flat = idx_A * len(self.active_inocc_indices) + idx_B
-				D_ab[idx_flat] = s
 
-			# Sanity checks
-				# Check that D matrix is not all zeros
+			D_ab[idx_A, idx_B] = s
+
+
+		# Check symmetry
+		sym_diff = np.max(np.abs(D_ab - D_ab.T))
+		if sym_diff > 1e-10:
+			print("WARNING: D_ab is not symmetric!")
+			# Print the non-symmetric parts
+			diff_matrix = np.abs(D_ab - D_ab.T)
+			idx = np.unravel_index(np.argmax(diff_matrix), diff_matrix.shape)
+			print(f"Max diff at ({idx[0]},{idx[1]}): D={D_ab[idx]:.6e}, D.T={D_ab.T[idx]:.6e}")
+
+
+		# Sanity checks for D_ab
 		assert np.count_nonzero(D_ab) > 0, "Density matrix D is all zeros!"
-				# Check that D matrix has no NaN or Inf values
 		assert np.all(np.isfinite(D_ab)), "Density matrix D contains non-finite values!"
-				# Check that D matrix is symmetric
-		assert np.allclose(D_ab, D_ab.T, atol=1e-10), "Density matrix D is not symmetric!"
+		assert np.allclose(D_ab, D_ab.T, atol=1e-10), f"Density matrix D is not symmetric! Max diff: {np.max(np.abs(D_ab - D_ab.T))}"
 
-
-
-
-
-
-
-
-		# Step (v): Compute the gradient and Hessian of the second-order Hylleraas functional
-
+		# i) Compute gradient G and Hessian H
+			
 			# Compute gradient G
-		G = np.zeros((len(self.active_inocc_indices) * len(self.inactive_indices),), dtype=np.float64)
+		G = np.zeros((len(self.active_inocc_indices), len(self.inactive_indices)), dtype=np.float64)
+
 		for idx_A, A in enumerate(self.active_inocc_indices):
 			for idx_E, E in enumerate(self.inactive_indices):
-				flat_idx_G = idx_A * len(self.inactive_indices) + idx_E
-
-				# Term1
-				term_1 = 0.0
+				term1 = 0.0
+				
+				# Term1: 2 * Σ_{i>j} Σ_{b} t_ij^{ab} <eb|ij>
 				for I in self.active_occ_indices:
 					for J in self.active_occ_indices:
 						if I <= J:
 							continue
 						
-						for B in self.active_inocc_indices:
-
-								# determine same/opposite spin for <e f | i j>
-							same_spin_IJ = (self.orbspin[I] == self.orbspin[J])
-							same_spin_EB = (self.orbspin[E] == self.orbspin[B])
-								# same-spin EF and same-spin IJ -> antisymmetrized, else Coulomb
-							if same_spin_IJ and same_spin_EB:
-								integral = eri_as[E, B, I, J]
-							else:
-								integral = eri_spin[E, B, I, J]
-
-
-							term_1 += 2.0 * MP1_amplitudes[A, B, I, J] * integral
-								# Alternative with antisymmetrized integrals	
-							#term_1 += 2.0 * MP1_amplitudes[A, B, I, J] * eri_as[E, B, I, J]
-
-
-				# Term2
-				term_2 = 0.0
+						for idx_B, B in enumerate(self.active_inocc_indices):
+							t_ABIJ = MP1_amplitudes[A, B, I, J]
+						
+							# Choose correct integral notation
+								# Same-spin: use antisymmetrized integral <eb||ij>
+								# Different-spin: use Coulomb integral <eb|ij> in physicist's notation
+							integral = eri_as[E, B, I, J]
+							
+							term1 += 2.0 * t_ABIJ * integral
+				
+				# Term2: 2 * Σ_{b} D_ab f_{be}
+				term2 = 0.0
 				for idx_B, B in enumerate(self.active_inocc_indices):
-					flat_idx_D = idx_A * len(self.active_inocc_indices) + idx_B
-					term_2 += 2.0 * D_ab[flat_idx_D] * Fmo_spin[E, B]
+					term2 += 2.0 * D_ab[idx_A, idx_B] * Fmo_spin[E, B]
+				
+				G[idx_A, idx_E] = term1 + term2
 
-				G[flat_idx_G] = term_1 + term_2
 
-		# Sanity checks
-			# Check that gradient is not all zeros
-		assert np.count_nonzero(G) > 0, "Gradient G is all zeros!"
-			# Check that gradient has no NaN or Inf values
+		# Sanity checks for G
+			# Check if gradient is empty
+		if np.count_nonzero(G) == 0:
+			print("No inactive orbitals -> gradient is empty (expected)")
+			print("Orbitals cannot be optimized further (full virtual space)")
+			
+				# Return original orbitals or handle appropriately
+				# For full virtual space, optimization is complete
+			return mo_coeffs
+			# Check if gradient has finite values
 		assert np.all(np.isfinite(G)), "Gradient G contains non-finite values!"
 
 
+
 			# Compute Hessian H
+		n_active_virt = len(self.active_inocc_indices)
+		n_inactive_virt = len(self.inactive_indices)
+				# Initialize Hessian
+		H = np.zeros((n_active_virt * n_inactive_virt, 
+					n_active_virt * n_inactive_virt), dtype=np.float64)
 
-		# Allocate Hessian
-		H = np.zeros((len(self.active_inocc_indices) * len(self.inactive_indices), len(self.active_inocc_indices) * len(self.inactive_indices)), dtype=np.float64)
-
-		# Build Hessian entries
-		for idx_A, A in enumerate(self.active_inocc_indices):
+				# Build Hessian entries
+		for idx_A, A in enumerate(self.active_inocc_indices):			
 			for idx_E, E in enumerate(self.inactive_indices):
-				row = idx_A * len(self.inactive_indices) + idx_E
-				for idx_B, B in enumerate(self.active_inocc_indices):
+				spin_E = self.orbspin[E]
+				row = idx_A * n_inactive_virt + idx_E
+				
+				for idx_B, B in enumerate(self.active_inocc_indices):					
 					for idx_F, F in enumerate(self.inactive_indices):
-						col = idx_B * len(self.inactive_indices) + idx_F
-
-						# Term 1: 2 * sum_{i>j} t_{ij}^{ab} <e f | i j>
+						spin_F = self.orbspin[F]
+						col = idx_B * n_inactive_virt + idx_F
+						
+						# ===== TERM 1: 2 * Σ_{i>j} t_ij^{ab} <ef|ij> =====
 						term1 = 0.0
-						for I in self.active_occ_indices:
+
+						for I in self.active_occ_indices:							
 							for J in self.active_occ_indices:
 								if I <= J:
 									continue
+								
 								t_ABIJ = MP1_amplitudes[A, B, I, J]
-								# determine same/opposite spin for <e f | i j>
-								same_spin_IJ = (self.orbspin[I] == self.orbspin[J])
-								same_spin_EF = (self.orbspin[E] == self.orbspin[F])
-								# same-spin EF and same-spin IJ -> antisymmetrized, else Coulomb
-								if same_spin_IJ and same_spin_EF:
-									integral = eri_as[E, F, I, J]
-								else:
-									integral = eri_spin[E, F, I, J]
+								
+								# Choose correct integral notation
+									# Same-spin: use antisymmetrized integral <eb||ij>
+									# Different-spin: simplifies to Coulomb integral <eb|ij> in physicist's notation
+								integral = eri_as[E, F, I, J]
+								
 								term1 += t_ABIJ * integral
+						
 						term1 *= 2.0
-
-						# Term 2: - sum_{i>j} sum_c [ t_{ij}^{a c} <b c | i j> + t_{ij}^{b c} <a c | i j> ] * δ_EF
+						
+						# ===== TERM 2: - Σ_{i>j} Σ_c [t_ij^{ac} <bc|ij> + t_ij^{bc} <ac|ij>] * δ_EF =====
 						term2 = 0.0
-						if E == F: # delta_EF
-							for I in self.active_occ_indices:
+						if E == F:  # δ_EF
+							for I in self.active_occ_indices:								
 								for J in self.active_occ_indices:
 									if I <= J:
 										continue
+									
 									for C in self.active_inocc_indices:
+										
 										t_ACIJ = MP1_amplitudes[A, C, I, J]
+										integral_BC = eri_as[B, C, I, J]
+									
 										t_BCIJ = MP1_amplitudes[B, C, I, J]
+										integral_AC = eri_as[A, C, I, J]
 
-										# integrals for <b c | i j> and <a c | i j>
-										same_spin_IJ = (self.orbspin[I] == self.orbspin[J])
-
-										same_spin_BC = (self.orbspin[B] == self.orbspin[C])
-										if same_spin_IJ and same_spin_BC:
-											int_bc = eri_as[B, C, I, J]
-										else:
-											int_bc = eri_spin[B, C, I, J]
-
-										same_spin_AC = (self.orbspin[A] == self.orbspin[C])
-										if same_spin_IJ and same_spin_AC:
-											int_ac = eri_as[A, C, I, J]
-										else:
-											int_ac = eri_spin[A, C, I, J]
-
-										term2 += (t_ACIJ * int_bc + t_BCIJ * int_ac)
-							term2 *= -1.0
-
-						# Terms involving D_ab:
-						flat_idx = idx_A * len(self.active_inocc_indices) + idx_B
-						Dab = D_ab[flat_idx]
-						if E == F:
-							term3 = Dab * (Fmo_spin[A, A] - Fmo_spin[B, B])
-						else:
-							term3 = Dab * Fmo_spin[E, F]
-
-						H[row, col] = term1 + term2 + term3
+										term2 += t_ACIJ * integral_BC + t_BCIJ * integral_AC
+							
+							term2 *= -1.0  # Negative sign in formula
+						
+						# ===== TERMS 3 & 4 =====
+						term3 = 0.0
+						term4 = 0.0
+						
+						Dab = D_ab[idx_A, idx_B]
+						
+						if E == F:  # Term 3
+							f_aa = Fmo_spin[A, A]
+							f_bb = Fmo_spin[B, B]
+							term3 = Dab * (f_aa - f_bb)
+						else:  # Term 4
+							term4 = Dab * Fmo_spin[E, F]
+						
+						H[row, col] = term1 + term2 + term3 + term4
 
 		# Symmetry check
-		diff_H = np.linalg.norm(H - H.T)
-		assert diff_H < 1e-6, f"Hessian H is not symmetric, ||H - H.T|| = {diff_H}"
-
-		# Basic checks
-		count_nonzero_H = np.count_nonzero(H)
-		assert count_nonzero_H > 0, "Hessian H is all zeros!"
-		assert np.all(np.isfinite(H)), "Hessian H contains non-finite values!"
-
-
+		if H.size > 0:
+			diff_H = np.linalg.norm(H - H.T)			
+			if diff_H > 1e-6:
+				print(f"WARNING: Hessian is not symmetric! Max diff: {np.max(np.abs(H - H.T)):.6e}")
+				assert False, "Hessian symmetry check failed!"
+						
 
 
 
@@ -730,8 +779,9 @@ class OVOS:
 
 		# Direct inversion method
 		if not use_RLE:
-
+			
 			# Solve for R, unoccupied space
+			G = G.reshape(-1)  # Flatten G to 1D array
 			R = - G @ np.linalg.inv(H)
 
 			# Initialize R,
@@ -934,28 +984,6 @@ class OVOS:
 			assert np.allclose(norm, np.eye(norm.shape[0]), atol=1e-6), f"MO coefficients for spin {spin} are not orthonormal!"
 
 
-			# Print shape and matrix of matrices and vectors for checking
-		# print("")
-		# print("Density matrix, shape: ", D_AB_cache.shape, "\n", D_AB_cache)
-		# print("")
-		# print("Gradient G, shape: ", G.shape, "\n", G)
-		# print("")
-		# print("Hessian H, shape: ", H.shape, "\n", H)
-		# print("")
-		# print("Orbital rotation parameter matrix R, shape: ", R_matrix.shape, "\n", R_matrix)
-		# print("")
-		# print("Unitary rotation matrix U, shape: ", U.shape, "\n", U)
-		# print("")
-			# Print mo_coeffs before and after rotation for checking
-		# print("")
-		# print("MO coefficients before rotation, shape: ", mo_coeffs[0].shape, "\n", mo_coeffs)
-		# print("")
-		# print("MO coefficients after rotation, shape: ", mo_coeffs_rot[0].shape, "\n", mo_coeffs_rot)
-		# print("")
-		# diff_mo_coeffs = np.linalg.norm(mo_coeffs_rot[0] - mo_coeffs[1])
-		# print("Diff in Rotated MO coefficients, shape: ", mo_coeffs_rot[spin].shape, "\n", diff_mo_coeffs)
-		# print("")
-
 				# Are the optimal solution when alpha and beta orbitals are the same? !!!!!!!!
 
 		return mo_coeffs_rot
@@ -980,9 +1008,7 @@ class OVOS:
 			iter += 1
 			print("#### OVOS Iteration ", iter, " ####")
 			
-			E_corr, MP1_amplitudes, eri_spin, eri_as, Fmo_spin = self.MP2_energy(mo_coeffs = mo_coeffs)
-			# print("MP2 correlation energy: ", E_corr)
-			# print()
+			E_corr, MP1_amplitudes, eri_spin, eri_phys, eri_as, Fmo_spin = self.MP2_energy(mo_coeffs = mo_coeffs)
 
 			# Step (ix): check convergence
 			# convergence criterion: change in correlation energy < 1e-6 Hartree
@@ -997,12 +1023,7 @@ class OVOS:
 				lst_E_corr = []
 				lst_E_corr.append(E_corr)
 
-			# If MP2 goes positive, stop the optimization
-			#if E_corr > 0:
-				#print("Warning: MP2 correlation energy is positive. Stopping OVOS optimization.")
-				#break
-
-			mo_coeffs = self.orbital_optimization(mo_coeffs, MP1_amplitudes=MP1_amplitudes, eri_spin=eri_spin, eri_as=eri_as, Fmo_spin=Fmo_spin)
+			mo_coeffs = self.orbital_optimization(mo_coeffs, MP1_amplitudes=MP1_amplitudes, eri_spin=eri_spin, eri_phys=eri_phys, eri_as=eri_as, Fmo_spin=Fmo_spin)
 
 		# Print information about the spaces
 		print()
@@ -1013,13 +1034,6 @@ class OVOS:
 		print("Inactive unoccupied spin-orbitals: ", self.inactive_indices)
 		print()
 		
-		# Return list of correlation energies
-		# print("List of MP2 correlation energies during OVOS optimization, w. length ", len(lst_E_corr) ,": ", lst_E_corr)
-
-		print("PySCF MP2")
-		MP2 = self.uhf.MP2().run()
-		print("MP2 correlation energy: ", MP2.e_corr)
-
 		# Check if OVOS converged
 		if not converged:
 			assert False, "OVOS did not converge within the maximum number of iterations."
@@ -1068,10 +1082,13 @@ atom, basis = (atom_choose_between[find_atom[select_atom]], basis_choose_between
 
 # Get number of electrons and full space size in molecular orbitals
 mol = pyscf.M(atom=atom, basis=basis, unit=unit)
+uhf = pyscf.scf.UHF(mol).run()
 	# Number of electrons
 num_electrons = mol.nelec[0] + mol.nelec[1]
 	# Full space size in molecular orbitals
-full_space_size = int(pyscf.scf.UHF(mol).run().mo_coeff.shape[1])
+full_space_size = int(uhf.mo_coeff.shape[1])
+	# MP2 correlation energy for the full space
+MP2 = uhf.MP2().run()
 
 
 
@@ -1165,7 +1182,8 @@ if run_different_virt_orbs == True:
 	# Print the final MP2 correlation energy after all OVOS and amount of iterations till convergence
 	print("")
 	for num_opt_virtual_orbs_current, E_corr, iter_ in lst_MP2_virt_orbs:
-		print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.2E' % Decimal(E_corr), "  @ ", iter_, " iterations till convergence")
+		print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.5E' % Decimal(E_corr), "  @ ", iter_, " iterations till convergence")
+	print("MP2 correlation energy, for full space: ", '%.5E' % Decimal(MP2.e_corr), "| Difference:", '%.5E' % Decimal(MP2.e_corr - lst_MP2_virt_orbs[-1][1]))
 	print("")
 
 	# Print summary of the run
