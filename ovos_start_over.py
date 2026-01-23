@@ -459,9 +459,23 @@ class OVOS:
 						# Antisymmetrized integral for same-spin pairs
 							# Simplifies to <ab|ij> for different-spin
 						integral = eri_as[a, b, i, j]  # <ab||ij>
+
+
+						# Check for near zero denominator/integral
+						if abs(integral) < 1e-12:
+							# print(f"WARNING: Small integral {integral:.6e} for indices a={a}, b={b}, i={i}, j={j}. Setting amplitude to zero.")
+							MP1_amplitudes[a, b, i, j] = 0.0
+							continue
+						if abs(denominator) < 1e-12:
+							# print(f"WARNING: Small denominator {denominator:.6e} for indices a={a}, b={b}, i={i}, j={j}. Setting amplitude to zero.")
+							MP1_amplitudes[a, b, i, j] = 0.0
+							continue
+
 						
 						# MP1 amplitude: t_{ij}^{ab} = -<ab||ij> / (ε_a + ε_b - ε_i - ε_j)
 						MP1_amplitudes[a, b, i, j] = -integral / denominator
+
+						# print(f"MP1 amplitude t_ij^ab for a={a}, b={b}, i={i}, j={j}: {MP1_amplitudes[a, b, i, j]:.6e} for denominator {denominator:.6e} and integral {integral:.6e}")
 
 		# Sanity checks
 			# Check that amplitudes are finite
@@ -471,6 +485,10 @@ class OVOS:
 			# Check amplitude antisymmetry: 
 				# t_ij^{ab} = t_ji^{ba}
 		assert np.allclose(MP1_amplitudes, MP1_amplitudes.transpose(1,0,3,2), atol=1e-10), "MP1 amplitudes do not satisfy antisymmetry t_ij^ab = t_ji^ba!"
+
+
+
+
 
 
 
@@ -562,7 +580,6 @@ class OVOS:
 				J_ij = term1 + term2
 				J_2 += J_ij
 		
-		print()
 		print(f"For {len(self.active_inocc_indices)}: Computed MP2 correlation energy (spin-orbital): ", J_2)
 		
 		# Sanity checks
@@ -674,15 +691,10 @@ class OVOS:
 				G[idx_A, idx_E] = term1 + term2
 
 
-		# # Check if gradient is reasonable
-		# if np.linalg.norm(G.flatten()) < 1e-10:
-		# 	print("WARNING: Gradient is essentially zero!")
-		# else:
-		# 	print("Gradient seems non-zero")
-
-		# Norm of the gradient
-		print(f"  Gradient norm: {np.linalg.norm(G):.6e}")
-
+		# Check if gradient is reasonable
+		if np.linalg.norm(G.flatten()) < 1e-8:
+			print("WARNING: Gradient is essentially zero!")
+			return mo_coeffs
 
 		# Sanity checks for G
 			# Check if gradient is empty
@@ -791,25 +803,17 @@ class OVOS:
 
 
 
-		# # In orbital_optimization, after computing H:
-		# print(f"\n=== HESSIAN DEBUG ===")
-		# print(f"Hessian shape: {H.shape}")
+
+
+		# Print diagnostics
+		print("Orbital Optimization Diagnostics:")
+
+		# Norm of the gradient
+		print(f"  Gradient norm: {np.linalg.norm(G):.6e}")
 
 		# Check eigenvalues
 		eigvals = np.linalg.eigvalsh(H)  # eigh for symmetric
-		print(f"  Hessian norm: {np.linalg.norm(H):.6e}, (Neg. Eigval: {np.sum(eigvals < 0)})")
-		# print(f"Hessian eigenvalues:")
-		# print(f"  Min eigenvalue: {np.min(eigvals):.6e}")
-		# print(f"  Max eigenvalue: {np.max(eigvals):.6e}")
-		# print(f"  Number of negative eigenvalues: {np.sum(eigvals < 0)}")
-
-		# # Condition number
-		# cond_num = np.max(np.abs(eigvals)) / np.maximum(np.min(np.abs(eigvals)), 1e-14)
-		# print(f"  Condition number: {cond_num:.6e}")
-
-		# if np.sum(eigvals < 0) > len(eigvals) * 0.25:  # More than 1% negative eigenvalues
-		# 	print("WARNING: Hessian has negative eigenvalues! Newton will go uphill!")
-		# 	return mo_coeffs  # Exit optimization if Hessian is not positive definite
+		print(f"  Hessian norm: {np.linalg.norm(H):.6e}, (Neg. Eigval: {np.sum(eigvals < 0)}/{len(eigvals)})")
 
 
 
@@ -833,9 +837,9 @@ class OVOS:
 			"""
 			# Try to identify block structure automatically
 				# Find size of blocks in Hessian
-			block_size = n_active  # Each block corresponds to one inactive orbital
-			n_blocks = n_inactive  # Number of inactive orbitals
-			total_size = block_size * n_blocks
+			block_size = 2 # n_active  # Each block corresponds to one inactive orbital
+			n_blocks = 2 # n_inactive  # Number of inactive orbitals
+			total_size = n_active * n_inactive
 
 			# Reshape H and G for block processing
 			if H.shape != (total_size, total_size):
@@ -894,6 +898,28 @@ class OVOS:
 			# print(f"  Found {len(block_groups)} block groups:")
 			# for i, group in enumerate(block_groups):
 			# 	print(f"    Group {i}: blocks {group}")
+
+			# Check if blocks have negative eigenvalues
+			for group_idx, block_indices in enumerate(block_groups):
+				# Collect all indices for this group
+				indices = []
+				for block_idx in block_indices:
+					start = block_idx * block_size
+					end = (block_idx + 1) * block_size
+					indices.extend(range(start, end))
+				
+				# Extract submatrix for this group
+				H_group = H[np.ix_(indices, indices)]
+				
+				# Check eigenvalues
+				eigvals_group = np.linalg.eigvalsh(H_group)
+				n_neg_eigvals = np.sum(eigvals_group < 0)
+				if n_neg_eigvals > 0:
+					# Discard block group if it has negative eigenvalues
+					print(f"WARNING: Block group {group_idx} has {n_neg_eigvals} negative eigenvalues! Skipping this group.")
+					block_groups[group_idx] = []  # Empty the group
+			# Remove empty groups
+			block_groups = [group for group in block_groups if len(group) > 0]
 			
 			# Solve each group of coupled blocks
 			for group_idx, block_indices in enumerate(block_groups):
@@ -952,7 +978,7 @@ class OVOS:
 			G = G.flatten()  # Flatten G to 1D array
 
 			# Solve for R, unoccupied space
-			R = - G @ np.linalg.inv(H) # PLOTTET !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			R = - G @ np.linalg.inv(H) # Direct inversion
 			# R = np.linalg.solve(H, -G)
 			# R = -scipy.linalg.lstsq(H, G)[0]
 
@@ -1193,21 +1219,31 @@ class OVOS:
 			E_corr, MP1_amplitudes, eri_spin, eri_phys, eri_as, Fmo_spin = self.MP2_energy(mo_coeffs = mo_coeffs)
 
 			# Step (ix): check convergence
-			# convergence criterion: change in correlation energy < 1e-6 Hartree
-			if iter_count > 1:
-				threshold = 1e-8
-				if np.abs(E_corr - lst_E_corr[-1]) < threshold and E_corr < 0.0:
+			# convergence criterion: change in correlation energy < 1e-10 Hartree
+			if iter_count > 2:
+				threshold = 1e-10
+				if np.abs(E_corr - lst_E_corr[-1]) < threshold:
 					converged = True
 					print("OVOS converged in ", iter_count, " iterations.")
 				else:
 					lst_E_corr.append(E_corr)
+					lst_iter_counts.append(iter_count)
+
+				# if E_corr > 0.0:
+				# 	print("WARNING: Correlation energy is positive! OVOS may not have converged properly.")
+				# 	lst_E_corr.append(E_corr)
+				# 	break
 			else:
 				lst_E_corr = []
 				lst_E_corr.append(E_corr)
 
+				lst_iter_counts = []
+				lst_iter_counts.append(iter_count)
+
 			if iter_count == max_iter:
 				print("Maximum number of iterations reached. OVOS did not converge.")
 				lst_E_corr.append(E_corr)
+				lst_iter_counts.append(iter_count)
 				break
 
 			# Step (v-viii): Orbital optimization
@@ -1227,7 +1263,7 @@ class OVOS:
 		if not converged:
 			print("OVOS did not converge within the maximum number of iterations.")
 
-		return lst_E_corr, iter_count
+		return lst_E_corr, lst_iter_counts
 	
 	
 
@@ -1237,7 +1273,9 @@ atom_choose_between = [
 	"H .0 .0 .0; H .0 .0 0.74144",  # H2 bond length 0.74144 Angstrom
 	"Li .0 .0 .0; H .0 .0 1.595",   # LiH bond length 1.595 Angstrom
 	"O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692;",  # H2O equilibrium geometry
-	"C  0.0000  0.0000  0.0000; H  0.0000  0.9350  0.5230; H  0.0000 -0.9350  0.5230;" # CH2 
+	"C  0.0000  0.0000  0.0000; H  0.0000  0.9350  0.5230; H  0.0000 -0.9350  0.5230;", # CH2 
+	"B 0 0 0; H 0 0 1.19; H 0 1.03 -0.40; H 0 -1.03 -0.40",  # BH3 equilibrium geometry
+	"N 0 0 0; N 0 0 1.10", # N2 bond length 1.10 Angstrom
 ]
 # Basis set
 basis_choose_between = [
@@ -1256,7 +1294,9 @@ find_atom = {
 	"H2": 0,
 	"LiH": 1,
 	"H2O": 2,
-	"CH2": 3
+	"CH2": 3,
+	"BH3": 4,
+	"N2": 5
 }	
 
 find_basis = {
@@ -1272,8 +1312,8 @@ find_basis = {
 
 
 # Select molecule and basis set
-select_atom = "LiH"  		# Select atom index here
-select_basis = "STO-3G" 	# Select basis index here
+select_atom = "H2O"  		# Select atom index here
+select_basis = "cc-pVDZ" 	# Select basis index here
 
 atom, basis = (atom_choose_between[find_atom[select_atom]], basis_choose_between[find_basis[select_basis]])
 
@@ -1330,7 +1370,7 @@ if run_different_virt_orbs == True:
 			uhf = pyscf.scf.UHF(mol).run()
 			mo_coeff = uhf.mo_coeff 
 
-			lst_E_corr, iter_count = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current).run_ovos(mo_coeff)
+			lst_E_corr, lst_iter_counts = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current).run_ovos(mo_coeff)
 
 			# run_OVOS got stuck in a non-converging loop
 			if len(lst_E_corr) >= 250:
@@ -1344,7 +1384,7 @@ if run_different_virt_orbs == True:
 			lst_MP2_virt_orbs.append((num_opt_virtual_orbs_current, lst_E_corr[-1], len(lst_E_corr)))
 			lst_E_corr_virt_orbs[0].append(lst_E_corr)
 			lst_E_corr_virt_orbs[1].append(num_opt_virtual_orbs_current)
-			lst_E_corr_virt_orbs[2].append(iter_count)
+			lst_E_corr_virt_orbs[2].append(lst_iter_counts)
 
 			# Reset retry count on success
 			retry_count = 0
@@ -1356,12 +1396,7 @@ if run_different_virt_orbs == True:
 			# Add error message to list
 
 				# Get results if available
-			if lst_E_corr is None:
-				iter_ = 1
-			else:
-				iter_ = len(lst_E_corr)
-
-			lst_error_messages.append((num_opt_virtual_orbs_current, str(e), iter_))
+			lst_error_messages.append((num_opt_virtual_orbs_current, str(e), lst_iter_counts[-1] if lst_iter_counts is not None else 0))
 
 			retry_count += 1
 			if retry_count >= max_retries:
@@ -1376,7 +1411,7 @@ if run_different_virt_orbs == True:
 	# Print the final MP2 correlation energy after all OVOS and amount of iterations till convergence
 	print("")
 	for num_opt_virtual_orbs_current, E_corr, iter_ in lst_MP2_virt_orbs:
-		print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.5E' % Decimal(E_corr), "  @ ", iter_count, " iterations till convergence")
+		print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.5E' % Decimal(E_corr), "  @ ", iter_, " iterations till convergence")
 	print("MP2 correlation energy, for full space: ", '%.5E' % Decimal(MP2.e_corr), "| Difference:", '%.5E' % Decimal(MP2.e_corr - lst_MP2_virt_orbs[-1][1]))
 	print("")
 
@@ -1398,7 +1433,7 @@ if run_different_virt_orbs == True:
 	# Save data to JSON files
 	import json
 
-	str_name = "different_virt_orbs"
+	str_name = "different_virt_orbs" # !!!!
 
 	str_atom = select_atom
 	str_basis = select_basis
