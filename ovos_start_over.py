@@ -51,9 +51,13 @@ class OVOS:
 		self.e_rhf = self.uhf.e_tot
 		self.h_nuc = mol.energy_nuc()
 
-		if self.init_orbs == "UHF":
+		# Set dependent on type of initial orbitals
+		if type(init_orbs) == str:
 			# MO coefficients (alpha, beta)
 			self.mo_coeffs = self.uhf.mo_coeff
+		elif type(init_orbs) != str:
+			# Get previous orbitals from init_orbs, same format as self.uhf.mo_coeff
+			self.mo_coeffs = init_orbs # User-provided orbitals or other method e.g. previous OVOS run
 
 		# MP2 calculation
 		self.MP2 = self.uhf.MP2().run()
@@ -580,7 +584,7 @@ class OVOS:
 				J_ij = term1 + term2
 				J_2 += J_ij
 		
-		print(f"For {len(self.active_inocc_indices)}: Computed MP2 correlation energy (spin-orbital): ", J_2)
+		print(f"[{len(self.active_inocc_indices)}/{len(self.active_inocc_indices + self.inactive_indices)}]: Computed MP2 correlation energy (spin-orbital): ", J_2)
 		
 		# Sanity checks
 			# Check that MP2 correlation energy is finite
@@ -611,8 +615,8 @@ class OVOS:
 
 		# Is MP2 energy reached?
 			# If full space is used, return original orbitals
-		if len(self.active_inocc_indices) == self.tot_num_spin_orbs - int(self.nelec):
-			return mo_coeffs
+		# if len(self.active_inocc_indices) == self.tot_num_spin_orbs - int(self.nelec):
+		# 	return mo_coeffs
 
 
 
@@ -691,21 +695,21 @@ class OVOS:
 				G[idx_A, idx_E] = term1 + term2
 
 
-		# Check if gradient is reasonable
-		if np.linalg.norm(G.flatten()) < 1e-8:
-			print("WARNING: Gradient is essentially zero!")
-			return mo_coeffs
+		# # Check if gradient is reasonable
+		# if np.linalg.norm(G.flatten()) < 1e-8:
+		# 	print("WARNING: Gradient is essentially zero!")
+		# 	return mo_coeffs
 
 		# Sanity checks for G
-			# Check if gradient is empty
-		if np.count_nonzero(G) == 0:
-			print("No inactive orbitals -> gradient is empty (expected)")
-			print("Orbitals cannot be optimized further (full virtual space)")
+		# 	# Check if gradient is empty
+		# if np.count_nonzero(G) == 0:
+		# 	print("No inactive orbitals -> gradient is empty (expected)")
+		# 	print("Orbitals cannot be optimized further (full virtual space)")
 			
-				# Return original orbitals or handle appropriately
-				# For full virtual space, optimization is complete
-			return mo_coeffs
-			# Check if gradient has finite values
+		# 		# Return original orbitals or handle appropriately
+		# 		# For full virtual space, optimization is complete
+		# 	return mo_coeffs
+		# 	# Check if gradient has finite values
 		assert np.all(np.isfinite(G)), "Gradient G contains non-finite values!"
 
 		# Convergence check
@@ -806,14 +810,14 @@ class OVOS:
 
 
 		# Print diagnostics
-		print("Orbital Optimization Diagnostics:")
+		print("  Orbital Optimization Diagnostics:")
 
 		# Norm of the gradient
-		print(f"  Gradient norm: {np.linalg.norm(G):.6e}")
+		print(f"    Gradient norm: {np.linalg.norm(G):.6e}")
 
 		# Check eigenvalues
 		eigvals = np.linalg.eigvalsh(H)  # eigh for symmetric
-		print(f"  Hessian norm: {np.linalg.norm(H):.6e}, (Neg. Eigval: {np.sum(eigvals < 0)}/{len(eigvals)})")
+		print(f"    Hessian norm: {np.linalg.norm(H):.6e}, (Neg. Eigval: {np.sum(eigvals < 0)}/{len(eigvals)})")
 
 
 
@@ -837,8 +841,8 @@ class OVOS:
 			"""
 			# Try to identify block structure automatically
 				# Find size of blocks in Hessian
-			block_size = 2 # n_active  # Each block corresponds to one inactive orbital
-			n_blocks = 2 # n_inactive  # Number of inactive orbitals
+			block_size = n_active  # Each block corresponds to one inactive orbital
+			n_blocks = n_inactive  # Number of inactive orbitals
 			total_size = n_active * n_inactive
 
 			# Reshape H and G for block processing
@@ -899,28 +903,6 @@ class OVOS:
 			# for i, group in enumerate(block_groups):
 			# 	print(f"    Group {i}: blocks {group}")
 
-			# Check if blocks have negative eigenvalues
-			for group_idx, block_indices in enumerate(block_groups):
-				# Collect all indices for this group
-				indices = []
-				for block_idx in block_indices:
-					start = block_idx * block_size
-					end = (block_idx + 1) * block_size
-					indices.extend(range(start, end))
-				
-				# Extract submatrix for this group
-				H_group = H[np.ix_(indices, indices)]
-				
-				# Check eigenvalues
-				eigvals_group = np.linalg.eigvalsh(H_group)
-				n_neg_eigvals = np.sum(eigvals_group < 0)
-				if n_neg_eigvals > 0:
-					# Discard block group if it has negative eigenvalues
-					print(f"WARNING: Block group {group_idx} has {n_neg_eigvals} negative eigenvalues! Skipping this group.")
-					block_groups[group_idx] = []  # Empty the group
-			# Remove empty groups
-			block_groups = [group for group in block_groups if len(group) > 0]
-			
 			# Solve each group of coupled blocks
 			for group_idx, block_indices in enumerate(block_groups):
 				if len(block_indices) == 1:
@@ -960,8 +942,8 @@ class OVOS:
 					# Distribute solution
 					R[indices] = R_group
 					
-					# Check group residual
-					residual = np.linalg.norm(H_group @ R_group + G_group)
+					# # Check group residual
+					# residual = np.linalg.norm(H_group @ R_group + G_group)
 					# print(f"    Group residual: {residual:.2e}")
 
 
@@ -972,6 +954,8 @@ class OVOS:
 		# Set to True to use Reduced Linear Equation method
 			# Use it when Hessian is ill-conditioned:
 		use_RLE = False
+			# Set it globally
+		self.use_RLE_orbopt = use_RLE
 
 			# Direct inversion method
 		if not use_RLE:
@@ -1031,13 +1015,13 @@ class OVOS:
 		assert np.all(np.isfinite(R_matrix)), "R_matrix contains NaN or Inf values!"
 			# Check that R_matrix is not all zeros
 		count_nonzero_R = np.count_nonzero(R_matrix)
-		if count_nonzero_R == 0:
-			print("WARNING: R_matrix is all zeros!")
-			return mo_coeffs  # Exit optimization if R_matrix is zero
+		# if count_nonzero_R == 0:
+		# 	print("WARNING: R_matrix is all zeros!")
+		# 	return mo_coeffs  # Exit optimization if R_matrix is zero
 
 		# Convergence check based on max element of R_matrix
 		max_R_elem = np.max(np.abs(R_matrix))
-		print(f"  Rotation norm {np.linalg.norm(R_matrix):.6e}, (Max el.: {max_R_elem:.6e})")
+		print(f"    Rotation norm {np.linalg.norm(R_matrix):.6e}, (Max el.: {max_R_elem:.6e})")
 		# if max_R_elem < 1e-6:
 		# 	print("  Rotation parameters below threshold -> Orbitals are optimized!")
 		# 	return mo_coeffs
@@ -1193,7 +1177,7 @@ class OVOS:
 
 				# Are the optimal solution when alpha and beta orbitals are the same? !!!!!!!!
 
-		return mo_coeffs_rot
+		return mo_coeffs_rot, self.use_RLE_orbopt
 
 
 	
@@ -1225,6 +1209,7 @@ class OVOS:
 				if np.abs(E_corr - lst_E_corr[-1]) < threshold:
 					converged = True
 					print("OVOS converged in ", iter_count, " iterations.")
+					break
 				else:
 					lst_E_corr.append(E_corr)
 					lst_iter_counts.append(iter_count)
@@ -1245,9 +1230,10 @@ class OVOS:
 				lst_E_corr.append(E_corr)
 				lst_iter_counts.append(iter_count)
 				break
-
+			
 			# Step (v-viii): Orbital optimization
-			mo_coeffs = self.orbital_optimization(mo_coeffs, MP1_amplitudes=MP1_amplitudes, eri_spin=eri_spin, eri_phys=eri_phys, eri_as=eri_as, Fmo_spin=Fmo_spin)
+			mo_coeffs, use_RLE_orbopt = self.orbital_optimization(mo_coeffs, MP1_amplitudes=MP1_amplitudes, eri_spin=eri_spin, eri_phys=eri_phys, eri_as=eri_as, Fmo_spin=Fmo_spin)
+
 
 
 		# Print information about the spaces
@@ -1263,7 +1249,7 @@ class OVOS:
 		if not converged:
 			print("OVOS did not converge within the maximum number of iterations.")
 
-		return lst_E_corr, lst_iter_counts
+		return lst_E_corr, lst_iter_counts, use_RLE_orbopt, mo_coeffs
 	
 	
 
@@ -1283,12 +1269,15 @@ basis_choose_between = [
 	"STO-6G",
 	"3-21G",
 	"6-31G",
+	"DZP",
+	"roosdz",
+	"anoroosdz",
 	"cc-pVDZ",
+	"cc-pV5Z",
+	"def2-QZVPP",
+	"aug-cc-pV5Z",
 	"ANO"
 ]
-
-# Unit
-unit="angstrom"
 
 find_atom = {
 	"H2": 0,
@@ -1304,21 +1293,43 @@ find_basis = {
 	"STO-6G": 1,
 	"3-21G": 2,
 	"6-31G": 3,
-	"cc-pVDZ": 4,
-	"ANO": 5
+	"DZP": 4,
+	"roosdz": 5,
+	"anoroosdz": 6,
+	"cc-pVDZ": 7,
+	"cc-pV5Z": 8,
+	"def2-QZVPP": 9,
+	"aug-cc-pV5Z": 10,
+	"ANO": 11
 }
 
 
 
 
 # Select molecule and basis set
-select_atom = "H2O"  		# Select atom index here
-select_basis = "cc-pVDZ" 	# Select basis index here
+select_atom = "CH2"  		# Select atom index here
+select_basis = "6-31G"  	# Select basis index here
+	# I want to run OVOS on CH2 w.
+		# Article reference
+		# (9s7p2d If,5s2p) 	-> [2, ..., 116]	-> E(SCF) = -38.89447 | E(UMP2) = ...      ,  E_corr = -0.182 683
+		# ------------------------------------------------------------|-------------------------------------------
+		# cc-pVDZ 		 	-> [2, ..., 40 ]	-> E(SCF) = -38.87219 | E(UMP2) = -38.98252,  E_corr = -0.110 327
+		# DZP 		 		-> [2, ..., 42 ]	-> E(SCF) = -38.87497 | E(UMP2) = -38.99727,  E_corr = -0.122 306
+		# roosdz 	 		-> [2, ..., 74 ]	-> E(SCF) = -38.88702 | E(UMP2) = -39.01329,  E_corr = -0.126 263
+		# anoroosdz 	 	-> [2, ..., 74 ]	-> E(SCF) = -38.88702 | E(UMP2) = -39.01329,  E_corr = -0.126 263
+		# def2-QZVPP 		-> [2, ..., 226]	-> E(SCF) = -38.88865 | E(UMP2) = -39.05821,  E_corr = -0.169 552
+		# ANO 		 		-> [2, ..., 334]	-> E(SCF) = -38.88763 | E(UMP2) = -39.07982,  E_corr = -0.192 186
+		# cc-pV5Z 	 		-> [2, ..., 394]	-> E(SCF) = -38.88888 | E(UMP2) = -39.07190,  E_corr = -0.183 022
+		# aug-cc-pV5Z 		-> [2, ..., 566]	-> E(SCF) = -38.88897 | E(UMP2) = -39.07315,  E_corr = -0.184 171
 
 atom, basis = (atom_choose_between[find_atom[select_atom]], basis_choose_between[find_basis[select_basis]])
 
 # Get number of electrons and full space size in molecular orbitals
+unit = "angstrom" # angstrom or bohr
+	# Initialize molecule and UHF
 mol = pyscf.M(atom=atom, basis=basis, unit=unit)
+	# Set symmetry
+# mol.symmetry = False  # Disable symmetry for OVOS
 uhf = pyscf.scf.UHF(mol).run()
 	# Number of electrons
 num_electrons = mol.nelec[0] + mol.nelec[1]
@@ -1354,6 +1365,9 @@ if run_different_virt_orbs == True:
 		# Incremenet by 2 for closed shell molecules
 	increment = 2
 
+		# Flag to indicate if previous virtual orbitals are used
+	use_prev_virt_orbs = True
+
 	while num_opt_virtual_orbs_current < max_opt_virtual_orbs:
 		# Increment num_opt_virtual_orbs until OVOS converges successfully
 		num_opt_virtual_orbs_current += increment 
@@ -1366,11 +1380,28 @@ if run_different_virt_orbs == True:
 		try:
 			# Re-initialize molecule and UHF for each run
 			mol = pyscf.M(atom=atom, basis=basis, unit=unit)
-				
-			uhf = pyscf.scf.UHF(mol).run()
-			mo_coeff = uhf.mo_coeff 
 
-			lst_E_corr, lst_iter_counts = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current).run_ovos(mo_coeff)
+			if use_prev_virt_orbs == True and 'mo_coeff' in locals():
+				# Use previously optimized orbitals as starting guess
+					# Only if mo_coeff exists from previous run
+
+				# Mix between UHF and previous orbitals to avoid local minima
+					# Try
+						# Keep previous active virtual orbitals, replace inactive virtual orbitals with UHF ones 
+						# Results -> MO coefficients for spin 0,1 are not orthonormal!
+					# Instead
+						# Mix previous and UHF orbitals linearly
+				uhf_mo_coeff = pyscf.scf.UHF(mol).run().mo_coeff
+				mix_ratio = 0.5  # 50% previous, 50% UHF
+				init_orbs = mix_ratio * mo_coeff + (1 - mix_ratio) * uhf_mo_coeff
+
+			else:
+				# Standard UHF initialization
+				mo_coeff = pyscf.scf.UHF(mol).run().mo_coeff
+				init_orbs = "UHF"
+
+
+			lst_E_corr, lst_iter_counts, use_RLE_orbopt, mo_coeff = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs).run_ovos(mo_coeff)
 
 			# run_OVOS got stuck in a non-converging loop
 			if len(lst_E_corr) >= 250:
@@ -1433,7 +1464,12 @@ if run_different_virt_orbs == True:
 	# Save data to JSON files
 	import json
 
-	str_name = "different_virt_orbs" # !!!!
+	if use_RLE_orbopt == True:
+		str_name = "different_virt_orbs_RLE" # !!!!
+	if use_prev_virt_orbs == True:
+		str_name = "different_virt_orbs_prev" # !!!!
+	else:
+		str_name = "different_virt_orbs" # !!!!
 
 	str_atom = select_atom
 	str_basis = select_basis
