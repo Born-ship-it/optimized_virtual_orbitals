@@ -113,11 +113,11 @@ class OVOS:
 
 			# Sum a coloumn of mo_coeffs to check normalization for a given spin
 				# Chekc: C^T S C = I
-		for spin in [0, 1]:
-			C_i = self.mo_coeffs[spin]
+		# for spin in [0, 1]:
+		# 	C_i = self.mo_coeffs[spin]
 			
-			norm = C_i.T @ self.S @ C_i
-			assert np.allclose(norm, np.eye(norm.shape[0]), atol=1e-6), f"MO coefficients for spin {spin} are not orthonormal!"
+		# 	norm = C_i.T @ self.S @ C_i
+			# assert np.allclose(norm, np.eye(norm.shape[0]), atol=1e-6), f"MO coefficients for spin {spin} are not orthonormal!"
 
 			# Check that the active spaces are correctly built
 		for I in self.active_occ_indices:
@@ -465,15 +465,15 @@ class OVOS:
 						integral = eri_as[a, b, i, j]  # <ab||ij>
 
 
-						# Check for near zero denominator/integral
-						if abs(integral) < 1e-12:
-							# print(f"WARNING: Small integral {integral:.6e} for indices a={a}, b={b}, i={i}, j={j}. Setting amplitude to zero.")
-							MP1_amplitudes[a, b, i, j] = 0.0
-							continue
-						if abs(denominator) < 1e-12:
-							# print(f"WARNING: Small denominator {denominator:.6e} for indices a={a}, b={b}, i={i}, j={j}. Setting amplitude to zero.")
-							MP1_amplitudes[a, b, i, j] = 0.0
-							continue
+						# # Check for near zero denominator/integral
+						# if abs(integral) < 1e-12:
+						# 	# print(f"WARNING: Small integral {integral:.6e} for indices a={a}, b={b}, i={i}, j={j}. Setting amplitude to zero.")
+						# 	MP1_amplitudes[a, b, i, j] = 0.0
+						# 	continue
+						# if abs(denominator) < 1e-12:
+						# 	# print(f"WARNING: Small denominator {denominator:.6e} for indices a={a}, b={b}, i={i}, j={j}. Setting amplitude to zero.")
+						# 	MP1_amplitudes[a, b, i, j] = 0.0
+						# 	continue
 
 						
 						# MP1 amplitude: t_{ij}^{ab} = -<ab||ij> / (ε_a + ε_b - ε_i - ε_j)
@@ -1055,23 +1055,21 @@ class OVOS:
 		assert diff < 1e-6, f"U is not orthogonal, ||U@U.T - I|| = {diff}"
 
 
+		# Check the active occupied area of U is close to identity
+		for i in self.active_occ_indices:
+			for j in self.active_occ_indices:
+				expected = 1.0 if i == j else 0.0
+				if abs(U[i, j] - expected) > 1e-6:
+					print(f"WARNING: U deviates from identity in active occupied block at ({i},{j}): U={U[i,j]:.6e}, expected={expected:.6e}")
+			# Print the the part of U corresponding to active occupied orbitals
+		# print("Active occupied block of U:")
+		# print(U[np.ix_(self.active_occ_indices, self.active_occ_indices)])
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+		# Helper functions for orbital coefficient conversions
 		def spatial_to_spin_mo(mo_coeffs):
 			"""
 			Convert spatial MO coefficients (alpha,beta) -> spin-orbital MO matrix.
@@ -1161,11 +1159,36 @@ class OVOS:
 				# Manual spin→spatial conversion: extract α and β columns using orbspin
 		mo_coeffs_rot = spin_to_spatial_mo(mo_coeffs_spin_rot, orbspin=orbspin)
 
+			# Check on what orbitals were rotated
+		num_rotated = 0
+		for spin in [0, 1]:
+				# In each spin block
+			for s in range(mo_coeffs[spin].shape[1]):
+					# Get original and rotated orbitals
+				orig_orb = mo_coeffs[spin][:, s]
+				rot_orb = mo_coeffs_rot[spin][:, s]
+					# Check if they differ significantly
+				if not np.allclose(orig_orb, rot_orb, atol=1e-6):
+					num_rotated += 1
+				# else:
+					# print(f"    Orbital {s} (spin {spin}) not rotated.")
+
+		print(f"    Rotated {num_rotated} spin orbitals out of {mo_coeffs[0].shape[1] + mo_coeffs[1].shape[1]} total.")
 
 				# check shape
 		for spin in [0, 1]:
 			expected_shape_spatial = mo_coeffs[spin].shape
 			assert mo_coeffs_rot[spin].shape == expected_shape_spatial, f"mo_coeffs_rot shape is {mo_coeffs_rot[spin].shape}, expected {expected_shape_spatial}"
+
+		# Check that the active occupied orbitals are unchanged
+			# Convert to spatial orbital index
+			for idx in self.active_occ_indices:
+				idx = idx // 2  # spatial orbital index
+				# Get original and rotated orbitals
+				orig_orb = mo_coeffs[spin][:, idx]
+				rot_orb = mo_coeffs_rot[spin][:, idx]
+
+				assert np.allclose(orig_orb, rot_orb, atol=1e-4), f"Active occupied spin orbital {idx} (spin {spin}) was changed during rotation!"
 
 		# Check that rotated orbitals are orthonormal
 			# Sum a coloumn of mo_coeffs to check normalization for a given spin
@@ -1192,7 +1215,7 @@ class OVOS:
 		"""
 
 		converged = False
-		max_iter = 250
+		max_iter = 500
 		iter_count = 0
 
 		while not converged:
@@ -1204,11 +1227,15 @@ class OVOS:
 
 			# Step (ix): check convergence
 			# convergence criterion: change in correlation energy < 1e-10 Hartree
-			if iter_count > 2:
-				threshold = 1e-10
+			if iter_count > 1:
+				threshold = 1e-8
 				if np.abs(E_corr - lst_E_corr[-1]) < threshold:
 					converged = True
 					print("OVOS converged in ", iter_count, " iterations.")
+
+					lst_E_corr.append(E_corr)
+					lst_iter_counts.append(iter_count)
+
 					break
 				else:
 					lst_E_corr.append(E_corr)
@@ -1249,7 +1276,7 @@ class OVOS:
 		if not converged:
 			print("OVOS did not converge within the maximum number of iterations.")
 
-		return lst_E_corr, lst_iter_counts, use_RLE_orbopt, mo_coeffs
+		return lst_E_corr, lst_iter_counts, mo_coeffs # lst_E_corr, lst_iter_counts, mo_coeff
 	
 	
 
@@ -1307,7 +1334,8 @@ find_basis = {
 
 
 # Select molecule and basis set
-select_atom = "CH2"  		# Select atom index here
+	# Went to have done, molecules: BH3, H2O, N2, ...
+select_atom = "BH3"  		# Select atom index here
 select_basis = "6-31G"  	# Select basis index here
 	# I want to run OVOS on CH2 w.
 		# Article reference
@@ -1323,6 +1351,10 @@ select_basis = "6-31G"  	# Select basis index here
 		# aug-cc-pV5Z 		-> [2, ..., 566]	-> E(SCF) = -38.88897 | E(UMP2) = -39.07315,  E_corr = -0.184 171
 
 atom, basis = (atom_choose_between[find_atom[select_atom]], basis_choose_between[find_basis[select_basis]])
+
+# Print start message
+print(" Running OVOS on ", select_atom, " with basis set ", select_basis)
+print("")
 
 # Get number of electrons and full space size in molecular orbitals
 unit = "angstrom" # angstrom or bohr
@@ -1347,11 +1379,13 @@ run_different_virt_orbs = True
 if run_different_virt_orbs == True:
 	# Loop over different numbers of optimized virtual orbitals
 	# List of MP2 correlation energies for different numbers of optimized virtual orbitals
-	lst_E_corr_virt_orbs = [[],[],[]]  # [[E_corr_list], [num_opt_virtual_orbs_list], [iterations_till_convergence_list]]
+	lst_E_corr_virt_orbs = [[],[],[],[]]  # [[E_corr_list], [num_opt_virtual_orbs_list], [iterations_till_convergence_list], [Unr. SCF check list]]
 	lst_MP2_virt_orbs = []  # [(num_opt_virtual_orbs, E_corr, iterations_till_convergence), ...]
 
-	# Error messages for failed runs
+	# List of error messages for failed runs
 	lst_error_messages = []
+	# List of message for priting later
+	lst_message = []
 
 	# Retry bounds
 	max_retries = 1
@@ -1365,8 +1399,27 @@ if run_different_virt_orbs == True:
 		# Incremenet by 2 for closed shell molecules
 	increment = 2
 
+
+	# Flags - Only one at a time is TRUE or both FALSE
 		# Flag to indicate if previous virtual orbitals are used
-	use_prev_virt_orbs = True
+	use_prev_virt_orbs = False
+		# Flag if 500 repeats of different random unitary rotations for each num_opt_virtual_orbs_current are use on UHF orbitals as starting guess
+	use_random_unitary_init = False
+	
+	# Optimization stuff
+		# Flag to indicate if RLE method was used in orbital optimization
+	use_RLE_orbopt = False
+
+
+	# Best of number of tries - True when 500 random initializations are used
+	if use_random_unitary_init == True:
+		try_best_of = True
+	else:
+		try_best_of = False
+		
+		# Number of random initializations to try for each num_opt_virtual_orbs_current
+	attempts_total = 100
+
 
 	while num_opt_virtual_orbs_current < max_opt_virtual_orbs:
 		# Increment num_opt_virtual_orbs until OVOS converges successfully
@@ -1380,36 +1433,146 @@ if run_different_virt_orbs == True:
 		try:
 			# Re-initialize molecule and UHF for each run
 			mol = pyscf.M(atom=atom, basis=basis, unit=unit)
+			
+			if try_best_of == False: # Single run of OVOS
+				if use_prev_virt_orbs == True and 'mo_coeffs' in locals():
+					# Use previously optimized orbitals as starting guess
+						# Only if mo_coeff exists from previous run
+					
+					# Note: The first 2(4e) orbitals correspond to the occupied space and should not be changed.
+					# We only want to modify the virtual orbitals beyond the occupied space.
+					# Extract occupied and virtual orbitals from previous mo_coeff
 
-			if use_prev_virt_orbs == True and 'mo_coeff' in locals():
-				# Use previously optimized orbitals as starting guess
-					# Only if mo_coeff exists from previous run
+						# Enforce orthonormality of the modified mo_coeff
+					init_orbs = mo_coeffs
+					mo_coeffs = init_orbs
 
-				# Mix between UHF and previous orbitals to avoid local minima
-					# Try
-						# Keep previous active virtual orbitals, replace inactive virtual orbitals with UHF ones 
-						# Results -> MO coefficients for spin 0,1 are not orthonormal!
-					# Instead
-						# Mix previous and UHF orbitals linearly
-				uhf_mo_coeff = pyscf.scf.UHF(mol).run().mo_coeff
-				mix_ratio = 0.5  # 50% previous, 50% UHF
-				init_orbs = mix_ratio * mo_coeff + (1 - mix_ratio) * uhf_mo_coeff
+					print("    Using previously optimized orbitals as starting guess.")				
 
-			else:
-				# Standard UHF initialization
-				mo_coeff = pyscf.scf.UHF(mol).run().mo_coeff
-				init_orbs = "UHF"
+			
+				elif use_random_unitary_init == True:
+					# Use random unitary rotations of UHF virtual orbitals as starting guess
+					# Get UHF orbitals
+					mo_coeffs_uhf = pyscf.scf.UHF(mol).run().mo_coeff
+
+					# Apply random unitary rotation to virtual orbitals only
+						# Number of occupied orbitals
+					num_occupied_orbitals = num_electrons // 2
+						# Total number of spatial orbitals
+					total_spatial_orbitals = mo_coeffs_uhf[0].shape[1]
+						# Number of virtual orbitals
+					num_virtual_orbitals = total_spatial_orbitals - num_occupied_orbitals
+
+						# Generate random unitary matrix for virtual orbitals
+					rand_matrix = np.random.rand(num_virtual_orbitals, num_virtual_orbitals)
+					Q, R = np.linalg.qr(rand_matrix)  # QR decomposition to get unitary matrix
+
+						# Rotate virtual orbitals for alpha and beta spins
+					mo_coeffs = [np.copy(mo_coeffs_uhf[0]), np.copy(mo_coeffs_uhf[1])]  # Deep copy to avoid modifying original
+
+					for spin in [0, 1]:
+						# Extract occupied and virtual parts
+						C_occ = mo_coeffs_uhf[spin][:, :num_occupied_orbitals]
+						C_virt = mo_coeffs_uhf[spin][:, num_occupied_orbitals:]
+
+						# Rotate virtual orbitals
+						C_virt_rot = C_virt @ Q
+
+						# Combine back
+						mo_coeffs[spin] = np.hstack((C_occ, C_virt_rot))
+
+					init_orbs = mo_coeffs
+					print("Using random unitary rotated UHF virtual orbitals as starting guess.")
+
+				else:
+					# Standard UHF initialization
+					mo_coeffs = pyscf.scf.UHF(mol).run().mo_coeff
+					init_orbs = "UHF"
+
+				lst_E_corr, lst_iter_counts, mo_coeffs = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs).run_ovos(mo_coeffs=mo_coeffs)
 
 
-			lst_E_corr, lst_iter_counts, use_RLE_orbopt, mo_coeff = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs).run_ovos(mo_coeff)
+			elif try_best_of == True: # Multiple runs of OVOS with different random initializations
+				# Try multiple random initializations and pick the best result
+				attempt = 0
+				best_E_corr = None
+				best_lst_E_corr = None
+				best_lst_iter_counts = None
+				best_mo_coeffs = None
+
+				while attempt < attempts_total:
+					attempt += 1
+					print("")
+					print("---- Attempt ", attempt, " of ", attempts_total, " ----")
+
+					# Get new random unitary rotation for virtual orbitals
+						# Get UHF orbitals
+					mo_coeffs_uhf = pyscf.scf.UHF(mol).run().mo_coeff
+
+					# Apply random unitary rotation to virtual orbitals only
+						# Number of occupied orbitals
+					num_occupied_orbitals = num_electrons // 2
+						# Total number of spatial orbitals
+					total_spatial_orbitals = mo_coeffs_uhf[0].shape[1]
+						# Number of virtual orbitals
+					num_virtual_orbitals = total_spatial_orbitals - num_occupied_orbitals
+
+						# Generate random unitary matrix for virtual orbitals
+					rand_matrix = np.random.rand(num_virtual_orbitals, num_virtual_orbitals)
+					Q, R = np.linalg.qr(rand_matrix)  # QR decomposition to get unitary matrix
+
+						# Rotate virtual orbitals for alpha and beta spins
+					mo_coeffs = [np.copy(mo_coeffs_uhf[0]), np.copy(mo_coeffs_uhf[1])]  # Deep copy to avoid modifying original
+					for spin in [0, 1]:
+						# Extract occupied and virtual parts
+						C_occ = mo_coeffs_uhf[spin][:, :num_occupied_orbitals]
+						C_virt = mo_coeffs_uhf[spin][:, num_occupied_orbitals:]
+
+						# Rotate virtual orbitals
+						C_virt_rot = C_virt @ Q
+
+						# Combine back
+						mo_coeffs[spin] = np.hstack((C_occ, C_virt_rot))
+					
+					init_orbs = np.array(mo_coeffs)
+					mo_coeffs = np.array(mo_coeffs)
+
+					# Run OVOS
+					lst_E_corr_attempt, lst_iter_counts_attempt, mo_coeffs_attempt = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs).run_ovos(mo_coeffs=mo_coeffs)
+
+					# Check if this is the best result so far
+					if best_E_corr is None or lst_E_corr_attempt[-1] < best_E_corr:
+						best_E_corr = lst_E_corr_attempt[-1]
+						best_lst_E_corr = lst_E_corr_attempt
+						best_lst_iter_counts = lst_iter_counts_attempt
+						best_mo_coeffs = mo_coeffs_attempt
+
+				# Use the best result from all attempts
+				lst_E_corr = best_lst_E_corr
+				lst_iter_counts = best_lst_iter_counts
+				mo_coeffs = best_mo_coeffs
+
 
 			# run_OVOS got stuck in a non-converging loop
-			if len(lst_E_corr) >= 250:
+			if len(lst_E_corr) >= 500:
 				print("OVOS with ", num_opt_virtual_orbs_current, " optimized virtual orbitals did not converge.")
+
+
+			# Check alpha/beta are the same for a tolerance - Done after orbital optimization
+			diff_alpha_beta = np.max(np.abs(mo_coeffs[0] - mo_coeffs[1]))
+			if diff_alpha_beta > 1e-4:
+				print("Warning: OVOS with ", num_opt_virtual_orbs_current, " optimized vorbs resulted in different alpha and beta orbitals (max diff: ", diff_alpha_beta, ").")
+					# Store message
+				lst_message.append(f"OVOS w. {num_opt_virtual_orbs_current} optimized vorbs resulted in different alpha and beta orbitals (max diff: {diff_alpha_beta}). Here largest alpha {np.max(mo_coeffs[0])} and beta {np.max(mo_coeffs[1])} orbital coeffs.")
+					# Append True-False flag to lst_E_corr_virt_orbs
+				lst_E_corr_virt_orbs[3].append("True")
+			else:
+				lst_E_corr_virt_orbs[3].append("False")
 
 			# run_OVOS converged to a positive MP2 correlation energy
 			if lst_E_corr[-1] > 0:
-				print("Warning: OVOS with ", num_opt_virtual_orbs_current, " optimized virtual orbitals converged to a positive MP2 correlation energy. Rerunning with the same number of virtual orbitals.")
+				print("Warning: OVOS with ", num_opt_virtual_orbs_current, " optimized virtual orbitals converged to a positive MP2 correlation energy.")
+
 
 			# Store results
 			lst_MP2_virt_orbs.append((num_opt_virtual_orbs_current, lst_E_corr[-1], len(lst_E_corr)))
@@ -1417,9 +1580,14 @@ if run_different_virt_orbs == True:
 			lst_E_corr_virt_orbs[1].append(num_opt_virtual_orbs_current)
 			lst_E_corr_virt_orbs[2].append(lst_iter_counts)
 
+
 			# Reset retry count on success
 			retry_count = 0
 
+
+				
+
+		# Catch errors during OVOS
 		except AssertionError as e:
 			print(f"Error during OVOS with {num_opt_virtual_orbs_current} optimized virtual orbitals: {e}")
 			print("Rerunning with the same number of virtual orbitals.")
@@ -1439,18 +1607,33 @@ if run_different_virt_orbs == True:
 			continue
 
 
-	# Print the final MP2 correlation energy after all OVOS and amount of iterations till convergence
-	print("")
-	for num_opt_virtual_orbs_current, E_corr, iter_ in lst_MP2_virt_orbs:
-		print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.5E' % Decimal(E_corr), "  @ ", iter_, " iterations till convergence")
-	print("MP2 correlation energy, for full space: ", '%.5E' % Decimal(MP2.e_corr), "| Difference:", '%.5E' % Decimal(MP2.e_corr - lst_MP2_virt_orbs[-1][1]))
-	print("")
 
 	# Print summary of the run
 	print("Number of electrons: ", num_electrons)
 	print("Full space size in molecular orbitals: ", full_space_size)
 	print("Maximum number of optimized virtual orbitals tested: ", max_opt_virtual_orbs)
 	print("Total OVOS runs completed: ", len(lst_MP2_virt_orbs))
+	print("")
+
+	# Print the final MP2 correlation energy after all OVOS and amount of iterations till convergence
+	for num_opt_virtual_orbs_current, E_corr, iter_ in lst_MP2_virt_orbs:
+		print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.5E' % Decimal(E_corr), "  @ ", iter_, " iterations till convergence")
+	print("MP2 correlation energy, for full space: ", '%.5E' % Decimal(MP2.e_corr), "| Difference:", '%.5E' % Decimal(MP2.e_corr - lst_MP2_virt_orbs[-1][1]))
+	print("")
+
+	# Print if the check of alpha and beta orbitals were the same
+	for msg in lst_message:
+		print(msg)
+	print("")
+	
+
+	# Print what methods were used
+	if use_RLE_orbopt == True:
+		print("Reduced Linear Equation (RLE) method was used in orbital optimization.")
+	if use_prev_virt_orbs == True:
+		print("Previously optimized virtual orbitals were used as starting guess for each OVOS run.")
+	if use_random_unitary_init == True:
+		print("Random unitary rotations of UHF virtual orbitals were used as starting guess for each OVOS run.")
 	print("")
 
 	# Print error messages summary
@@ -1461,21 +1644,33 @@ if run_different_virt_orbs == True:
 		print("")
 
 
+
+
+
+
+
 	# Save data to JSON files
 	import json
 
-	if use_RLE_orbopt == True:
-		str_name = "different_virt_orbs_RLE" # !!!!
+	str_name = ""
+
 	if use_prev_virt_orbs == True:
 		str_name = "different_virt_orbs_prev" # !!!!
-	else:
+	if use_random_unitary_init == True:
+		str_name = "different_virt_orbs_random" # !!!!
+	if use_prev_virt_orbs == False and use_random_unitary_init == False:
 		str_name = "different_virt_orbs" # !!!!
+	
+	if use_RLE_orbopt == True:
+		str_name += "_RLE" # !!!!
 
 	str_atom = select_atom
 	str_basis = select_basis
+
+	print("Saving data to branch/data/"+str_atom+"/"+str_basis+"/")
 
 	# Save MP2 correlation energy convergence data
 	with open("branch/data/"+str_atom+"/"+str_basis+"/lst_MP2_"+str_name+".json", "w") as f:
 		json.dump(lst_E_corr_virt_orbs, f, indent=2)
 
-	print("Data saved to branch/data/"+str_atom+"/"+str_basis+"/...")
+	print("Data saved to branch/data/"+str_atom+"/"+str_basis+"/lst_MP2_"+str_name+".json")

@@ -15,21 +15,14 @@ from typing import Tuple
 import numpy as np
 import scipy
 import pyscf
-from pyscf.cc.addons import spatial2spin, spin2spatial
-from pyscf.scf.addons import convert_to_ghf
 
 from decimal import Decimal
-
-
-<<<<<<< HEAD
-# Options:
-np.set_printoptions(precision=4, suppress=True, linewidth=200)
-=======
->>>>>>> c7df87fa832a7bd73fc45f0f5fe982bf666f88f4
 
 class OVOS:
 
 	"""
+	The OVOS algorithm minimizes the second-order correlation energy (MP2) using orbital rotations. 
+
 	Implemenation is based on:
 	[L. Adamowicz & R. J. Bartlett (1987)](https://pubs.aip.org/aip/jcp/article/86/11/6314/93345/Optimized-virtual-orbital-space-for-high-level)
 
@@ -53,27 +46,21 @@ class OVOS:
 		self.e_rhf = self.uhf.e_tot
 		self.h_nuc = mol.energy_nuc()
 
-		if self.init_orbs == "UHF":
+		# Set dependent on type of initial orbitals
+		if type(init_orbs) == str:
 			# MO coefficients (alpha, beta)
 			self.mo_coeffs = self.uhf.mo_coeff
+		elif type(init_orbs) != str:
+			# Get previous orbitals from init_orbs, same format as self.uhf.mo_coeff
+			self.mo_coeffs = init_orbs # User-provided orbitals or other method e.g. previous OVOS run
 
 		# MP2 calculation
 		self.MP2 = self.uhf.MP2().run()
 		self.MP2_ecorr = self.MP2.e_corr
-		print()
-		print("MP2 correlation energy: ", self.MP2_ecorr)
 
 		# Overlap matrix check
 		self.S = mol.intor('int1e_ovlp')
 
-		# Sum a coloumn of mo_coeffs to check normalization for a given spin
-			# Chekc: C^T S C = I
-		for spin in [0, 1]:
-			C_i = self.mo_coeffs[spin]
-			
-			norm = C_i.T @ self.S @ C_i
-			assert np.allclose(norm, np.eye(norm.shape[0]), atol=1e-6), f"MO coefficients for spin {spin} are not orthonormal!"
-		
 		# Fock matrix in AO basis 
 		self.Fao = self.uhf.get_fock()
 		
@@ -83,67 +70,24 @@ class OVOS:
 		self.eri_4fold_ao = mol.intor('int2e_sph', aosym=1)
 
 		# Number of orbitals
-		self.n_orbs = int(self.rhf.mo_coeff.shape[0])
-		print(f"Number of orbitals: {self.n_orbs}")
+		self.tot_num_spin_orbs = int(2*self.mo_coeffs.shape[1])
+			# Check that orbitals are unrestricted
+		assert self.mo_coeffs[0].shape[1] == self.mo_coeffs[1].shape[1], "Number of alpha and beta orbitals must be equal for OVOS."
 		
 		# Number of electrons
-		self.nelec = self.mol.nelec
-
-<<<<<<< HEAD
-		# build spin orbital coefficients
-			# [0,1,0,1,...] for alpha and beta spin orbitals
-		self.orbspin = np.array([0,1]*self.tot_num_spin_orbs)
+		self.nelec = self.mol.nelec[0] + self.mol.nelec[1]
 
 		# Build index lists of active and inactive spaces
-		# I,J indices -> occupied spin orbitals
+			# I,J indices -> occupied spin orbitals
 		self.active_occ_indices = [i for i in range(int(self.nelec))]
-		# A, B indices -> inoccupied spin orbitals in active space
+			# A, B indices -> inoccupied spin orbitals in active space
 		self.active_inocc_indices = [i for i in range(self.active_occ_indices[-1]+1,int((self.num_opt_virtual_orbs+self.nelec)))]
-		# E, F indices -> inoccipoed spin in virtual space
+			# E, F indices -> inoccipoed spin in virtual space
 		self.virtual_inocc_indices = [i for i in range(self.active_inocc_indices[-1]+1,int((self.tot_num_spin_orbs)))]
 			# actice + inactive space
 		self.inactive_indices = [i for i in range(self.active_inocc_indices[-1]+1,int((self.tot_num_spin_orbs)))]
 			# Full space
 		self.full_indices = [i for i in range(int(self.tot_num_spin_orbs))]
-
-		# Check that the active spaces are correctly built
-		for I in self.active_occ_indices:
-			assert I < self.nelec, f"I={I} not less than number of electrons {self.nelec}"
-		for A in self.active_inocc_indices:
-			assert A >= self.nelec, f"A={A} not greater than or equal to number of electrons {self.nelec}"
-			assert A < self.nelec + self.num_opt_virtual_orbs, f"A={A} not less than number of electrons + num_opt_virtual_orbs {self.nelec + self.num_opt_virtual_orbs}"
-		for E in self.inactive_indices:
-			assert E >= self.nelec + self.num_opt_virtual_orbs, f"E={E} not greater than or equal to number of electrons + num_opt_virtual_orbs {self.nelec + self.num_opt_virtual_orbs}"
-			assert E < self.tot_num_spin_orbs, f"E={E} not less than total number of spin orbitals {self.tot_num_spin_orbs}"
-
-		# Check that the spaces do not overlap
-		assert len(set(self.active_occ_indices).intersection(set(self.active_inocc_indices))) == 0, "Active occupied and active unoccupied spaces overlap!"
-
-		# Precompute valid I>J, A>B, C>D combinations to avoid redundant calculations
-			# Not implemented yet!
-		self.active_occ_indices_valid = [(I, J) for I in self.active_occ_indices for J in self.active_occ_indices if I > J]
-		self.active_inocc_indices_valid = [(A, B) for A in self.active_inocc_indices for B in self.active_inocc_indices if A > B]
-		self.inactive_indices_valid = [(E, F) for E in self.inactive_indices for F in self.inactive_indices if E > F]
-			# This lets us transform nested loops like:
-			# for A in self.active_inocc_indices:
-			# 	for B in self.active_inocc_indices:
-			# 		if A > B:
-			# into:
-			# for (A, B) in self.active_inocc_indices_valid:
-			#
-			# For different num_opt_virtual_orbs, see below:
-			# num_opt_virtual_orbs = 2 → 1 pair (A,B) with A>B
-			# num_opt_virtual_orbs = 3 → 3 pairs (A,B) with A>B
-			# num_opt_virtual_orbs = 4 → 6 pairs (A,B) with A>B
-			# num_opt_virtual_orbs = 5 → 10 pairs (A,B) with A>B
-			# num_opt_virtual_orbs = 6 → 15 pairs (A,B) with A>B
-			# num_opt_virtual_orbs = 7 → 21 pairs (A,B) with A>B
-
-		# Check if valid indices are correctly built
-		for (I, J) in self.active_occ_indices_valid:
-			assert I in self.active_occ_indices, f"I={I} not in active_occ_indices"
-			assert J in self.active_occ_indices, f"J={J} not in active_occ_indices"
-			assert I > J, f"I={I} not greater than J={J}"
 
 
 		# Print information about the spaces
@@ -157,434 +101,460 @@ class OVOS:
 
 
 
-		# Check that the number of optimized virtual orbitals is not too large
+		# Checks and balances
+
+			# Check that the number of optimized virtual orbitals is not too large
 		assert self.tot_num_spin_orbs >= self.num_opt_virtual_orbs+self.nelec, "Your space 'num_opt_virtual_orbs' is too large"  
+
+			# Check that the active spaces are correctly built
+		for I in self.active_occ_indices:
+			assert I < self.nelec, f"I={I} not less than number of electrons {self.nelec}"
+		for A in self.active_inocc_indices:
+			assert A >= self.nelec, f"A={A} not greater than or equal to number of electrons {self.nelec}"
+			assert A < self.nelec + self.num_opt_virtual_orbs, f"A={A} not less than number of electrons + num_opt_virtual_orbs {self.nelec + self.num_opt_virtual_orbs}"
+		for E in self.inactive_indices:
+			assert E >= self.nelec + self.num_opt_virtual_orbs, f"E={E} not greater than or equal to number of electrons + num_opt_virtual_orbs {self.nelec + self.num_opt_virtual_orbs}"
+			assert E < self.tot_num_spin_orbs, f"E={E} not less than total number of spin orbitals {self.tot_num_spin_orbs}"
+
+			# Check that the spaces do not overlap
+		assert len(set(self.active_occ_indices).intersection(set(self.active_inocc_indices))) == 0, "Active occupied and active unoccupied spaces overlap!"
+		assert len(set(self.active_occ_indices).intersection(set(self.inactive_indices))) == 0, "Active occupied and inactive unoccupied spaces overlap!"
+		assert len(set(self.active_inocc_indices).intersection(set(self.inactive_indices))) == 0, "Active unoccupied and inactive unoccupied spaces overlap!"
+
+
+	def spatial_to_spin_eri(self, eri_aaaa, eri_aabb, eri_bbbb):
+		"""
+		Convert spatial ERIs to spin-orbital ERIs.
+
+		Parameters:
+		-----------
+		eri_aaaa : np.ndarray
+			alpha-alpha-alpha-alpha two-electron integrals, shape (n_spatial, n_spatial, n_spatial, n_spatial)
+		eri_aabb : np.ndarray
+			alpha-alpha-beta-beta two-electron integrals, shape (n_spatial, n_spatial, n_spatial, n_spatial)
+		eri_bbbb : np.ndarray
+			beta-beta-beta-beta two-electron integrals, shape (n_spatial, n_spatial, n_spatial, n_spatial)
+			
+		Returns:
+		--------
+		eri_spin : np.ndarray
+			Spin-orbital two-electron integrals, shape (n_spin, n_spin, n_spin, n_spin)
+		"""
+		n_spatial = eri_aaaa.shape[0]
+		n_spin = 2 * n_spatial
+		
+		eri_spin = np.zeros((n_spin, n_spin, n_spin, n_spin), dtype=np.float64)
+		
+		for p in range(n_spin):
+			pa, sp_p = p // 2, p % 2
+			for q in range(n_spin):
+				pb, sp_q = q // 2, q % 2
+				for r in range(n_spin):
+					ra, sp_r = r // 2, r % 2
+					for s in range(n_spin):
+						rb, sp_s = s // 2, s % 2
+						
+						# Handle possible spin combinations
+						if (sp_p, sp_q, sp_r, sp_s) == (0, 0, 0, 0):
+							eri_spin[p, q, r, s] = eri_aaaa[pa, pb, ra, rb]
+						elif (sp_p, sp_q, sp_r, sp_s) == (1, 1, 1, 1):
+							eri_spin[p, q, r, s] = eri_bbbb[pa, pb, ra, rb]
+						elif (sp_p, sp_q, sp_r, sp_s) == (0, 0, 1, 1):
+							# (αα|ββ)
+							eri_spin[p, q, r, s] = eri_aabb[pa, pb, ra, rb]
+						elif (sp_p, sp_q, sp_r, sp_s) == (1, 1, 0, 0):
+							# (ββ|αα) = (αα|ββ) with indices swapped
+							eri_spin[p, q, r, s] = eri_aabb[ra, rb, pa, pb]
+						elif (sp_p, sp_q, sp_r, sp_s) == (0, 1, 0, 1):
+							# (αβ|αβ)
+							eri_spin[p, q, r, s] = eri_aabb[pa, ra, pb, rb]
+						elif (sp_p, sp_q, sp_r, sp_s) == (1, 0, 1, 0):
+							# (βα|βα) = (αβ|αβ) with indices swapped
+							eri_spin[p, q, r, s] = eri_aabb[pb, rb, pa, ra]
+						else:
+							# Other combinations like (αβ|βα) etc. is zero
+							eri_spin[p, q, r, s] = 0.0
+		
+		return eri_spin
+
+	def spatial_to_spin_fock(self, Fmo_a, Fmo_b):
+		"""
+		Convert spatial Fock matrices to spin-orbital Fock matrix.
+		
+		Parameters:
+		-----------
+		Fmo_a : np.ndarray
+			Alpha Fock matrix, shape (n_spatial, n_spatial)
+		Fmo_b : np.ndarray
+			Beta Fock matrix, shape (n_spatial, n_spatial)
+			
+		Returns:
+		--------
+		Fmo_spin : np.ndarray
+			Spin-orbital Fock matrix, shape (n_spin, n_spin)
+		"""
+		n_spatial = Fmo_a.shape[0]
+		n_spin = 2 * n_spatial
+		
+		# Initialize spin Fock matrix
+		Fmo_spin = np.zeros((n_spin, n_spin), dtype=np.float64)
+		
+		# Helper function for Kronecker delta
+		def kronecker_delta(i, j):
+			return 1 if i == j else 0
+		
+		# Convert using the Fortran logic
+		for p in range(n_spin):
+			for q in range(n_spin):
+				# Fortran: mod(p,2) -> p % 2 in Python
+				# Fortran: (p+1)/2 -> p//2 in Python (0-based indexing)
+				
+				# Get spatial indices (0-based)
+				spatial_p = p // 2
+				spatial_q = q // 2
+				
+				# Get spin components
+				spin_p = p % 2  # 0=alpha, 1=beta
+				spin_q = q % 2
+				
+				# Apply Kronecker delta condition
+				spin_factor = kronecker_delta(spin_p, spin_q)
+				
+				if spin_factor == 0:
+					Fmo_spin[p, q] = 0.0
+					continue
+				
+				# Get the appropriate Fock matrix element
+				if spin_p == 0:  # alpha spin
+					Fmo_spin[p, q] = Fmo_a[spatial_p, spatial_q]
+				else:  # beta spin
+					Fmo_spin[p, q] = Fmo_b[spatial_p, spatial_q]
+		
+		return Fmo_spin
+
+	def spatial_to_spin_mo_energy(self, mo_energy_a, mo_energy_b):
+		"""
+		Convert spatial MO energies to spin-orbital MO energies.
+		
+		Parameters:
+		-----------
+		mo_energy_a : np.ndarray
+			Alpha MO energies, shape (n_spatial,)
+		mo_energy_b : np.ndarray
+			Beta MO energies, shape (n_spatial,)
+			
+		Returns:
+		--------
+		orbital_energies : np.ndarray
+			Spin-orbital MO energies, shape (n_spin,)
+		"""
+		n_spatial = len(mo_energy_a)
+
+		# Create list of (energy, spin, spatial_index, spin_orbital_index)
+		spin_data = []
+		for i in range(n_spatial):
+			# Alpha: spin-orbital index = 2*i
+			spin_data.append((mo_energy_a[i], 0, i, 2*i))      # (energy, spin, spatial_idx, spin_orb_idx)
+			# Beta: spin-orbital index = 2*i + 1
+			spin_data.append((mo_energy_b[i], 1, i, 2*i + 1))  # (energy, spin, spatial_idx, spin_orb_idx)
+
+		# Sort by energy
+		spin_data.sort(key=lambda x: x[0])
+
+		# Extract arrays
+		orbital_energies = np.array([d[0] for d in spin_data])
+		orbspin = np.array([d[1] for d in spin_data])
+		spatial_map = np.array([d[2] for d in spin_data])  # spatial index for each energy-ordered position
+		spin_orb_map = np.array([d[3] for d in spin_data])  # spin-orbital index in NATURAL ordering
+
+		return orbital_energies, orbspin, spatial_map, spin_orb_map
+
+
+
+
+
+
+
+
+
 
 
 	def MP2_energy(self, mo_coeffs) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]: 
-=======
-	def _space_selection(self) -> Tuple[List[int], List[int]]:
->>>>>>> c7df87fa832a7bd73fc45f0f5fe982bf666f88f4
 		"""
-		Step (iii): Define active and inactive orbitals
-
-		The choice is based upon the contribution from each individual 
-		virtual orbital to the second-order correlation energy. The 
-		contribution is calculated as a sum of the diagonal and a half 
-		of the off-diagonal part.
-
-		Occupied orbitals are not considered for the selection.
-		Virtual orbitals of a,b,... are ranked according to their contribution
-		to the MP2 correlation energy, and the top `num_vir_ops` orbitals
-		are selected as active orbitals, a,b,... and the rest as inactive orbitals, e,f,...
+		MP2 correlation energy for unrestricted orbitals 
 
 		Returns
 		-------
-		List[int], List[int]
-			Indices of active and inactive orbitals
+		E_corr : float
+			MP2 correlation energy.
+		t1_amplitudes : ndarray
+			First-order MP amplitudes.
+		eri_spin : ndarray
+			Spin-orbital two-electron integrals.
+		Fmo_spin : ndarray
+			Spin-orbital Fock matrix.
 		"""
 
-		# Get MP2 energy contribution tensor
-		_, E_corr_tensor = self._MP2_energy(mo_coeffs=self.rhf.mo_coeff, E_rhf=self.e_rhf, spin_orbital_basis=False)
-		
-<<<<<<< HEAD
-		# Numerical checks
-			# Check that orbital energies are sorted for each spin
-		assert np.all(np.diff(mo_energy_a) >= 0), "Alpha orbital energies are not sorted!"
-		assert np.all(np.diff(mo_energy_b) >= 0), "Beta orbital energies are not sorted!"
+		# Fock matrix in MO basis 
+		Fmo_a = mo_coeffs[0].T @ self.Fao[0] @ mo_coeffs[0]
+		Fmo_b = mo_coeffs[1].T @ self.Fao[1] @ mo_coeffs[1]
+
+		# Sanity checks
+			# Check that Fock matrices are finite
+		assert np.all(np.isfinite(Fmo_a)), "Alpha Fock matrix contains non-finite values!"
+		assert np.all(np.isfinite(Fmo_b)), "Beta Fock matrix contains non-finite values!"
+			# Check that Fock matrices are not all zero
+		assert np.count_nonzero(Fmo_a) > 0, "Alpha Fock matrix is all zero!"
+		assert np.count_nonzero(Fmo_b) > 0, "Beta Fock matrix is all zero!"
+			# Check that Fock matrices are Hermitian
+		assert np.allclose(Fmo_a, Fmo_a.T.conj(), atol=1e-10), "Alpha Fock matrix is not Hermitian!"
+		assert np.allclose(Fmo_b, Fmo_b.T.conj(), atol=1e-10), "Beta Fock matrix is not Hermitian!"
+
+
+
+
+
+
+
+			# Convert Fock matrix to spin orbitals
+		Fmo_spin = self.spatial_to_spin_fock(Fmo_a, Fmo_b)
+
+		# Sanity checks
+			# Check that Fock matrix is finite
+		assert np.all(np.isfinite(Fmo_spin)), "Spin-orbital Fock matrix contains non-finite values!"
+			# Check that Fock matrix is not all zero
+		assert np.count_nonzero(Fmo_spin) > 0, "Spin-orbital Fock matrix is all zero!"
+			# Check that Fock matrix is Hermitian
+		assert np.allclose(Fmo_spin, Fmo_spin.T.conj(), atol=1e-10), "Spin-orbital Fock matrix is not Hermitian!"
+
+
+
+
+
+
+
+
+		# Get orbital energies
+		eigval_a, eigvec_a = scipy.linalg.eigh(Fmo_a)  # Use eigh for Hermitian matrices
+		eigval_b, eigvec_b = scipy.linalg.eigh(Fmo_b)  # Use eigh for Hermitian matrices
+
+		# Already sorted by eigh
+		mo_energy_a = np.real(eigval_a)
+		mo_energy_b = np.real(eigval_b)
+
+		# Convert to spin orbitals with proper sorting
+		self.eps, self.orbspin_sorted, self.spatial_map_sorted, self.spin_orb_map_sorted = self.spatial_to_spin_mo_energy(mo_energy_a, mo_energy_b)
+
+		# Create inverse mapping: from natural spin-orbital index -> energy-ordered index
+		self.natural_to_energy = np.zeros(self.tot_num_spin_orbs, dtype=int)
+		for energy_idx, natural_spin_idx in enumerate(self.spin_orb_map_sorted):
+			self.natural_to_energy[natural_spin_idx] = energy_idx
+
+		# Convert active indices from NATURAL to ENERGY ordering
+		self.active_occ_indices_energy = [self.natural_to_energy[i] for i in self.active_occ_indices]
+		self.active_inocc_indices_energy = [self.natural_to_energy[i] for i in self.active_inocc_indices]
+		self.inactive_indices_energy = [self.natural_to_energy[i] for i in self.inactive_indices]
+
+		# Set for convenience
+		eps = self.eps
+
+		# Sanity checks
 			# Check that orbital energies are finite
-		assert np.all(np.isfinite(orbital_energies)), "Orbital energies contain non-finite values!"
-			# Check lengths
-		expected_length = norb_alpha + norb_beta
-		assert len(orbital_energies) == expected_length, f"Orbital energies length is {len(orbital_energies)}, expected {expected_length}"
-			
+		assert np.all(np.isfinite(eps)), "Spin-orbital MO energies contain non-finite values!"
+			# Check that orbital energies are not all zero
+		assert np.count_nonzero(eps) > 0, "Spin-orbital MO energies are all zero!"
+			# Check that number of orbital energies matches number of spin orbitals
+		assert len(eps) == self.tot_num_spin_orbs, "Number of spin-orbital MO energies does not match number of spin orbitals!"
 
 
 
 
-		#PySCF stores 2e integrals in chemists' notation: (ij|kl) = <ik|jl> in physicists' notation.
+		# i) Fock matrix in spin-orbital basis & Two-electron integrals in spin-orbital basis
 
-		# (alpha alpha | alpha alpha) integrals
+			#PySCF stores 2e integrals in chemists' notation: (ij|kl) = <ik|jl> in physicists' notation.
+				# (alpha alpha | alpha alpha) integrals
 		eri_aaaa = pyscf.ao2mo.kernel(self.eri_4fold_ao, [mo_coeffs[0], mo_coeffs[0], mo_coeffs[0], mo_coeffs[0]], compact=False)
-		#eri_aaaa = eri_aaaa.reshape(norb_alpha, norb_alpha, norb_alpha, norb_alpha)
-
-		# (beta beta | beta beta) integrals
+				# (beta beta | beta beta) integrals
 		eri_bbbb = pyscf.ao2mo.kernel(self.eri_4fold_ao, [mo_coeffs[1], mo_coeffs[1], mo_coeffs[1], mo_coeffs[1]], compact=False)
-		#eri_bbbb = eri_bbbb.reshape(norb_beta, norb_beta, norb_beta, norb_beta)
-
-		# (alpha alpha | beta beta) integrals
-		# These are the (ij|kl) where i,j are alpha, k,l are beta
+				# (alpha alpha | beta beta) integrals
 		eri_aabb = pyscf.ao2mo.kernel(self.eri_4fold_ao, [mo_coeffs[0], mo_coeffs[0], mo_coeffs[1], mo_coeffs[1]], compact=False)
-		#eri_aabb = eri_aabb.reshape(norb_alpha, norb_alpha, norb_beta, norb_beta)
 
-		norb_total = norb_alpha + norb_beta
-		#eri_spin = np.zeros((norb_total, norb_total, norb_total, norb_total))
+		    # reshape AO->MO (chemists' notation)
+		norb_alpha, norb_beta = mo_coeffs[0].shape[1], mo_coeffs[1].shape[1]
+		eri_aaaa = eri_aaaa.reshape((norb_alpha, norb_alpha, norb_alpha, norb_alpha))
+		eri_bbbb = eri_bbbb.reshape((norb_beta,  norb_beta,  norb_beta,  norb_beta))
+		eri_aabb = eri_aabb.reshape((norb_alpha, norb_alpha, norb_beta,  norb_beta))
 
-		#See https://pyscf.org/_modules/pyscf/cc/addons.html#spatial2spin
-		eri_spin = spatial2spin([eri_aaaa, eri_aabb, eri_bbbb], orbspin=None)
-		Fmo_spin = spatial2spin([Fmo[0], Fmo[1]], orbspin=None)
 
-		# 	# Check symmetry of eri_spin
-		# for p in range(norb_total):
-		# 	for q in range(norb_total):
-		# 		for r in range(norb_total):
-		# 			for s in range(norb_total):
-		# 				# Symmetry 1: Always valid
-		# 				assert np.isclose(eri_spin[p,q,r,s], eri_spin[q,p,s,r], atol=1e-6), \
-		# 					f"eri_spin symmetry failed: (pq|rs) != (qp|sr) for p={p}, q={q}, r={r}, s={s}!"
+			# Manual assembly of spin-orbital integrals from spatial blocks
+				# allocate spin-orbital ERI and Fock
+		eri_spin = self.spatial_to_spin_eri(eri_aaaa, eri_aabb, eri_bbbb)
+
+		# Sanity checks 
+			# Check that integrals are finite
+		assert np.all(np.isfinite(eri_spin)), "Spin-orbital integrals contain non-finite values!"
+			# Check that integrals are not all zero
+		assert np.count_nonzero(eri_spin) > 0, "Spin-orbital integrals are all zero!"
+			
+
+
+				# Convert from chemist's to physicist's notation
+					# Chemist's: (pq|rs), Physicist's: <pq|rs> = (pr|qs)
+		eri_phys = eri_spin.transpose(0,2,1,3)  # Swap indices 1 and 2
+
+		# Sanity checks
+			# Check that integrals are finite
+		assert np.all(np.isfinite(eri_phys)), "Physicist's notation integrals contain non-finite values!"
+			# Check that integrals are not all zero
+		assert np.count_nonzero(eri_phys) > 0, "Physicist's notation integrals are all zero!"
+
+
+
+			# Antisymmetrized integrals in physicist's notation
+				# <pq||rs> = <pq|rs> - <pq|sr>
+		eri_as = eri_phys - eri_phys.transpose(0,1,3,2)
+
+		# Sanity checks 
+			# Check that integrals are finite
+		assert np.all(np.isfinite(eri_as)), "Antisymmetrized integrals contain non-finite values!"
+			# Check that integrals are not all zero
+		assert np.count_nonzero(eri_as) > 0, "Antisymmetrized integrals are all zero!"	
+
+
+
+		# ii) Compute MP1 amplitudes (spin-orbital)
+		n_spin = self.tot_num_spin_orbs
+		MP1_amplitudes = np.zeros((n_spin, n_spin, n_spin, n_spin), dtype=np.float64)
+
+		# Full computation with spin considerations
+		for a in self.active_inocc_indices:
+			eps_a = eps[a]
+			for b in self.active_inocc_indices:
+				eps_b = eps[b]
+				for i in self.active_occ_indices:
+					eps_i = eps[i]
+					for j in self.active_occ_indices:
+						eps_j = eps[j]
+			
+						# Energy denominator: ε_a + ε_b - ε_i - ε_j
+						denominator = eps_a + eps_b - eps_i - eps_j
+
+						# Antisymmetrized integral for same-spin pairs
+							# Simplifies to <ab|ij> for different-spin
+						integral = eri_as[a, b, i, j]  # <ab||ij>
 						
-		# 				# Symmetry 2: Only for same-spin quartets
-		# 				if self.orbspin[p] == self.orbspin[q] == self.orbspin[r] == self.orbspin[s]:
-		# 					assert np.isclose(eri_spin[p,q,r,s], eri_spin[r,s,p,q], atol=1e-6), \
-		# 						f"eri_spin symmetry failed: (pq|rs) != (rs|pq) for same-spin p={p}, q={q}, r={r}, s={s}!"
+						# MP1 amplitude: t_{ij}^{ab} = -<ab||ij> / (ε_a + ε_b - ε_i - ε_j)
+						MP1_amplitudes[a, b, i, j] = -integral / denominator
+
+						# print(f"MP1 amplitude t_ij^ab for a={a}, b={b}, i={i}, j={j}: {MP1_amplitudes[a, b, i, j]:.6e} for denominator {denominator:.6e} and integral {integral:.6e}")
+
+		# Sanity checks
+			# Check that amplitudes are finite
+		assert np.all(np.isfinite(MP1_amplitudes)), "MP1 amplitudes contain non-finite values!"
+			# Check that amplitudes are not all zero
+		assert np.count_nonzero(MP1_amplitudes) > 0, "MP1 amplitudes are all zero!"
+			# Check amplitude antisymmetry: 
+				# t_ij^{ab} = t_ji^{ba}
+		assert np.allclose(MP1_amplitudes, MP1_amplitudes.transpose(1,0,3,2), atol=1e-10), "MP1 amplitudes do not satisfy antisymmetry t_ij^ab = t_ji^ba!"
 
 
 
-		# Initialize MP1 amplitudes array
-		MP1_amplitudes = np.zeros((norb_total, norb_total, norb_total, norb_total))
-
-		# Define t1 function for MP1 amplitudes
-		def t1(I,J,A,B) -> float:
-			#MP1 amplitudes:
-			t1 = -1.0*( (eri_spin[A,I,B,J]- eri_spin[A,J,B,I])
-			/ (orbital_energies[A] + orbital_energies[B] 
-			- orbital_energies[I] - orbital_energies[J]) )
-			return t1 
-
-		# Build MP1 amplitudes
-		for I in self.active_occ_indices:
-			for J in self.active_occ_indices:
-				for A in self.active_inocc_indices:
-					for B in self.active_inocc_indices:
-						MP1_amplitudes[A,I,B,J] = t1(I,J,A,B)
-
-			# Check antisymmetry of MP1_amplitudes
-		for I in self.active_occ_indices:
-			for J in self.active_occ_indices:
-				for A in self.active_inocc_indices:
-					for B in self.active_inocc_indices:
-
-						t_abij = MP1_amplitudes[A,I,B,J]
-
-						# Antisymmetry check: t_abij = - t_abji
-						t_abji = MP1_amplitudes[A,J,B,I]
-						# Antismmetry check: t_abij = - t_baij
-						t_baij = MP1_amplitudes[B,I,A,J]
-
-						# Assert antisymmetry
-						assert np.isclose(t_abij, -t_abji, atol=1e-6), f"MP1_amplitudes antisymmetry failed: t_abij != - t_abji for I={I}, J={J}, A={A}, B={B}!"
-						assert np.isclose(t_abij, -t_baij, atol=1e-6), f"MP1_amplitudes antisymmetry failed: t_abij != - t_baij for I={I}, J={J}, A={A}, B={B}!"
-
-						# # Print check results
-						# if not np.isclose(t_abij, -t_abji, atol=1e-10):
-						# 	print("t_abij = - t_abji:", '%.2E' % Decimal(t_abij + t_abji))
-						# if not np.isclose(t_abij, -t_baij, atol=1e-10):
-						# 	print("t_abij = - t_baij:", '%.2E' % Decimal(t_abij + t_baij))
-						
-
-
-		# # Sanity check for t1 function
-		# 	# For initial UHF orbitals, compare t1 amplitudes with PySCF MP2 amplitudes
-		# if self.init_orbs == "UHF" and self.num_opt_virtual_orbs == 2:			
-		# 		# Compare with PySCF MP2 amplitudes for a sample set of indices
-		# 			# Initial count of failed checks
-		# 	failed_checks = 0
-
-		# 			# Total number of spin orbitals combinations to check
-		# 	total_checks = len(self.active_occ_indices_valid)*len(self.active_inocc_indices_valid)
-		# 	current_check = 0
-			
-		# 			# Get all indices I,J,A,B to test
-		# 	for (I, J) in self.active_occ_indices_valid:
-		# 		for (A, B) in self.active_inocc_indices_valid:
-
-		# 			current_check += 1
-					
-		# 			sample_t1 = t1(I, J, A, B)
-
-		# 				# Check that t1 amplitude is finite
-		# 			assert np.isfinite(sample_t1), f"t1 amplitude for I={I}, J={J}, A={A}, B={B} is not finite!"
-			
-		# 				# Energy denominator should not be zero
-		# 			denom = orbital_energies[A] + orbital_energies[B] - orbital_energies[I] - orbital_energies[J]
-		# 			assert denom != 0, f"Energy denominator for I={I}, J={J}, A={A}, B={B} is zero!"
-
-		# 				# Antisymmetry check: t1(I,J,A,B) = - t1(J,I,A,B)
-		# 			t1_ij, t1_ji  = t1(I, J, A, B), t1(J, I, A, B)
-		# 			assert np.isclose(t1_ij, -t1_ji, atol=1e-10), f"t1 antisymmetry failed for I={I}, J={J}, A={A}, B={B}!"
-
-		# 				# MP2.t2 is tuple: (t2_aaaa, t2_aabb, t2_bbbb)
-					
-		# 					# Determine which component based on spin combination
-		# 			spatial_A = A // 2
-		# 			spatial_B = B // 2
-		# 			spatial_I = I // 2
-		# 			spatial_J = J // 2
-
-		# 					# Correct for PySCF virtual orbital ordering
-		# 						# Get n_occ_alpha and n_occ_beta
-		# 			n_occ_alpha = self.mol.nelec[0]
-		# 			n_occ_beta = self.mol.nelec[1]
-
-		# 						# Check spin combination - PySCF only stores 3 types: (αα|αα), (αα|ββ), (ββ|ββ)
-		# 			spin_I = self.orbspin[I]
-		# 			spin_J = self.orbspin[J]
-		# 			spin_A = self.orbspin[A]
-		# 			spin_B = self.orbspin[B]
-			
-		# 						# Get MP2 t2 amplitude from PySCF
-		# 			MP2_t2_amp = None
-		# 			spin_combination = None
-
-		# 			if spin_I == 0 and spin_J == 0 and spin_A == 0 and spin_B == 0:
-		# 					# (αα|αα) - stored in t2[0]
-		# 				spin_combination = "(αα|αα)"
-		# 				spatial_A -= n_occ_alpha
-		# 				spatial_B -= n_occ_alpha
-		# 				MP2_t2_amp = self.MP2.t2[0][spatial_I, spatial_J, spatial_A, spatial_B]
-
-		# 			elif spin_I == 1 and spin_J == 1 and spin_A == 1 and spin_B == 1:
-		# 					# (ββ|ββ) - stored in t2[2]
-		# 				spin_combination = "(ββ|ββ)"
-		# 				spatial_A -= n_occ_beta
-		# 				spatial_B -= n_occ_beta
-		# 				MP2_t2_amp = self.MP2.t2[2][spatial_I, spatial_J, spatial_A, spatial_B]
-
-		# 			elif spin_I == 0 and spin_J == 0 and spin_A == 1 and spin_B == 1:
-		# 					# (αα|ββ) - stored in t2[1]
-		# 				spin_combination = "(αα|ββ)"
-		# 				spatial_A -= n_occ_beta
-		# 				spatial_B -= n_occ_beta
-		# 				MP2_t2_amp = self.MP2.t2[1][spatial_I, spatial_J, spatial_A, spatial_B]
-						
-		# 			elif spin_I == 1 and spin_J == 1 and spin_A == 0 and spin_B == 0:
-		# 					# (ββ|αα) - also stored in t2[1]
-		# 				spin_combination = "(ββ|αα)"
-		# 				spatial_A -= n_occ_alpha
-		# 				spatial_B -= n_occ_alpha
-		# 				MP2_t2_amp = self.MP2.t2[1][spatial_I, spatial_J, spatial_A, spatial_B]
-		# 			else:
-		# 					# Mixed-spin combinations like (αα|βα) are not stored in PySCF MP2.t2
-		# 				spin_str = f"({'α' if spin_I==0 else 'β'}{'α' if spin_J==0 else 'β'}|{'α' if spin_A==0 else 'β'}{'α' if spin_B==0 else 'β'})"
-		# 				spin_combination = f"mixed-{spin_str}"
-					
-		# 				# Print check results
-					
-		# 			if MP2_t2_amp is not None and not np.isclose(sample_t1, MP2_t2_amp, atol=1e-8):
-		# 				failed_checks += 1
-		# 				# print()
-		# 				# print(f"  Spin combination: {spin_combination}")
-		# 				# print(f"  Indices: I={I} ({'α' if spin_I==0 else 'β'}), J={J} ({'α' if spin_J==0 else 'β'}), A={A} ({'α' if spin_A==0 else 'β'}), B={B} ({'α' if spin_B==0 else 'β'})")
-		# 				# print(f"  Checking t2 amplitude for spatial: I={spatial_I}, J={spatial_J}, A={spatial_A}, B={spatial_B}...")
-		# 				# print(f"  Diff = {sample_t1 - MP2_t2_amp}")
-		# 				# assert np.isclose(sample_t1, MP2_t2_amp, atol=1e-8), f"t1 amplitude {sample_t1} does not match PySCF MP2 amplitude {MP2_t2_amp} for I={I}, J={J}, A={A}, B={B}!"
-		# 	# Summary of t1 amplitude checks
-		# 	assert failed_checks == 0, f"{failed_checks} out of {total_checks} t1 amplitude checks failed against PySCF MP2 amplitudes!"
-
-
-
-
-
-
-		# Compute MP2 correlation energy
-			# Equation 10: J_2 = ...
-				# Term 1: \sum_{I>J} \sum_{A>B} \sum_{C>D} t_ABIJ t_CDIJ * ( F_AC \delta_BD + F_BD \delta_BC - F_AD \delta_BC - F_BC \delta_AD - (e_I + e_J) (\delta_AC \delta_BD - \delta_AD \delta_BC) )
-				# Term 2: \sum_{I>J} \sum_{A>B} 2 t_ABIJ ( <AI|BJ> - <AJ|BI> )
-
-		J_2 = 0
-		for (I, J) in self.active_occ_indices_valid:
-			first_term = 0
-			for (A, B) in self.active_inocc_indices_valid:
-				for (C, D) in self.active_inocc_indices_valid:
-
-					t_abij = t1(I=I,J=J,A=A,B=B)
-					t_cdij = t1(I=I,J=J,A=C,B=D)
-
-					if B==D: # delta_BD
-						first_term += t_abij*t_cdij*Fmo_spin[A,C]
-					if A==C: # delta_AC
-						first_term += t_abij*t_cdij*Fmo_spin[B,D]
-					if B==C: # delta_BC
-						first_term += -1.0*t_abij*t_cdij*Fmo_spin[A,D]
-					if A==D: # delta_AD
-						first_term += -1.0*t_abij*t_cdij*Fmo_spin[B,C]
-					if A==C and B==D: # delta_AC delta_BD
-						first_term += -1.0*t_abij*t_cdij*(
-							orbital_energies[I] + orbital_energies[J])
-					if A==D and B==C: # delta_AD delta_BC
-						first_term += t_abij*t_cdij*(
-							orbital_energies[I] + orbital_energies[J])
-
-			second_term = 0
-			for (A, B) in self.active_inocc_indices_valid:
-				second_term += 2*t1(I=I,J=J,A=A,B=B)*(eri_spin[A,I,B,J]- eri_spin[A,J,B,I])
-			
-			J_2 += first_term+second_term
-
-		# MP2 = self.uhf.MP2().run()
-		# assert np.abs(J_2 - MP2.e_corr) < 1e-6, "|J_2 - E_corr_MP2| < 1e-6 !!!"  
-
-		# Check that MP1_amplitudes is not all zeros
-		assert not np.allclose(MP1_amplitudes, 0), "MP1_amplitudes is all zeros!"
-		# Check if MP1_amplitudes has NaN or Inf values
-		assert np.all(np.isfinite(MP1_amplitudes)), "MP1_amplitudes contains NaN or Inf values"
-
-		# Check that eri_spin is not all zeros
-		assert not np.allclose(eri_spin, 0), "eri_spin is all zeros!"
-		# Check if eri_spin has NaN or Inf values
-		assert np.all(np.isfinite(eri_spin)), "eri_spin contains NaN or Inf values!"
-
-		# Check that Fmo_spin is not all zeros
-		assert not np.allclose(Fmo_spin, 0), "Fmo_spin is all zeros!"
-		# Check if Fmo_spin has NaN or Inf values
-		assert np.all(np.isfinite(Fmo_spin)), "Fmo_spin contains NaN or Inf values!"
-
-		return J_2, MP1_amplitudes, eri_spin, Fmo_spin
-=======
-		nelec_ = self.nelec[0] + self.nelec[1]
-		n_occ = int(nelec_ / 2)
-		n_virt = self.n_orbs - n_occ
-		
-		print(f"Number of occupied orbitals: {n_occ}")
-		print(f"Number of virtual orbitals: {n_virt}")
-		print(f"Requested active virtual orbitals: {self.num_vir_ops}")
-		
-		# Check if we have enough virtual orbitals for the requested active space
-		if self.num_vir_ops > n_virt:
-			raise ValueError(
-				f"Insufficient virtual orbitals: requested {self.num_vir_ops} active virtuals "
-				f"but only {n_virt} virtual orbitals available. "
-				f"Use a larger basis set or reduce num_vir_ops."
-			)
-		
-		# Ensure we have at least 1 inactive virtual orbital for rotation
-		if self.num_vir_ops == n_virt:
-			raise ValueError(
-				f"Need at least 1 inactive virtual orbital for OVOS optimization. "
-				f"Current: {n_virt} virtuals, requested {self.num_vir_ops} active. "
-				f"Use a larger basis set or set num_vir_ops < {n_virt}."
-			)
-		
-		# Calculate contribution from each VIRTUAL orbital to MP2 correlation energy
-		# Only consider virtual orbitals (a >= n_occ)
-		virt_contributions = np.zeros(n_virt)
-		
-		for a_idx, a in enumerate(range(n_occ, self.n_orbs)):
-			contribution = 0.0
-			for i in range(n_occ):
-				for b in range(n_occ, self.n_orbs):
-					for j in range(n_occ):
-						if a == b:
-							# Diagonal contribution (full)
-							contribution += E_corr_tensor[a, i, b, j]
-						else:
-							# Off-diagonal contribution (half to avoid double counting)
-							contribution += 0.5 * E_corr_tensor[a, i, b, j]
-			virt_contributions[a_idx] = contribution
-		
-		# Rank virtual orbitals by their contribution (descending order)
-		sorted_virt_indices = np.argsort(virt_contributions)[::-1]
-		
-		# Select top num_vir_ops virtual orbitals as active (a, b, ...)
-		active_virt_indices = sorted_virt_indices[:self.num_vir_ops]
-		# Remaining virtual orbitals are inactive (e, f, ...)
-		inactive_virt_indices = sorted_virt_indices[self.num_vir_ops:]
-		
-		# Convert back to absolute orbital indices
-		active_virt_indices = [n_occ + idx for idx in active_virt_indices]
-		inactive_virt_indices = [n_occ + idx for idx in inactive_virt_indices]
-
-		return active_virt_indices, inactive_virt_indices
+		# iii) Compute MP2 correlation energy (spin-orbital indices)
 	
->>>>>>> c7df87fa832a7bd73fc45f0f5fe982bf666f88f4
-
-
-	def _t1(self, mo_coeffs, active_virt_indices, spin_orbital_basis: bool = True) -> np.ndarray:
-		"""
-		Step (iv): MP1 amplitudes
+		J_2 = 0.0
 		
-		calculate t1 amplitudes for active virtual orbitals only
-
-		Returns
-		-------
-		np.ndarray
-			Shape (n_orbs, n_orbs, n_orbs, n_orbs) array of t1 amplitudes
-			Only amplitudes for active virtual orbitals are non-zero
-		"""
-
-		# Transform Fock matrix to MO basis
-		Fmo  = mo_coeffs.T @ self.F_matrix @ mo_coeffs
-		eigval, eigvec = scipy.linalg.eig(Fmo)
+		# Create lists for easier indexing
+		occ_indices = self.active_occ_indices
+		virt_indices = self.active_inocc_indices
 		
-		# Sort eigenvalues and eigenvectors
-		sorting = np.argsort(eigval)
-		eigval = np.real(eigval[sorting])
-		eigvec = np.real(eigvec[:, sorting])
-
-		# Two-electron integrals in MO basis
-		eri_4fold_mo = pyscf.ao2mo.incore.full(self.eri_4fold_ao, mo_coeffs)
-
-		# i,j -> occupied orbitals
-		# a,b -> active virtual orbitals
-		
-		nelec_ = self.nelec[0] + self.nelec[1]
-		n_occ = int(nelec_ / 2)
-
-		t1_tensor = np.zeros((self.n_orbs,self.n_orbs,self.n_orbs,self.n_orbs))
-
-		# MP2 in spin-orbital basis, Eq. 14.2.53 in Molecular electronic-structure theory book				
-		if spin_orbital_basis:
-			eri_4fold_spin_mo = spatial2spin(eri_4fold_mo, orbspin=None)
+		for idx_i, i in enumerate(occ_indices):
+			eps_i = eps[i]
 			
-			eigval_spin_mo = []
-			for i in eigval:
-				for rep in range(2):
-					eigval_spin_mo.append(float(i))
+			for idx_j, j in enumerate(occ_indices):
+				if j <= i:  # i > j restriction
+					continue
+					
+				eps_j = eps[j]
+				J_ij = 0.0
+				
+				# First term: Σ_{a>b} Σ_{c>d} t_ij^{ab} t_ij^{cd} [...]
+				term1 = 0.0
+				
+				# Use symmetry: sum over all a,b,c,d but use independent sums
+				# This is more efficient than nested loops
+				for idx_a, a in enumerate(virt_indices):					
+					for idx_b, b in enumerate(virt_indices):
+						if b <= a:  # a > b restriction
+							continue
 
-			# Convert active virtual indices to spin-orbital basis
-			active_spin_indices = []
-			for idx in active_virt_indices:
-				active_spin_indices.append(2*idx)      # alpha spin
-				active_spin_indices.append(2*idx + 1)  # beta spin
-
-			# Build t1 amplitudes only for active virtual orbitals
-			for I in range(int(nelec_)):
-				for J in range(int(nelec_)):
-					if I > J:
-						for A in active_spin_indices:
-							for B in active_spin_indices:
-								if A > B:
-
-									# Calculate MP1 amplitudes, t1, for each combination of (A,I,B,J)
-									t1 =  -1.0*( (eri_4fold_spin_mo[A,I,B,J] - eri_4fold_spin_mo[A,J,B,I]) / (eigval_spin_mo[A] + eigval_spin_mo[B] - eigval_spin_mo[I] - eigval_spin_mo[J]) )
-									t1_tensor[A,I,B,J] = t1
+						t_abij = MP1_amplitudes[a, b, i, j]
+						
+						for idx_c, c in enumerate(virt_indices):
+							
+							for idx_d, d in enumerate(virt_indices):
+								if d <= c:  # c > d restriction
+									continue
 									
-		# MP2 in spatial orbital basis, Equation 14.4.56 in Molecular electronic-structure theory book
-		if spin_orbital_basis is False:
-			# Build t1 amplitudes only for active virtual orbitals
-			for i in range(n_occ):
-				for j in range(n_occ):
-					for a in active_virt_indices:
-						for b in active_virt_indices:
+								t_cdij = MP1_amplitudes[c, d, i, j]
+								
+								# Compute the bracket term
+								bracket = 0.0
+								
+								# f_ac δ_bd
+								if b == d:
+									bracket += Fmo_spin[a, c]
+								
+								# f_bd δ_ac
+								if a == c:
+									bracket += Fmo_spin[b, d]
+								
+								# - f_ad δ_bc
+								if b == c:
+									bracket -= Fmo_spin[a, d]
+								
+								# - f_bc δ_ad
+								if a == d:
+									bracket -= Fmo_spin[b, c]
+								
+								# - (ε_i + ε_j)(δ_ac δ_bd - δ_ad δ_bc)
+								if a == c and b == d:
+									bracket -= (eps_i + eps_j)
+								if a == d and b == c:
+									bracket += (eps_i + eps_j)
+								
+								term1 += t_abij * t_cdij * bracket
+				
+				# Second term: 2 Σ_{a>b} t_ij^{ab} <ab|ij>
+				term2 = 0.0
+				
+				for idx_a, a in enumerate(virt_indices):
+					
+					for idx_b, b in enumerate(virt_indices):
+						if b <= a:  # a > b restriction
+							continue
+							
+						t_abij = MP1_amplitudes[a, b, i, j]
+						integral = eri_as[a, b, i, j]  
+						
+						term2 += 2.0 * t_abij * integral
+				
+				J_ij = term1 + term2
+				J_2 += J_ij
+		
+		print(f"[{len(self.active_inocc_indices)}/{len(self.active_inocc_indices + self.inactive_indices)}]: Computed MP2 correlation energy (spin-orbital): ", J_2)
+		
+		# Sanity checks
+			# Check that MP2 correlation energy is finite
+		assert np.isfinite(J_2), "MP2 correlation energy is not finite!"
+			# Check that MP2 correlation energy is not positive
+		if J_2 > 0:
+			print("WARNING: MP2 correlation energy is positive, which is unexpected!")
 
-							# Calculate MP1 amplitudes, t1, for each combination of (a,i,b,j)
-							t1 =  -1.0*(eri_4fold_mo[a,i,b,j] / (eigval[a] + eigval[b] - eigval[i] - eigval[j]) )
-							t1_tensor[a,i,b,j] = t1
 
+		return J_2, MP1_amplitudes, eri_spin, eri_phys, eri_as, Fmo_spin	
 
-		return t1_tensor 
-	
+	def orbital_optimization(self, mo_coeffs, MP1_amplitudes, eri_spin, eri_phys, eri_as, Fmo_spin) -> np.ndarray:
 
-	
-	def _MP2_energy(self, mo_coeffs, E_rhf, spin_orbital_basis: bool = True) -> Tuple[float, np.ndarray]: 
-     
-		"""
-		MP2 energy
-
-		Returns
-		-------
-		float
-			MP2 total energy, E_MP2 = E_RHF + E_corr
 		"""
 		Step (v-viii) of the OVOS algorithm: Orbital optimization via orbital rotations.
 		
@@ -593,7 +563,6 @@ class OVOS:
 		- Compute Hessiansecond-order derivatives of the second-order Hylleraas functional
 		Equation 11b in [L. Adamowicz & R. J. Bartlett (1987)]
 
-<<<<<<< HEAD
 		- Use the Newton-Raphson method to minimize the second-order Hylleraas functional, Equations 14 in [L. Adamowicz & R. J. Bartlett (1987)]
 
 		- Construct the unitary orbital rotation matrix U = exp(R), Equation 15 in [L. Adamowicz & R. J. Bartlett (1987)]
@@ -601,454 +570,179 @@ class OVOS:
 		First- and second-order derivatives of the second-order Hylleraas functional
 		Equations 11a and 11b in https://pubs.aip.org/aip/jcp/article/86/11/6314/93345/Optimized-virtual-orbital-space-for-high-level
 		"""
+		
+		# Precompute D_ab as 2D array
+		n_active_virt = len(self.active_inocc_indices)
+		D_ab = np.zeros((n_active_virt, n_active_virt), dtype=np.float64)
 
-		# # Helper function to access MP1 amplitudes with proper antisymmetry handling
-		# def get_t1_amplitude(A: int, I: int, B: int, J: int) -> float:
-		# 	if A > B:
-		# 		return MP1_amplitudes[A,I,B,J]
-		# 	elif A < B:
-		# 		return -MP1_amplitudes[B,I,A,J]
-		# 	else:  # A == B (Pauli exclusion)
-		# 		return 0.0
-
-		# 	# Verify that get_t1_amplitude respects antisymmetry
-		# for (I, J) in self.active_occ_indices_valid:
-		# 	for (A, B) in self.active_inocc_indices_valid:
-		# 		t_abij = get_t1_amplitude(A, I, B, J)
-		# 		t_baij = get_t1_amplitude(B, I, A, J)
-		# 		assert np.isclose(t_abij, -t_baij, atol=1e-10), f"get_t1_amplitude antisymmetry failed for I={I}, J={J}, A={A}, B={B}!"
-
-
-
-
-
-		# Step (v): Compute the gradient and Hessian of the second-order Hylleraas functional
-
-		# Precompute D_AB matrix
-			# Equation 13: D_AB = 2 \sum_{I>J} \sum_C t_ABIJ t_CBJI
-				# Eqs. 12a and 12b use D_AB
-
-			# For whole unoccupied space (inefficient)
-		n_active = len(self.active_inocc_indices)
-		D_AB_cache = np.zeros((n_active * n_active))
 		for idx_A, A in enumerate(self.active_inocc_indices):
 			for idx_B, B in enumerate(self.active_inocc_indices):
-				D_AB = 0
+				s = 0.0
 				for I in self.active_occ_indices:
 					for J in self.active_occ_indices:
-						if I > J:
-							for C in self.active_inocc_indices:
-								D_AB += 2.0*MP1_amplitudes[A,I,C,J]*MP1_amplitudes[B,I,C,J]
-
-				flat_index_D = idx_A * n_active + idx_B
-				D_AB_cache[flat_index_D] = D_AB
-			# Check that D_AB_cache is symmetric
-		D_AB_2D = D_AB_cache.reshape(n_active, n_active)
-		assert np.allclose(D_AB_2D, D_AB_2D.T), "D_AB_cache is not symmetric!"
-=======
-		# Transform Fock matrix to MO basis
-		Fmo  = mo_coeffs.T @ self.F_matrix @ mo_coeffs
-		eigval, eigvec = scipy.linalg.eig(Fmo)
-		
-		# Sort eigenvalues and eigenvectors
-		sorting = np.argsort(eigval)
-		eigval = np.real(eigval[sorting])
-		eigvec = np.real(eigvec[:, sorting])
-
-		# Two-electron integrals in MO basis
-		eri_4fold_mo = pyscf.ao2mo.incore.full(self.eri_4fold_ao, mo_coeffs)
-
-		# i,j -> occupied orbitals
-		# a,b -> virtual orbitals
-		
-		nelec_ = self.nelec[0] + self.nelec[1]
-		
-		E_corr_sum = 0.0
-		E_corr_tensor = np.zeros((self.n_orbs,self.n_orbs,self.n_orbs,self.n_orbs))
-
-		# MP2 in spin-orbital basis, Eq. 14.2.53 in Molecular electronic-structure theory book				
-		if spin_orbital_basis:
-			eri_4fold_spin_mo = spatial2spin(eri_4fold_mo, orbspin=None)
-			
-			eigval_spin_mo = []
-			for i in eigval:
-				for rep in range(2):
-					eigval_spin_mo.append(float(i))
->>>>>>> c7df87fa832a7bd73fc45f0f5fe982bf666f88f4
-
-			# Build correlation energy
-			for I in range(int(nelec_)):
-				for J in range(int(nelec_)):
-					if I > J:
-						for A in range(int(nelec_),2*self.n_orbs):
-							for B in range(int(nelec_),2*self.n_orbs):
-								if A > B:
-									
-									# Calculate correlation energy contribution for each combination of (a,i,b,j)
-									E_corr = -1.0*((eri_4fold_spin_mo[A,I,B,J] - eri_4fold_spin_mo[A,J,B,I])**2 
-										/ (eigval_spin_mo[A] + eigval_spin_mo[B] - eigval_spin_mo[I] - eigval_spin_mo[J]) )		
-									E_corr_sum += E_corr
-
-<<<<<<< HEAD
-
-
-
-
-
-
-		# Define gradient functions
-		def gradient(E: int, A: int, idx_A: int) -> float:
-			#Equation 12a: G_EA = ...
-				# Term 1: 2 \sum_{I>J} \sum_B t_ABIJ ( <EI|BJ> - <EJ|BI> )
-				# Term 2: + 2 \sum_B D_AB F_EB
-=======
-									# Store individual contributions in tensor
-									E_corr_tensor[A,I,B,J] = E_corr
->>>>>>> c7df87fa832a7bd73fc45f0f5fe982bf666f88f4
-
-		# MP2 in spatial orbital basis, Equation 14.4.56 in Molecular electronic-structure theory book
-		if spin_orbital_basis is False:
-			# Build correlation energy
-			for i in range(int(nelec_/2)):
-				for j in range(int(nelec_/2)):
-					for a in range(int(nelec_/2),self.n_orbs):
-						for b in range(int(nelec_/2),self.n_orbs):
-							
-							# Calculate correlation energy contribution for each combination of (a,i,b,j)
-							E_corr = -1.0*(eri_4fold_mo[a,i,b,j]*(2*eri_4fold_mo[i,a,j,b] - eri_4fold_mo[i,b,j,a]) / 
-								(eigval[a] + eigval[b] - eigval[i] - eigval[j]) )
-							E_corr_sum += E_corr
-
-							# Store individual contributions in tensor
-							E_corr_tensor[a,i,b,j] = E_corr
-													
-		E_MP2 = E_rhf + E_corr
-		
-		if False:
-			# Verify with PySCF MP2		
-			MP2 = self.rhf.MP2().run()
-			assert np.abs(E_corr - MP2.e_corr) < 1e-6, "np.abs(E_corr - self.rhf.MP2().run().e_corr) < 1e-6"  
-			assert np.abs(E_MP2 - MP2.e_tot) < 1e-6, "np.abs(E_corr - self.rhf.MP2().run().e_corr) < 1e-6"  
-
-		return E_MP2, E_corr_tensor
-	
-
-			second_term = 0
-			for idx_B, B in enumerate(self.active_inocc_indices):
-				flat_index_D = idx_A * n_active + idx_B
-				D_AB = D_AB_cache[flat_index_D]
-				second_term += 2.0*D_AB*Fmo_spin[E,B]
-
-	def _compute_gradient_hessian(self, mo_coeffs, active_virt_indices, inactive_virt_indices, t1_tensor) -> Tuple[np.ndarray, np.ndarray]:
-		"""
-		Step (v): Compute gradient and Hessian
-
-<<<<<<< HEAD
-		# Define Hessian function
-		def hessian(E: int, A: int, F: int, B: int, idx_A: int, idx_B: int) -> float:
-			#Equation 12b: H_EA,FB = ...
-				# Term 1: 2 \sum_{I>J} t_ABIJ ( <EI|FJ> - <EJ|FI> )
-				# Term 2: - 1.0 * \sum_{I>J} \sum_C [ t_ACIJ ( <BI|CJ> - <BJ|CI> ) + t_CBIJ ( <CI|AJ> - <CJ|AI> ) ] \delta_EF
-				# Term 3: + D_AB ( F_AA - F_BB ) \delta_EF 
-				# Term 4: + D_AB F_EF
-				# Term 5: - 1.0 * D_AB F_EF \delta_EF
-
-			# Get D_AB from cache
-			flat_index_D = idx_A * len(self.active_inocc_indices) + idx_B
-			D_AB = D_AB_cache[flat_index_D]
-
-			# Calculate each term separately
-				# Term 1, symmetric
-			first_term = 0
-			for I in self.active_occ_indices:
-				for J in self.active_occ_indices:
-					if I > J:
-						first_term += 2.0*MP1_amplitudes[A,I,B,J]*(eri_spin[E,I,F,J] - eri_spin[E,J,F,I])
-
-				# Term 2, symmetric
-			second_term = 0			
-			for I in self.active_occ_indices:
-				for J in self.active_occ_indices:
-					if I > J:
+						if I <= J:
+							continue
 						for C in self.active_inocc_indices:
-							if E==F:
-								second_term +=-1.0*(
-									MP1_amplitudes[A,I,C,J]*(eri_spin[B,I,C,J] - eri_spin[B,J,C,I]) 
-									+ MP1_amplitudes[C,I,B,J]*(eri_spin[C,I,A,J] - eri_spin[C,J,A,I])
-								)
-				
-				# Term 3 and 5, symmetric
-			third_term = 0
-			fifth_term = 0
-			if E==F:
-				third_term += D_AB*(Fmo_spin[A,A] - Fmo_spin[B,B])
-				fifth_term += -1.0*D_AB*Fmo_spin[E,F] 
+							# Use antisymmetric amplitudes
+							t_ACIJ = MP1_amplitudes[A, C, I, J]
+							t_BCIJ = MP1_amplitudes[B, C, I, J]
+							s += t_ACIJ * t_BCIJ
 
-				# Term 4, symmetric
-			forth_term = 0
-			forth_term = D_AB*Fmo_spin[E,F]
-
-			return first_term + second_term + third_term + forth_term + fifth_term
-
-			# Check how many times \delta_EF is used
-		delta_EF_count = 0
-		for idx_E, E in enumerate(self.inactive_indices):
-			for idx_F, F in enumerate(self.inactive_indices):
-				if E==F:
-					delta_EF_count += 1
-		expected_delta = len(self.inactive_indices)  # Should equal number of E indices
-		assert expected_delta == expected_delta, f"δ_EF triggered {expected_delta} times, expected {expected_delta}"	
+				D_ab[idx_A, idx_B] = s
 
 
-		# # Test hessian function symmetry directly
-		# print("\n=== Testing Hessian function symmetry ===")
-		# test_cases = [
-		# 	(self.inactive_indices[0], self.active_inocc_indices[0], 
-		# 	self.inactive_indices[1], self.active_inocc_indices[1]),
-		# ]
 
-		# for E, A, F, B in test_cases:
-		# 	idx_A = self.active_inocc_indices.index(A)
-		# 	idx_B = self.active_inocc_indices.index(B)
-		# 	idx_E = self.inactive_indices.index(E)
-		# 	idx_F = self.inactive_indices.index(F)
+		# Check symmetry
+		sym_diff = np.max(np.abs(D_ab - D_ab.T))
+		if sym_diff > 1e-10:
+			print("WARNING: D_ab is not symmetric!")
+			# Print the non-symmetric parts
+			diff_matrix = np.abs(D_ab - D_ab.T)
+			idx = np.unravel_index(np.argmax(diff_matrix), diff_matrix.shape)
+			print(f"Max diff at ({idx[0]},{idx[1]}): D={D_ab[idx]:.6e}, D.T={D_ab.T[idx]:.6e}")
+
+		# Sanity checks for D_ab
+		assert np.count_nonzero(D_ab) > 0, "Density matrix D is all zeros!"
+		assert np.all(np.isfinite(D_ab)), "Density matrix D contains non-finite values!"
+		assert np.allclose(D_ab, D_ab.T, atol=1e-10), f"Density matrix D is not symmetric! Max diff: {np.max(np.abs(D_ab - D_ab.T))}"
+
+
+
+		# i) Compute gradient G and Hessian H
 			
-		# 	H_EAFB = hessian(E, A, F, B, idx_A, idx_B)
-		# 	H_FBEA = hessian(F, B, E, A, idx_B, idx_A)
-			
-		# 	print(f"H[E={E},A={A},F={F},B={B}] = {H_EAFB:.8f}")
-		# 	print(f"H[F={F},B={B},E={E},A={A}] = {H_FBEA:.8f}")
-		# 	print(f"Difference: {abs(H_EAFB - H_FBEA):.2e}")
-			
-		# 	if not np.isclose(H_EAFB, H_FBEA, atol=1e-8):
-		# 		print("❌ ASYMMETRIC - problem is in hessian function!")
-				
-		# 		# Test each term separately
-		# 		print("\nDebugging individual terms:")
-		# 		# You can manually compute each term for both orderings here
-		# 	else:
-		# 		print("✓ Symmetric - problem is in matrix building")
-
-
-		# Build gradient and Hessian matrices
-			# Build gradient matrix G[A, E] and Hessian tensor H[A, E, B, F]
-		n_active = len(self.active_inocc_indices)
-		n_inactive = len(self.inactive_indices)
-		
-		G = np.zeros((n_active * n_inactive))
-		H = np.zeros((n_active * n_inactive, n_active * n_inactive))
+			# Compute gradient G
+		G = np.zeros((len(self.active_inocc_indices), len(self.inactive_indices)), dtype=np.float64)
 
 		for idx_A, A in enumerate(self.active_inocc_indices):
 			for idx_E, E in enumerate(self.inactive_indices):
-			
-				# Gradient G[E,A]
-				flat_index_G = idx_A * n_inactive + idx_E
-				G[flat_index_G] = gradient(E, A, idx_A)
-
+				term1 = 0.0
+				
+				# Term1: 2 * Σ_{i>j} Σ_{b} t_ij^{ab} <eb|ij>
+				for I in self.active_occ_indices:
+					for J in self.active_occ_indices:
+						if I <= J:
+							continue
+						
+						for idx_B, B in enumerate(self.active_inocc_indices):
+							t_ABIJ = MP1_amplitudes[A, B, I, J]
+						
+							# Choose correct integral notation
+								# Same-spin: use antisymmetrized integral <eb||ij>
+								# Different-spin: use Coulomb integral <eb|ij> in physicist's notation
+							integral = eri_as[E, B, I, J]
+							
+							term1 += 2.0 * t_ABIJ * integral
+				
+				# Term2: 2 * Σ_{b} D_ab f_{eb}
+				term2 = 0.0
 				for idx_B, B in enumerate(self.active_inocc_indices):
+					term2 += 2.0 * D_ab[idx_A, idx_B] * Fmo_spin[B, E]
+				
+				# Combine terms into gradient
+				G[idx_A, idx_E] = term1 + term2
+
+
+		# Check if gradient is reasonable
+		if np.linalg.norm(G.flatten()) < 1e-8:
+			print("WARNING: Gradient is essentially zero!")
+			# Check if gradient is empty
+		if np.count_nonzero(G) == 0:
+			print("No inactive orbitals -> gradient is empty (expected)")
+			print("Orbitals cannot be optimized further (full virtual space)")
+			# Check if gradient has finite values
+		assert np.all(np.isfinite(G)), "Gradient G contains non-finite values!"
+
+
+
+			# Compute Hessian H
+		n_active_virt = len(self.active_inocc_indices)
+		n_inactive_virt = len(self.inactive_indices)
+				# Initialize Hessian
+		H = np.zeros((n_active_virt * n_inactive_virt, 
+					n_active_virt * n_inactive_virt), dtype=np.float64)
+
+				# Build Hessian entries
+		for idx_A, A in enumerate(self.active_inocc_indices):			
+			for idx_E, E in enumerate(self.inactive_indices):
+				row = idx_A * n_inactive_virt + idx_E
+				
+				for idx_B, B in enumerate(self.active_inocc_indices):					
 					for idx_F, F in enumerate(self.inactive_indices):
-					
-						# Hessian H[E,A,F,B]
-						flat_index_H = (idx_A * n_inactive + idx_E, idx_B * n_inactive + idx_F)
-						H[flat_index_H] = hessian(E, A, F, B, idx_A, idx_B)
-	
+						col = idx_B * n_inactive_virt + idx_F
+						
+						# ===== TERM 1: 2 * Σ_{i>j} t_ij^{ab} <ef|ij> =====
+						term1 = 0.0
 
-		# Ensure float64 for numerical stability
-		# H = H.astype(np.float128)
-		# G = G.astype(np.float128)
+						for I in self.active_occ_indices:							
+							for J in self.active_occ_indices:
+								if I <= J:
+									continue
+								
+								t_ABIJ = MP1_amplitudes[A, B, I, J]
+								
+								# Choose correct integral notation
+									# Same-spin: use antisymmetrized integral <eb||ij>
+									# Different-spin: simplifies to Coulomb integral <eb|ij> in physicist's notation
+								integral = eri_as[E, F, I, J]
+								
+								term1 += 2.0 * t_ABIJ * integral
+						
+						# ===== TERM 2: - Σ_{i>j} Σ_c [t_ij^{ac} <bc|ij> + t_ij^{bc} <ac|ij>] * δ_EF =====
+						term2 = 0.0
+						if E == F:  # δ_EF
+							for I in self.active_occ_indices:								
+								for J in self.active_occ_indices:
+									if I <= J:
+										continue
+									
+									temp2_sum = 0.0
+									for C in self.active_inocc_indices:
+										
+										t_ACIJ = MP1_amplitudes[A, C, I, J]
+										integral_BC = eri_as[B, C, I, J]
+									
+										t_BCIJ = MP1_amplitudes[B, C, I, J]
+										integral_AC = eri_as[A, C, I, J]
+										temp2_sum += t_ACIJ * integral_BC + t_BCIJ * integral_AC
 
-		# Reshape G and H for Newton-Raphson
-		# G = G.reshape(n_active * n_inactive)
-		# H = H.reshape(n_active * n_inactive, n_active * n_inactive)
+									term2 -= temp2_sum
+						
+						# ===== TERMS 3 & 4 =====
+						term3 = 0.0
+						term4 = 0.0
 
-		# Debugging symmetry of H
-		print(f"Hessian H: \n {H}")
+							# Precomputed D_ab
+						Dab = D_ab[idx_A, idx_B]
+						
+						if E == F:  # Term 3: Dab * (f_aa - f_bb) δ_EF
+							f_aa = Fmo_spin[A, A]
+							f_bb = Fmo_spin[B, B]
+							term3 = Dab * (f_aa - f_bb)
 
-		# After building H matrix, before symmetry check:
-		# print("\n=== Checking matrix building ===")
-		
-			# # Test all combinations of (E,A) and (F,B) of H matrix against hessian function
-		# for idx_i_test in range(n_active * n_inactive):
-		# 	for idx_j_test in range(n_active * n_inactive):
-		# 		i_test = idx_i_test
-		# 		j_test = idx_j_test
+						if E != F:  # Term 4: Dab * f_ef (1- δ_EF)
+							term4 = Dab * Fmo_spin[E, F] 
+						
+						H[row, col] = term1 + term2 + term3 + term4
 
-		# 		E_i = self.inactive_indices[i_test % n_inactive]
-		# 		A_i = self.active_inocc_indices[i_test // n_inactive]
-		# 		F_j = self.inactive_indices[j_test % n_inactive]
-		# 		B_j = self.active_inocc_indices[j_test // n_inactive]
 
-		# 		H_ij_matrix = H[i_test, j_test]
-		# 		H_ij_function = hessian(
-		# 			E=E_i,
-		# 			A=A_i,
-		# 			F=F_j,
-		# 			B=B_j,
-		# 			idx_A=i_test // n_inactive,
-		# 			idx_B=j_test // n_inactive,
-		# 		)
+		# Symmetry check
+		if H.size > 0:
+			diff_H = np.max(np.abs(H - H.T))	
+			if diff_H > 2.5e-3:
+				print(f"WARNING: Hessian is not symmetric! Max diff: {np.max(np.abs(H - H.T)):.6e}")
+				
 
-		# 		if not np.isclose(H_ij_matrix, H_ij_function, atol=1e-8):
-		# 			print(f"❌ Mismatch at H[{i_test},{j_test}] for (E={E_i},A={A_i},F={F_j},B={B_j}):")
-		# 			print(f"   From matrix: {H_ij_matrix:.8f}")
-		# 			print(f"   From function: {H_ij_function:.8f}")
-		# 			print(f"   Difference: {abs(H_ij_matrix - H_ij_function):.2e}")
 
-		# 	# Check symmetry of H matrix 
-		# 		# For all combinations of (E,A) and (F,B), check H[E,A,F,B] == H[F,B,E,A]
-		# symmetry_failures = 0
-		# for idx_i in range(n_active * n_inactive):
-		# 	for idx_j in range(n_active * n_inactive):
-		# 		H_ij = H[idx_i, idx_j]
-		# 		H_ji = H[idx_j, idx_i]
-
-		# 		if not np.isclose(H_ij, H_ji, atol=1e-8):
-		# 			symmetry_failures += 1
-
-		# print(f"\nTotal symmetry failures: {symmetry_failures}")
-		
-		# # Diagnose worst case: i=0, j=27
-		# print("\n=== Diagnosing worst asymmetry case ===")
-		# print("Case: i=0, j=27 → (E=6,A=4,F=17,B=5)")
-		
-		# idx_A_0 = 0  # A=4 is first active virtual
-		# idx_B_0 = 1  # B=5 is second active virtual
-		
-		# H_0_27_direct = hessian(6, 4, 17, 5, idx_A_0, idx_B_0)
-		# H_27_0_direct = hessian(17, 5, 6, 4, idx_B_0, idx_A_0)
-		
-		# print(f"hessian(E=6, A=4, F=17, B=5) = {H_0_27_direct:.8e}")
-		# print(f"hessian(E=17, A=5, F=6, B=4) = {H_27_0_direct:.8e}")
-		# print(f"Function asymmetry: {abs(H_0_27_direct - H_27_0_direct):.2e}")
-		# print(f"Is hessian function symmetric? {np.isclose(H_0_27_direct, H_27_0_direct, atol=1e-8)}")
-		
-		# # Check if E≠F condition matters
-		# print(f"\nE=6, F=17 → E≠F (δ_EF = 0)")
-		# print("Terms with δ_EF should be zero")
-
-				# Diagnose worst case: i=0, j=27
-		print("\n=== Diagnosing worst asymmetry case ===")
-		print("Case: i=0, j=27 → (E=6,A=4,F=17,B=5)")
-
-		idx_A_0 = 0  # A=4 is first active virtual
-		idx_B_0 = 1  # B=5 is second active virtual
-
-		# Compute each term separately for both orderings
-		def hessian_terms(E, A, F, B, idx_A, idx_B):
-			"""Return all 5 terms of hessian separately"""
-			flat_index_D = idx_A * n_active + idx_B
-			D_AB = D_AB_cache[flat_index_D]
-			
-			# Term 1
-			term1 = 0
-			for (I, J) in self.active_occ_indices_valid:
-				term1 += 2.0*MP1_amplitudes[A,I,B,J]*(eri_spin[E,I,F,J] - eri_spin[E,J,F,I])
-			
-			# Term 2
-			term2 = 0
-			if E == F:
-				for (I, J) in self.active_occ_indices_valid:
-					for C in self.active_inocc_indices:
-						term2 += -1.0*(MP1_amplitudes[A,I,C,J]*(eri_spin[B,I,C,J] - eri_spin[B,J,C,I]) + MP1_amplitudes[C,I,B,J]*(eri_spin[C,I,A,J] - eri_spin[C,J,A,I]))
-			
-			# Terms 3, 4, 5
-			term3 = D_AB*(Fmo_spin[A,A] - Fmo_spin[B,B]) if E == F else 0
-			term4 = D_AB*Fmo_spin[E,F]
-			term5 = -D_AB*Fmo_spin[E,F] if E == F else 0
-			
-			return term1, term2, term3, term4, term5
-
-		t1_a, t2_a, t3_a, t4_a, t5_a = hessian_terms(6, 4, 17, 5, idx_A_0, idx_B_0)
-		t1_b, t2_b, t3_b, t4_b, t5_b = hessian_terms(17, 5, 6, 4, idx_B_0, idx_A_0)
-
-		print(f"\nhessian(E=6, A=4, F=17, B=5):")
-		print(f"  Term 1: {t1_a:.8e}")
-		print(f"  Term 2: {t2_a:.8e}")
-		print(f"  Term 3: {t3_a:.8e}")
-		print(f"  Term 4: {t4_a:.8e}")
-		print(f"  Term 5: {t5_a:.8e}")
-		print(f"  Total:  {sum([t1_a, t2_a, t3_a, t4_a, t5_a]):.8e}")
-
-		print(f"\nhessian(E=17, A=5, F=6, B=4):")
-		print(f"  Term 1: {t1_b:.8e}")
-		print(f"  Term 2: {t2_b:.8e}")
-		print(f"  Term 3: {t3_b:.8e}")
-		print(f"  Term 4: {t4_b:.8e}")
-		print(f"  Term 5: {t5_b:.8e}")
-		print(f"  Total:  {sum([t1_b, t2_b, t3_b, t4_b, t5_b]):.8e}")
-
-		print(f"\nTerm differences:")
-		print(f"  Term 1 diff: {abs(t1_a - t1_b):.8e}")
-		print(f"  Term 2 diff: {abs(t2_a - t2_b):.8e}")
-		print(f"  Term 3 diff: {abs(t3_a - t3_b):.8e}")
-		print(f"  Term 4 diff: {abs(t4_a - t4_b):.8e}")
-		print(f"  Term 5 diff: {abs(t5_a - t5_b):.8e}")
+		# Print diagnostics
+		print("  Orbital Optimization Diagnostics:")
+			# Norm of the gradient
+		print(f"    Gradient norm: {np.linalg.norm(G):.6e}")
+			# Check eigenvalues
+		eigvals = np.linalg.eigvalsh(H)  # eigh for symmetric
+		print(f"    Hessian norm: {np.linalg.norm(H):.6e}, (Neg. Eigval: {np.sum(eigvals < 0)}/{len(eigvals)})")
 
 
 
-		# We loop over all combinations of (E,A) and (F,B) to fill G and H
-			# Error: H is not symmetric! - We are seeing zero for all upper off-diagonal elements
-				# H matrix is of shape (n_active*n_inactive, n_active*n_inactive)
-					# Upper off-diagonal elements are H[i,j] where i < j
-				# Check if H[i,j] == H[j,i] for all i,j
-					# If not, find which elements are not equal
-		# failed_symmetry_checks = 0
-		
-		# for i in range(len(self.active_inocc_indices)*len(self.inactive_indices)):
-		# 	for j in range(len(self.active_inocc_indices)*len(self.inactive_indices)):
-		# 		if i < j:
-		# 			if not np.isclose(hessian(
-		# 				E=self.inactive_indices[i % len(self.inactive_indices)],
-		# 				A=self.active_inocc_indices[i // len(self.inactive_indices)],
-		# 				F=self.inactive_indices[j % len(self.inactive_indices)],
-		# 				B=self.active_inocc_indices[j // len(self.inactive_indices)],
-		# 				idx_A=i // len(self.inactive_indices),
-		# 				idx_B=j // len(self.inactive_indices),
-		# 			),
-		# 			hessian(
-		# 				E=self.inactive_indices[j % len(self.inactive_indices)],
-		# 				A=self.active_inocc_indices[j // len(self.inactive_indices)],
-		# 				F=self.inactive_indices[i % len(self.inactive_indices)],
-		# 				B=self.active_inocc_indices[i // len(self.inactive_indices)],
-		# 				idx_A=j // len(self.inactive_indices),
-		# 				idx_B=i // len(self.inactive_indices),
-		# 			)):
-		# 				# print(f"Hessian asymmetry found at indices i={i}, j={j}")
-		# 				# print(f"  H[{i},{j}] != H[{j},{i}]"+f"  H[{i},{j}] = {hessian(E=self.inactive_indices[i % len(self.inactive_indices)], A=self.active_inocc_indices[i // len(self.inactive_indices)], F=self.inactive_indices[j % len(self.inactive_indices)], B=self.active_inocc_indices[j // len(self.inactive_indices)], idx_A=i // len(self.inactive_indices), idx_B=j // len(self.inactive_indices))}"+f"  H[{j},{i}] = {hessian(E=self.inactive_indices[j % len(self.inactive_indices)], A=self.active_inocc_indices[j // len(self.inactive_indices)], F=self.inactive_indices[i % len(self.inactive_indices)], B=self.active_inocc_indices[i // len(self.inactive_indices)], idx_A=j // len(self.inactive_indices), idx_B=i // len(self.inactive_indices))}")
-		# 				failed_symmetry_checks += 1
-		# 	# Final assertion
-		# assert failed_symmetry_checks == 0, f"{failed_symmetry_checks} Hessian asymmetry checks failed! \n Symmetry: {np.allclose(H, H.T, atol=1e8)};"	
-
-
-		# For G all zeros check, this means we have converged
-		if np.allclose(G, 0):
-			print("Gradient G is all zeros. Orbital optimization has converged.")
-			return mo_coeffs  # Return original MO coefficients if converged
-
-		# Numerical checks
-			# Check that G is not all zeros
-		assert not np.allclose(G, 0), "Gradient G is all zeros!"
-			# Check normal of G
-		norm_G = np.linalg.norm(G)
-		assert norm_G > 1e-8, f"Norm of gradient G is too small: {norm_G}"
-			# Check that H is symmetric
-		assert np.allclose(H, H.T, atol= 1e-8), f"Hessian H is not symmetric! [max(H-H.T) = {np.max(H-H.T):.2e}]"
-			# Check that H is not all zeros
-		assert not np.allclose(H, 0), "Hessian H is all zeros!"
-			# Check if H is invertible by checking its condition number
-		cond_H = np.linalg.cond(H)
-		#assert cond_H < 1e12, f"Hessian H is ill-conditioned (cond = {cond_H}). Cannot invert."
-			# Check if H has NaN or Inf values
-		assert np.all(np.isfinite(H)), "Hessian H contains NaN or Inf values"
-			# Check if G has NaN or Inf values
-		assert np.all(np.isfinite(G)), "Gradient G contains NaN or Inf values"
-
-		# Shapes of G and H for checking
-		# np.set_printoptions(precision=4, suppress=True, linewidth=200)
-		# print("G shape: ", G.shape)
-		# print("G matrix: \n", G)
-		# print("H shape: ", H.shape)
-		# print("H tensor: \n", H)
 
 
 		# Step (vi): Use the Newton-Raphson method to minimize the second-order Hylleraas functional
@@ -1056,327 +750,334 @@ class OVOS:
 		# solve for rotation parameters
 			# Original direct inversion method
 				# equation 14: R = - G H^-1 -> R = -G @ np.linalg.inv(H)
+			# Alternatively, use Reduced Linear Equation (RLE) method
+
+		def solve_block_diagonal_RLE(H, G, n_active, n_inactive):
+			"""
+			Block diagonal RLE method as suggested in Adamowicz & Bartlett.
+			Only invert diagonal blocks H_{ee}.
+			
+			Each block corresponds to excitations from occupied orbitals 
+			to one inactive virtual orbital (including spin cases).
+			"""
+			# Try to identify block structure automatically
+				# Find size of blocks in Hessian
+			block_size = n_active  # Each block corresponds to one inactive orbital
+			n_blocks = n_inactive  # Number of inactive orbitals
+			total_size = n_active * n_inactive
+
+			# Reshape H and G for block processing
+			if H.shape != (total_size, total_size):
+				# Reshape H
+				H = H.reshape((total_size, total_size))
+			if G.shape != (total_size, ):
+				# Flatten G
+				G = G.flatten()
+
+			# Initialize R vector
+			R = np.zeros(total_size, dtype=np.float64)
+
+			# Create block coupling matrix
+			coupling_matrix = np.zeros((n_blocks, n_blocks), dtype=bool)
+			
+			for i in range(n_blocks):
+				for j in range(n_blocks):
+					if i == j:
+						continue
+					# Extract block H[i,j]
+					i_start = i * block_size
+					i_end = (i + 1) * block_size
+					j_start = j * block_size
+					j_end = (j + 1) * block_size
+					
+					H_block_ij = H[i_start:i_end, j_start:j_end]
+					block_norm = np.linalg.norm(H_block_ij)
+					
+					if block_norm > 1e-10:  # Significant coupling
+						coupling_matrix[i, j] = True
+
+			# Find connected components (groups of coupled blocks)
+			visited = [False] * n_blocks
+			block_groups = []
+			
+			for i in range(n_blocks):
+				if not visited[i]:
+					# Start new group
+					group = []
+					stack = [i]
+					
+					while stack:
+						current = stack.pop()
+						if not visited[current]:
+							visited[current] = True
+							group.append(current)
+							
+							# Add coupled blocks
+							for j in range(n_blocks):
+								if coupling_matrix[current, j] or coupling_matrix[j, current]:
+									if not visited[j]:
+										stack.append(j)
+					
+					block_groups.append(group)
+
+			# Solve each group of coupled blocks
+			for group_idx, block_indices in enumerate(block_groups):
+				if len(block_indices) == 1:
+					# Single block - solve independently
+					block_idx = block_indices[0]
+					start = block_idx * block_size
+					end = (block_idx + 1) * block_size
+					
+					H_block = H[start:end, start:end]
+					G_block = G[start:end]
+					
+					# Solve this block
+						#R_block = np.linalg.solve(H_block, -G_block)
+					R_block = - G_block @ np.linalg.inv(H_block)
+						
+					R[start:end] = R_block
+					
+				else:
+					# Multiple coupled blocks - solve together
+					# Collect all indices for this group
+					indices = []
+					for block_idx in block_indices:
+						start = block_idx * block_size
+						end = (block_idx + 1) * block_size
+						indices.extend(range(start, end))
+					
+					# Extract submatrix for this group
+					H_group = H[np.ix_(indices, indices)]
+					G_group = G[indices]
+					
+					# Solve coupled system
+						# R_group = np.linalg.solve(H_group, -G_group)
+					R_group = - G_group @ np.linalg.inv(H_group)
+					
+					# Distribute solution
+					R[indices] = R_group
+
+
+			return R
+
 
 
 		# Set to True to use Reduced Linear Equation method
-		use_RLE = False  
+			# Use it when Hessian is ill-conditioned:
+		use_RLE = False
+			# Set it globally
+		self.use_RLE_orbopt = use_RLE
 
-
-		# Direct inversion method
+			# Direct inversion method
 		if not use_RLE:
+			G = G.flatten()  # Flatten G to 1D array
+
 			# Solve for R, unoccupied space
-			R = - G @ np.linalg.inv(H)
-			#R = - np.linalg.solve(H, G)
-			# print("R shape (direct inversion): ", R.shape)
-			# print("R matrix (direct inversion): \n", R)
+			R = - G @ np.linalg.inv(H) # Direct inversion
+			# R = np.linalg.solve(H, -G)
+			# R = -scipy.linalg.lstsq(H, G)[0]
+
+			# Reduced Linear Equation method
+		if use_RLE:				
+			R = solve_block_diagonal_RLE(H, G, len(self.active_inocc_indices), len(self.inactive_indices))
 			
-			# Initialize R,
-				# Matrix: self.full_indices x self.full_indices
-			R_matrix = np.zeros((len(self.full_indices), len(self.full_indices)))
-
-			# Build R_matrix from R[A, E]
-			for idx_A, A in enumerate(self.active_inocc_indices):
-				for idx_E, E in enumerate(self.inactive_indices):
-					
-					# Check indixes
-					# print(f"Setting R_matrix for A={A}, E={E} from R[{idx_A}, {i_E}] = {R[idx_A, i_E]}")
-
-					# R[A, E] gives the rotation parameter
-						# Flat indexing: R[idx_A * idx_E]
-					flat_index_R = idx_A * len(self.inactive_indices) + idx_E
-					R_matrix[E, A] = R[flat_index_R]  
-					R_matrix[A, E] = -R[flat_index_R]  # Anti-symmetry
-
-
-			
-
-		# Try the option of implementing the RLE for R,
-			# as described in the paper, instead of direct inversion of H.
-		if use_RLE:	
-			# ...
-			raise NotImplementedError("Reduced Linear Equation (RLE) method not implemented yet.")
 		
+		# Initialize R,
+			# Matrix: self.full_indices x self.full_indices
+		R_matrix = np.zeros((len(self.full_indices), len(self.full_indices), ), dtype=np.float64)
 
-		# Numerical checks on R_matrix
-			# Typeset R to float64 for numerical stability
-		# R_matrix = R_matrix.astype(np.float128)
+		# Build R_matrix from R[A, E]
+		for idx_A, A in enumerate(self.active_inocc_indices):
+			for idx_E, E in enumerate(self.inactive_indices):
+				# Extract R_EA and R_AE
+				R_AE = R[idx_A * len(self.inactive_indices) + idx_E]
+				R_EA = -1.0*R_AE  # Antisymmetry
+
+				# Check antisymmetry
+				if abs(R_EA + R_AE) > 1e-10:
+					print(f"WARNING: R matrix antisymmetry violated for indices ({E},{A}): R_EA={R_EA:.6e}, R_AE={R_AE:.6e}, sum={R_EA + R_AE:.6e}")
+
+				# Fill in R_matrix
+				R_matrix[E, A] = R_AE
+				R_matrix[A, E] = R_EA
+
 			# Check shape
 		expected_shape = np.zeros((len(self.full_indices), len(self.full_indices))).shape
-=======
-		Gradient and Hessian of the MP2 energy with respect to orbital rotations
-		between active and inactive orbitals.
-
-		Expressions
-		----------
-		Gradient:
-		G_ea = 2 Σ_i>j Σ_b t_ij^ab ⟨ij|eb⟩ + 2 Σ_b Σ_i>j Σ_c t_ij^ac t_ij^bc f_eb
-		Hessian:
-		H_ea,fb = 2 Σ_i>j t_ij^ab ⟨ij|eb⟩ - Σ_i>j Σ_c (t_ij^ac ⟨ij|bc⟩ - t_ij^cb ⟨ij|ca⟩) delta_ef + Σ_i>j Σ_c t_ij^ac t_ij^bc (f_aa - f_bb) delta_ef + Σ_i>j Σ_c t_ij^ac t_ij^bc f_ef (1 - delta_ef)
-
-		Parameters
-		----------
-		mo_coeffs : np.ndarray
-			Molecular orbital coefficients
-		active_indices : List[int]
-			Indices of active orbitals
-		inactive_indices : List[int]
-			Indices of inactive orbitals
-
-		Returns
-		-------
-		np.ndarray, np.ndarray
-			Gradient and Hessian matrices
-		"""
-
-		nelec_ = self.nelec[0] + self.nelec[1]
-		n_occ = int(nelec_/2)
-		
-		# Get Fock matrix eigenvalues (orbital energies)
-		Fmo = mo_coeffs.T @ self.F_matrix @ mo_coeffs
-		eigval = np.real(scipy.linalg.eigh(Fmo)[0])
-		
-		# Get ERIs in MO basis
-		eri_4fold_mo = pyscf.ao2mo.incore.full(self.eri_4fold_ao, mo_coeffs)
-		
-		n_pairs = len(active_virt_indices) * len(inactive_virt_indices)
-		gradient = np.zeros(n_pairs)
-		hessian = np.zeros((n_pairs, n_pairs))
-
-		# Compute gradient and Hessian
-		idx_ea = 0
-		for e in inactive_virt_indices:
-			for a in active_virt_indices:
-				# Gradient G_ea
-				grad_ea_term1 = 0.0
-				grad_ea_term2 = 0.0
-				
-				# First term: 2 Σ_i>j Σ_b t_ij^ab ⟨ij|eb⟩
-				for i in range(n_occ):
-					for j in range(i+1, n_occ):  # i > j
-						for b in active_virt_indices:
-							t_ijab = t1_tensor[a, i, b, j]
-							eri_ijeb = eri_4fold_mo[i, j, e, b]
-							grad_ea_term1 += 2.0 * t_ijab * eri_ijeb
-				
-				# Second term: 2 Σ_b Σ_i>j Σ_c t_ij^ac t_ij^bc f_eb
-				for b in active_virt_indices:
-					for i in range(n_occ):
-						for j in range(i+1, n_occ):
-							for c in active_virt_indices:
-								t_ijac = t1_tensor[a, i, c, j]
-								t_ijbc = t1_tensor[b, i, c, j]
-								f_eb = Fmo[e, b]
-								grad_ea_term2 += 2.0 * t_ijac * t_ijbc * f_eb
-				
-				gradient[idx_ea] = grad_ea_term1 + grad_ea_term2
-				
-				# Hessian H_ea,fb (diagonal approximation for now)
-				# For diagonal: H_ea,ea ≈ 2(f_ee - f_aa)
-				hessian[idx_ea, idx_ea] = 2.0 * (eigval[e] - eigval[a])
-				
-				idx_ea += 1
-
-		return gradient, hessian
-
-	def _transform_mo_coeffs(self, mo_coeffs, active_virt_indices, inactive_virt_indices, rotatio_params) -> np.ndarray:
-		"""
-		Step (iv): Transform MO coefficients
-
-		Expressions
-		-----------
-		a -> a' = a + Σ_e κ_ea e - 1/2 Σ_e Σ_b κ_ea κ_eb b + ...
-
-		Parameters
-		----------
-		mo_coeffs : np.ndarray
-			Molecular orbital coefficients
-		active_indices : List[int]
-			Indices of active orbitals
-		inactive_indices : List[int]
-			Indices of inactive orbitals
-		
-		Returns
-		-------
-		np.ndarray
-			Transformed MO coefficients
-		"""
-
-		return NotImplementedError
-
-
-
-	def _rotate_mo_coeffs(self, mo_coeffs, active_virt_indices, inactive_virt_indices, rotation_unitary) -> np.ndarray:
-		"""
-		Step (viii): Rotate MO coefficients
-
-		Expressions
-		-----------
-		a -> a' = Σ_b U_ba b + Σ_e U_ea e
-
-		Parameters
-		----------
-		mo_coeffs : np.ndarray
-			Molecular orbital coefficients
-		active_indices : List[int]
-			Indices of active orbitals
-		inactive_indices : List[int]
-			Indices of inactive orbitals
-		rotation_unitary : np.ndarray
-			Unitary rotation matrix U
-
-		Returns
-		-------
-		np.ndarray
-			Rotated MO coefficients
-		"""
-
-		return NotImplementedError
-
-	def _compute_rotation_unitary(self, active_virt_indices, inactive_virt_indices, rotation_params) -> np.ndarray:
-		"""
-		Step (vii): Generate Unitary rotation matrix U
-
-		Expressions
-		----------
-		U = exp(κ) = X cosh(d) X^T + κ X sinh(d)d^-1 X^T
-		d^2 = X^T κ^2 X
-
-		Parameters
-		----------
-		active_virt_indices : List[int]
-			Indices of active virtual orbitals
-		inactive_virt_indices : List[int]
-			Indices of inactive virtual orbitals
-		rotation_params : np.ndarray
-			Rotation parameters from Newton-Raphson solution
-
-		Returns
-		-------
-		np.ndarray
-			Unitary rotation matrix U
-		"""
-
-		# Check that R_matrix is anti-symmetric
-		R_antisymmetric_test = R_matrix + R_matrix.T
-			# The anti-symmetric test matrix should be close to zero matrix
-		assert np.allclose(R_matrix + R_matrix.T, 0, atol=1e8), f"R_matrix is not anti-symmetric, max deviation {np.max(np.abs(R_antisymmetric_test))}"
-
-		# Check shape of R_matrix
-		expected_shape = (len(self.active_inocc_indices) + len(self.inactive_indices), len(self.active_inocc_indices) + len(self.inactive_indices))
->>>>>>> c7df87fa832a7bd73fc45f0f5fe982bf666f88f4
 		assert R_matrix.shape == expected_shape, f"R_matrix shape is {R_matrix.shape}, expected {expected_shape}"
-			# Print shape of R_matrix for checking
-		# print("R_matrix shape: ", R_matrix.shape)
-			# Pretty print R for checking
-		# print("Orbital rotation parameter matrix R: \n", R_matrix)
 			# Check that R is anti-symmetric
 		diff_R = np.linalg.norm(R_matrix + R_matrix.T)
 		assert diff_R < 1e-6, f"R_matrix is not anti-symmetric, ||R + R.T|| = {diff_R}"
-			# Print norm of R for checking
-		norm_R = np.linalg.norm(R_matrix)
-		# print("Norm of R_matrix: ", norm_R)
+			# Check that R_matrix has no NaN or Inf values
+		assert np.all(np.isfinite(R_matrix)), "R_matrix contains NaN or Inf values!"
+			# Check that R_matrix is not all zeros
+		count_nonzero_R = np.count_nonzero(R_matrix)
+		if count_nonzero_R == 0:
+			print("WARNING: R_matrix is all zeros!")
+
+		# Convergence check based on max element of R_matrix
+		max_R_elem = np.max(np.abs(R_matrix))
+		print(f"    Rotation norm {np.linalg.norm(R_matrix):.6e}, (Max el.: {max_R_elem:.6e})")
 
 
 
 
 		# Step (vii): Construct the unitary orbital rotation matrix U = exp(R)
 
-<<<<<<< HEAD
 		# Unitary rotation matrix
 		U = scipy.linalg.expm(R_matrix)
 
-		# Typeset U to float64 for numerical stability
-		# U = U.astype(np.float128)
-
 		# Numerical checks on U
-			# Check shape
-		expected_shape_U = np.zeros((len(self.full_indices), len(self.full_indices))).shape
-		assert U.shape == expected_shape_U, f"U shape is {U.shape}, expected {expected_shape_U}"
-			# Print shape of U for checking
-		# print("U shape: ", U.shape)	
-			# Pretty print U for checking
-		# print("Unitary rotation matrix U: \n", U)
+			# Check U if U^T U = I
+		assert np.allclose(U.T @ U, np.eye(len(U)), atol=1e-4), "Unitary rotation matrix U is not unitary!"
+			# Check is U has no NaN or Inf values
+		assert np.all(np.isfinite(U)), "Unitary rotation matrix U contains NaN or Inf values!"
+			# Check that U is not all zeros
+		assert not np.allclose(U, 0), "Unitary rotation matrix U is all zeros!"
 
-=======
-	def _Fock_matrix(self, rotation_unitary) -> Tuple[np.ndarray, np.ndarray]:
-		"""
-		Step (viii): Construct Fock matrix for rotated active space and diagonalize
->>>>>>> c7df87fa832a7bd73fc45f0f5fe982bf666f88f4
 
-		Expressions
-		-----------
-		F' = U^T F U
+		# Check that U is orthogonal
+			# Note, sometimes due to numerical errors (e-11) U@U.T is not exactly identity, but very close
+				# If the difference is too large, raise an error
+		diff = np.linalg.norm(U@U.T - np.eye(len(U)))
+		assert diff < 1e-6, f"U is not orthogonal, ||U@U.T - I|| = {diff}"
 
-<<<<<<< HEAD
+
+		# Check the active occupied area of U is close to identity
+		for i in self.active_occ_indices:
+			for j in self.active_occ_indices:
+				expected = 1.0 if i == j else 0.0
+				if abs(U[i, j] - expected) > 1e-6:
+					print(f"WARNING: U deviates from identity in active occupied block at ({i},{j}): U={U[i,j]:.6e}, expected={expected:.6e}")
+
+
+
+		# Helper functions for MO coefficient conversions
+		def spatial_to_spin_mo(mo_coeffs):
+			"""
+			Convert spatial MO coefficients (alpha,beta) -> spin-orbital MO matrix.
+			Args:
+				mo_coeffs: array-like with shape (2, n_ao, n_spatial) or [C_alpha, C_beta]
+						where C_alpha/C_beta are (n_ao, n_spatial).
+			Returns:
+				mo_coeffs_spin: ndarray (n_ao, 2*n_spatial) with columns [α0,β0,α1,β1,...]
+				orb_map: ndarray (n_spin,) mapping spin-index -> spatial-index (p//2)
+				orbspin: ndarray (n_spin,) spin label (0=alpha,1=beta)
+			"""
+			# Normalize input form
+			if isinstance(mo_coeffs, (list, tuple)):
+				C_alpha, C_beta = mo_coeffs
+			else:
+				# assume array-like (2, n_ao, n_spatial)
+				C_alpha, C_beta = mo_coeffs[0], mo_coeffs[1]
+
+			n_ao, n_spatial = C_alpha.shape
+			assert C_beta.shape == (n_ao, n_spatial), "Alpha/beta shapes mismatch"
+
+			n_spin = 2 * n_spatial
+			C_spin = np.zeros((n_ao, n_spin), dtype=C_alpha.dtype)
+
+			for s in range(n_spatial):
+				C_spin[:, 2*s]   = C_alpha[:, s]  # alpha s
+				C_spin[:, 2*s+1] = C_beta[:, s]   # beta s
+
+			orb_map = np.array([i // 2 for i in range(n_spin)], dtype=int)
+			orbspin = np.array([i % 2 for i in range(n_spin)], dtype=int)
+			return C_spin, orb_map, orbspin
+
+		def spin_to_spatial_mo(mo_coeffs_spin, orbspin=None):
+			"""
+			Convert interleaved spin-orbital MO matrix -> spatial (alpha,beta).
+			Args:
+				mo_coeffs_spin: ndarray (n_ao, n_spin) with interleaved columns [α0,β0,...]
+				orbspin: optional ndarray of length n_spin (0/1). If None, assume interleaved.
+			Returns:
+				mo_coeffs_spatial: ndarray shape (2, n_ao, n_spatial) -> [C_alpha, C_beta]
+			"""
+			n_ao, n_spin = mo_coeffs_spin.shape
+			if orbspin is None:
+				orbspin = np.array([i % 2 for i in range(n_spin)], dtype=int)
+			# infer n_spatial
+			n_spatial = n_spin // 2
+			C_alpha = np.zeros((n_ao, n_spatial), dtype=mo_coeffs_spin.dtype)
+			C_beta  = np.zeros((n_ao, n_spatial), dtype=mo_coeffs_spin.dtype)
+
+			# if strictly interleaved, faster slicing:
+			if np.all(orbspin == np.array([i % 2 for i in range(n_spin)])):
+				C_alpha[:, :] = mo_coeffs_spin[:, 0::2]
+				C_beta[:, :]  = mo_coeffs_spin[:, 1::2]
+			else:
+				# general extraction using orbspin and orb_map
+				idx_alpha = np.where(orbspin == 0)[0]
+				idx_beta  = np.where(orbspin == 1)[0]
+				assert len(idx_alpha) == len(idx_beta) == n_spatial, "Unexpected orbspin layout"
+				C_alpha[:, :] = mo_coeffs_spin[:, idx_alpha]
+				C_beta[:, :]  = mo_coeffs_spin[:, idx_beta]
+
+			return np.array([C_alpha, C_beta])
 
 
 
 		# Step (viii): Rotate the orbitals
 
-
-
-		# rotate orbitals, 
 			# convert to spin orbital basis
-		mo_coeffs_spin = spatial2spin([mo_coeffs[0], mo_coeffs[1]],orbspin=self.orbspin)
-			
+				# Manual spatial→spin conversion: interleave α and β columns
+					# PySCF convention: mo_coeffs shape is (n_ao, n_spatial_orbs), columns are orbitals
+					# mo_coeffs[0] = alpha, mo_coeffs[1] = beta
+					# Result: (n_ao, n_spin_orbs) where spin_orbs = [α0, β0, α1, β1, ...]
+		mo_coeffs_spin, orb_map, orbspin = spatial_to_spin_mo(mo_coeffs)
+
 			# apply rotation
-				# mo_coffs_spin shape: (n_AO, num_spin_orbitals)
+				# mo_coeffs_spin shape: (n_ao, num_spin_orbitals)
 				# U shape: (num_spin_orbitals, num_spin_orbitals)
+				# Result: C_new = C_old @ U (standard orbital rotation)
 		mo_coeffs_spin_rot = mo_coeffs_spin @ U
-			
-				# Print shape for checking
-		# print("mo_coeffs_spin shape: ", mo_coeffs_spin.shape)
-		
+
 			# convert back to spatial orbital basis
-		mo_coeffs_rot = spin2spatial(mo_coeffs_spin_rot, orbspin=self.orbspin)
+				# Manual spin→spatial conversion: extract α and β columns using orbspin
+		mo_coeffs_rot = spin_to_spatial_mo(mo_coeffs_spin_rot, orbspin=orbspin)
+
+			# Check on what orbitals were rotated
+		num_rotated = 0
+		for spin in [0, 1]:
+				# In each spin block
+			for s in range(mo_coeffs[spin].shape[1]):
+					# Get original and rotated orbitals
+				orig_orb = mo_coeffs[spin][:, s]
+				rot_orb = mo_coeffs_rot[spin][:, s]
+					# Check if they differ significantly
+				if not np.allclose(orig_orb, rot_orb, atol=1e-6):
+					num_rotated += 1
+				# else:
+					# print(f"    Orbital {s} (spin {spin}) not rotated.")
+
+		print(f"    Rotated {num_rotated} spin orbitals out of {mo_coeffs[0].shape[1] + mo_coeffs[1].shape[1]} total.")
 
 				# check shape
 		for spin in [0, 1]:
-			# print()
-			# print(f"Spin {spin} mo_coeffs_rot shape: ", mo_coeffs_rot[spin].shape)
-
 			expected_shape_spatial = mo_coeffs[spin].shape
 			assert mo_coeffs_rot[spin].shape == expected_shape_spatial, f"mo_coeffs_rot shape is {mo_coeffs_rot[spin].shape}, expected {expected_shape_spatial}"
 
-		# Pretty print rotated MO coefficients for checking
-			diff_matrix = mo_coeffs_rot[spin] - mo_coeffs[spin]
+		# Check that the active occupied orbitals are unchanged
+			# Convert to spatial orbital index
+			for idx in self.active_occ_indices:
+				idx = idx // 2  # spatial orbital index
+				# Get original and rotated orbitals
+				orig_orb = mo_coeffs[spin][:, idx]
+				rot_orb = mo_coeffs_rot[spin][:, idx]
 
-			# print()
-			# print(f"   Difference in MO coefficients for spin {spin} after rotation: \n", diff_matrix)
+				assert np.allclose(orig_orb, rot_orb, atol=1e-4), f"Active occupied spin orbital {idx} (spin {spin}) was changed during rotation!"
 
 		# Check that rotated orbitals are orthonormal
 			# Sum a coloumn of mo_coeffs to check normalization for a given spin
 				# Check: C^T S C = I
-		
 			C_i = mo_coeffs_rot[spin]
-			
 			norm = C_i.T @ self.S @ C_i
-			
-			# print()
-			# print(f"   Normalization check for spin {spin} after rotation: \n", norm)
-			# print()
-
 			assert np.allclose(norm, np.eye(norm.shape[0]), atol=1e-6), f"MO coefficients for spin {spin} are not orthonormal!"
 
 
-		# Print shape and matrix of matrices and vectors for checking
-		print("")
-		print("Density matrix, shape: ", D_AB_cache.shape, "\n", D_AB_cache)
-		print("")
-		print("Gradient G, shape: ", G.shape, "\n", G)
-		print("")
-		print("Hessian H, shape: ", H.shape, "\n", H)
-		print("")
-		print("Orbital rotation parameter matrix R, shape: ", R_matrix.shape, "\n", R_matrix)
-		print("")
-		print("Unitary rotation matrix U, shape: ", U.shape, "\n", U)
-		print("")
-		print("Rotated MO coefficients, shape: ", mo_coeffs_rot[spin].shape, "\n", mo_coeffs_rot[spin])
-		print("")
+				# Are the optimal solution when alpha and beta orbitals are the same? !!!!!!!!
 
-
-
-		return mo_coeffs_rot
+		return mo_coeffs_rot, self.use_RLE_orbopt
 
 
 	
@@ -1388,83 +1089,52 @@ class OVOS:
 	def run_ovos(self,  mo_coeffs):
 		"""
 		Run the OVOS algorithm.
-=======
-		Parameters
-		----------
-		rotation_unitary : np.ndarray
-			Unitary rotation matrix U
-		
-		Returns
-		-------
-		np.ndarray, np.ndarray
-			Eigenvalues and eigenvectors of rotated Fock matrix
->>>>>>> c7df87fa832a7bd73fc45f0f5fe982bf666f88f4
 		"""
 
-		# Fmo  = mo_coeffs.T @ self.F_matrix @ mo_coeffs
-		# eigval, eigvec = scipy.linalg.eig(Fmo)
-		# sorting = np.argsort(eigval)
-		# eigval = np.real(eigval[sorting])
-		# eigvec = np.real(eigvec[:, sorting])
+		converged = False
+		max_iter = 500
+		iter_count = 0
 
-<<<<<<< HEAD
-		while not converged and iter < max_iter:
-			iter += 1
-			print("#### OVOS Iteration ", iter, " ####")
+		while not converged:
+			iter_count += 1
+			print("#### OVOS Iteration ", iter_count, " ####")
 			
-			E_corr, MP1_amplitudes, eri_spin, Fmo_spin = self.MP2_energy(mo_coeffs = mo_coeffs)
-			print("MP2 correlation energy: ", E_corr)
-			print()
-=======
-		return NotImplementedError 
->>>>>>> c7df87fa832a7bd73fc45f0f5fe982bf666f88f4
+			# Step (iii-iv): Compute MP2 correlation energy and amplitudes
+			E_corr, MP1_amplitudes, eri_spin, eri_phys, eri_as, Fmo_spin = self.MP2_energy(mo_coeffs = mo_coeffs)
 
+			# Step (ix): check convergence
+				# convergence criterion: change in correlation energy < 1e-10 Hartree
+			if iter_count > 2:
+				threshold = 1e-10
+				if np.abs(E_corr - lst_E_corr[-1]) < threshold:
+					converged = True
+					print("OVOS converged in ", iter_count, " iterations.")
 
+					lst_E_corr.append(E_corr)
+					lst_iter_counts.append(iter_count)
 
-	def run_OVOS(self):
-		"""
-		Run OVOS procedure to obtain optimized virtual orbitals
-		
-		Returns
-		-------
-		np.ndarray
-			Optimized virtual orbital coefficients
-		"""
+					break
+				else:
+					lst_E_corr.append(E_corr)
+					lst_iter_counts.append(iter_count)
 
-		# Step (i): Compute SCF solution
-			# Get initial MO coefficients from RHF
-		mo_coeffs = self.rhf.mo_coeff 
-		print(f"Initial: {mo_coeffs}")
-
-		# Step (ii): Record structure of integrals
-
-		# Step (iii): Define active and inactive orbitals
-		active_virt_indices, inactive_virt_indices = self._space_selection()
-		print(f"Active virtual indices: {active_virt_indices}")
-		print(f"Inactive virtual indices: {inactive_virt_indices}")
-
-		# Iterative procedure
-		max_iterations = 1
-		for iteration in range(max_iterations):
-			print(f"--- Iteration {iteration+1} ---")
-
-			# Step (iv):
-				# Transform integrals, a -> a'
-					# Initial iteration: no transformation needed
-			if iteration == 0:
-				pass
-					# Iterative procedure: Transform integrals using previous rotation matrix
 			else:
-				#mo_coeffs = self._transform_mo_coeffs(self, mo_coeffs, active_virt_indices, inactive_virt_indices, rotation_params)
-				pass
+				lst_E_corr = []
+				lst_E_corr.append(E_corr)
 
-				# Compute t1 amplitudes
-			t1_tensor = self._t1(mo_coeffs=mo_coeffs,
-						 active_virt_indices=active_virt_indices,
-						 spin_orbital_basis=False)
+				lst_iter_counts = []
+				lst_iter_counts.append(iter_count)
 
-<<<<<<< HEAD
-			mo_coeffs = self.orbital_optimization(mo_coeffs, MP1_amplitudes=MP1_amplitudes, eri_spin=eri_spin, Fmo_spin=Fmo_spin)
+			if iter_count == max_iter:
+				print("Maximum number of iterations reached. OVOS did not converge.")
+				lst_E_corr.append(E_corr)
+				lst_iter_counts.append(iter_count)
+				break
+			
+			# Step (v-viii): Orbital optimization
+			mo_coeffs, use_RLE_orbopt = self.orbital_optimization(mo_coeffs, MP1_amplitudes=MP1_amplitudes, eri_spin=eri_spin, eri_phys=eri_phys, eri_as=eri_as, Fmo_spin=Fmo_spin)
+
+
 
 		# Print information about the spaces
 		print()
@@ -1474,466 +1144,15 @@ class OVOS:
 		print("Active unoccupied spin-orbitals: ", self.active_inocc_indices)
 		print("Inactive unoccupied spin-orbitals: ", self.inactive_indices)
 		print()
-
 		
-		# Return list of correlation energies
-		# print("List of MP2 correlation energies during OVOS optimization, w. length ", len(lst_E_corr) ,": ", lst_E_corr)
-
-		print("PySCF MP2")
-		MP2 = self.uhf.MP2().run()
-		print("MP2 correlation energy: ", MP2.e_corr)
-
 		# Check if OVOS converged
 		if not converged:
-			assert False, "OVOS did not converge within the maximum number of iterations."
+			print("OVOS did not converge within the maximum number of iterations.")
 
-		return lst_E_corr
+		return lst_E_corr, lst_iter_counts, mo_coeffs 
 	
 	
-	
-		
-# CTRL + ' (thingy under ENTER) to comment/uncomment multiple lines
-
-
-# Make a presentation for how the matrices develop during OVOS... !!!
-	# ...
-
-# Make R bigger to account for full space!
-
-
-
 """
-Objective:
-- Get LiH STO-3G molecule working with OVOS at different numbers of optimized virtual orbitals
-	* Point might be to instead solve the Newton-Raphson equation for the orbital rotation parameters R
-		with a different method than direct inversion of the Hessian, e.g. conjugate gradient
-		The other proposed method in the paper is:
-			"A block generalization of the reduced linear equation 
-			technique of Purvis and Bartlett is used. 
-			It is recognized that the Hessian matrix is dominated 
-			by square blocks located diagonally. A particular block is 
-			related to the rotation of all possible active orbitals with one 
-			nonactive orbital (Hea,eb)' Only inverses of all diagonally 
-			located blocks are kept in the core."
-		It is called the "reduced linear equation (RLE) method" in the following paper:
-			The reduced linear equation method in coupled cluster theory,
-				by George D. Purvis III and Rodney J. Bartlett,
-				at Battelle Columbus Laboratories. Columbus, Ohio 43201 
-				(Received 24 September 1980; accepted 14 April 1981) 
-
-				
-		Get correct integral notation for eri_spin
-			eri_spin[A,I,B,J] should represent <AI|BJ> in physicist's notation
-			PySCF chemist's notation: (ij|kl) = physicist's <ik|jl>
-			So eri_spin[A,I,B,J] stored as (AI|BJ)_chem = <AB|IJ>_phys
-	
-	PySCF's spatial2spin produces ERIs with [occupied, occupied, virtual, virtual] index ordering,
-		not [virtual, occupied, virtual, occupied]
-
-	Therefore, we need to permute the indices to get the correct ordering
-	eri_spin = eri_spin.transpose(0,2,1,3)  # Now eri_spin[A,I,B,J] = <AI|BJ> in physicist's notation
-				
-	
-	Make a function w. scipy opimize to minimize the Hylleraas functional
-		Should optimize Rotation matrix R directly, R_ea
-			Each spin orbital a in active_inocc_indices should have a rotation parameter R_ea for each inactive orbital e in inactive_indices
-				phi -> phi' = exp(R) phi_b + exp(R) phi_a
-	def ...() -> ...:
-
+TESTS !!!!!!!!!!!!!!!!!!!!!!! 
+Inspiration from SlowQuant Github...
 """
-=======
-			# Step (v): Compute gradient and Hessian
-			Grad, Hess = self._compute_gradient_hessian(mo_coeffs=mo_coeffs,
-										 active_virt_indices=active_virt_indices,
-										 inactive_virt_indices=inactive_virt_indices,
-										 t1_tensor=t1_tensor)
-			print(f"Gradient: {Grad}")
-			print(f"Hessian: {Hess}")
->>>>>>> c7df87fa832a7bd73fc45f0f5fe982bf666f88f4
-
-			# Step (vi): Solve Newton-Raphson equations to get rotation parameters
-			rotation_params = -np.linalg.solve(Hess, Grad)
-			print(f"Rotation parameters: {rotation_params}")
-
-			# Step (vii): Generate Unitary rotation matrix U
-			#rotation_unitary = self._compute_rotation_unitary(active_virt_indices,
-			#												 inactive_virt_indices,
-			#												 rotation_params)
-			#print(f"Unitary rotation matrix: {rotation_unitary}")
-
-			# Step (viii): Construct Fock matrix for the rotated active space (occupied + active virtuals)
-				# and diagonalize the Fock matrix to generate new canonical active orbitals
-			#mo_coeffs = self._diagonalize_fock_matrix(self,rotation_unitary)
-
-			# Step (ix): Calculate MP2 correlation energy with new canonical active orbitals
-				# If energy is converged, exit loop
-			#if converged:
-			#	break
-
-				# Else, go back to step (iv)
-
-		return None
-
-
-# Molecule
-atom_choose_between = [
-	"H .0 .0 .0; H .0 .0 0.74144",  # H2 bond length 0.74144 Angstrom
-	"Li .0 .0 .0; H .0 .0 1.595",   # LiH bond length 1.595 Angstrom
-	"O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692;",  # H2O equilibrium geometry
-	"C  0.0000  0.0000  0.0000; H  0.0000  0.9350  0.5230; H  0.0000 -0.9350  0.5230;" # CH2 
-]
-# Basis set
-basis_choose_between = [
-	"STO-3G",
-	"6-31G",
-]
-
-# Unit
-unit="angstrom"
-
-
-# Select molecule and basis set
-select_atom = 1  # Select molecule index here
-select_basis = 1 # Select molecule index here
-
-atom, basis = (atom_choose_between[select_atom], basis_choose_between[select_basis])
-
-# Get number of electrons and full space size in molecular orbitals
-mol = pyscf.M(atom=atom, basis=basis, unit=unit)
-	# Number of electrons
-num_electrons = mol.nelec[0] + mol.nelec[1]
-	# Full space size in molecular orbitals
-full_space_size = int(pyscf.scf.UHF(mol).run().mo_coeff.shape[1])
-
-
-
-
-"""
-Simple run for Phillip!
-"""
-one_run = True
-if one_run == True:
-	num_opt_virtual_orbs = 2  # Set number of optimized virtual orbitals here
-
-	print("")
-	print("#### OVOS with ", num_opt_virtual_orbs, " optimized virtual orbitals ####")
-	print("")
-
-	uhf = pyscf.scf.UHF(mol).run()
-	mo_coeff = uhf.mo_coeff 
-
-
-	try:
-		# Get list of MP2 correlation energies during OVOS optimization
-		lst_E_corr = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs).run_ovos(mo_coeff)
-
-	except AssertionError as e:
-		print("")
-		print(f"Error during OVOS with {num_opt_virtual_orbs} optimized virtual orbitals: {e}")
-
-
-	# Print the final MP2 correlation energy after all OVOS and amount of iterations till convergence
-	print("")
-	print("MP2 correlation energy, for ", num_opt_virtual_orbs, " optimized virtual orbitals:", '%.2E' % Decimal(lst_E_corr[-1]), " @ ", len(lst_E_corr), " iterations till convergence")
-	print("")
-
-	# Print
-	print("Number of electrons: ", num_electrons)
-	print("Full space size in molecular orbitals: ", full_space_size)
-	print("")
-
-
-run_OVOS = OVOS(mol=mol, num_vir_ops=3)
-run_OVOS.run_OVOS()
-
-"""
-Run OVOS for different numbers of optimized virtual orbitals
-"""
-run_different_virt_orbs = False
-if run_different_virt_orbs == True:
-	# Loop over different numbers of optimized virtual orbitals
-	# List of MP2 correlation energies for different numbers of optimized virtual orbitals
-	lst_E_corr_virt_orbs = [[],[]]  # [[E_corr_list], [num_opt_virtual_orbs_list]]
-	lst_MP2_virt_orbs = []  # [(num_opt_virtual_orbs, E_corr, iterations_till_convergence), ...]
-
-	# Error messages for failed runs
-	lst_error_messages = []
-
-	# Retry bounds
-	max_retries = 1
-	retry_count = 0
-
-	# Set maximum number of optimized virtual orbitals to test
-		# Denoted in molecular orbitals (not spin orbitals)
-	max_opt_virtual_orbs = full_space_size*2 - num_electrons
-		# Set statrting number of optimized virtual orbitals and increment
-	num_opt_virtual_orbs_current = 0  # Start with number of occupied orbitals
-		# Incremenet by 2 for closed shell molecules
-	increment = 2
-
-	while num_opt_virtual_orbs_current < max_opt_virtual_orbs:  
-		# Increment num_opt_virtual_orbs until OVOS converges successfully
-		num_opt_virtual_orbs_current += increment 
-
-		lst_E_corr = None  # Reset lst_E_corr for each run
-
-		print("")
-		print("#### OVOS with ", num_opt_virtual_orbs_current, " out of ", max_opt_virtual_orbs," optimized virtual orbitals (Retry count: ", retry_count,") ####")
-
-		try:
-			# Re-initialize molecule and UHF for each run
-			mol = pyscf.M(atom=atom, basis=basis, unit=unit)
-				
-			uhf = pyscf.scf.UHF(mol).run()
-			mo_coeff = uhf.mo_coeff 
-
-			lst_E_corr = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current).run_ovos(mo_coeff)
-
-			# run_OVOS got stuck in a non-converging loop
-			if len(lst_E_corr) >= 1000:
-				print("OVOS with ", num_opt_virtual_orbs_current, " optimized virtual orbitals did not converge. Rerunning with the same number of virtual orbitals.")
-				num_opt_virtual_orbs_current -= increment  # Decrement to retry the same number
-				continue
-
-			# run_OVOS converged to a positive MP2 correlation energy
-			if lst_E_corr[-1] > 0:
-				print("Warning: OVOS with ", num_opt_virtual_orbs_current, " optimized virtual orbitals converged to a positive MP2 correlation energy. Rerunning with the same number of virtual orbitals.")
-				num_opt_virtual_orbs_current -= increment  # Decrement to retry the same number
-				continue
-
-			# Store results
-			lst_MP2_virt_orbs.append((num_opt_virtual_orbs_current, lst_E_corr[-1], len(lst_E_corr)))
-			lst_E_corr_virt_orbs[0].append(lst_E_corr)
-			lst_E_corr_virt_orbs[1].append(num_opt_virtual_orbs_current)
-
-			# Reset retry count on success
-			retry_count = 0
-
-		except AssertionError as e:
-			print(f"Error during OVOS with {num_opt_virtual_orbs_current} optimized virtual orbitals: {e}")
-			print("Rerunning with the same number of virtual orbitals.")
-
-			# Add error message to list
-
-				# Get results if available
-			if lst_E_corr is None:
-				iter_ = 1
-			else:
-				iter_ = len(lst_E_corr)
-
-			lst_error_messages.append((num_opt_virtual_orbs_current, str(e), iter_))
-
-			retry_count += 1
-			if retry_count >= max_retries:
-				print(f"Maximum retries reached for {num_opt_virtual_orbs_current} optimized virtual orbitals. Skipping to next.")
-				retry_count = 0
-				continue
-
-			num_opt_virtual_orbs_current -= increment  # Decrement to retry the same number
-			continue
-
-
-	# Print the final MP2 correlation energy after all OVOS and amount of iterations till convergence
-	print("")
-	for num_opt_virtual_orbs_current, E_corr, iter_ in lst_MP2_virt_orbs:
-		print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.2E' % Decimal(E_corr), "  @ ", iter_, " iterations till convergence")
-	print("")
-
-	# Print summary of the run
-	print("Number of electrons: ", num_electrons)
-	print("Full space size in molecular orbitals: ", full_space_size)
-	print("Maximum number of optimized virtual orbitals tested: ", max_opt_virtual_orbs)
-	print("Total OVOS runs completed: ", len(lst_MP2_virt_orbs))
-	print("")
-
-	# Print error messages summary
-	if len(lst_error_messages) > 0:
-		print("#### Error messages summary ####")
-		for num_opt_virtual_orbs_current, error_msg, iter_ in lst_error_messages:
-			print("  OVOS w. ", num_opt_virtual_orbs_current, " optimized vorbs failed at iteration ", iter_ ," w. error: ", error_msg)
-		print("")
-
-
-	# Save data to JSON files
-	import json
-
-	str_name = "different_virt_orbs"
-
-	if select_atom == 0:
-		str_atom = "H2"
-	elif select_atom == 1:
-		str_atom = "LiH"
-	elif select_atom == 2:
-		str_atom = "H2O"
-	elif select_atom == 3:
-		str_atom = "CH2"
-
-	if select_basis == 0:
-		str_basis = "STO-3G"
-	elif select_basis == 1:
-		str_basis = "6-31G"
-
-	# Save MP2 correlation energy convergence data
-	with open("branch/data/"+str_atom+"/"+str_basis+"/lst_MP2_"+str_name+".json", "w") as f:
-		json.dump(lst_E_corr_virt_orbs, f, indent=2)
-
-	print("Data saved to branch/data/"+str_atom+"/"+str_basis+"/...")
-
-
-
-
-
-
-# """
-# Time profiling 
-# """
-# time_profile = False
-# if time_profile == True and run_single_ovos == True:
-# 	import cProfile
-# 	import pstats
-
-# 	opt = "opt_C" # Lable for optimization settings, see Optimization_options.md
-
-# 	cProfile.run('OVOS(mol=mol, num_opt_virtual_orbs=6).run_ovos(mo_coeff)', 'branch/profil/profiling_results_'+opt+'.prof')
-
-# 	# Print the profiling results
-# 	with open('branch/profil/profiling_results_'+opt+'.txt', 'w') as f:
-# 		stats = pstats.Stats('branch/profil/profiling_results_'+opt+'.prof', stream=f)
-# 		stats.sort_stats('cumulative')  # Sort by cumulative time
-# 		stats.print_stats()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# """
-# Run OVOS algorithm for N cycles and store MP2 correlation energy convergence data.
-# Save data to JSON files
-# """
-# run_cycles = False
-# if run_cycles == True:
-# 	import json
-	
-# 	# Set maximum number of optimized virtual orbitals to test
-# 		# Denoted in molecular orbitals (not spin orbitals)
-# 	max_opt_virtual_orbs = full_space_size*2 - num_electrons
-# 		# Set statrting number of optimized virtual orbitals and increment
-# 	num_opt_virtual_orbs_current = 0  # Start with number of occupied orbitals
-# 	increment = 1 # Increment by 1 optimized virtual orbital
-
-# 	# Retry bounds for vorb
-# 	max_retries_vorb = 3
-# 	retry_count_vorb = 0
-
-# 	for num_opt_virtual_orbs in range(1, max_opt_virtual_orbs+1, increment):
-		
-# 		print("")
-# 		print("#### OVOS with ", num_opt_virtual_orbs, " out of ", max_opt_virtual_orbs," optimized virtual orbitals ####")
-# 		print("")
-
-# 		# List of MP2 correlation energy convergence data for each cycle
-# 		lst_E_corr_cycle = []
-# 		iter_conv_cycle = []
-
-# 		# Number of OVOS cycles
-# 		cycle_max = 25 # N = 100
-# 		cycle_max_run = cycle_max # To keep track of actual number of runs including restarts
-# 		max_cycle_max = 100 # To avoid infinite loops
-# 		cycle = 0
-
-# 		# Retry bounds
-# 		max_retries = 5
-# 		retry_count = 0
-
-# 		while cycle < cycle_max:
-# 			print("")
-# 			print("#### OVOS Cycle ", cycle+1, " out of", cycle_max_run," ####")
-
-# 			try:
-# 				# Re-initialize molecule and UHF for each cycle
-# 				mol = pyscf.M(atom=atom, basis=basis, unit=unit)
-# 				uhf = pyscf.scf.UHF(mol).run()
-# 				mo_coeff = uhf.mo_coeff
-
-# 				run_OVOS = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs)
-
-# 				lst_E_corr = run_OVOS.run_ovos(mo_coeff)
-
-# 				# run_OVOS got stuck in a non-converging loop
-# 				if len(lst_E_corr) >= 600:
-# 					print("OVOS cycle did not converge. Restarting cycle.")
-# 					cycle_max_run += 1
-# 					continue
-
-# 				# If the last cycle's correlation energy converges to a positive value, skip storing the data
-# 				if lst_E_corr[-1] > 0:
-# 					print("Warning: OVOS converged to a positive MP2 correlation energy. Skipping data storage for this cycle.")
-# 					print("")
-
-# 					# Do a new cycle still keeping the max number of cycles the same
-# 					cycle_max_run += 1
-# 				else:
-# 					lst_E_corr_cycle.append(lst_E_corr)
-
-# 					# Reset retry count on success
-# 					retry_count = 0
-# 					retry_count_vorb = 0
-
-# 					# Increment cycle count only on successful completion
-# 					cycle += 1
-				
-# 			except AssertionError as e:
-# 				print(f"Error during OVOS cycle: {e}")
-# 				print("Restarting cycle.")
-# 				cycle_max_run += 1
-
-# 				retry_count += 1
-# 				if retry_count >= max_retries:
-# 					print(f"Maximum retries reached for this cycle. Skipping to next.")
-# 					retry_count = 0
-# 					continue
-
-# 				retry_count_vorb += 1
-# 				if retry_count_vorb >= max_retries_vorb:
-# 					print(f"Maximum retries reached for number of optimized virtual orbitals. Moving to next number of virtual orbitals.")
-# 					retry_count_vorb = 0
-# 					break
-
-# 				if cycle_max_run >= max_cycle_max:
-# 					print("Reached maximum allowed cycles. Exiting.")
-# 					break
-
-# 				continue
-
-# 		str_name = "cycle_"+str(cycle_max)
-# 		str_name += "_vorb_"+str(num_opt_virtual_orbs)
-		
-# 		if select_atom == 0:
-# 			str_atom = "H2"
-# 		elif select_atom == 1:
-# 			str_atom = "LiH"
-# 		elif select_atom == 2:
-# 			str_atom = "H2O"
-
-# 		if select_basis == 0:
-# 			str_basis = "STO-3G"
-# 		elif select_basis == 1:
-# 			str_basis = "6-31G"
-
-# 		# If lst_E_corr_cycle is empty, skip saving
-# 		if len(lst_E_corr_cycle) == 0:
-# 			print("No successful OVOS cycles completed for ", num_opt_virtual_orbs, " optimized virtual orbitals. Skipping data saving.")
-# 			continue
-
-# 		# Save MP2 correlation energy convergence data
-# 		with open("branch/data/"+str_atom+"/"+str_basis+"/lst_E_corr_"+str_name+".json", "w") as f:
-# 			json.dump(lst_E_corr_cycle, f, indent=2)
