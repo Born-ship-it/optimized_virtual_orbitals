@@ -284,11 +284,6 @@ class OVOS:
 		eri_spin[0::2, 0::2, 1::2, 1::2] = eri_aabb
 		# (ββ|αα)
 		eri_spin[1::2, 1::2, 0::2, 0::2] = eri_aabb.transpose(2,3,0,1)
-		# (αβ|αβ)
-		eri_spin[0::2, 1::2, 0::2, 1::2] = eri_aabb.transpose(0,2,1,3)
-		# (βα|βα)
-		eri_spin[1::2, 0::2, 1::2, 0::2] = eri_aabb.transpose(1,3,0,2)
-		# Other combinations are zero by spin conservation
 		
 		return eri_spin
 
@@ -1148,148 +1143,123 @@ class OVOS:
 			# Alternatively, use Reduced Linear Equation (RLE) method
 
 
-		
-
-
-
-
-
-
-
-
-
 		def solve_block_diagonal_RLE(H, G, n_active, n_inactive):
 			"""
-			Block diagonal RLE method for solving H*R = -G.
+			Block diagonal RLE method as suggested in Adamowicz & Bartlett.
+			Only invert diagonal blocks H_{ee}.
 			
-			Follows the Newton-Raphson approach for orbital rotation parameters R.
-			Uses block-diagonal approximation where each block corresponds to
-			rotations between all active orbitals and one specific inactive orbital.
-			
-			Parameters:
-			-----------
-			H : ndarray
-				Hessian matrix (total_size x total_size) where total_size = n_active * n_inactive
-			G : ndarray
-				Gradient vector (total_size,) or matrix that can be flattened
-			n_active : int
-				Number of active orbitals
-			n_inactive : int
-				Number of inactive (virtual) orbitals
-				
-			Returns:
-			--------
-			R : ndarray
-				Solution vector R = -H⁻¹G (using block-diagonal approximation)
+			Each block corresponds to excitations from occupied orbitals 
+			to one inactive virtual orbital (including spin cases).
 			"""
-			# Handle edge cases
-			if n_inactive == 0:
-				# No inactive orbitals - return empty solution
-				return np.array([], dtype=H.dtype)
-			
-			if n_active == 0:
-				# No active orbitals - return empty solution
-				return np.array([], dtype=H.dtype)
-			
+			# Try to identify block structure automatically
+				# Find size of blocks in Hessian
+			block_size = n_active  # Each block corresponds to one inactive orbital
+			n_blocks = n_inactive  # Number of inactive orbitals
 			total_size = n_active * n_inactive
-			block_size = n_active
-			
-			# Validate dimensions
-			if total_size == 0:
-				return np.array([], dtype=H.dtype)
-			
-			# Validate and reshape inputs
+
+			# Reshape H and G for block processing
 			if H.shape != (total_size, total_size):
-				# Try to reshape, but only if dimensions are compatible
-				if H.size == total_size * total_size:
-					H = H.reshape(total_size, total_size)
-				else:
-					raise ValueError(f"Hessian dimension mismatch: H has {H.size} elements, "
-								f"expected {total_size * total_size}")
-			
-			if G.ndim != 1:
+				# Reshape H
+				H = H.reshape((total_size, total_size))
+			if G.shape != (total_size, ):
+				# Flatten G
 				G = G.flatten()
-			if G.shape[0] != total_size:
-				raise ValueError(f"Gradient dimension mismatch: G has {G.shape[0]} elements, "
-							f"expected {total_size}")
-			
-			# Method 1: Direct block-diagonal solve (most efficient if blocks are truly independent)
-			# This assumes H is block-diagonal with minimal coupling between blocks
-			return _solve_strict_block_diagonal(H, G, n_active, n_inactive)
 
+			# Initialize R vector
+			R = np.zeros(total_size, dtype=np.float64)
 
-		def _solve_strict_block_diagonal(H, G, n_active, n_inactive):
-			"""
-			Solve assuming strictly block-diagonal Hessian.
-			This is the Purvis-Bartlett approximation where only diagonal blocks are considered.
-			"""
-			if n_inactive == 0 or n_active == 0:
-				return np.array([], dtype=H.dtype)
+			# Create block coupling matrix
+			coupling_matrix = np.zeros((n_blocks, n_blocks), dtype=bool)
 			
-			block_size = n_active
-			n_blocks = n_inactive
-			R = np.zeros(n_active * n_inactive, dtype=H.dtype)
-			
-			for block_idx in range(n_blocks):
-				start = block_idx * block_size
-				end = (block_idx + 1) * block_size
-				
-				# Extract diagonal block H_ii
-				H_block = H[start:end, start:end]
-				G_block = G[start:end]
-				
-				# Solve H_ii * R_i = -G_i
-				try:
-					# More stable than direct inverse
-					R_block = np.linalg.solve(H_block, -G_block)
-				except np.linalg.LinAlgError:
-					# Fallback to pseudoinverse if singular
-					R_block = -G_block @ np.linalg.pinv(H_block)
-				
-				R[start:end] = R_block
-			
-			return R
+			for i in range(n_blocks):
+				for j in range(n_blocks):
+					if i == j:
+						continue
+					# Extract block H[i,j]
+					i_start = i * block_size
+					i_end = (i + 1) * block_size
+					j_start = j * block_size
+					j_end = (j + 1) * block_size
+					
+					H_block_ij = H[i_start:i_end, j_start:j_end]
+					block_norm = np.linalg.norm(H_block_ij)
+					
+					if block_norm > 1e-10:  # Significant coupling
+						coupling_matrix[i, j] = True
 
-		# Alternative: A simpler wrapper that handles all edge cases
-		def solve_block_diagonal_RLE_safe(H, G, n_active, n_inactive):
-			"""
-			Safe version that handles all edge cases including n_inactive = 0.
-			"""
-			# Quick return for empty cases
-			if n_inactive == 0 or n_active == 0:
-				return np.array([], dtype=np.float64)
+			# Find connected components (groups of coupled blocks)
+			visited = [False] * n_blocks
+			block_groups = []
 			
-			total_size = n_active * n_inactive
-			
-			# If H or G are empty/zero-sized, return appropriate result
-			if total_size == 0:
-				return np.array([], dtype=np.float64)
-			
-			# Ensure inputs are properly shaped
-			if H.shape != (total_size, total_size):
-				if H.size == total_size * total_size:
-					H = H.reshape(total_size, total_size)
+			for i in range(n_blocks):
+				if not visited[i]:
+					# Start new group
+					group = []
+					stack = [i]
+					
+					while stack:
+						current = stack.pop()
+						if not visited[current]:
+							visited[current] = True
+							group.append(current)
+							
+							# Add coupled blocks
+							for j in range(n_blocks):
+								if coupling_matrix[current, j] or coupling_matrix[j, current]:
+									if not visited[j]:
+										stack.append(j)
+					
+					block_groups.append(group)
+
+			# print(f"  Found {len(block_groups)} block groups:")
+			# for i, group in enumerate(block_groups):
+			# 	print(f"    Group {i}: blocks {group}")
+
+			# Solve each group of coupled blocks
+			for group_idx, block_indices in enumerate(block_groups):
+				if len(block_indices) == 1:
+					# Single block - solve independently
+					block_idx = block_indices[0]
+					start = block_idx * block_size
+					end = (block_idx + 1) * block_size
+					
+					H_block = H[start:end, start:end]
+					G_block = G[start:end]
+					
+					# Solve this block
+						#R_block = np.linalg.solve(H_block, -G_block)
+					R_block = - G_block @ np.linalg.inv(H_block)
+						
+					R[start:end] = R_block
+					
 				else:
-					raise ValueError(f"Hessian size mismatch. Expected {(total_size, total_size)}, got {H.shape}")
-			
-			G_flat = np.asarray(G).flatten()
-			if len(G_flat) != total_size:
-				raise ValueError(f"Gradient size mismatch. Expected {total_size}, got {len(G_flat)}")
-			
-			# Call the main function
-			return solve_block_diagonal_RLE(H, G_flat, n_active, n_inactive)
+					# Multiple coupled blocks - solve together
+					# print(f"  Solving coupled group {group_idx} (blocks {block_indices})...")
+					
+					# Collect all indices for this group
+					indices = []
+					for block_idx in block_indices:
+						start = block_idx * block_size
+						end = (block_idx + 1) * block_size
+						indices.extend(range(start, end))
+					
+					# Extract submatrix for this group
+					H_group = H[np.ix_(indices, indices)]
+					G_group = G[indices]
+					
+					# Solve coupled system
+						# R_group = np.linalg.solve(H_group, -G_group)
+					R_group = - G_group @ np.linalg.inv(H_group)
+					
+					# Distribute solution
+					R[indices] = R_group
+					
+					# # Check group residual
+					# residual = np.linalg.norm(H_group @ R_group + G_group)
+					# print(f"    Group residual: {residual:.2e}")
 
 
-
-
-
-
-
-
-
-
-
-
+			return R
 
 
 
@@ -1316,7 +1286,7 @@ class OVOS:
 
 			# Reduced Linear Equation method
 		if use_RLE:				
-			R = solve_block_diagonal_RLE_safe(H, G, len(self.active_inocc_indices), len(self.inactive_indices))
+			R = solve_block_diagonal_RLE(H, G, len(self.active_inocc_indices), len(self.inactive_indices))
 			
 		
 		# Initialize R,
@@ -1573,7 +1543,7 @@ class OVOS:
 		"""
 
 		converged = False
-		max_iter = 2500
+		max_iter = 15
 		iter_count = 0
 
 		while not converged:

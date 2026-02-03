@@ -195,8 +195,12 @@ class OVOS:
                     for s in range(n):
                         # (αβ|αβ) type blocks
                         eri_spin[2*p, 2*q+1, 2*r, 2*s+1] = eri_aabb[p, r, q, s]
+                        # (βα|βα) type blocks
                         eri_spin[2*p+1, 2*q, 2*r+1, 2*s] = eri_aabb[q, s, p, r]
-        
+                        # (βα|αβ) type blocks
+                        # ...
+                        # (αβ|βα) type blocks
+                        # ...
         
         return eri_spin
     

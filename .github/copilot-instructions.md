@@ -58,14 +58,6 @@ The code uses a complex orbital indexing system with **two different orderings**
 - full_indices:                    All spin-orbitals [0, tot_spin_orbs)
 ```
 
-### Ordering Transformation
-The code transforms from **NATURAL ordering** (as stored in MO coefficients) to **ENERGY ordering** (sorted by orbital energy):
-- `eps`: Array of orbital energies (energy-ordered)
-- `spin_orb_map_sorted`: Maps energy-ordered index → natural spin-orbital index
-- `natural_to_energy`: Maps natural spin-orbital index → energy-ordered index
-- Uses energy-ordered indices: `active_occ_indices_energy`, `active_inocc_indices_energy`, `inactive_indices_energy`
-
-**Critical**: Always clarify which ordering is being used when working with orbital indices!
 
 ---
 
@@ -118,7 +110,7 @@ After conversion, `eri_spin` has shape `(n_spin, n_spin, n_spin, n_spin)` where:
 ## Key Algorithm Variables & Conventions
 
 ### Orbital Energies & Fock Matrices
-- `eps`: Spin-orbital orbital energies (energy-ordered), shape (n_spin,)
+- `eps`: Spin-orbital orbital energies, shape (n_spin,)
 - `Fmo_spin`: Spin-orbital Fock matrix in MO basis (energy-ordered), shape (n_spin, n_spin)
 - `Fmo_a`, `Fmo_b`: Spatial (alpha, beta) Fock matrices, computed as `C^T F_ao C`
 
