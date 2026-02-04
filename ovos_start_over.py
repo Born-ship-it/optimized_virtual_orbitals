@@ -43,23 +43,26 @@ class OVOS:
         Initial orbitals.
     """
 
-	def __init__(self, mol: pyscf.gto.Mole, num_opt_virtual_orbs: int, init_orbs: str = "UHF") -> None:
+	def __init__(self, mol: pyscf.gto.Mole, num_opt_virtual_orbs: int, mo_coeff, init_orbs: str = "UHF") -> None:
 		self.mol = mol
 		self.num_opt_virtual_orbs = num_opt_virtual_orbs
 		self.init_orbs = init_orbs
 
-		# Set up unrestricted Hartree-Fock calculation 
-		self.uhf = pyscf.scf.UHF(mol).run()
-		self.e_rhf = self.uhf.e_tot
-		self.h_nuc = mol.energy_nuc()
+		# Perform initial Hartree-Fock calculation to get orbitals
+		if init_orbs == "UHF":
+			# Set up unrestricted Hartree-Fock calculation 
+			self.uhf = pyscf.scf.UHF(mol).run()
+			self.e_rhf = self.uhf.e_tot
+			self.h_nuc = mol.energy_nuc()
+		if init_orbs == "RHF":
+			# Set up restricted Hartree-Fock calculation 
+			self.rhf = pyscf.scf.RHF(mol).run()
+			self.e_rhf = self.rhf.e_tot
+			self.h_nuc = mol.energy_nuc()
+			# Convert RHF orbitals to UHF format
+			self.uhf = self.rhf.to_uhf()
 
-		# Set dependent on type of initial orbitals
-		if type(init_orbs) == str:
-			# MO coefficients (alpha, beta)
-			self.mo_coeffs = self.uhf.mo_coeff
-		elif type(init_orbs) != str:
-			# Get previous orbitals from init_orbs, same format as self.uhf.mo_coeff
-			self.mo_coeffs = init_orbs # User-provided orbitals or other method e.g. previous OVOS run
+		self.mo_coeffs = mo_coeff 
 
 		# MP2 calculation
 		self.MP2 = self.uhf.MP2().run()
@@ -284,10 +287,10 @@ class OVOS:
 		eri_spin[0::2, 0::2, 1::2, 1::2] = eri_aabb
 		# (ββ|αα)
 		eri_spin[1::2, 1::2, 0::2, 0::2] = eri_aabb.transpose(2,3,0,1)
-		# (αβ|αβ)
-		eri_spin[0::2, 1::2, 0::2, 1::2] = eri_aabb.transpose(0,2,1,3)
-		# (βα|βα)
-		eri_spin[1::2, 0::2, 1::2, 0::2] = eri_aabb.transpose(1,3,0,2)
+		# # (αβ|αβ)
+		# eri_spin[0::2, 1::2, 0::2, 1::2] = eri_aabb.transpose(0,2,1,3)
+		# # (βα|βα)
+		# eri_spin[1::2, 0::2, 1::2, 0::2] = eri_aabb.transpose(1,3,0,2)
 		# Other combinations are zero by spin conservation
 		
 		return eri_spin
@@ -1295,7 +1298,7 @@ class OVOS:
 
 		# Set to True to use Reduced Linear Equation method
 			# Use it when Hessian is ill-conditioned:
-		use_RLE = False
+		use_RLE = True
 			# Set it globally
 		self.use_RLE_orbopt = use_RLE
 
@@ -1308,10 +1311,12 @@ class OVOS:
 			if np.linalg.cond(H) > 1e12 and np.linalg.matrix_rank(H) < H.shape[0] and det_H == 0.0:
 				print("        WARNING: Using pseudo-inverse for orbital rotations.")
 				R = - G @ np.linalg.pinv(H)
+				# Handle is H is ill-conditioned, use solve
+			elif np.linalg.cond(H) > 1e12:
+				print("        WARNING: Using np.linalg.solve for orbital rotations due to ill-conditioned Hessian.")
+				R = np.linalg.solve(H, -G)
 			else:
-				R = - G @ np.linalg.inv(H) # Direct inversion
-				# R = np.linalg.solve(H, -G)
-				# R = -scipy.linalg.lstsq(H, G)[0]
+				R = - G @ np.linalg.inv(H)
 
 
 			# Reduced Linear Equation method
@@ -1715,8 +1720,8 @@ find_basis = {
 
 
 # Select molecule and basis set
-select_atom  = "H2"  		# Select atom index here
-select_basis = "cc-pVDZ"  	# Select basis index here
+select_atom  = "CH2"  		# Select atom index here
+select_basis = "6-31G"  	# Select basis index here
 	# I want to run OVOS on CH2 w.
 		# Article reference - CH2 !!!
 		# (9s7p2d If,5s2p) 	-> [2, ..., 116]	-> E(SCF) = -38.89447 | E(UMP2) = ...      ,  E_corr = -0.182 683
@@ -1749,8 +1754,9 @@ num_electrons = mol.nelec[0] + mol.nelec[1]
 	# Full space size in molecular orbitals
 full_space_size = int(uhf.mo_coeff.shape[1])
 	# MP2 correlation energy for the full space
-MP2 = uhf.MP2().run()
-
+MP2_UHF = uhf.MP2().run()
+		# Set reference MP2
+MP2 = MP2_UHF
 
 # Can we also opt. with no virt-virt ?? WHY/NOT
 # WHERE DO WE FORCE IT TO ONLY TAKE into account
@@ -1791,13 +1797,24 @@ if run_different_virt_orbs == True:
 
 	# Flags - Only one at a time is TRUE or both FALSE
 		# Flag to indicate if previous virtual orbitals are used
-	use_prev_virt_orbs = False
+	use_prev_virt_orbs = True
 		# Flag if 500 repeats of different random unitary rotations for each num_opt_virtual_orbs_current are use on UHF orbitals as starting guess
 	use_random_unitary_init = False
+
+	# From the article: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			# The initial implementation of our OVOS procedure is restricted 
+			# to the closed-shell RHF reference case
+		# Flag to indicate if standard UHF initialization is used
+	use_UHF_init = True # Also for random unitary init
+		# Flag to indicate if standard RHF initialization is used
+	use_RHF_init = False
 	
 	# Optimization stuff
 		# Flag to indicate if RLE method was used in orbital optimization
 	use_RLE_orbopt = False
+
+
+	# TO DO: PREV. w. UHF, PREV w. RHF, PREV w. Random...
 
 
 	# Best of number of tries - True when random initializations are used
@@ -1822,8 +1839,30 @@ if run_different_virt_orbs == True:
 		try:
 			# Re-initialize molecule and UHF for each run
 			mol = pyscf.M(atom=atom, basis=basis, unit=unit)
+
 			
 			if try_best_of == False: # Single run of OVOS
+
+				if use_UHF_init == True:
+					# Use random unitary rotations of UHF virtual orbitals as starting guess
+					if 'mo_coeffs_uhf' in locals():
+						del mo_coeffs_uhf  # Clear previous UHF orbitals to avoid reuse
+						# Ensure we get new UHF orbitals each time
+					# Get UHF orbitals
+					if use_prev_virt_orbs == False and mo_coeffs is None:
+						mo_coeffs_uhf = pyscf.scf.UHF(mol).run().mo_coeff
+					init_orbs = "UHF"
+				if use_RHF_init == True:
+					# Use random unitary rotations of RHF virtual orbitals as starting guess
+					if 'mo_coeffs_uhf' in locals():
+						del mo_coeffs_uhf  # Clear previous UHF orbitals to avoid reuse
+						# Ensure we get new UHF orbitals each time
+					# Get RHF orbitals and convert to UHF format
+						# For first run 
+					mo_coeffs_uhf = pyscf.scf.RHF(mol).run().to_uhf().mo_coeff
+					init_orbs = "RHF"
+
+
 				if use_prev_virt_orbs == True and 'mo_coeffs' in locals():
 					# Use previously optimized orbitals as starting guess
 						# Only if mo_coeff exists from previous run
@@ -1833,17 +1872,12 @@ if run_different_virt_orbs == True:
 					# Extract occupied and virtual orbitals from previous mo_coeff
 
 						# Enforce orthonormality of the modified mo_coeff
-					init_orbs = mo_coeffs
-					mo_coeffs = init_orbs
+					mo_coeffs = mo_coeffs.copy()  # Start from previous optimized orbitals
 
 					print("    Using previously optimized orbitals as starting guess.")				
 
 			
 				elif use_random_unitary_init == True:
-					# Use random unitary rotations of UHF virtual orbitals as starting guess
-					# Get UHF orbitals
-					mo_coeffs_uhf = pyscf.scf.UHF(mol).run().mo_coeff
-
 					# Apply random unitary rotation to virtual orbitals only
 						# Number of occupied orbitals
 					num_occupied_orbitals = num_electrons // 2
@@ -1870,13 +1904,8 @@ if run_different_virt_orbs == True:
 						# Combine back
 						mo_coeffs[spin] = np.hstack((C_occ, C_virt_rot))
 
-					init_orbs = mo_coeffs
 					print("Using random unitary rotated UHF virtual orbitals as starting guess.")
 
-				else:
-					# Standard UHF initialization
-					mo_coeffs = pyscf.scf.UHF(mol).run().mo_coeff
-					init_orbs = "UHF"
 
 
 
@@ -1890,7 +1919,7 @@ if run_different_virt_orbs == True:
 				# pr.enable()
 
 					# Run OVOS
-				lst_E_corr, lst_iter_counts, mo_coeffs = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs).run_ovos(mo_coeffs=mo_coeffs)
+				lst_E_corr, lst_iter_counts, mo_coeffs = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs, mo_coeff=mo_coeffs).run_ovos(mo_coeffs=mo_coeffs)
 
 				# pr.disable()
 
@@ -2033,7 +2062,7 @@ if run_different_virt_orbs == True:
 
 	# Print the final MP2 correlation energy after all OVOS and amount of iterations till convergence
 	for num_opt_virtual_orbs_current, E_corr, iter_ in lst_MP2_virt_orbs:
-		print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.5E' % Decimal(E_corr), "  @ ", iter_, " iterations till convergence")
+		print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.5E' % Decimal(E_corr),f" ({(E_corr/MP2.e_corr)*100:.4}%)"+" @ ", iter_, " iterations till convergence")
 	print("MP2 correlation energy, for full space: ", '%.5E' % Decimal(MP2.e_corr), "| Difference:", '%.5E' % Decimal(MP2.e_corr - lst_MP2_virt_orbs[-1][1]))
 	print("")
 
@@ -2079,6 +2108,11 @@ if run_different_virt_orbs == True:
 	
 	if use_RLE_orbopt == True:
 		str_name += "_RLE" # !!!!
+
+	if use_UHF_init == True:
+		str_name += "_UHF_init" # !!!!
+	if use_RHF_init == True:
+		str_name += "_RHF_init" # !!!!
 
 	str_atom = select_atom
 	str_basis = select_basis
