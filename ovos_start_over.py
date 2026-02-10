@@ -15,15 +15,14 @@ from typing import Tuple
 import numpy as np
 import scipy
 import pyscf
-from pyscf.cc.addons import spatial2spin, spin2spatial
 
 from decimal import Decimal
 
-import time
+# import time
 
 
 # Options:
-np.set_printoptions(precision=4, suppress=True, linewidth=200)
+np.set_printoptions(precision=4, suppress=False, linewidth=200)
 
 class OVOS:
 
@@ -43,7 +42,11 @@ class OVOS:
         Initial orbitals.
     """
 
-	def __init__(self, mol: pyscf.gto.Mole, num_opt_virtual_orbs: int, mo_coeff, init_orbs: str = "UHF") -> None:
+	def __init__(self, mol: pyscf.gto.Mole, num_opt_virtual_orbs: int, mo_coeff, use, init_orbs: str = "UHF") -> None:
+		# Use ...
+		self.use_canonical_Fock = use[0]
+
+		# Store parameters
 		self.mol = mol
 		self.num_opt_virtual_orbs = num_opt_virtual_orbs
 		self.init_orbs = init_orbs
@@ -54,6 +57,7 @@ class OVOS:
 			self.uhf = pyscf.scf.UHF(mol).run()
 			self.e_rhf = self.uhf.e_tot
 			self.h_nuc = mol.energy_nuc()
+
 		if init_orbs == "RHF":
 			# Set up restricted Hartree-Fock calculation 
 			self.rhf = pyscf.scf.RHF(mol).run()
@@ -311,7 +315,7 @@ class OVOS:
 		return Fmo_spin
 	
 
-	def MP2_energy(self, mo_coeffs) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]: 
+	def MP2_energy(self, mo_coeffs, Fmo) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]: 
 		"""
 		MP2 correlation energy for unrestricted orbitals 
 
@@ -328,41 +332,67 @@ class OVOS:
 		"""
 
 		# Fock matrix in MO basis 
-		Fmo_a = mo_coeffs[0].T @ self.Fao[0] @ mo_coeffs[0]
-		Fmo_b = mo_coeffs[1].T @ self.Fao[1] @ mo_coeffs[1]
+		if not isinstance(Fmo, np.ndarray):
+			Fmo_a = mo_coeffs[0].T @ self.Fao[0] @ mo_coeffs[0]
+			Fmo_b = mo_coeffs[1].T @ self.Fao[1] @ mo_coeffs[1]
 
-		# Sanity checks
-			# Check that Fock matrices are finite
-		assert np.all(np.isfinite(Fmo_a)), "Alpha Fock matrix contains non-finite values!"
-		assert np.all(np.isfinite(Fmo_b)), "Beta Fock matrix contains non-finite values!"
-			# Check that Fock matrices are not all zero
-		assert np.count_nonzero(Fmo_a) > 0, "Alpha Fock matrix is all zero!"
-		assert np.count_nonzero(Fmo_b) > 0, "Beta Fock matrix is all zero!"
-			# Check that Fock matrices are Hermitian
-		assert np.allclose(Fmo_a, Fmo_a.T.conj(), atol=1e-10), "Alpha Fock matrix is not Hermitian!"
-		assert np.allclose(Fmo_b, Fmo_b.T.conj(), atol=1e-10), "Beta Fock matrix is not Hermitian!"
+			# Sanity checks
+				# Check that Fock matrices are finite
+			assert np.all(np.isfinite(Fmo_a)), "Alpha Fock matrix contains non-finite values!"
+			assert np.all(np.isfinite(Fmo_b)), "Beta Fock matrix contains non-finite values!"
+				# Check that Fock matrices are not all zero
+			assert np.count_nonzero(Fmo_a) > 0, "Alpha Fock matrix is all zero!"
+			assert np.count_nonzero(Fmo_b) > 0, "Beta Fock matrix is all zero!"
+				# Check that Fock matrices are Hermitian
+			assert np.allclose(Fmo_a, Fmo_a.T.conj(), atol=1e-10), "Alpha Fock matrix is not Hermitian!"
+			assert np.allclose(Fmo_b, Fmo_b.T.conj(), atol=1e-10), "Beta Fock matrix is not Hermitian!"
 
-		# print()
-		# print("#### Fock and MO sizes ####")
-		# print("Fock matrices", np.size(Fmo_a), np.size(Fmo_b))
-		# print("MO Coefficients", np.size(mo_coeffs[0]), np.size(mo_coeffs[1]))
-		# print("AO Fock matrices", np.size(self.Fao[0]), np.size(self.Fao[1]))
-		# print()
 
-		# 	# Convert Fock matrix to spin orbitals
-		# t0 = time.time()
-		# Fmo_spin = self.spatial_to_spin_fock(Fmo_a, Fmo_b)
-		# print("Time for spatial_to_spin_fock: ", time.time() - t0)
-		# 	# Test optimized version
-		# t1 = time.time()
-		Fmo_spin_opt = self.spatial_to_spin_fock_optimized(Fmo_a, Fmo_b)
-		# print("Time for spatial_to_spin_fock_optimized: ", time.time() - t1)
-		# 	# Check that both methods give the same result
-		# Fock_diff = np.max(np.abs(Fmo_spin - Fmo_spin_opt))
-		# assert np.allclose(Fmo_spin, Fmo_spin_opt, atol=1e-10), "Optimized spin-orbital Fock conversion does not match original! Max diff: {}".format(Fock_diff)
-			
-			# Use optimized version
-		Fmo_spin = Fmo_spin_opt
+			# # Assert if canonical Fock is used,
+			# 	# Check that Fock matrices are diagonal, 
+			# 	# and that diagonal elements match MO energies from UHF
+			# if self.use_canonical_Fock == True:
+			# 	# Alpha
+			# 	off_diag_a = Fmo_a - np.diag(np.diag(Fmo_a))
+			# 	assert np.allclose(off_diag_a, 0.0, atol=1e-10), "Alpha Fock matrix is not diagonal for canonical orbitals!"
+			# 	diag_a = np.diag(Fmo_a)
+			# 	uhf_mo_energies_a = self.uhf.mo_energy[0]
+			# 	assert np.allclose(diag_a, uhf_mo_energies_a, atol=1e-10), "Alpha Fock diagonal elements do not match UHF MO energies!"
+			# 	# Beta
+			# 	off_diag_b = Fmo_b - np.diag(np.diag(Fmo_b))
+			# 	assert np.allclose(off_diag_b, 0.0, atol=1e-10), "Beta Fock matrix is not diagonal for canonical orbitals!"
+			# 	diag_b = np.diag(Fmo_b)
+			# 	uhf_mo_energies_b = self.uhf.mo_energy[1]
+			# 	assert np.allclose(diag_b, uhf_mo_energies_b, atol=1e-10), "Beta Fock diagonal elements do not match UHF MO energies!"
+
+
+			# print()
+			# print("#### Fock and MO sizes ####")
+			# print("Fock matrices", np.size(Fmo_a), np.size(Fmo_b))
+			# print("MO Coefficients", np.size(mo_coeffs[0]), np.size(mo_coeffs[1]))
+			# print("AO Fock matrices", np.size(self.Fao[0]), np.size(self.Fao[1]))
+			# print()
+
+			# 	# Convert Fock matrix to spin orbitals
+			# t0 = time.time()
+			# Fmo_spin = self.spatial_to_spin_fock(Fmo_a, Fmo_b)
+			# print("Time for spatial_to_spin_fock: ", time.time() - t0)
+			# 	# Test optimized version
+			# t1 = time.time()
+			Fmo_spin_opt = self.spatial_to_spin_fock_optimized(Fmo_a, Fmo_b)
+			# print("Time for spatial_to_spin_fock_optimized: ", time.time() - t1)
+			# 	# Check that both methods give the same result
+			# Fock_diff = np.max(np.abs(Fmo_spin - Fmo_spin_opt))
+			# assert np.allclose(Fmo_spin, Fmo_spin_opt, atol=1e-10), "Optimized spin-orbital Fock conversion does not match original! Max diff: {}".format(Fock_diff)
+				
+				# Use optimized version
+			Fmo_spin = Fmo_spin_opt
+
+			# After first iteration, we can use the rotated Fock matrix directly without conversion
+		else:
+			# Use rotated Fock matrix
+			Fmo_spin = Fmo
+
 
 		# Sanity checks
 			# Check that Fock matrix is finite
@@ -373,25 +403,74 @@ class OVOS:
 		assert np.allclose(Fmo_spin, Fmo_spin.T.conj(), atol=1e-10), "Spin-orbital Fock matrix is not Hermitian!"
 
 
+		# Check if canonical Fock is used,
+		# 	# Check that Fock matrix is diagonal,
+		# if self.use_canonical_Fock == True:
+		# 	# iterate through each row and check if the right elements is the only non-zero
+		# 	for i in range(Fmo_spin.shape[0]):
+		# 		# Get how many non-zero elements are in the row
 
+		# 		# 	# Print 5 largerst non-diagonal element for debugging
+		# 		# non_diag_elements = np.abs(Fmo_spin[i, :]).copy()
+		# 		# non_diag_elements[i] = 0.0  # Exclude diagonal
+		# 		# largest_non_diag = np.sort(non_diag_elements)[-5:]
+		# 		# print(f"Largest 5 non-diagonal elements in row {i}: {largest_non_diag}")
 
+		# 		# Get relative tolerance for zero comparison
+		# 		atol_zero_compare = 1e-6
+		# 		non_zero_elements = np.count_nonzero(np.abs(Fmo_spin[i, :]) > atol_zero_compare)
 
+		# 		# There should be only one non-zero element (the diagonal)
+		# 		assert non_zero_elements == 1, f"Row {i} of spin-orbital Fock matrix has {non_zero_elements} non-zero elements, expected 1 for canonical orbitals!"
 
+		"""
+		CH2 6-31G UHF canonical Fock matrix non-diagonal elements for debugging:
+		Largest 5 non-diagonal elements in row 0: [7.7624e-10 1.4163e-08 1.5221e-08 2.3790e-08 2.3861e-08]
+		Largest 5 non-diagonal elements in row 1: [5.1300e-09 8.8853e-09 1.1574e-08 1.4719e-08 1.4747e-08]
+		Largest 5 non-diagonal elements in row 2: [1.1408e-08 1.4672e-08 2.0790e-08 2.3861e-08 3.6146e-08]
+		Largest 5 non-diagonal elements in row 3: [1.1574e-08 1.2642e-08 2.4491e-08 8.2406e-08 9.1904e-08]
+		Largest 5 non-diagonal elements in row 4: [9.9920e-16 1.2768e-15 1.3455e-08 4.4543e-08 4.8668e-08]
+		Largest 5 non-diagonal elements in row 5: [3.3307e-16 3.8858e-16 2.2867e-08 1.0911e-07 1.1093e-07]
+		Largest 5 non-diagonal elements in row 6: [1.4672e-08 5.0825e-08 6.0558e-08 6.0712e-08 1.3032e-07]
+		Largest 5 non-diagonal elements in row 7: [5.1300e-09 1.6473e-08 3.4827e-08 6.5534e-08 6.8831e-08]
+		Largest 5 non-diagonal elements in row 8: [8.4025e-17 8.8235e-17 9.6345e-17 1.4850e-16 5.8291e-08]
+		Largest 5 non-diagonal elements in row 9: [6.6218e-17 1.3196e-16 1.6092e-16 1.9609e-16 6.7883e-08]
+		Largest 5 non-diagonal elements in row 10: [6.1482e-09 7.0144e-09 1.5221e-08 2.5759e-08 6.0712e-08]
+		Largest 5 non-diagonal elements in row 11: [8.8853e-09 2.3632e-08 3.4538e-08 6.8831e-08 9.1904e-08]
+		Largest 5 non-diagonal elements in row 12: [6.7030e-15 9.5202e-15 2.0835e-08 4.4543e-08 4.7427e-08]
+		Largest 5 non-diagonal elements in row 13: [3.5527e-15 5.8287e-15 3.1153e-08 4.3840e-08 1.1093e-07]
+		Largest 5 non-diagonal elements in row 14: [4.2188e-15 4.9127e-15 1.2999e-08 2.0835e-08 4.8668e-08]
+		Largest 5 non-diagonal elements in row 15: [2.4147e-15 3.1641e-15 2.2867e-08 3.1153e-08 4.0886e-08]
+		Largest 5 non-diagonal elements in row 16: [1.1408e-08 1.4072e-08 1.4163e-08 2.8352e-08 1.3032e-07]
+		Largest 5 non-diagonal elements in row 17: [1.4719e-08 2.3632e-08 2.4491e-08 2.9977e-08 6.5534e-08]
+		Largest 5 non-diagonal elements in row 18: [5.0897e-17 5.8702e-17 9.4913e-17 1.1059e-16 5.8291e-08]
+		Largest 5 non-diagonal elements in row 19: [9.7364e-17 1.3729e-16 1.5080e-16 1.9896e-16 6.7883e-08]
+		Largest 5 non-diagonal elements in row 20: [6.1482e-09 7.0119e-09 2.8352e-08 3.6146e-08 6.0558e-08]
+		Largest 5 non-diagonal elements in row 21: [3.1292e-09 3.7928e-09 5.7590e-09 1.2642e-08 1.6473e-08]
+		Largest 5 non-diagonal elements in row 22: [1.4072e-08 2.0790e-08 2.3790e-08 2.5759e-08 5.0825e-08]
+		Largest 5 non-diagonal elements in row 23: [1.4747e-08 2.9977e-08 3.4538e-08 3.4827e-08 8.2406e-08]
+		Largest 5 non-diagonal elements in row 24: [5.7478e-15 6.0080e-15 1.2999e-08 1.3455e-08 4.7427e-08]
+		Largest 5 non-diagonal elements in row 25: [2.5564e-15 2.6669e-15 4.0886e-08 4.3840e-08 1.0911e-07]
+		"""
 
+		if not isinstance(Fmo, np.ndarray):
+			# Get orbital energies
+			eigval_a, eigvec_a = scipy.linalg.eigh(Fmo_a)  # Use eigh for Hermitian matrices
+			eigval_b, eigvec_b = scipy.linalg.eigh(Fmo_b)  # Use eigh for Hermitian matrices
 
-		# Get orbital energies
-		eigval_a, eigvec_a = scipy.linalg.eigh(Fmo_a)  # Use eigh for Hermitian matrices
-		eigval_b, eigvec_b = scipy.linalg.eigh(Fmo_b)  # Use eigh for Hermitian matrices
+			# Already sorted by eigh
+			mo_energy_a = np.real(eigval_a)
+			mo_energy_b = np.real(eigval_b)
 
-		# Already sorted by eigh
-		mo_energy_a = np.real(eigval_a)
-		mo_energy_b = np.real(eigval_b)
+			# Convert to spin orbitals with proper sorting
+			self.eps = self.spatial_to_spin_mo_energy(mo_energy_a, mo_energy_b)
 
-		# Convert to spin orbitals with proper sorting
-		self.eps = self.spatial_to_spin_mo_energy(mo_energy_a, mo_energy_b)
-
-		# Set for convenience
-		eps = self.eps
+			# Set for convenience
+			eps = self.eps
+		else:
+			# If Fock is already in spin-orbital basis, we can just take the diagonal as orbital energies
+			self.eps = np.diag(Fmo)
+			eps = self.eps
 
 		# Sanity checks
 			# Check that orbital energies are finite
@@ -494,20 +573,57 @@ class OVOS:
 						for j in self.active_occ_indices:
 							eps_j = eps[j]
 				
-							# Energy denominator: ε_a + ε_b - ε_i - ε_j
-							denominator = eps_a + eps_b - eps_i - eps_j
+							
+							if self.use_canonical_Fock:
+								# Energy denominator: ε_a + ε_b - ε_i - ε_j
+								denominator = eps_a + eps_b - eps_i - eps_j
+								# Antisymmetrized integral: <ab||ij> = <ab|ij> - <ab|ji>
+								integral = eri_as[a, b, i, j]  # <ab||ij>
 
-							# Antisymmetrized integral for same-spin pairs
-								# Simplifies to <ab|ij> for different-spin
-							integral = eri_as[a, b, i, j]  # <ab||ij>
+							# else:
+							# 	denominator = Fmo_spin[a, a] + Fmo_spin[b, b] - Fmo_spin[i, i] - Fmo_spin[j, j] - 2 * Fmo_spin[a, b] + 2 * Fmo_spin[i, j]  # Non-canonical denominator with off-diagonal Fock elements
+
+							# 	integral_eri = eri_as[a, b, i, j]
+							# 	sum_ = 0.0
+								
+							# 	for C in self.active_inocc_indices:
+							# 		for D in self.active_inocc_indices:
+							# 			if C <= D:
+							# 				continue
+							# 			if C != a and D != b:
+							# 				t_cdij = MP1_amplitudes[C, D, i, j]
+											
+							# 				f_AC = Fmo_spin[a, C] if b == D else 0.0
+							# 				f_BD = Fmo_spin[b, D] if a == C else 0.0
+							# 				f_AD = Fmo_spin[a, D] if b == C else 0.0
+							# 				f_BC = Fmo_spin[b, C] if a == D else 0.0
+
+							# 				parentheses_delta_a = 0.0
+							# 				if a == C and b == D:
+							# 					parentheses_delta_a = 1.0
+												
+							# 				parentheses_delta_b = 0.0
+							# 				if a == D and b == C:
+							# 					parentheses_delta_b = -1.0
+
+							# 				f_II = Fmo_spin[i, i] * (parentheses_delta_a - parentheses_delta_b)
+							# 				f_JJ = Fmo_spin[j, j] * (parentheses_delta_a - parentheses_delta_b)
+							# 				f_IJ = 2*Fmo_spin[i, j] * (parentheses_delta_a - parentheses_delta_b)
+
+							# 				parentheses_fock = f_AC + f_BD - f_AD - f_BC - f_II - f_JJ - f_IJ
+
+							# 				sum_ -= t_cdij * parentheses_fock
+								
+
+							# 	integral = integral_eri - sum_
 							
 							# MP1 amplitude: t_{ij}^{ab} = -<ab||ij> / (ε_a + ε_b - ε_i - ε_j)
-							MP1_amplitudes[a, b, i, j] = -integral / denominator
+							MP1_amplitudes[a, b, i, j] = -1.0 * integral / denominator
 		
 			return MP1_amplitudes
 		
 		# t0 = time.time()
-		# MP1_amplitudes_full = compute_mp1_amplitudes(self, eps, eri_as)
+		# MP1_amplitudes = compute_mp1_amplitudes(self, eps, eri_as)
 		# print("Time for full MP1 amplitude computation: ", time.time() - t0)
 
 		# Optimized computation of MP1 amplitudes only in active space
@@ -554,12 +670,15 @@ class OVOS:
 			return MP1_amplitudes
 
 		# t1 = time.time()
-		MP1_amplitudes = compute_mp1_amplitudes_optimized(self, eps, eri_as)	
+		MP1_amplitudes_opt = compute_mp1_amplitudes_optimized(self, eps, eri_as)	
 		# print("Time for optimized MP1 amplitude computation: ", time.time() - t1)
 
 		# 	# Check optimized amplitudes match full computation
 		# amplitude_diff = np.max(np.abs(MP1_amplitudes_full - MP1_amplitudes))
 		# assert np.allclose(MP1_amplitudes_full, MP1_amplitudes, atol=1e-10), "Optimized MP1 amplitudes do not match full computation! Max diff: {}".format(amplitude_diff)
+
+		# Set optimized version
+		MP1_amplitudes = MP1_amplitudes_opt
 
 		# Sanity checks
 			# Check that amplitudes are finite
@@ -575,89 +694,282 @@ class OVOS:
 
 
 		# iii) Compute MP2 correlation energy (spin-orbital indices)
-	
-		J_2 = 0.0
-		
-		# Create lists for easier indexing
-		occ_indices = self.active_occ_indices
-		virt_indices = self.active_inocc_indices
-		
-		for idx_i, i in enumerate(occ_indices):
-			eps_i = eps[i]
+		def compute_mp2_energy(self, eps, Fmo_spin, eri_as, MP1_amplitudes):
+			J_2 = 0.0
 			
-			for idx_j, j in enumerate(occ_indices):
-				if j <= i:  # i > j restriction
-					continue
+			# Create lists for easier indexing
+			occ_indices = self.active_occ_indices
+			virt_indices = self.active_inocc_indices
+			
+			for idx_i, i in enumerate(occ_indices):
+				eps_i = eps[i]
+				
+				for idx_j, j in enumerate(occ_indices):
+					if i <= j:  # i > j restriction
+						continue
+						
+					eps_j = eps[j]
+					J_ij = 0.0
 					
-				eps_j = eps[j]
-				J_ij = 0.0
-				
-				# First term: Σ_{a>b} Σ_{c>d} t_ij^{ab} t_ij^{cd} [...]
-				term1 = 0.0
-				
-				# Use symmetry: sum over all a,b,c,d but use independent sums
-				# This is more efficient than nested loops
-				for idx_a, a in enumerate(virt_indices):					
-					for idx_b, b in enumerate(virt_indices):
-						if b <= a:  # a > b restriction
-							continue
+					# First term: Σ_{a>b} Σ_{c>d} t_ij^{ab} t_ij^{cd} [...]
+					term1 = 0.0
+					
+					# Use symmetry: sum over all a,b,c,d but use independent sums
+					# This is more efficient than nested loops
+					for idx_a, a in enumerate(virt_indices):					
+						for idx_b, b in enumerate(virt_indices):
+							if a <= b:  # a > b restriction
+								continue
 
-						t_abij = MP1_amplitudes[a, b, i, j]
-						
-						for idx_c, c in enumerate(virt_indices):
+							t_abij = MP1_amplitudes[a, b, i, j]
 							
-							for idx_d, d in enumerate(virt_indices):
-								if d <= c:  # c > d restriction
-									continue
+							for idx_c, c in enumerate(virt_indices):
+								
+								for idx_d, d in enumerate(virt_indices):
+									if c <= d:  # c >d restriction
+										continue
+										
+									t_cdij = MP1_amplitudes[c, d, i, j]
 									
-								t_cdij = MP1_amplitudes[c, d, i, j]
-								
-								# Compute the bracket term
-								bracket = 0.0
-								
-								# f_ac δ_bd
-								if b == d:
-									bracket += Fmo_spin[a, c]
-								
-								# f_bd δ_ac
-								if a == c:
-									bracket += Fmo_spin[b, d]
-								
-								# - f_ad δ_bc
-								if b == c:
-									bracket -= Fmo_spin[a, d]
-								
-								# - f_bc δ_ad
-								if a == d:
-									bracket -= Fmo_spin[b, c]
-								
-								# - (ε_i + ε_j)(δ_ac δ_bd - δ_ad δ_bc)
-								if a == c and b == d:
-									bracket -= (eps_i + eps_j)
-								if a == d and b == c:
-									bracket += (eps_i + eps_j)
-								
-								term1 += t_abij * t_cdij * bracket
-				
-				# Second term: 2 Σ_{a>b} t_ij^{ab} <ab|ij>
-				term2 = 0.0
-				
-				for idx_a, a in enumerate(virt_indices):
+									# Compute the bracket term
+									bracket = 0.0
+									
+									# f_ac δ_bd
+									if b == d:
+										# Non-canonical Fock
+										if self.use_canonical_Fock == False:
+											bracket += Fmo_spin[a, c]
+										# Canonical Fock
+										else:
+											bracket += Fmo_spin[a, c]
+											# if a == c:
+											# 	bracket += eps[a]
+									
+									# f_bd δ_ac
+									if a == c:
+										# Non-canonical Fock
+										if self.use_canonical_Fock == False:
+											bracket += Fmo_spin[b, d]
+										# Canonical Fock
+										else:
+											bracket += Fmo_spin[b, d]
+											# if b == d:
+											# 	bracket += eps[b]
+									
+									# - f_ad δ_bc
+									if b == c:
+										# Non-canonical Fock
+										if self.use_canonical_Fock == False:
+											bracket -= Fmo_spin[a, d]
+										# Canonical Fock
+										else:
+											bracket -= Fmo_spin[a, d]
+											# if a == d:
+											# 	bracket -= eps[a]
+									
+									# - f_bc δ_ad
+									if a == d:
+										# Non-canonical Fock
+										if self.use_canonical_Fock == False:
+											bracket -= Fmo_spin[b, c]
+										# Canonical Fock
+										else:
+											bracket -= Fmo_spin[b, c]
+											# if b == c:
+											# 	bracket -= eps[b]
+									
+									# - (ε_i + ε_j)(δ_ac δ_bd - δ_ad δ_bc)
+									if a == c and b == d:
+										if self.use_canonical_Fock == False:
+											bracket -= (Fmo_spin[i, i] + Fmo_spin[j, j])
+										else:
+											bracket -= (eps_i + eps_j)
+									if a == d and b == c:
+										if self.use_canonical_Fock == False:
+											bracket += (Fmo_spin[i, i] + Fmo_spin[j, j])
+										else:
+											bracket += (eps_i + eps_j)
+									
+									term1 += t_abij * t_cdij * bracket
 					
-					for idx_b, b in enumerate(virt_indices):
-						if b <= a:  # a > b restriction
-							continue
-							
-						t_abij = MP1_amplitudes[a, b, i, j]
-						integral = eri_as[a, b, i, j]  
+					# Second term: 2 Σ_{a>b} t_ij^{ab} <ab|ij>
+					term2 = 0.0
+					
+					for idx_a, a in enumerate(virt_indices):
 						
-						term2 += 2.0 * t_abij * integral
+						for idx_b, b in enumerate(virt_indices):
+							if b <= a:  # a > b restriction
+								continue
+								
+							t_abij = MP1_amplitudes[a, b, i, j]
+							integral = eri_as[a, b, i, j]  
+							
+							term2 += 2.0 * t_abij * integral
+
+					J_ij = term1 + term2 
+					J_2 += J_ij
+			return J_2
+		
+		J_2 = compute_mp2_energy(self, eps, Fmo_spin, eri_as, MP1_amplitudes)
+
+		def compute_mp2_energy_optimized(self, eps, Fmo_spin, eri_as, MP1_amplitudes):
+			# Get orbital indices
+			occ_indices = self.active_occ_indices
+			virt_indices = self.active_inocc_indices
+			
+			nocc = len(occ_indices)
+			nvir = len(virt_indices)
+			
+			if nocc == 0 or nvir == 0:
+				return 0.0
+			
+			# Convert to numpy arrays for faster indexing
+			occ = np.array(occ_indices)
+			vir = np.array(virt_indices)
+			
+			J_2 = 0.0
+			
+			# Precompute all (a,b) and (c,d) pairs with a>b and c>d
+			# Get indices of all a>b pairs
+			a_idx, b_idx = np.triu_indices(nvir, k=1)  # upper triangle without diagonal
+			n_ab_pairs = len(a_idx)
+			
+			# Actual orbital indices for virtual pairs
+			a_vals = vir[a_idx]  # shape: (n_ab_pairs,)
+			b_vals = vir[b_idx]
+			
+			# For non-canonical case, precompute Fock matrix elements
+			if not self.use_canonical_Fock:
+				# Extract virtual-virtual block of Fock matrix
+				F_virt = Fmo_spin[vir][:, vir]  # shape: (nvir, nvir)
 				
-				J_ij = term1 + term2
-				J_2 += J_ij
-		
+				# Map virtual indices to positions in F_virt
+				vir_to_idx = {v: i for i, v in enumerate(vir)}
+				a_idx_pos = np.array([vir_to_idx[a] for a in a_vals])  # shape: (n_ab_pairs,)
+				b_idx_pos = np.array([vir_to_idx[b] for b in b_vals])
+				
+				# Create arrays for broadcasting
+				# For all combinations of (a,b) and (c,d) pairs
+				a_pos_all = a_idx_pos[:, None]  # shape: (n_ab_pairs, 1)
+				b_pos_all = b_idx_pos[:, None]  # shape: (n_ab_pairs, 1)
+				c_pos_all = a_idx_pos[None, :]  # shape: (1, n_ab_pairs)
+				d_pos_all = b_idx_pos[None, :]  # shape: (1, n_ab_pairs)
+				
+				# Create masks for Kronecker deltas
+				delta_ac = (a_vals[:, None] == a_vals[None, :])  # shape: (n_ab_pairs, n_ab_pairs)
+				delta_bd = (b_vals[:, None] == b_vals[None, :])
+				delta_ad = (a_vals[:, None] == b_vals[None, :])
+				delta_bc = (b_vals[:, None] == a_vals[None, :])
+			
+			# Loop over all i>j pairs
+			# Outer loop: i from first to last
+			for idx_i in range(nocc):
+				i = occ[idx_i]
+				eps_i = eps[i]
+				
+				# Inner loop: j from i-1 down to 0 (for i > j)
+				for idx_j in range(idx_i):
+					j = occ[idx_j]
+					eps_j = eps[j]
+					
+					# Get all t_ij^{ab} for a>b
+					t_abij = MP1_amplitudes[a_vals, b_vals, i, j]  # shape: (n_ab_pairs,)
+					
+					# === TERM 2: 2 Σ_{a>b} t_ij^{ab} <ab|ij> ===
+					integrals = eri_as[a_vals, b_vals, i, j]  # shape: (n_ab_pairs,)
+					term2 = 2.0 * np.dot(t_abij, integrals)
+					
+					# === TERM 1: Σ_{a>b} Σ_{c>d} t_ij^{ab} t_ij^{cd} bracket ===
+					term1 = 0.0
+					
+					if self.use_canonical_Fock:
+						# Canonical case: Fock matrix is diagonal
+						# The bracket simplifies to: (ε_a + ε_b - ε_i - ε_j) when (a,b) = (c,d)
+						# And all other terms are zero because δ_ac requires a=c, δ_bd requires b=d, etc.
+						
+						# Only non-zero contributions are when (a,b) = (c,d)
+						# So term1 = Σ_{a>b} t_abij² * (ε_a + ε_b - ε_i - ε_j)
+						eps_a = eps[a_vals]
+						eps_b = eps[b_vals]
+						eps_ab = eps_a + eps_b - eps_i - eps_j
+						term1 = np.sum(t_abij**2 * eps_ab)
+						
+					else:
+						# Non-canonical case: need to compute full bracket
+						# We'll use vectorization to compute all (a,b),(c,d) pairs at once
+						
+						# Reshape t_abij for broadcasting
+						t_row = t_abij[:, None]  # shape: (n_ab_pairs, 1)
+						t_col = t_abij[None, :]  # shape: (1, n_ab_pairs)
+						
+						# Initialize bracket matrix
+						bracket = np.zeros((n_ab_pairs, n_ab_pairs))
+						
+						# 1. f_ac δ_bd
+						# Only when b == d
+						mask_bd = delta_bd
+						if np.any(mask_bd):
+							# Get f_ac = Fmo_spin[a, c] for all a,c where b == d
+							f_ac_vals = F_virt[a_pos_all, c_pos_all]
+							bracket += f_ac_vals * mask_bd
+						
+						# 2. f_bd δ_ac
+						# Only when a == c
+						mask_ac = delta_ac
+						if np.any(mask_ac):
+							# Get f_bd = Fmo_spin[b, d] for all b,d where a == c
+							f_bd_vals = F_virt[b_pos_all, d_pos_all]
+							bracket += f_bd_vals * mask_ac
+						
+						# 3. -f_ad δ_bc
+						# Only when b == c
+						mask_bc = delta_bc
+						if np.any(mask_bc):
+							# Get f_ad = Fmo_spin[a, d] for all a,d where b == c
+							f_ad_vals = F_virt[a_pos_all, d_pos_all]
+							bracket -= f_ad_vals * mask_bc
+						
+						# 4. -f_bc δ_ad
+						# Only when a == d
+						mask_ad = delta_ad
+						if np.any(mask_ad):
+							# Get f_bc = Fmo_spin[b, c] for all b,c where a == d
+							f_bc_vals = F_virt[b_pos_all, c_pos_all]
+							bracket -= f_bc_vals * mask_ad
+						
+						# 5. - (ε_i + ε_j)(δ_ac δ_bd - δ_ad δ_bc)
+						# Note: We use Fmo_spin diagonal for non-canonical case
+						eps_ij_sum = Fmo_spin[i, i] + Fmo_spin[j, j]
+						
+						# δ_ac δ_bd term
+						mask_ac_bd = delta_ac & delta_bd
+						bracket[mask_ac_bd] -= eps_ij_sum
+						
+						# δ_ad δ_bc term
+						mask_ad_bc = delta_ad & delta_bc
+						bracket[mask_ad_bc] += eps_ij_sum
+						
+						# Compute term1: sum over all (a,b) and (c,d)
+						# t_abij * bracket * t_cdij
+						term1 = np.sum(t_row * bracket * t_col)
+					
+					# Add to total
+					J_2 += term1 + term2
+			
+			return J_2
+			
+		# Get MP2 energy optimized
+		# J_2_opt = compute_mp2_energy_optimized(self, eps, Fmo_spin, eri_as, MP1_amplitudes)
+
+		# Check optimized MP2 energy matches full computation
+		# energy_diff = np.abs(J_2 - J_2_opt)
+		# assert energy_diff < 1e-10, "Optimized MP2 energy does not match full computation! Diff: {}".format(energy_diff)
+
+		# Set optimized version
+		# J_2 = J_2_opt
+
 		print(f"[{len(self.active_inocc_indices)}/{len(self.active_inocc_indices + self.inactive_indices)}]: Computed MP2 correlation energy (spin-orbital): ", J_2)
-		
+
 		# Sanity checks
 			# Check that MP2 correlation energy is finite
 		assert np.isfinite(J_2), "MP2 correlation energy is not finite!"
@@ -799,23 +1111,60 @@ class OVOS:
 								t_ABIJ = MP1_amplitudes[A, B, I, J]
 							
 								# Choose correct integral notation
-									# Same-spin: use antisymmetrized integral <eb||ij>
-									# Different-spin: use Coulomb integral <eb|ij> in physicist's notation
-								integral = eri_as[E, B, I, J]
+									# Use antisymmetrized integral <eb||ij>
+								integral = -eri_as[E, B, I, J]
 								
 								term1 += 2.0 * t_ABIJ * integral
 					
 					# Term2: 2 * Σ_{b} D_ab f_{eb}
 					term2 = 0.0
 					for idx_B, B in enumerate(self.active_inocc_indices):
-						term2 += 2.0 * D_ab[idx_A, idx_B] * Fmo_spin[B, E]
-					
+						# In non-canonical fock matrix, f_eb = Fmo_spin[E, B]
+						if self.use_canonical_Fock == False:
+							# Get overlap S_EB
+							# S_EB = 0.0
+							# for p in range(self.tot_num_spin_orbs):
+							# 	S_EB += mo_coeffs[p, E] * mo_coeffs[p, B]
+							# f_EB = self.eps[E] * S_EB
+							f_EB = Fmo_spin[E, B]
+							term2 += 2.0 * D_ab[idx_A, idx_B] * f_EB
+						# In canonical fock matrix, f_eb = eps_e δ_eb
+						else:
+							# if E == B:
+								# Get overlap S_EB
+								# S_EB = 0.0
+								# for p in range(self.tot_num_spin_orbs):
+								# 	S_EB += mo_coeffs[p, E] * mo_coeffs[p, B]
+								# f_EB = self.eps[E] * S_EB
+							term2 += 2.0 * D_ab[idx_A, idx_B] * Fmo_spin[E, B]
+
+					# # term3:
+					# term3 = 0.0
+					# if self.use_canonical_Fock == False:
+					# 	for I in self.active_occ_indices:
+					# 		for J in self.active_occ_indices:
+					# 			if I <= J:
+					# 				continue
+					# 			for idx_B, B in enumerate(self.active_inocc_indices):
+					# 				for K in self.active_occ_indices:
+					# 					for L in self.active_occ_indices:
+					# 						if K <= L:
+					# 							continue
+					# 						for idx_C, C in enumerate(self.active_inocc_indices):
+					# 							t_CBKL = MP1_amplitudes[C, B, K, L]
+												
+					# 							# \partial t_CBKL/\partial f_IJ = ...
+					# 							t_CBKL = 2*t_CBKL/(Fmo_spin[C, C] + Fmo_spin[B, B] - Fmo_spin[K, K] - Fmo_spin[L, L] - 2*Fmo_spin[C,B] - 2*Fmo_spin[K,L])
+					# 								# plus some recursive terms that i omit
+
+					# 							term3 += -2.0 * t_CBKL * D_ab[idx_C, idx_B] * Fmo_spin[E,B] * Fmo_spin[I, J]  
+
 					# Combine terms into gradient
-					G[idx_A, idx_E] = term1 + term2
+					G[idx_A, idx_E] = term1 + term2 # + term3
 			return G
 		
 		# t0 = time.time()
-		# G = compute_gradient(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin)
+		G = compute_gradient(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin)
 		# print("Time for gradient computation: ", time.time() - t0)
 
 		def compute_gradient_optimized(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin):
@@ -876,26 +1225,36 @@ class OVOS:
 			J_int_flat = J_idx_int_expanded.ravel()
 			
 			# Extract int_pairs
-			int_pairs = eri_as[E_flat, B_int_flat, I_int_flat, J_int_flat].reshape(ninactive, nvir, n_pairs)
+			int_pairs = -eri_as[E_flat, B_int_flat, I_int_flat, J_int_flat].reshape(ninactive, nvir, n_pairs)
 			
 			# Compute term1
 			term1 = 2.0 * np.einsum('abp,ebp->ae', t_pairs, int_pairs, optimize=True)
 			
-			# Term2
-			F_block = Fmo_spin[np.ix_(vir, inactive)]
-			term2 = 2.0 * np.dot(D_ab, F_block)
-			
+			# Term2: 2 * Σ_{b} D_ab f_{eb}
+				# Non-canonical Fock matrix version
+			if self.use_canonical_Fock == False:
+				F_block = Fmo_spin[np.ix_(vir, inactive)]
+				term2 = 2.0 * D_ab @ F_block
+				# Canonical Fock matrix version
+			else:
+				eps_block = np.zeros((len(vir), len(inactive)), dtype=np.float64)
+				for idx_B, B in enumerate(vir):
+					for idx_E, E in enumerate(inactive):
+						if B == E:
+							eps_block[idx_B, idx_E] = self.eps[E]
+				term2 = 2.0 * D_ab @ eps_block
+
 			return term1 + term2
 		
 		 	# Test optimized version
 		# t0 = time.time()
-		G_optimized = compute_gradient_optimized(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin)
+		# G_optimized = compute_gradient_optimized(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin)
 		# print("Time for optimized gradient computation: ", time.time() - t0)
 		 	# Check that both methods give the same result
 		# grad_diff = np.max(np.abs(G.flatten() - G_optimized.flatten()))
 		# assert np.allclose(G.flatten(), G_optimized.flatten(), atol=1e-10), "Optimized gradient does not match original! Max diff: {}".format(grad_diff)
 		 	# Use optimized version
-		G = G_optimized
+		# G = G_optimized
 
 		# Print diagnostics
 		print("  Orbital Optimization Diagnostics:")
@@ -922,10 +1281,10 @@ class OVOS:
 		assert np.all(np.isfinite(G)), "Gradient G contains non-finite values!"
 
 		# Convergence check
-		max_grad = np.max(np.abs(G))
-		# print(f"  Max gradient element: {max_grad:.6e}")
-		if max_grad < 1e-6:
-			print("        WRANING: Gradient below threshold -> Orbitals are optimized!")
+		# max_grad = np.max(np.abs(G))
+		# # print(f"  Max gradient element: {max_grad:.6e}")
+		# if max_grad < 1e-6:
+		# 	print("        WRANING: Gradient below threshold -> Orbitals are optimized!")
 
 
 
@@ -962,7 +1321,7 @@ class OVOS:
 									# Choose correct integral notation
 										# Same-spin: use antisymmetrized integral <eb||ij>
 										# Different-spin: simplifies to Coulomb integral <eb|ij> in physicist's notation
-									integral = eri_as[E, F, I, J]
+									integral = -eri_as[E, F, I, J]
 									
 									term1 += 2.0 * t_ABIJ * integral
 							
@@ -978,11 +1337,11 @@ class OVOS:
 										for C in self.active_inocc_indices:
 											
 											t_ACIJ = MP1_amplitudes[A, C, I, J]
-											integral_BC = eri_as[B, C, I, J]
+											integral_BC = -eri_as[B, C, I, J]
 										
-											t_BCIJ = MP1_amplitudes[B, C, I, J]
-											integral_AC = eri_as[A, C, I, J]
-											temp2_sum += t_ACIJ * integral_BC + t_BCIJ * integral_AC
+											t_CBIJ = MP1_amplitudes[C, B, I, J]
+											integral_AC = -eri_as[C, A, I, J]
+											temp2_sum += t_ACIJ * integral_BC + t_CBIJ * integral_AC
 
 										term2 -= temp2_sum
 							
@@ -994,13 +1353,61 @@ class OVOS:
 							Dab = D_ab[idx_A, idx_B]
 							
 							if E == F:  # Term 3: Dab * (f_aa - f_bb) δ_EF
-								f_aa = Fmo_spin[A, A]
-								f_bb = Fmo_spin[B, B]
+								# Non-canonical Fock
+								if self.use_canonical_Fock == False:
+									f_aa = Fmo_spin[A, A]
+									f_bb = Fmo_spin[B, B]
+								# Canonical Fock
+								else:
+									# f_aa = self.eps[A]
+									# f_bb = self.eps[B]
+									f_aa = Fmo_spin[A, A]
+									f_bb = Fmo_spin[B, B]
+								
 								term3 = Dab * (f_aa - f_bb)
 
 							if E != F:  # Term 4: Dab * f_ef (1- δ_EF)
-								term4 = Dab * Fmo_spin[E, F] 
+								# Inactive-inactive block of Fock matrix
+									# Should not be included in the canonical Fock case,
+										# only canonical Fock in active space, a,b,c,d...
+								f_ef = Fmo_spin[E, F]
+								
+								term4 = Dab * f_ef			
 							
+							# # ===== TERMS 5 =====
+							# # These terms are zero for canonical orbitals, so we can skip them in that
+							# term5 = 0.0
+							# if self.use_canonical_Fock == False:
+							# 	for I in self.active_occ_indices:
+							# 		for J in self.active_occ_indices:
+							# 			if I <= J:
+							# 				continue
+							# 			t_ABIJ = MP1_amplitudes[A, B, I, J]
+							# 			f_IJ = Fmo_spin[I, J]
+							# 			integral = -eri_as[E, F, I, J]
+
+							# 			term5 += 2.0 * t_ABIJ * f_IJ * integral
+								
+							# 	for I in self.active_occ_indices:
+							# 		for J in self.active_occ_indices:
+							# 			if I <= J:
+							# 				continue
+							# 			for C in self.active_occ_indices:
+							# 				for D in self.active_occ_indices:
+							# 					if C <= D:
+							# 						continue
+							# 					integral = eri_as[C, D, I, J]
+
+							# 					t_CDIJ = MP1_amplitudes[C, D, I, J]
+												
+							# 					# \partial t_CBKL/\partial f_AB = ...
+							# 					t_CDIJ = 2*t_CDIJ/(Fmo_spin[C, C] + Fmo_spin[D, D] - Fmo_spin[I, I] - Fmo_spin[J, J] - 2*Fmo_spin[C,D] - 2*Fmo_spin[I,J])
+
+							# 						# plus some recursive terms that i omit
+							# 					delta_EF = 1.0 if E == F else 0.0
+
+							# 					term5 += 2.0 * t_CDIJ * integral * D_ab[idx_A, idx_B] * (1 - delta_EF)
+
 							H[row, col] = term1 + term2 + term3 + term4
 			return H
 		
@@ -1042,24 +1449,24 @@ class OVOS:
 			for p in range(n_pairs):
 				i = occ[i_idx[p]]
 				j = occ[j_idx[p]]
-				int_ef_pairs[:, :, p] = eri_as[np.ix_(inactive, inactive, [i], [j])].reshape(ninactive, ninactive)
+				int_ef_pairs[:, :, p] = -eri_as[np.ix_(inactive, inactive, [i], [j])].reshape(ninactive, ninactive)
 			
 			# H[A,E,B,F] += 2 * Σ_p t[A,B,p] * int[E,F,p]
 			term1_4d = 2.0 * np.einsum('abp,efp->aebf', t_pairs, int_ef_pairs, optimize=True)
 			H_4d += term1_4d
 			
-			# === TERM 2: - Σ_{i>j} Σ_c [t_ij^{ac} <bc|ij> + t_ij^{bc} <ac|ij>] * δ_EF ===
+			# === TERM 2: - Σ_{i>j} Σ_c [t_ij^{ac} <bc|ij> + t_ij^{cb} <ac|ij>] * δ_EF ===
 			# Extract integrals for term2: <B,C,I,J> and <A,C,I,J> for I<J
-			int_bc_pairs = np.zeros((nvir, nvir, n_pairs))
+			int_pairs = np.zeros((nvir, nvir, n_pairs))
 			for p in range(n_pairs):
 				i = occ[i_idx[p]]
 				j = occ[j_idx[p]]
-				int_bc_pairs[:, :, p] = eri_as[np.ix_(vir, vir, [i], [j])].reshape(nvir, nvir)
+				int_pairs[:, :, p] = -eri_as[np.ix_(vir, vir, [i], [j])].reshape(nvir, nvir)
 			
 			# Compute Σ_c t[A,C,p] * int[B,C,p]
-			term2_part1 = np.einsum('acp,bcp->abp', t_pairs, int_bc_pairs, optimize=True)
-			# Compute Σ_c t[B,C,p] * int[A,C,p]
-			term2_part2 = np.einsum('bcp,acp->abp', t_pairs, int_bc_pairs, optimize=True)
+			term2_part1 = np.einsum('acp,bcp->abp', t_pairs, int_pairs, optimize=True)
+			# Compute Σ_c t[C,B,p] * int[C,A,p]
+			term2_part2 = np.einsum('cbp,cap->abp', t_pairs, int_pairs, optimize=True)
 			
 			# Sum over p and apply negative sign
 			term2_sum = -np.sum(term2_part1 + term2_part2, axis=2)  # shape: (nvir, nvir)
@@ -1071,8 +1478,16 @@ class OVOS:
 				H_4d[:, e, :, e] += term2_sum
 			
 			# === TERM 3: Dab * (f_aa - f_bb) δ_EF ===
-			f_diag_vir = np.array([Fmo_spin[a, a] for a in vir])
-			f_diff = f_diag_vir[:, None] - f_diag_vir[None, :]  # shape: (nvir, nvir)
+			# Non-canonical Fock
+			if self.use_canonical_Fock == False:
+				# Extract f_aa and f_bb for active virtual orbitals
+				f_diag_vir = np.array([Fmo_spin[a, a] for a in vir])
+				f_diff = f_diag_vir[:, None] - f_diag_vir[None, :]  # shape: (nvir, nvir)
+			# Canonical Fock
+			else:
+				# Extract ε_a and ε_b for active virtual orbitals
+				eps_vir = np.array([self.eps[a] for a in vir])
+				f_diff = eps_vir[:, None] - eps_vir[None, :]  # shape: (nvir, nvir)
 			term3 = D_ab * f_diff  # shape: (nvir, nvir)
 			
 			# Add to diagonal E,F blocks
@@ -1094,7 +1509,7 @@ class OVOS:
 			
 			# Reshape back to 2D
 			H = H_4d.reshape(nvir * ninactive, nvir * ninactive)
-			
+				
 			return H
 
 
@@ -1124,7 +1539,7 @@ class OVOS:
 		det_H = np.linalg.det(H) if H.size > 0 else 0.0
 		print(f"    Hessian determinant: {det_H:.6e}")
 		if det_H < 1e-4:
-			print("        WARNING: Hessian is Determinant is small!")
+			print("        WARNING: Hessian determinant is small!")
 		if det_H == 0.0:
 			print("        WARNING: Hessian is singular!")
 
@@ -1243,8 +1658,11 @@ class OVOS:
 				
 				# Solve H_ii * R_i = -G_i
 				try:
+					# Direct inversion
+					R_block = -G_block @ np.linalg.inv(H_block)
+
 					# More stable than direct inverse
-					R_block = np.linalg.solve(H_block, -G_block)
+					#R_block = np.linalg.solve(H_block, -G_block)
 				except np.linalg.LinAlgError:
 					# Fallback to pseudoinverse if singular
 					R_block = -G_block @ np.linalg.pinv(H_block)
@@ -1312,9 +1730,9 @@ class OVOS:
 				print("        WARNING: Using pseudo-inverse for orbital rotations.")
 				R = - G @ np.linalg.pinv(H)
 				# Handle is H is ill-conditioned, use solve
-			elif np.linalg.cond(H) > 1e12:
-				print("        WARNING: Using np.linalg.solve for orbital rotations due to ill-conditioned Hessian.")
-				R = np.linalg.solve(H, -G)
+			# elif np.linalg.cond(H) > 1e12:
+			# 	print("        WARNING: Using np.linalg.solve for orbital rotations due to ill-conditioned Hessian.")
+			# 	R = np.linalg.solve(H, -G)
 			else:
 				R = - G @ np.linalg.inv(H)
 
@@ -1534,6 +1952,12 @@ class OVOS:
 		print()
 		print(f"    Rotated {num_rotated} spin orbitals out of {mo_coeffs[0].shape[1] + mo_coeffs[1].shape[1]} total.")
 		print()
+
+		# In the case of non-canonical orbitals,
+			# Does the MO coefficients supposed to stay orthonormal after rotation?
+				# Yes, the rotation is unitary, so it should preserve orthonormality
+			# Check that the rotated orbitals are still orthonormal
+
 				# check shape
 		for spin in [0, 1]:
 			expected_shape_spatial = mo_coeffs[spin].shape
@@ -1548,22 +1972,50 @@ class OVOS:
 				rot_orb = mo_coeffs_rot[spin][:, idx]
 
 				assert np.allclose(orig_orb, rot_orb, atol=1e-4), f"Active occupied spin orbital {idx} (spin {spin}) was changed during rotation!"
-
-		# Check that rotated orbitals are orthonormal
-			# Sum a coloumn of mo_coeffs to check normalization for a given spin
-				# Check: C^T S C = I
-			C_i = mo_coeffs_rot[spin]
-			norm = C_i.T @ self.S @ C_i
-			assert np.allclose(norm, np.eye(norm.shape[0]), atol=1e-6), f"MO coefficients for spin {spin} are not orthonormal!"
-
-
-
-		# Final note:
-				# Are the optimal solution when alpha and beta orbitals are the same? !!!!!!!!
+			
+			if self.use_canonical_Fock:	
+			# Check that rotated orbitals are orthonormal
+				# Sum a coloumn of mo_coeffs to check normalization for a given spin
+					# Check: C^T S C = I
+				C_i = mo_coeffs_rot[spin]
+				norm = C_i.T @ self.S @ C_i
+				assert np.allclose(norm, np.eye(norm.shape[0]), atol=1e-6), f"MO coefficients for spin {spin} are not orthonormal!"
 
 
+		# Rotate the Fock matrix in the MO basis as well
+			# Only rotate the active virtual block of the Fock matrix, since that's what we use for the next iteration
+				# Fmo_spin is the Fock matrix in the spin-orbital basis, we need to rotate it to get the new Fock matrix in the MO basis
+					# Fmo_rot = U^T Fmo_spin U
+						# This is the standard transformation for a Fock matrix under orbital rotation
+			# Isolate the active virtual block U to rotate the relevant part of Fmo
+				# In the spin-orbital basis, the active virtual orbitals correspond to certain columns of U, and the occupied orbitals correspond to certain rows/columns of Fmo_spin
+				# Leave the occupied-occupied and inactive-inactive blocks of Fmo unchanged, only rotate the active virtual block
+		U_active_virtual = U[np.ix_(self.active_inocc_indices, self.active_inocc_indices)]
+		Fmo_spin_active_virtual = Fmo_spin[np.ix_(self.active_inocc_indices, self.active_inocc_indices)]
+		Fmo_rot_active_virtual = U_active_virtual.T @ Fmo_spin_active_virtual @ U_active_virtual
 
-		return mo_coeffs_rot, self.use_RLE_orbopt
+			# Construct the full rotated Fock matrix in the spin-orbital basis
+		Fmo_rot = np.copy(Fmo_spin)
+		Fmo_rot[np.ix_(self.active_inocc_indices, self.active_inocc_indices)] = Fmo_rot_active_virtual
+
+			# Diagonalize the full Fock matrix
+		eigvals_rot, eigvecs_rot = np.linalg.eigh(Fmo_rot)
+		Fmo_rot = eigvecs_rot @ np.diag(eigvals_rot) @ eigvecs_rot.T.conj()
+
+			# Check that the rotated Fock matrix is still Hermitian
+		if not np.allclose(Fmo_rot, Fmo_rot.T.conj(), atol=1e-10):
+			print("WARNING: Rotated Fock matrix is not Hermitian!")
+
+			# Check that the diagonal elements of the rotated Fock matrix are real
+		if not np.all(np.isreal(np.diag(Fmo_rot))):
+			print("WARNING: Diagonal elements of rotated Fock matrix are not real!")
+
+			# Check that the rotated Fock matrix has no NaN or Inf values
+		if not np.all(np.isfinite(Fmo_rot)):
+			print("WARNING: Rotated Fock matrix contains NaN or Inf values!")
+
+
+		return mo_coeffs_rot, Fmo_rot, self.use_RLE_orbopt
 
 
 	
@@ -1572,26 +2024,56 @@ class OVOS:
 
 
 
-	def run_ovos(self,  mo_coeffs):
+	def run_ovos(self,  mo_coeffs, Fmo_rot):
 		"""
 		Run the OVOS algorithm.
 		"""
 
 		converged = False
-		max_iter = 2500
+		max_iter = 500
 		iter_count = 0
+
+		E_corr = None
 
 		while not converged:
 			iter_count += 1
 			print("#### OVOS Iteration ", iter_count, " ####")
 			
+			# Check if maximum iterations reached
+			if iter_count >= max_iter:
+				print("Maximum number of iterations reached. OVOS did not converge.")
+				lst_E_corr.append(E_corr)
+				lst_iter_counts.append(iter_count)
+				# Set converged to False
+				converged = False
+				break
+			
+
 			# Step (iii-iv): Compute MP2 correlation energy and amplitudes
-			E_corr, MP1_amplitudes, eri_spin, eri_phys, eri_as, Fmo_spin = self.MP2_energy(mo_coeffs = mo_coeffs)
+			print(" Step (iii)-(iv): Compute MP2 correlation energy and amplitudes")
+			E_corr, MP1_amplitudes, eri_spin, eri_phys, eri_as, Fmo_spin = self.MP2_energy(mo_coeffs = mo_coeffs, Fmo = Fmo_rot)
 
 			if E_corr > 0.0:
 					print("		WARNING: Correlation energy is positive! OVOS may not have converged properly.")
 
+					# Break here to stop on positive correlation energy, 
+						# but still record the energy and iteration count
+					if iter_count < max_iter and iter_count > 1:
+						lst_E_corr.append(E_corr)
+						lst_iter_counts.append(iter_count)
+
+						# Account for if first iteration is positive, initialize lists
+					if iter_count == 1:
+						lst_E_corr = []
+						lst_E_corr.append(E_corr)
+
+						lst_iter_counts = []
+						lst_iter_counts.append(iter_count)
+
+					break # Remember to comment out if not use_best_of
+
 			# Step (ix): check convergence
+			print(" Step (ix): Check convergence")
 			# convergence criterion: change in correlation energy < 1e-10 Hartree
 			if iter_count < max_iter and iter_count > 1:
 				threshold = 1e-8
@@ -1603,6 +2085,7 @@ class OVOS:
 					lst_iter_counts.append(iter_count)
 
 					break
+
 				else:
 					lst_E_corr.append(E_corr)
 					lst_iter_counts.append(iter_count)
@@ -1614,15 +2097,106 @@ class OVOS:
 					print()
 
 					# Step (v)-(viii): Orbital optimization
-					mo_coeffs, use_RLE = self.orbital_optimization(mo_coeffs=mo_coeffs, MP1_amplitudes=MP1_amplitudes, eri_as=eri_as, Fmo_spin=Fmo_spin, eri_spin=eri_spin, eri_phys=eri_phys)
+					print(" Step (v)-(viii): Orbital optimization")
+					mo_coeffs, Fmo_rot, use_RLE = self.orbital_optimization(mo_coeffs=mo_coeffs, MP1_amplitudes=MP1_amplitudes, eri_as=eri_as, Fmo_spin=Fmo_spin, eri_spin=eri_spin, eri_phys=eri_phys)
 
-			elif iter_count >= max_iter:
-				print("Maximum number of iterations reached. OVOS did not converge.")
-				lst_E_corr.append(E_corr)
-				lst_iter_counts.append(iter_count)
-				break
 
-			elif iter_count == 1:
+			# # Check if stuck in a limit cycle or oscillatory pattern
+			# # Detect persistent oscillation between two or more values
+			# if iter_count >= 250:  # Need enough history to detect a pattern
+			# 	# Look for repeating patterns in the last few iterations
+			# 	recent_energies = lst_E_corr[-min(12, len(lst_E_corr)):]  # Get more points for better detection
+				
+			# 	if len(recent_energies) >= 16:  # Need enough points for reliable detection
+			# 		# Method 1: Check for PERFECT alternation with large amplitude
+			# 		# Only trigger if oscillation amplitude is significantly above convergence threshold
+			# 		if len(recent_energies) >= 16:
+			# 			# Check last 8 points for A-B-A-B pattern with consistent amplitude
+			# 			alt_pattern_large = True
+			# 			oscillation_amplitude = abs(recent_energies[-1] - recent_energies[-2])
+						
+			# 			# Check if we have at least 4 cycles of consistent alternation
+			# 			for i in range(1, 5):
+			# 				idx1 = -2*i
+			# 				idx2 = -2*i - 1
+			# 				if idx2 >= -len(recent_energies):
+			# 					current_amp = abs(recent_energies[idx1] - recent_energies[idx2])
+			# 					# Amplitude should be similar and large (> 10x convergence threshold)
+			# 					if abs(current_amp - oscillation_amplitude) > 1e-10 or oscillation_amplitude < 1e-7:
+			# 						alt_pattern_large = False
+			# 						break
+						
+			# 			# Also verify values alternate back to similar numbers
+			# 			if alt_pattern_large:
+			# 				# Check if odd-indexed values are similar and even-indexed values are similar
+			# 				odd_vals = recent_energies[-1:-9:-2]  # Last, 3rd last, 5th last, 7th last
+			# 				even_vals = recent_energies[-2:-9:-2]  # 2nd last, 4th last, 6th last, 8th last
+							
+			# 				odd_std = np.std(odd_vals) if len(odd_vals) > 1 else 0
+			# 				even_std = np.std(even_vals) if len(even_vals) > 1 else 0
+							
+			# 				# Values in each group should be similar (small std)
+			# 				alt_pattern_large = alt_pattern_large and (odd_std < 1e-7 and even_std < 1e-7)
+					
+			# 		# Method 2: Detect divergence (consistently increasing energy)
+			# 		if len(recent_energies) >= 6:
+			# 			# Check if last 6 energies show monotonic increase
+			# 			increasing_trend = all(recent_energies[i] > recent_energies[i-1] 
+			# 								for i in range(-1, -6, -1))
+						
+			# 			if increasing_trend:
+			# 				print("OVOS appears to be diverging (correlation energy consistently increasing).")
+			# 				print(f"  Recent trend: {[f'{e:.10f}' for e in recent_energies[-6:]]}")
+			# 				print("  Stopping optimization.")
+			# 				converged = False
+			# 				break
+					
+			# 		# Method 3: Check for oscillation without convergence over many iterations
+			# 		# Calculate if we're making progress toward convergence
+			# 		if len(recent_energies) >= 10:
+			# 			# Split into first half and second half of recent points
+			# 			first_half = recent_energies[:5]
+			# 			second_half = recent_energies[5:]
+						
+			# 			# Calculate range of oscillations in each half
+			# 			range_first = max(first_half) - min(first_half)
+			# 			range_second = max(second_half) - min(second_half)
+						
+			# 			# If oscillation range isn't decreasing significantly, we might be stuck
+			# 			no_progress = (abs(range_second - range_first) / max(range_first, 1e-10) < 0.1)
+						
+			# 			# And if we're still far from convergence threshold
+			# 			avg_change = np.mean([abs(recent_energies[i] - recent_energies[i-1]) 
+			# 								for i in range(1, len(recent_energies))])
+						
+			# 			# Strong limit cycle detection: oscillation amplitude > 1e-6 AND no progress
+			# 			strong_limit_cycle = (oscillation_amplitude > 1e-6 and 
+			# 								no_progress and 
+			# 								avg_change > 1e-7)
+					
+			# 		# Trigger limit cycle warning only for CLEAR cases
+			# 		if alt_pattern_large and oscillation_amplitude > 1e-6:
+			# 			print("OVOS appears to be stuck in a limit cycle/oscillatory pattern.")
+			# 			print(f"  Clear A-B-A-B pattern detected with consistent large amplitude.")
+			# 			print(f"  Recent energies: {[f'{e:.10f}' for e in recent_energies[-8:]]}")
+			# 			print(f"  Oscillation amplitude: {oscillation_amplitude:.2e} Hartree")
+			# 			print(f"  (Convergence threshold: {threshold:.1e})")
+			# 			print("  Stopping optimization to avoid infinite loop.")
+						
+			# 			# Set converged to False
+			# 			converged = False
+			# 			break
+			# 		elif strong_limit_cycle:
+			# 			print("OVOS appears to be stuck - oscillations not decreasing.")
+			# 			print(f"  Average energy change: {avg_change:.2e} (not decreasing toward threshold)")
+			# 			print(f"  Oscillation range: {range_second:.2e} (similar to previous: {range_first:.2e})")
+			# 			print("  Stopping optimization.")
+			# 			converged = False
+			# 			break				
+
+
+			# First iteration, initialize lists
+			if iter_count == 1:
 				lst_E_corr = []
 				lst_E_corr.append(E_corr)
 
@@ -1630,8 +2204,8 @@ class OVOS:
 				lst_iter_counts.append(iter_count)
 
 				# Step (v)-(viii): Orbital optimization
-				mo_coeffs, use_RLE = self.orbital_optimization(mo_coeffs=mo_coeffs, MP1_amplitudes=MP1_amplitudes, eri_as=eri_as, Fmo_spin=Fmo_spin, eri_spin=eri_spin, eri_phys=eri_phys)
-
+				print(" Step (v)-(viii): Orbital optimization")
+				mo_coeffs, Fmo_rot, use_RLE = self.orbital_optimization(mo_coeffs=mo_coeffs, MP1_amplitudes=MP1_amplitudes, eri_as=eri_as, Fmo_spin=Fmo_spin, eri_spin=eri_spin, eri_phys=eri_phys)
 
 		# Which direction did we go?
 		if converged:
@@ -1662,7 +2236,7 @@ class OVOS:
 		if not converged:
 			print("OVOS did not converge within the maximum number of iterations.")
 
-		return lst_E_corr, lst_iter_counts, mo_coeffs # lst_E_corr, lst_iter_counts, mo_coeff
+		return lst_E_corr, lst_iter_counts, mo_coeffs, Fmo_rot
 	
 	
 
@@ -1798,24 +2372,21 @@ if run_different_virt_orbs == True:
 	# Flags - Only one at a time is TRUE or both FALSE
 		# Flag to indicate if previous virtual orbitals are used
 	use_prev_virt_orbs = True
-		# Flag if 500 repeats of different random unitary rotations for each num_opt_virtual_orbs_current are use on UHF orbitals as starting guess
+		# Flag if 1000 repeats of different random unitary rotations for each num_opt_virtual_orbs_current are use on UHF orbitals as starting guess
 	use_random_unitary_init = False
 
 	# From the article: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			# The initial implementation of our OVOS procedure is restricted 
 			# to the closed-shell RHF reference case
 		# Flag to indicate if standard UHF initialization is used
-	use_UHF_init = True # Also for random unitary init
+	use_UHF_init = False # Also for random unitary and prev. virt. orb. inits
 		# Flag to indicate if standard RHF initialization is used
-	use_RHF_init = False
+			# Set to inverse of use_UHF_init
+	use_RHF_init = not use_UHF_init
 	
-	# Optimization stuff
-		# Flag to indicate if RLE method was used in orbital optimization
-	use_RLE_orbopt = False
-
-
-	# TO DO: PREV. w. UHF, PREV w. RHF, PREV w. Random...
-
+	# Set flag for Canonical or Non-Canonical Fock matrix
+		# Canonical Fock matrix is diagonal in the MO basis
+	use_canonical_Fock = True  # True for Canonical Fock matrix, False for Non-Canonical Fock matrix
 
 	# Best of number of tries - True when random initializations are used
 	if use_random_unitary_init == True:
@@ -1824,7 +2395,7 @@ if run_different_virt_orbs == True:
 		try_best_of = False
 		
 		# Number of random initializations to try for each num_opt_virtual_orbs_current
-	attempts_total = 100
+	attempts_total = 1000  # Total attempts for each num_opt_virtual_orbs_current
 
 
 	while num_opt_virtual_orbs_current < max_opt_virtual_orbs:
@@ -1844,26 +2415,28 @@ if run_different_virt_orbs == True:
 			if try_best_of == False: # Single run of OVOS
 
 				if use_UHF_init == True:
-					# Use random unitary rotations of UHF virtual orbitals as starting guess
-					if 'mo_coeffs_uhf' in locals():
-						del mo_coeffs_uhf  # Clear previous UHF orbitals to avoid reuse
-						# Ensure we get new UHF orbitals each time
 					# Get UHF orbitals
-					if use_prev_virt_orbs == False and mo_coeffs is None:
-						mo_coeffs_uhf = pyscf.scf.UHF(mol).run().mo_coeff
+					if use_prev_virt_orbs == False or use_random_unitary_init == False and 'mo_coeffs' not in locals() and 'Fmo_rot' not in locals():
+						# Only get UHF orbitals if not using previous or random init
+							# The if state will prevent re-getting UHF orbitals if using previous or random init
+						mo_coeffs = pyscf.scf.UHF(mol).run().mo_coeff
+						Fmo_rot = None # Fock matrix in the MO basis will be constructed later based on the initial orbitals
 					init_orbs = "UHF"
 				if use_RHF_init == True:
-					# Use random unitary rotations of RHF virtual orbitals as starting guess
-					if 'mo_coeffs_uhf' in locals():
-						del mo_coeffs_uhf  # Clear previous UHF orbitals to avoid reuse
-						# Ensure we get new UHF orbitals each time
-					# Get RHF orbitals and convert to UHF format
-						# For first run 
-					mo_coeffs_uhf = pyscf.scf.RHF(mol).run().to_uhf().mo_coeff
+					# Get RHF orbitals
+					if use_prev_virt_orbs == False or use_random_unitary_init == False and 'mo_coeffs' not in locals() and 'Fmo_rot' not in locals():
+						# Only get RHF orbitals if not using previous or random init
+							# The if state will prevent re-getting RHF orbitals if using previous or random init
+						mo_coeffs = pyscf.scf.RHF(mol).run().to_uhf().mo_coeff
+						Fmo_rot = None # Fock matrix in the MO basis will be constructed later based on the initial orbitals
 					init_orbs = "RHF"
 
+				print()
+				print("Fmo matrix before OVOS (if exists):", isinstance(Fmo_rot, np.ndarray))
+				print("Mo_coeffs before OVOS (if exists):", 'mo_coeffs' in locals())
+				print()
 
-				if use_prev_virt_orbs == True and 'mo_coeffs' in locals():
+				if use_prev_virt_orbs == True and 'mo_coeffs' in locals() and 'Fmo_rot' in locals():
 					# Use previously optimized orbitals as starting guess
 						# Only if mo_coeff exists from previous run
 					
@@ -1873,6 +2446,7 @@ if run_different_virt_orbs == True:
 
 						# Enforce orthonormality of the modified mo_coeff
 					mo_coeffs = mo_coeffs.copy()  # Start from previous optimized orbitals
+					Fmo_rot = Fmo_rot  # Start from previous optimized Fock matrix
 
 					print("    Using previously optimized orbitals as starting guess.")				
 
@@ -1892,6 +2466,9 @@ if run_different_virt_orbs == True:
 
 						# Rotate virtual orbitals for alpha and beta spins
 					mo_coeffs = [np.copy(mo_coeffs_uhf[0]), np.copy(mo_coeffs_uhf[1])]  # Deep copy to avoid modifying original
+					Fmo_rot = Fmo_rot if Fmo_rot is not None else None  # Start from previous optimized Fock matrix if it exists, otherwise None
+				
+					print("Fock matrix before rotation (if exists):", Fmo_rot)
 
 					for spin in [0, 1]:
 						# Extract occupied and virtual parts
@@ -1903,6 +2480,15 @@ if run_different_virt_orbs == True:
 
 						# Combine back
 						mo_coeffs[spin] = np.hstack((C_occ, C_virt_rot))
+
+					# Rotate corresponding block of Fock matrix if it exists
+					if Fmo_rot is not None:
+						Fmo_rot_block = Fmo_rot[num_occupied_orbitals:, num_occupied_orbitals:]
+						Fmo_rot_block_rot = Q.T @ Fmo_rot_block @ Q
+						Fmo_rot[num_occupied_orbitals:, num_occupied_orbitals:] = Fmo_rot_block_rot
+
+						# Note: The occupied-occupied and occupied-virtual blocks of the Fock matrix remain unchanged, only the virtual-virtual block is rotated.
+
 
 					print("Using random unitary rotated UHF virtual orbitals as starting guess.")
 
@@ -1919,7 +2505,7 @@ if run_different_virt_orbs == True:
 				# pr.enable()
 
 					# Run OVOS
-				lst_E_corr, lst_iter_counts, mo_coeffs = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs, mo_coeff=mo_coeffs).run_ovos(mo_coeffs=mo_coeffs)
+				lst_E_corr, lst_iter_counts, mo_coeffs, Fmo_rot = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs, mo_coeff=mo_coeffs, use=[use_canonical_Fock]).run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
 
 				# pr.disable()
 
@@ -1979,11 +2565,11 @@ if run_different_virt_orbs == True:
 						# Combine back
 						mo_coeffs[spin] = np.hstack((C_occ, C_virt_rot))
 					
-					init_orbs = np.array(mo_coeffs)
+					init_orbs = "UHF"
 					mo_coeffs = np.array(mo_coeffs)
 
 					# Run OVOS
-					lst_E_corr_attempt, lst_iter_counts_attempt, mo_coeffs_attempt = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs).run_ovos(mo_coeffs=mo_coeffs)
+					lst_E_corr_attempt, lst_iter_counts_attempt, mo_coeffs_attempt, Fmo_rot_attempts = OVOS(mol=mol, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs, mo_coeff=mo_coeffs, use=[use_canonical_Fock]).run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
 
 					# Check if this is the best result so far
 					if best_E_corr is None or lst_E_corr_attempt[-1] < best_E_corr:
@@ -1991,15 +2577,17 @@ if run_different_virt_orbs == True:
 						best_lst_E_corr = lst_E_corr_attempt
 						best_lst_iter_counts = lst_iter_counts_attempt
 						best_mo_coeffs = mo_coeffs_attempt
+						best_Fmo_rot = Fmo_rot_attempts
 
 				# Use the best result from all attempts
 				lst_E_corr = best_lst_E_corr
 				lst_iter_counts = best_lst_iter_counts
 				mo_coeffs = best_mo_coeffs
+				Fmo_rot = best_Fmo_rot
 
 
 			# run_OVOS got stuck in a non-converging loop
-			if len(lst_E_corr) >= 250:
+			if len(lst_E_corr) >= 2500:
 				print("OVOS with ", num_opt_virtual_orbs_current, " optimized virtual orbitals did not converge.")
 
 
@@ -2017,7 +2605,6 @@ if run_different_virt_orbs == True:
 			# run_OVOS converged to a positive MP2 correlation energy
 			if lst_E_corr[-1] > 0:
 				print("Warning: OVOS with ", num_opt_virtual_orbs_current, " optimized virtual orbitals converged to a positive MP2 correlation energy.")
-
 
 			# Store results
 			lst_MP2_virt_orbs.append((num_opt_virtual_orbs_current, lst_E_corr[-1], len(lst_E_corr)))
@@ -2073,8 +2660,6 @@ if run_different_virt_orbs == True:
 	
 
 	# Print what methods were used
-	if use_RLE_orbopt == True:
-		print("Reduced Linear Equation (RLE) method was used in orbital optimization.")
 	if use_prev_virt_orbs == True:
 		print("Previously optimized virtual orbitals were used as starting guess for each OVOS run.")
 	if use_random_unitary_init == True:
@@ -2105,9 +2690,6 @@ if run_different_virt_orbs == True:
 		str_name = "different_virt_orbs_random" # !!!!
 	if use_prev_virt_orbs == False and use_random_unitary_init == False:
 		str_name = "different_virt_orbs" # !!!!
-	
-	if use_RLE_orbopt == True:
-		str_name += "_RLE" # !!!!
 
 	if use_UHF_init == True:
 		str_name += "_UHF_init" # !!!!
@@ -2117,10 +2699,15 @@ if run_different_virt_orbs == True:
 	str_atom = select_atom
 	str_basis = select_basis
 
-	print("Saving data to branch/data/"+str_atom+"/"+str_basis+"/")
+	if use_canonical_Fock == True:
+		str_canonical = "use_canonical_Fock"
+	else:
+		str_canonical = "use_non_canonical_Fock"
+
+	print("Saving data to branch/data/"+str_atom+"/"+str_basis+"/"+str_canonical+"/")
 
 	# Save MP2 correlation energy convergence data
-	with open("branch/data/"+str_atom+"/"+str_basis+"/lst_MP2_"+str_name+".json", "w") as f:
+	with open("branch/data/"+str_atom+"/"+str_basis+"/"+str_canonical+"/lst_MP2_"+str_name+".json", "w") as f:
 		json.dump(lst_E_corr_virt_orbs, f, indent=2)
 
-	print("Data saved to branch/data/"+str_atom+"/"+str_basis+"/lst_MP2_"+str_name+".json")
+	print("Data saved to branch/data/"+str_atom+"/"+str_basis+"/"+str_canonical+"/lst_MP2_"+str_name+".json")
