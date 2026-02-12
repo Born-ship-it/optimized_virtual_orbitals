@@ -458,174 +458,125 @@ class OVOS:
 				# t_ij^{ab} = t_ji^{ba}
 		assert np.allclose(MP1_amplitudes, MP1_amplitudes.transpose(1,0,3,2), atol=1e-10), "MP1 amplitudes do not satisfy antisymmetry t_ij^ab = t_ji^ba!"
 
-		# iii) Compute MP2 correlation energy (spin-orbital indices)
+        # iii) Compute MP2 correlation energy (spin-orbital indices)
 		def compute_mp2_energy_optimized(self, eps, Fmo_spin, eri_as, MP1_amplitudes):
 			"""
-			Compute MP2 correlation energy
-				using optimized approach
-				- that avoids explicit 4-fold nested loops,
-				- reduces memory usage by processing in chunks.
+			Compute MP2 correlation energy using block-shaped arrays:
+				eri_as has shape (nvir_spin, nvir_spin, nocc_spin, nocc_spin)
+				MP1_amplitudes has shape (nvir_act, nvir_act, nocc, nocc)
+			All with block-local indexing (0-based within each block).
 
-			Parameters:
-			-----------
-			eps : np.ndarray
-				Spin-orbital MO energies, shape (n_spin,)
-			Fmo_spin : np.ndarray
-				Fock matrix in spin-orbital basis, shape (n_spin, n_spin)
-			eri_as : np.ndarray
-				Antisymmetrized two-electron integrals in spin-orbital basis, shape (n_spin, n_spin, n_spin, n_spin)
-			MP1_amplitudes : np.ndarray
-				First-order MP amplitudes in spin-orbital basis, shape (n_spin, n_spin, n_spin, n_spin)
-			
-			Returns:
-			---------
-			J_2 : float
-				MP2 correlation energy.
-				The computed MP2 correlation energy is the sum of contributions from all unique pairs of occupied orbitals (i,j) and all unique pairs of virtual orbitals (a,b), weighted by the corresponding MP1 amplitudes and antisymmetrized integrals, as defined by the OVOS algorithm.
-				The energy is computed using the formula:
-				J_2 = Σ_{i>j} [ Σ_{a>b} Σ_{c>d} t_ij^{ab} t_ij^{cd} (f_ac δ_bd + f_bd δ_ac - f_ad δ_bc - f_bc δ_ad - (ε_i + ε_j)(δ_ac δ_bd - δ_ad δ_bc)) + 2 Σ_{a>b} t_ij^{ab} <ab|ij> ]
-			Where:
-				- i,j are indices for occupied spin orbitals (I,J in OVOS)
-				- a,b,c,d are indices for virtual spin orbitals (A,B,C,D in OVOS)
-				- t_ij^{ab} are the first-order MP amplitudes
-				- f_ac, f_bd, f_ad, f_bc are elements of the Fock matrix in spin-orbital basis
-				- ε_i, ε_j are the orbital energies of the occupied orbitals
-				- <ab|ij> are the antisymmetrized two-electron integrals in spin-orbital basis
-				- δ is the Kronecker delta function
+			eps and Fmo_spin use absolute spin-orbital indices.
 			"""
-			# Get orbital indices
-			occ_indices = self.active_occ_indices
-			virt_indices = self.active_inocc_indices
-			
+			# Absolute index lists
+			occ_indices = self.active_occ_indices      # absolute: [0, 1, ..., nelec-1]
+			virt_indices = self.active_inocc_indices    # absolute: [nelec, ..., nelec+num_opt-1]
+
 			nocc = len(occ_indices)
 			nvir = len(virt_indices)
-			
+
 			if nocc == 0 or nvir == 0:
 				return 0.0
-			
-			# Convert to numpy arrays for faster indexing
-			occ = np.array(occ_indices)
-			vir = np.array(virt_indices)
-			
+
+			# Absolute arrays (for eps / Fmo_spin lookups)
+			occ_abs = np.array(occ_indices)
+			vir_abs = np.array(virt_indices)
+
 			J_2 = 0.0
-			
-			# Get all a>b pairs using upper triangle indices
-			a_idx, b_idx = np.triu_indices(nvir, k=1)
-			n_ab_pairs = len(a_idx)
-			
-			# Virtual orbital indices for all pairs
-			a_vals = vir[a_idx]
-			b_vals = vir[b_idx]
-			
-			# Extract virtual-virtual block of Fock matrix
-			F_virt = Fmo_spin[vir][:, vir]  # shape: (nvir, nvir)
-			
-			# Precompute mask matrices (these are boolean and memory efficient)
-			# We'll compute these on the fly when needed to save memory
-			
-			# Instead of storing all pairs, process in chunks
-			chunk_size = min(500, n_ab_pairs)  # Adjust based on available memory
-			
-			# Loop over all i>j pairs
-			for idx_i in range(nocc):
-				i = occ[idx_i]
-				f_ii = Fmo_spin[i, i]
-				
-				for idx_j in range(idx_i):
-					j = occ[idx_j]
-					f_jj = Fmo_spin[j, j]
+
+			# All a>b pairs using LOCAL virtual indices 0..nvir-1
+			a_loc, b_loc = np.triu_indices(nvir, k=1)
+			n_ab_pairs = len(a_loc)
+
+			# Build virtual Fock sub-matrix from eps (diagonal, using absolute indices)
+			eps_vir = eps[vir_abs]             # shape: (nvir,)
+			F_virt = np.diag(eps_vir)          # shape: (nvir, nvir) — local indexing
+
+			# Chunking to limit memory
+			chunk_size = min(500, n_ab_pairs)
+
+			# Loop over occupied i>j using LOCAL occupied indices
+			for loc_i in range(nocc):
+				abs_i = occ_abs[loc_i]
+				f_ii = Fmo_spin[abs_i, abs_i]
+				for loc_j in range(loc_i):
+					abs_j = occ_abs[loc_j]
+					f_jj = Fmo_spin[abs_j, abs_j]
 					eps_ij_sum = f_ii + f_jj
-					
-					# Get all t_ij^{ab} for a>b
-					t_abij = MP1_amplitudes[a_vals, b_vals, i, j]  # shape: (n_ab_pairs,)
-					
-					# === TERM 2: 2 Σ_{a>b} t_ij^{ab} <ab|ij> ===
-					integrals = eri_as[a_vals, b_vals, i, j]  # shape: (n_ab_pairs,)
+
+					# MP1_amplitudes is (nvir_act, nvir_act, nocc, nocc) — local indices
+					t_abij = MP1_amplitudes[a_loc, b_loc, loc_i, loc_j]  # shape: (n_ab_pairs,)
+
+					# TERM 2: 2 * sum_{a>b} t * <ab|ij>
+					# eri_as is (nvir_spin, nvir_spin, nocc_spin, nocc_spin) — local indices
+					# Active virtual = first nvir local indices
+					integrals = eri_as[a_loc, b_loc, loc_i, loc_j]   # shape: (n_ab_pairs,)
 					term2 = 2.0 * np.dot(t_abij, integrals)
-					
-					# === TERM 1: Σ_{a>b} Σ_{c>d} t_ij^{ab} t_ij^{cd} bracket ===
+
+					# TERM 1: double sum with bracket
 					term1 = 0.0
-					
-					# Process in chunks to reduce memory
+
 					for start_row in range(0, n_ab_pairs, chunk_size):
 						end_row = min(start_row + chunk_size, n_ab_pairs)
 						chunk_rows = slice(start_row, end_row)
-						
-						# Get chunk data
-						t_row_chunk = t_abij[chunk_rows, None]  # shape: (chunk_size, 1)
-						a_vals_chunk = a_vals[chunk_rows]
-						b_vals_chunk = b_vals[chunk_rows]
-						
-						# Process against all columns in chunks
+
+						t_row_chunk = t_abij[chunk_rows, None]  # (chunk_size, 1)
+						a_loc_chunk = a_loc[chunk_rows]
+						b_loc_chunk = b_loc[chunk_rows]
+
 						for start_col in range(0, n_ab_pairs, chunk_size):
 							end_col = min(start_col + chunk_size, n_ab_pairs)
 							chunk_cols = slice(start_col, end_col)
-							
-							# Get column chunk data
-							t_col_chunk = t_abij[None, chunk_cols]  # shape: (1, chunk_size)
-							a_vals_all = a_vals[chunk_cols]
-							b_vals_all = b_vals[chunk_cols]
-							
-							# Create masks on the fly (memory efficient)
-							# shape: (chunk_rows_size, chunk_cols_size)
-							delta_ac = (a_vals_chunk[:, None] == a_vals_all[None, :])
-							delta_bd = (b_vals_chunk[:, None] == b_vals_all[None, :])
-							delta_ad = (a_vals_chunk[:, None] == b_vals_all[None, :])
-							delta_bc = (b_vals_chunk[:, None] == a_vals_all[None, :])
-							
-							# Initialize bracket for this chunk
+
+							t_col_chunk = t_abij[None, chunk_cols]  # (1, chunk_size)
+							a_loc_all = a_loc[chunk_cols]
+							b_loc_all = b_loc[chunk_cols]
+
+							# Masks using LOCAL indices (chunk_rows_size, chunk_cols_size)
+							delta_ac = (a_loc_chunk[:, None] == a_loc_all[None, :])
+							delta_bd = (b_loc_chunk[:, None] == b_loc_all[None, :])
+							delta_ad = (a_loc_chunk[:, None] == b_loc_all[None, :])
+							delta_bc = (b_loc_chunk[:, None] == a_loc_all[None, :])
+
+							# Initialize bracket chunk
 							bracket_chunk = np.zeros((end_row - start_row, end_col - start_col))
-							
-							# 1. f_ac δ_bd (only when b == d)
-							mask_bd = delta_bd
-							if np.any(mask_bd):
-								# Get indices for F_virt lookup
-								a_indices_chunk = a_idx[chunk_rows]
-								b_indices_chunk = b_idx[chunk_rows]
-								a_indices_all = a_idx[chunk_cols]
-								b_indices_all = b_idx[chunk_cols]
-								
-								# Compute f_ac where b == d
-								f_ac = F_virt[a_indices_chunk[:, None], a_indices_all[None, :]]
-								bracket_chunk += f_ac * mask_bd
-							
-							# 2. f_bd δ_ac (only when a == c)
-							mask_ac = delta_ac
-							if np.any(mask_ac):
-								f_bd = F_virt[b_indices_chunk[:, None], b_indices_all[None, :]]
-								bracket_chunk += f_bd * mask_ac
-							
-							# 3. -f_ad δ_bc (only when b == c)
-							mask_bc = delta_bc
-							if np.any(mask_bc):
-								f_ad = F_virt[a_indices_chunk[:, None], b_indices_all[None, :]]
-								bracket_chunk -= f_ad * mask_bc
-							
-							# 4. -f_bc δ_ad (only when a == d)
-							mask_ad = delta_ad
-							if np.any(mask_ad):
-								f_bc = F_virt[b_indices_chunk[:, None], a_indices_all[None, :]]
-								bracket_chunk -= f_bc * mask_ad
-							
+
+							# 1. f_ac δ_bd  — F_virt uses local indices
+							if np.any(delta_bd):
+								f_ac = F_virt[a_loc_chunk[:, None], a_loc_all[None, :]]
+								bracket_chunk += f_ac * delta_bd
+
+							# 2. f_bd δ_ac
+							if np.any(delta_ac):
+								f_bd = F_virt[b_loc_chunk[:, None], b_loc_all[None, :]]
+								bracket_chunk += f_bd * delta_ac
+
+							# 3. -f_ad δ_bc
+							if np.any(delta_bc):
+								f_ad = F_virt[a_loc_chunk[:, None], b_loc_all[None, :]]
+								bracket_chunk -= f_ad * delta_bc
+
+							# 4. -f_bc δ_ad
+							if np.any(delta_ad):
+								f_bc = F_virt[b_loc_chunk[:, None], a_loc_all[None, :]]
+								bracket_chunk -= f_bc * delta_ad
+
 							# 5. - (ε_i + ε_j)(δ_ac δ_bd - δ_ad δ_bc)
-							# δ_ac δ_bd term
 							mask_ac_bd = delta_ac & delta_bd
 							if np.any(mask_ac_bd):
 								bracket_chunk[mask_ac_bd] -= eps_ij_sum
-							
-							# δ_ad δ_bc term
+
 							mask_ad_bc = delta_ad & delta_bc
 							if np.any(mask_ad_bc):
 								bracket_chunk[mask_ad_bc] += eps_ij_sum
-							
-							# Accumulate contribution from this chunk
+
+							# Accumulate chunk contribution
 							term1 += np.sum(t_row_chunk * bracket_chunk * t_col_chunk)
-					
-					# Add to total
+
 					J_2 += term1 + term2
-			
+
 			return J_2
-		
+			
 		def compute_mp2_energy_standard(self, t_block, eri_as_block):
 			"""
 			Compute MP2 correlation energy using the standard closed-form:
@@ -1188,14 +1139,8 @@ class OVOS:
 		# Step (vii): Construct the unitary orbital rotation matrix U = exp(R)
 
 		# Unitary rotation matrix
-			# Dependent on the size of R_matrix,
-				# Padé approximation for matrix exponential, more stable than eigendecomposition for large matrices
-		if R_matrix.shape[0] > 25:
-			U = scipy.linalg.expm(R_matrix)
-		else:
-			# For small matrices, eigendecomposition is fine
-			eigvals_R, eigvecs_R = np.linalg.eig(R_matrix)
-			U = eigvecs_R @ np.diag(np.exp(eigvals_R)) @ np.linalg.inv(eigvecs_R)
+			# Padé approximation for matrix exponential, more stable than eigendecomposition for large matrices	
+		U = scipy.linalg.expm(R_matrix)
 
 		# Numerical checks on U
 			# Check U if U^T U = I
@@ -1689,103 +1634,91 @@ class OVOS:
 
 		return lst_E_corr, lst_iter_counts, mo_coeffs, Fmo_rot, lst_stop_reason
 	
-	
+# I want to run OVOS on CH2 w.
+	# Article reference - CH2 !!!
+	# (9s7p2d If,5s2p) 	-> [2, ..., 116]	-> E(SCF) = -38.89447 | E(UMP2) = ...      ,  E_corr = -0.182 683
+	# ------------------------------------------------------------|-------------------------------------------
+	# 6-31G 		 	-> [2, ..., 18 ]	-> E(SCF) = -38.84716 | E(UMP2) = -38.91172,  E_corr = -0.064 553
+	# cc-pVDZ 		 	-> [2, ..., 40 ]	-> E(SCF) = -38.87219 | E(UMP2) = -38.98252,  E_corr = -0.110 327
+	# DZP 		 		-> [2, ..., 42 ]	-> E(SCF) = -38.87497 | E(UMP2) = -38.99727,  E_corr = -0.122 306
+	# roosdz 	 		-> [2, ..., 74 ]	-> E(SCF) = -38.88702 | E(UMP2) = -39.01329,  E_corr = -0.126 263
+	# def2-QZVPP 		-> [2, ..., 226]	-> E(SCF) = -38.88865 | E(UMP2) = -39.05821,  E_corr = -0.169 552
+	# ANO 		 		-> [2, ..., 334]	-> E(SCF) = -38.88763 | E(UMP2) = -39.07982,  E_corr = -0.192 186
+	# cc-pV5Z 	 		-> [2, ..., 394]	-> E(SCF) = -38.88888 | E(UMP2) = -39.07190,  E_corr = -0.183 022 <-- !!!
+	# aug-cc-pV5Z 		-> [2, ..., 566]	-> E(SCF) = -38.88897 | E(UMP2) = -39.07315,  E_corr = -0.184 171
 
 
-# Molecule
-atom_choose_between = [
-	"H .0 .0 .0; H .0 .0 0.74144",  # H2 bond length 0.74144 Angstrom
-	"Li .0 .0 .0; H .0 .0 1.595",   # LiH bond length 1.595 Angstrom
-	"O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692;",  # H2O equilibrium geometry
-	"C  0.0000  0.0000  0.0000; H  0.0000  0.9350  0.5230; H  0.0000 -0.9350  0.5230;", # CH2 
-	"B 0 0 0; H 0 0 1.19; H 0 1.03 -0.40; H 0 -1.03 -0.40",  # BH3 equilibrium geometry
-	"N 0 0 0; N 0 0 1.10", # N2 bond length 1.10 Angstrom
-]
-# Basis set
-basis_choose_between = [
-	"STO-3G",
-	"STO-6G",
-	"3-21G",
-	"6-31G",
-	"DZP",
-	"roosdz",
-	"anoroosdz",
-	"cc-pVDZ",
-	"cc-pV5Z",
-	"def2-QZVPP",
-	"aug-cc-pV5Z",
-	"ANO"
-]
+"""
+Setup OVOS calculation
+"""
+def setup_OVOS(select_atom, select_basis):
+	# Molecule
+	atom_choose_between = [
+		"H .0 .0 .0; H .0 .0 0.74144",  # H2 bond length 0.74144 Angstrom
+		"Li .0 .0 .0; H .0 .0 1.595",   # LiH bond length 1.595 Angstrom
+		"O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692;",  # H2O equilibrium geometry
+		"C  0.0000  0.0000  0.0000; H  0.0000  0.9350  0.5230; H  0.0000 -0.9350  0.5230;", # CH2 
+		"B 0 0 0; H 0 0 1.19; H 0 1.03 -0.40; H 0 -1.03 -0.40",  # BH3 equilibrium geometry
+		"N 0 0 0; N 0 0 1.10", # N2 bond length 1.10 Angstrom
+		"C 0 0 0; O 0 0 1.128", # CO bond length 1.128 Angstrom
+		"H 0 0 0; F 0 0 0.917", # HF bond length 0.917 Angstrom
+		"N 0 0 0; H 0 0 1.012; H 0 0.935 -0.262; H 0 -0.935 -0.262" # NH3 equilibrium geometry
+	]
+	# Basis set
+	basis_choose_between = [
+		"STO-3G",
+		"6-31G",
+		"cc-pVDZ",
+		"cc-pVTZ"
+	]
 
-find_atom = {
-	"H2": 0,
-	"LiH": 1,
-	"H2O": 2,
-	"CH2": 3,
-	"BH3": 4,
-	"N2": 5
-}	
+	find_atom = {
+		"H2": 0,
+		"LiH": 1,
+		"H2O": 2,
+		"CH2": 3,
+		"BH3": 4,
+		"N2": 5,
+		"CO": 6,
+		"HF": 7,
+		"NH3": 8
+	}	
 
-find_basis = {
-	"STO-3G": 0,
-	"STO-6G": 1,
-	"3-21G": 2,
-	"6-31G": 3,
-	"DZP": 4,
-	"roosdz": 5,
-	"anoroosdz": 6,
-	"cc-pVDZ": 7,
-	"cc-pV5Z": 8,
-	"def2-QZVPP": 9,
-	"aug-cc-pV5Z": 10,
-	"ANO": 11
-}
+	find_basis = {
+		"STO-3G": 0,
+		"6-31G": 1,
+		"cc-pVDZ": 2,
+		"cc-pVTZ": 3
+	}
 
+	atom, basis = (atom_choose_between[find_atom[select_atom]], basis_choose_between[find_basis[select_basis]])
 
+	# Print start message
+	print(" Running OVOS on ", atom, " with basis set ", basis)
+	print("")
 
+	# Get number of electrons and full space size in molecular orbitals
+	unit = "angstrom" # angstrom or bohr
+		# Initialize molecule and UHF
+	mol = pyscf.M(atom=atom, basis=basis, unit=unit)
+		# Set symmetry
+	# mol.symmetry = False  # Disable symmetry for OVOS
+	rhf = pyscf.scf.RHF(mol).run()
+		# Number of electrons
+	num_electrons = mol.nelec[0] + mol.nelec[1]
+		# Full space size in molecular orbitals
+	full_space_size = int(rhf.mo_coeff.shape[1])
+		# MP2 correlation energy for the full space
+	MP2_RHF = rhf.MP2().run()
+			# Set reference MP2
+	MP2 = MP2_RHF
 
-# Select molecule and basis set
-select_atom  = "H2O"  		# Select atom index here
-select_basis = "6-31G"  	# Select basis index here
-	# I want to run OVOS on CH2 w.
-		# Article reference - CH2 !!!
-		# (9s7p2d If,5s2p) 	-> [2, ..., 116]	-> E(SCF) = -38.89447 | E(UMP2) = ...      ,  E_corr = -0.182 683
-		# ------------------------------------------------------------|-------------------------------------------
-		# 6-31G 		 	-> [2, ..., 18 ]	-> E(SCF) = -38.84716 | E(UMP2) = -38.91172,  E_corr = -0.064 553
-		# cc-pVDZ 		 	-> [2, ..., 40 ]	-> E(SCF) = -38.87219 | E(UMP2) = -38.98252,  E_corr = -0.110 327
-		# DZP 		 		-> [2, ..., 42 ]	-> E(SCF) = -38.87497 | E(UMP2) = -38.99727,  E_corr = -0.122 306
-		# roosdz 	 		-> [2, ..., 74 ]	-> E(SCF) = -38.88702 | E(UMP2) = -39.01329,  E_corr = -0.126 263
-		# def2-QZVPP 		-> [2, ..., 226]	-> E(SCF) = -38.88865 | E(UMP2) = -39.05821,  E_corr = -0.169 552
-		# ANO 		 		-> [2, ..., 334]	-> E(SCF) = -38.88763 | E(UMP2) = -39.07982,  E_corr = -0.192 186
-		# cc-pV5Z 	 		-> [2, ..., 394]	-> E(SCF) = -38.88888 | E(UMP2) = -39.07190,  E_corr = -0.183 022 <-- !!!
-		# aug-cc-pV5Z 		-> [2, ..., 566]	-> E(SCF) = -38.88897 | E(UMP2) = -39.07315,  E_corr = -0.184 171
-
-atom, basis = (atom_choose_between[find_atom[select_atom]], basis_choose_between[find_basis[select_basis]])
-
-# Print start message
-print(" Running OVOS on ", select_atom, " with basis set ", select_basis)
-print("")
-
-# Get number of electrons and full space size in molecular orbitals
-unit = "angstrom" # angstrom or bohr
-	# Initialize molecule and UHF
-mol = pyscf.M(atom=atom, basis=basis, unit=unit)
-	# Set symmetry
-# mol.symmetry = False  # Disable symmetry for OVOS
-rhf = pyscf.scf.RHF(mol).run()
-	# Number of electrons
-num_electrons = mol.nelec[0] + mol.nelec[1]
-	# Full space size in molecular orbitals
-full_space_size = int(rhf.mo_coeff.shape[1])
-	# MP2 correlation energy for the full space
-MP2_RHF = rhf.MP2().run()
-		# Set reference MP2
-MP2 = MP2_RHF
+	return mol, rhf, num_electrons, full_space_size, MP2
 
 """
 Run OVOS for different numbers of optimized virtual orbitals
 """
-def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess):
+def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select_atom, select_basis):
 	# Start guess:
 	if start_guess == "RHF":
 		use_RHF_init = True
@@ -1801,7 +1734,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess):
 		use_random_unitary_init = True
 
 	# Total attempts for each num_opt_virtual_orbs_current
-	attempts_total = 1000 # Only used if try_best_of is True
+	attempts_total = 1000
 	if use_random_unitary_init == True:
 		try_best_of = True
 	else:
@@ -1839,10 +1772,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess):
 		print("#### OVOS with ", num_opt_virtual_orbs_current, " out of ", max_opt_virtual_orbs," optimized virtual orbitals (Retry count: ", retry_count,") ####")
 
 		try:
-			# Re-initialize molecule and UHF for each run
-			mol = pyscf.M(atom=atom, basis=basis, unit=unit)
 
-			
 			if try_best_of == False: # Single run of OVOS
 
 				# Get RHF orbitals
@@ -1936,16 +1866,29 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess):
 					ovos_obj.S = S  # Pass the overlap matrix
 					ovos_obj.hcore_ao = hcore_ao  # Pass the core Hamiltonian in AO basis
 
-					lst_E_corr_attempt, lst_iter_counts_attempt, mo_coeffs_attempt, Fmo_rot_attempts, lst_stop_reason_attempts = ovos_obj.run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
 
-					# Check if this is the best result so far
-					if best_E_corr is None or lst_E_corr_attempt[-1] < best_E_corr:
-						best_E_corr = lst_E_corr_attempt[-1]
-						best_lst_E_corr = lst_E_corr_attempt
-						best_lst_iter_counts = lst_iter_counts_attempt
-						best_mo_coeffs = mo_coeffs_attempt
-						best_Fmo_rot = Fmo_rot_attempts
-						best_lst_stop_reason = lst_stop_reason_attempts
+					# Criteria for pre-picking the best result:
+						# Have higher initial MP2 correlation energy (before orbital optimization) compared to the RHF guess
+					E_corr_initial_guess, _, _, _ = ovos_obj.MP2_energy(mo_coeffs=mo_coeffs, Fmo=Fmo_rot)
+					# print(f"Initial MP2 correlation energy for this guess: {E_corr_initial_guess:.6f} Hartree")
+
+						# RHF guess correlation energy for comparison
+					E_corr_RHF_guess, _, _, _ = ovos_obj.MP2_energy(mo_coeffs=np.array([rhf.mo_coeff, rhf.mo_coeff]), Fmo=None)
+					# print(f"MP2 correlation energy for RHF guess: {E_corr_RHF_guess:.6f} Hartree")
+
+					if E_corr_initial_guess > E_corr_RHF_guess and E_corr_initial_guess < 0:
+						# print("This guess has a better initial MP2 correlation energy than the RHF guess. Running OVOS with this guess.")
+
+						lst_E_corr_attempt, lst_iter_counts_attempt, mo_coeffs_attempt, Fmo_rot_attempts, lst_stop_reason_attempts = ovos_obj.run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
+
+						# Check if this is the best result so far
+						if best_E_corr is None or lst_E_corr_attempt[-1] < best_E_corr:
+							best_E_corr = lst_E_corr_attempt[-1]
+							best_lst_E_corr = lst_E_corr_attempt
+							best_lst_iter_counts = lst_iter_counts_attempt
+							best_mo_coeffs = mo_coeffs_attempt
+							best_Fmo_rot = Fmo_rot_attempts
+							best_lst_stop_reason = lst_stop_reason_attempts
 
 				# Use the best result from all attempts
 				lst_E_corr = best_lst_E_corr
@@ -2075,6 +2018,40 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess):
 
 	print("Data saved to branch/data/"+str_atom+"/"+str_basis+"/lst_MP2_"+str_name+".json")
 
-get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="RHF")
-get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="prev")
-get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="random")
+"""
+Get data
+"""
+
+# Select atom and basis set
+	# Atom: CO, H2O, HF, NH3 | Basis set: 6-31G, cc-pVDZ, cc-pVTZ
+		# Combinations i have run so far:
+			# CO: 
+				# 6-31G: RHF, prev, ...
+				# cc-pVDZ: RHF, prev, ...
+				# cc-pVTZ: ...
+			# H2O:
+				# 6-31G: RHF, prev, ...
+				# cc-pVDZ: RHF, prev, ...
+				# cc-pVTZ: ...
+			# HF:
+				# 6-31G: RHF, prev, ...
+				# cc-pVDZ: RHF, prev, ...
+				# cc-pVTZ: ...
+			# NH3:
+				# 6-31G: RHF, prev, ...
+				# cc-pVDZ: RHF, prev, ...
+				# cc-pVTZ: ...
+
+# for basis_set in ["6-31G", "cc-pVDZ", "cc-pVTZ"]:
+# 	for molecule in ["CO", "H2O", "HF", "NH3"]:
+# 		print("")
+# 		print("===============================================")
+# 		print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
+# 		print("===============================================")
+# 		print("")
+
+# 		mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
+
+# 		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="RHF", select_atom=molecule, select_basis=basis_set)
+# 		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="prev", select_atom=molecule, select_basis=basis_set)
+# 		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="random", select_atom=molecule, select_basis=basis_set)
