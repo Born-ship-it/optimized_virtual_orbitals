@@ -163,6 +163,53 @@ class OVOS:
 
 		return orbital_energies
 
+
+	# Test for spatial_to_spin_eri optimization method
+	def spatial_2_spin_eri_optimized(self, eri_aaaa, eri_aabb, eri_bbbb):
+		"""
+		Convert spatial ERIs to spin-orbital ERIs.
+
+		Parameters:
+		-----------
+		eri_aaaa : np.ndarray
+			(αα|αα) integrals, shape (n_spatial, n_spatial, n_spatial, n_spatial)
+		eri_aabb : np.ndarray
+			(αα|ββ) integrals, shape (n_spatial, n_spatial, n_spatial, n_spatial)
+		eri_bbbb : np.ndarray
+			(ββ|ββ) integrals, shape (n_spatial, n_spatial, n_spatial, n_spatial)
+
+		Returns:
+		--------
+		eri_spin : np.ndarray
+			Spin-orbital ERIs, shape (n_spin, n_spin, n_spin, n_spin)
+				Where n_spin = 2 * n_spatial
+			The spin-orbital ERIs are ordered such that the first half of the indices correspond to alpha spin and the second half correspond to beta spin.
+				For example, if n_spatial = 3, then the spin-orbital indices would be:
+					0: spatial orbital 0, alpha spin
+					1: spatial orbital 0, beta spin
+					2: spatial orbital 1, alpha spin
+					3: spatial orbital 1, beta spin
+					4: spatial orbital 2, alpha spin
+					5: spatial orbital 2, beta spin
+		"""
+		n_spatial = eri_aaaa.shape[0]
+		n_spin = 2 * n_spatial
+		
+		eri_spin = np.zeros((n_spin, n_spin, n_spin, n_spin), dtype=np.float64)
+		
+		# Fill in the blocks directly
+		# (αα|αα)
+		eri_spin[0::2, 0::2, 0::2, 0::2] = eri_aaaa
+		# (ββ|ββ)
+		eri_spin[1::2, 1::2, 1::2, 1::2] = eri_bbbb
+		# (αα|ββ)
+		eri_spin[0::2, 0::2, 1::2, 1::2] = eri_aabb
+		# (ββ|αα)
+		eri_spin[1::2, 1::2, 0::2, 0::2] = eri_aabb.transpose(2,3,0,1)
+		# Other combinations are zero by spin conservation
+		
+		return eri_spin
+
 	def spatial_to_spin_fock_optimized(self, Fmo_a, Fmo_b):
 		"""
 		Convert spatial Fock matrices to spin-orbital Fock matrix.
@@ -360,6 +407,39 @@ class OVOS:
 		# eri_bbbb = eri_bbbb.reshape((norb_beta,  norb_beta,  norb_beta,  norb_beta))
 		# eri_aabb = eri_aabb.reshape((norb_alpha, norb_alpha, norb_beta,  norb_beta))
 
+		# Convert to spin-orbital basis
+		# eri_spin_opt = self.spatial_2_spin_eri_optimized(eri_aaaa, eri_aabb, eri_bbbb)
+			# Use optimized version
+		# eri_spin = eri_spin_opt
+
+		# assemble into spin-orbital (virt_spin, virt_spin, occ_spin, occ_spin)
+		nvir_spin = 2 * nvir_a   # total virtual spin-orbitals
+		nocc_spin = self.nelec   # total occupied spin-orbitals
+
+		eri_vovo = np.zeros((nvir_spin, nocc_spin, nvir_spin, nocc_spin), dtype=np.float64)
+		eri_vovo[0::2, 0::2, 0::2, 0::2] = eri_vovo_aaaa
+		eri_vovo[1::2, 1::2, 1::2, 1::2] = eri_vovo_bbbb
+		eri_vovo[0::2, 0::2, 1::2, 1::2] = eri_vovo_aabb
+		eri_vovo[1::2, 1::2, 0::2, 0::2] = eri_vovo_aabb.transpose(2,3,0,1)
+
+        # Embed into full array: eri_chem[virt, occ, virt, occ]
+		n_spin = self.tot_num_spin_orbs
+		eri_chem = np.zeros((n_spin, n_spin, n_spin, n_spin), dtype=np.float64)
+		virt_slice = slice(self.nelec, n_spin)
+		occ_slice  = slice(0, self.nelec)
+		eri_chem[virt_slice, occ_slice, virt_slice, occ_slice] = eri_vovo
+
+			# Convert from chemist's to physicist's notation
+				# Chemist's: (pq|rs), Physicist's: <pq|rs> = (pr|qs)
+		# eri_phys = eri_spin.transpose(0,2,1,3)  # Swap indices 1 and 2
+		eri_phys = eri_chem.transpose(0, 2, 1, 3)
+
+			# Antisymmetrized integrals in physicist's notation
+				# <pq||rs> = <pq|rs> - <pq|sr>
+		# eri_as = eri_phys - eri_phys.transpose(0,1,3,2)
+		eri_as = eri_phys - eri_phys.transpose(0, 1, 3, 2)
+	
+
 		# assemble into spin-orbital (virt_spin, occ_spin, virt_spin, occ_spin) - chemist notation
 		nvir_spin = 2 * nvir_a   # total virtual spin-orbitals
 		nocc_spin = self.nelec   # total occupied spin-orbitals
@@ -378,7 +458,7 @@ class OVOS:
 
 		# Antisymmetrize in physicist's notation:
 		#   <ab||ij> = <ab|ij> - <ab|ji>  =>  transpose last two indices
-		eri_as = eri_phys_block - eri_phys_block.transpose(0, 1, 3, 2)
+		eri_as_block = eri_phys_block - eri_phys_block.transpose(0, 1, 3, 2)
 
 		# Clean up
 		del eri_vovo, eri_phys_block
@@ -387,7 +467,79 @@ class OVOS:
 
 
 		# ii) Compute MP1 amplitudes (spin-orbital)
-			# Optimized computation of MP1 amplitudes only in active space
+		# Optimized computation of MP1 amplitudes only in active space
+		def compute_mp1_amplitudes_optimized(self, eps, eri_as):
+			"""
+			Compute MP1 amplitudes in spin-orbital basis 
+				using an optimized approach
+				- avoids explicit 4-fold nested loops
+				- reduces memory usage by processing only the active block of amplitudes.
+			
+			Parameters:
+			-----------
+			eps : np.ndarray
+				Spin-orbital MO energies, shape (n_spin,)
+			eri_as : np.ndarray
+				Antisymmetrized two-electron integrals in spin-orbital basis, shape (n_spin, n_spin, n_spin, n_spin)
+
+			Returns:
+			--------
+			MP1_amplitudes : np.ndarray
+				First-order MP amplitudes in spin-orbital basis, shape (n_spin, n_spin, n_spin, n_spin)
+				The MP1 amplitudes are ordered such that the first half of the indices correspond to alpha spin and the second half correspond to beta spin.
+					For example, if n_spin = 6 (corresponding to 3 spatial orbitals), then the indices would be:
+						0: spatial orbital 0, alpha spin
+						1: spatial orbital 0, beta spin
+						2: spatial orbital 1, alpha spin
+						3: spatial orbital 1, beta spin
+						4: spatial orbital 2, alpha spin
+						5: spatial orbital 2, beta spin
+			Only the block of amplitudes corresponding to active virtual and occupied orbitals will be computed and filled in. The rest will be zero.
+				Specifically, the non-zero block will be t_ij^{ab} where i,j are active occupied indices and a,b are active virtual indices. All other combinations of indices will yield zero amplitudes due to the nature of the MP1 equations and the fact that we are only including excitations from active occupied to active virtual orbitals.
+				The amplitude t_ij^{ab} corresponds to the excitation of electrons from occupied orbitals i,j to virtual orbitals a,b, and is computed using the formula:
+				t_ij^{ab} = - <ab||ij> / (ε_a + ε_b - ε_i - ε_j)
+				where <ab||ij> are the antisymmetrized two-electron integrals in physicist's notation, and ε_a, ε_b, ε_i, ε_j are the orbital energies of the corresponding virtual and occupied orbitals.
+				The computed MP1 amplitudes will satisfy the antisymmetry property t_ij^{ab} = t_ji^{ba}, which arises from the indistinguishability of electrons and the antisymmetric nature of the wavefunction. This means that if we swap the occupied indices i and j, and simultaneously swap the virtual indices a and b, the amplitude will remain unchanged.
+			"""
+			n_spin = self.tot_num_spin_orbs
+			
+			# Get active indices
+			occ_idx = self.active_occ_indices
+			vir_idx = self.active_inocc_indices
+			
+			# Pre-extract energies for active orbitals
+			eps_occ = eps[occ_idx]
+			eps_vir = eps[vir_idx]
+			
+			# Create energy denominator tensor using broadcasting
+				# Denominator: ε_a + ε_b - ε_i - ε_j
+					# We'll create separate tensors for each combination
+			eps_vir_a = eps_vir.reshape(-1, 1, 1, 1)        # shape: (nvir, 1, 1, 1)
+			eps_vir_b = eps_vir.reshape(1, -1, 1, 1)        # shape: (1, nvir, 1, 1)
+			eps_occ_i = eps_occ.reshape(1, 1, -1, 1)        # shape: (1, 1, nocc, 1)
+			eps_occ_j = eps_occ.reshape(1, 1, 1, -1)        # shape: (1, 1, 1, nocc)
+			
+			# Compute denominator tensor
+			denominator = eps_vir_a + eps_vir_b - eps_occ_i - eps_occ_j
+			
+			# Extract the relevant block of antisymmetrized integrals
+				# Only need vir-vir-occ-occ block
+			integral_block = eri_as[vir_idx][:, vir_idx][:, :, occ_idx][:, :, :, occ_idx]
+			
+			# Compute MP1 amplitudes for active block only
+			MP1_block = -integral_block / denominator
+
+			# Create full tensor with zeros
+			MP1_amplitudes = np.zeros((n_spin, n_spin, n_spin, n_spin), dtype=np.float64)
+			
+			# Insert the computed block into the full tensor
+				# Using numpy's advanced indexing
+			idx_grid = np.ix_(vir_idx, vir_idx, occ_idx, occ_idx)
+			MP1_amplitudes[idx_grid] = MP1_block
+			
+			return MP1_amplitudes
+		
+		# Optimized computation of MP1 amplitudes only in active space
 		def compute_mp1_amplitudes_block(self, eps, eri_as_block):
 			"""
 			Compute MP1 amplitudes in spin-orbital basis 
@@ -446,8 +598,21 @@ class OVOS:
 			# Return only the block — shape: (nvir_act, nvir_act, nocc, nocc)
 			return t_block
 
+		# Get MP1 amplitudes using optimized method
+		MP1_amplitudes_opt = compute_mp1_amplitudes_optimized(self, eps, eri_as)	
+
 		# Get MP1 amplitudes using block method (for testing)
-		MP1_amplitudes = compute_mp1_amplitudes_block(self, eps, eri_as)
+		MP1_amplitudes_block = compute_mp1_amplitudes_block(self, eps, eri_as_block)
+
+		# Sanity check: optimized vs block method
+			# Take block of optimized amplitudes corresponding to active space
+		idx_grid = np.ix_(self.active_inocc_indices, self.active_inocc_indices, self.active_occ_indices, self.active_occ_indices)
+		MP1_amplitudes_opt_block = MP1_amplitudes_opt[idx_grid]
+				# Compare with block method results
+		assert np.allclose(MP1_amplitudes_block, MP1_amplitudes_opt_block, atol=1e-10), "Optimized MP1 amplitudes do not match block method results!"
+
+			# Set optimized version
+		MP1_amplitudes = MP1_amplitudes_opt
 
 		# Sanity checks
 			# Check that amplitudes are finite
@@ -664,10 +829,10 @@ class OVOS:
 			return J_2
 
 		# Get MP2 energy using optimized method
-		J_2 = compute_mp2_energy_standard(self, MP1_amplitudes, eri_as)
+		# J_2_standard = compute_mp2_energy_standard(self, MP1_amplitudes, eri_as_block)
 
 		# Get MP2 energy using optimized method
-		# J_2 = compute_mp2_energy_optimized(self, eps, Fmo_spin, eri_as, MP1_amplitudes)
+		J_2 = compute_mp2_energy_optimized(self, eps, Fmo_spin, eri_as, MP1_amplitudes)
 
 		# Sanity check: optimized vs standard method
 		# assert np.isclose(J_2, J_2_standard, atol=1e-10), f"Optimized MP2 energy {J_2} does not match standard MP2 energy {J_2_standard}!"
@@ -684,7 +849,7 @@ class OVOS:
 			# Check that MP2 correlation energy is not positive
 		# assert J_2 <= 0.0, "MP2 correlation energy is not negative!"
 
-		return J_2, MP1_amplitudes, eri_as, Fmo_spin	
+		return J_2, [MP1_amplitudes, MP1_amplitudes_block], [eri_as, eri_as_block], Fmo_spin	
 
 	def orbital_optimization(self, mo_coeffs, MP1_amplitudes, eri_as, Fmo_spin) -> np.ndarray:
 
@@ -703,8 +868,36 @@ class OVOS:
 		First- and second-order derivatives of the second-order Hylleraas functional
 		Equations 11a and 11b in https://pubs.aip.org/aip/jcp/article/86/11/6314/93345/Optimized-virtual-orbital-space-for-high-level
 		"""
+		MP1_amplitudes, MP1_amplitudes_block = MP1_amplitudes
+		eri_as, eri_as_block = eri_as
 
-		# Precompute D_ab as 2D array		
+		# Precompute D_ab as 2D array
+		def compute_D_ab_optimized(self, MP1_amplitudes):
+			"""
+			Version that only considers I<J pairs as in original code.
+			"""
+			occ_idx = self.active_occ_indices
+			vir_idx = self.active_inocc_indices
+			
+			nocc = len(occ_idx)
+			nvir = len(vir_idx)
+			
+			# Extract block
+			idx_grid = np.ix_(vir_idx, vir_idx, occ_idx, occ_idx)
+			t_block = MP1_amplitudes[idx_grid]  # shape: (nvir, nvir, nocc, nocc)
+			
+			# Get indices where I < J
+			i_idx, j_idx = np.tril_indices(nocc, k=-1)
+			
+			# Extract only I<J pairs
+			# shape: (nvir, nvir, n_pairs)
+			t_unique = t_block[:, :, i_idx, j_idx]
+			
+			# Compute D_ab
+			D_ab = np.einsum('acp,bcp->ab', t_unique, t_unique, optimize=True)
+			
+			return D_ab
+		
 		def compute_D_ab_block(self, t_block):
 			"""
 			Compute virtual-virtual density matrix D_ab from MP1 amplitudes block.
@@ -734,7 +927,13 @@ class OVOS:
 			return D_ab
 
 		# Compute D_ab using optimized method
-		D_ab = compute_D_ab_block(self, MP1_amplitudes)
+		D_ab_block = compute_D_ab_block(self, MP1_amplitudes_block)
+		
+		# Compute D_ab using optimized method
+		D_ab = compute_D_ab_optimized(self, MP1_amplitudes)
+
+		# Sanity check: optimized vs block method
+		assert np.allclose(D_ab, D_ab_block, atol=1e-10), "Optimized D_ab does not match block method results!"
 
 		# Check symmetry
 		sym_diff = np.max(np.abs(D_ab - D_ab.T))
@@ -757,6 +956,120 @@ class OVOS:
 
 		# i) Compute gradient G and Hessian H
 			# ia) Compute gradient G		
+		def compute_gradient_optimized(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin):
+			"""
+			Compute gradient G using optimized approach that avoids explicit 4-fold nested loops and reduces memory usage by processing in chunks.
+			Only the block of the gradient corresponding to inactive virtual and active occupied orbitals will be computed and filled in. The rest will be zero.
+				Specifically, the non-zero block will be G_ea where e is an inactive virtual index and a is an active occupied index.
+				The computed gradient will satisfy the antisymmetry property G_ea = -G_ae, which arises from the nature of orbital rotations and the fact that the gradient represents the derivative of the energy with respect to orbital rotations between occupied and virtual orbitals. This means that if we swap the indices e and a, the gradient will change sign, reflecting the fact that a rotation in the opposite direction would have the opposite effect on the energy.
+			
+			Parameters:
+			-----------
+			MP1_amplitudes : np.ndarray
+				First-order MP amplitudes in spin-orbital basis, shape (n_spin, n_spin, n_spin, n_spin)
+			eri_as : np.ndarray
+				Antisymmetrized two-electron integrals in spin-orbital basis, shape (n_spin, n_spin, n_spin, n_spin)
+			D_ab : np.ndarray
+				Density matrix in the active virtual space, shape (n_active_vir, n_active_vir)
+			Fmo_spin : np.ndarray
+				Fock matrix in spin-orbital basis, shape (n_spin, n_spin)	
+
+			Returns:
+			---------
+			G : np.ndarray
+				Gradient matrix, shape (n_spin, n_spin)
+				The computed gradient matrix G has non-zero elements only in the block corresponding to inactive virtual and active occupied orbitals, denoted as G_ea. The elements of this block represent the derivative of the energy with respect to orbital rotations between inactive virtual orbitals (e) and active occupied orbitals (a). The rest of the elements in the gradient matrix will be zero, reflecting the fact that orbital rotations involving other combinations of orbitals do not contribute to the gradient in the context of the OVOS algorithm. The computed gradient will satisfy the antisymmetry property G_ea = -G_ae, which arises from the nature of orbital rotations and the fact that the gradient represents the derivative of the energy with respect to orbital rotations between occupied and virtual orbitals. This means that if we swap the indices e and a, the gradient will change sign, reflecting the fact that a rotation in the opposite direction would have the opposite effect on the energy.
+				The gradient is computed using the formula:
+				G_ea = 2 Σ_{I>J} [ Σ_{B} t_ij^{ab} <eb|ij> ] + 2 Σ_{B} D_ab F_be
+			Where:
+				- I,J are indices for active occupied spin orbitals
+				- a,b are indices for active virtual spin orbitals
+				- e is an index for inactive virtual spin orbitals
+				- t_ij^{ab} are the first-order MP amplitudes in spin-orbital basis
+				- <eb|ij> are the antisymmetrized two-electron integrals in spin-orbital basis
+				- D_ab is the density matrix in the active virtual space
+				- F_be are elements of the Fock matrix in spin-orbital basis
+				- The factor of 2 arises from the spin summation and the fact that we are only summing over unique pairs of occupied orbitals (I>J) and unique pairs of virtual orbitals (a>b) in the MP1 amplitudes, which already accounts for the antisymmetry and indistinguishability of electrons.
+				
+				The computed gradient will satisfy the antisymmetry property G_ea = -G_ae, which arises from the nature of orbital rotations and the fact that the gradient represents the derivative of the energy with respect to orbital rotations between occupied and virtual orbitals. This means that if we swap the indices e and a, the gradient will change sign, reflecting the fact that a rotation in the opposite direction would have the opposite effect on the energy.
+				
+				The first term in the gradient expression represents the contribution from the MP1 amplitudes and the two-electron integrals, while the second term represents the contribution from the density matrix and the Fock matrix. Both terms are essential for accurately capturing the effect of orbital rotations on the energy in the OVOS algorithm.
+				
+				To compute the gradient efficiently, we will process the contributions in chunks to avoid memory issues, especially when dealing with large active spaces. We will leverage numpy's broadcasting and efficient array operations to compute the contributions without explicit nested loops over all indices.
+				
+				Note: The indices I,J in the MP1 amplitudes correspond to the active occupied orbitals, while the indices a,b correspond to the active virtual orbitals. The index e corresponds to the inactive virtual orbitals. The gradient G_ea represents the derivative of the energy with respect to orbital rotations between inactive virtual orbitals (e) and active occupied orbitals (a).
+			"""
+			occ = np.array(self.active_occ_indices)
+			vir = np.array(self.active_inocc_indices)
+			inactive = np.array(self.inactive_indices)
+			
+			nocc = len(occ)
+			nvir = len(vir)
+			ninactive = len(inactive)
+			
+			if ninactive == 0:
+				return np.zeros((nvir, 0), dtype=np.float64)
+			
+			# Get I>J pairs
+			i_idx, j_idx = np.tril_indices(nocc, k=-1)
+			n_pairs = len(i_idx)
+			
+			G = np.zeros((nvir, ninactive), dtype=np.float64)
+			
+			# Process in chunks to save memory
+			chunk_size = min(100, n_pairs)
+			
+			for start in range(0, n_pairs, chunk_size):
+				end = min(start + chunk_size, n_pairs)
+				chunk_size_current = end - start
+				
+				# Get current chunk of I,J pairs
+				I_chunk = occ[i_idx[start:end]][None, None, :]  # shape: (1, 1, chunk_size)
+				J_chunk = occ[j_idx[start:end]][None, None, :]  # shape: (1, 1, chunk_size)
+				
+				# Broadcast to all A,B
+				A_idx = vir[:, None, None]  # shape: (nvir, 1, 1)
+				B_idx = vir[None, :, None]  # shape: (1, nvir, 1)
+				
+				A_expanded = np.broadcast_to(A_idx, (nvir, nvir, chunk_size_current))
+				B_expanded = np.broadcast_to(B_idx, (nvir, nvir, chunk_size_current))
+				I_expanded = np.broadcast_to(I_chunk, (nvir, nvir, chunk_size_current))
+				J_expanded = np.broadcast_to(J_chunk, (nvir, nvir, chunk_size_current))
+				
+				# Get t_pairs for this chunk
+				t_pairs = MP1_amplitudes[
+					A_expanded.ravel(),
+					B_expanded.ravel(),
+					I_expanded.ravel(),
+					J_expanded.ravel()
+				].reshape(nvir, nvir, chunk_size_current)
+				
+				# Get integrals for this chunk
+				# E needs to be first dimension for einsum compatibility
+				E_idx = inactive[:, None, None]  # shape: (ninactive, 1, 1)
+				B_int_idx = vir[None, :, None]   # shape: (1, nvir, 1)
+				
+				E_expanded = np.broadcast_to(E_idx, (ninactive, nvir, chunk_size_current))
+				B_int_expanded = np.broadcast_to(B_int_idx, (ninactive, nvir, chunk_size_current))
+				I_int_expanded = np.broadcast_to(I_chunk, (ninactive, nvir, chunk_size_current))
+				J_int_expanded = np.broadcast_to(J_chunk, (ninactive, nvir, chunk_size_current))
+				
+				int_pairs = -eri_as[
+					E_expanded.ravel(),
+					B_int_expanded.ravel(),
+					I_int_expanded.ravel(),
+					J_int_expanded.ravel()
+				].reshape(ninactive, nvir, chunk_size_current)
+				
+				# Accumulate term1
+				G += 2.0 * np.einsum('abp,ebp->ae', t_pairs, int_pairs, optimize=True)
+			
+			# Add term2
+			F_block = Fmo_spin[np.ix_(inactive, vir)]  # shape: (ninactive, nvir)
+			G += 2.0 * np.einsum('ab,eb->ae', D_ab, F_block, optimize=True)
+			
+			return G
+
 		def compute_gradient_block(self, t_block, eri_as_block, D_ab, Fmo_spin):
 			"""
 			Compute gradient G of J_2 w.r.t. orbital rotations using block arrays.
@@ -809,9 +1122,18 @@ class OVOS:
 			
 			return G
 
+		# Get gradient using optimized method
+		G_optimized = compute_gradient_optimized(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin)
+
 		# Get gradient using block method
-		G = compute_gradient_block(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin)
-	
+		G_block = compute_gradient_block(self, MP1_amplitudes_block, eri_as_block, D_ab_block, Fmo_spin)
+
+		# Sanity check: optimized vs block method
+		assert np.allclose(G_optimized, G_block, atol=1e-10), "Optimized gradient does not match block method results!"
+		
+		
+		G = G_optimized	
+
 		# Print diagnostics
 		print("  Orbital Optimization Diagnostics:")
 
@@ -836,6 +1158,138 @@ class OVOS:
 			# Check if gradient has finite values
 		assert np.all(np.isfinite(G)), "Gradient G contains non-finite values!"
 
+
+
+			# ib) Compute Hessian H		
+		def compute_hessian_optimized(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin):
+			"""
+			Compute Hessian H using optimized approach that avoids explicit 4-fold nested loops and reduces
+			memory usage by processing in chunks.
+			Only the block of the Hessian corresponding to inactive virtual and active occupied orbitals will be computed and filled in. The rest will be zero.
+				Specifically, the non-zero block will be H_{(e,f),(a,b)} where e,f are inactive virtual indices and a,b are active occupied indices.
+				The computed Hessian will satisfy the symmetry property H_{(e,f),(a,b)} = H_{(a,b),(e,f)}, which arises from the nature of second derivatives and the fact that the Hessian represents the second derivative of the energy with respect to orbital rotations between occupied and virtual orbitals. This means that if we swap the pairs of indices (e,f) and (a,b), the Hessian will remain unchanged, reflecting the fact that the second derivative is symmetric with respect to the order of differentiation.
+				
+			Parameters:
+			-----------
+			MP1_amplitudes : np.ndarray
+				First-order MP amplitudes in spin-orbital basis, shape (n_spin, n_spin, n_spin, n_spin)
+			eri_as : np.ndarray
+				Antisymmetrized two-electron integrals in spin-orbital basis, shape (n_spin, n_spin, n_spin, n_spin)
+			D_ab : np.ndarray
+				Density matrix in the active virtual space, shape (n_active_vir, n_active_vir)
+			Fmo_spin : np.ndarray
+				Fock matrix in spin-orbital basis, shape (n_spin, n_spin)
+
+			Returns:
+			---------
+			H : np.ndarray
+				Hessian matrix, shape (n_inactive_vir * n_active_occ, n_inactive_vir * n_active_occ)
+				The computed Hessian matrix H has non-zero elements only in the block corresponding to pairs of inactive virtual orbitals (e,f) and pairs of active occupied orbitals (a,b), denoted as H_{(e,f),(a,b)}. The elements of this block represent the second derivative of the energy with respect to orbital rotations between pairs of inactive virtual orbitals (e,f) and pairs of active occupied orbitals (a,b). The rest of the elements in the Hessian matrix will be zero, reflecting the fact that second derivatives involving other combinations of orbitals do not contribute to the Hessian in the context of the OVOS algorithm. The computed Hessian will satisfy the symmetry property H_{(e,f),(a,b)} = H_{(a,b),(e,f)}, which arises from the nature of second derivatives and the fact that the Hessian represents the second derivative of the energy with respect to orbital rotations between occupied and virtual orbitals. This means that if we swap the pairs of indices (e,f) and (a,b), the Hessian will remain unchanged, reflecting the fact that the second derivative is symmetric with respect to the order of differentiation.
+				The Hessian is computed using the formula:
+				H_{(e,f),(a,b)} = 2 Σ_{I>J} [ Σ_{E} t_ij^{ab} <ef|ij> ] + 2 Σ_{E} D_ab F_ef + D_ab * (f_aa - f_bb) δ_EF + D_ab * f_ef (1 - δ_EF)
+			Where:
+				- I,J are indices for active occupied spin orbitals
+				- a,b are indices for active virtual spin orbitals
+				- e,f are indices for inactive virtual spin orbitals
+				- t_ij^{ab} are the first-order MP amplitudes in spin-orbital basis
+				- <ef|ij> are the antisymmetrized two-electron integrals in spin-orbital basis
+				- D_ab is the density matrix in the active virtual space
+				- F_ef are elements of the Fock matrix in spin-orbital basis
+				- f_aa, f_bb are diagonal elements of the Fock matrix corresponding to active virtual orbitals a and b
+				- δ_EF is the Kronecker delta function that is 1 when e=f and 0 otherwise
+				- The factor of 2 arises from the spin summation and the fact that we are only summing over unique pairs of occupied orbitals (I>J) and unique pairs of virtual orbitals (a>b) in the MP1 amplitudes, which already accounts for the antisymmetry and indistinguishability of electrons.	
+			"""
+			occ = np.array(self.active_occ_indices)
+			vir = np.array(self.active_inocc_indices)
+			inactive = np.array(self.inactive_indices)
+			
+			nocc = len(occ)
+			nvir = len(vir)
+			ninactive = len(inactive)
+			
+			if ninactive == 0:
+				return np.zeros((0, 0), dtype=np.float64)
+			
+			# Get I>J pairs
+			i_idx, j_idx = np.tril_indices(nocc, k=-1)
+			n_pairs = len(i_idx)
+			
+			H = np.zeros((nvir * ninactive, nvir * ninactive), dtype=np.float64)
+			
+			# === PREPARE COMMON DATA ===
+			f_diag_vir = np.diag(Fmo_spin)[vir]
+			f_inactive = Fmo_spin[np.ix_(inactive, inactive)]
+			
+			# Zero diagonal for term4 (E != F condition)
+			f_inactive_offdiag = f_inactive.copy()
+			np.fill_diagonal(f_inactive_offdiag, 0.0)
+			
+			# === PROCESS IN CHUNKS TO SAVE MEMORY ===
+			chunk_size = min(100, n_pairs)
+			
+			term2_sum = np.zeros((nvir, nvir))
+			
+			for start in range(0, n_pairs, chunk_size):
+				end = min(start + chunk_size, n_pairs)
+				chunk_pairs = slice(start, end)
+				
+				# Get current chunk of I,J indices
+				I_chunk = occ[i_idx[chunk_pairs]]
+				J_chunk = occ[j_idx[chunk_pairs]]
+				n_chunk = len(I_chunk)
+				
+				# === TERM 1 AND TERM 2 PREPARATION ===
+				# Create index arrays for the chunk
+				t_chunk = np.zeros((nvir, nvir, n_chunk))
+				int_EF_chunk = np.zeros((ninactive, ninactive, n_chunk))
+				int_BC_chunk = np.zeros((nvir, nvir, n_chunk))
+				
+				for p in range(n_chunk):
+					i = I_chunk[p]
+					j = J_chunk[p]
+					
+					# t[A,B,i,j]
+					t_chunk[:, :, p] = MP1_amplitudes[np.ix_(vir, vir, [i], [j])].reshape(nvir, nvir)
+					
+					# <E,F|i,j>
+					int_EF_chunk[:, :, p] = -eri_as[np.ix_(inactive, inactive, [i], [j])].reshape(ninactive, ninactive)
+					
+					# <B,C|i,j>
+					int_BC_chunk[:, :, p] = -eri_as[np.ix_(vir, vir, [i], [j])].reshape(nvir, nvir)
+				
+				# === TERM 1: 2 * Σ_{i>j} t_ij^{ab} <ef|ij> ===
+				term1_chunk = 2.0 * np.einsum('abp,efp->aebf', t_chunk, int_EF_chunk, optimize=True)
+				H += term1_chunk.reshape(nvir * ninactive, nvir * ninactive)
+				
+				# === TERM 2 ACCUMULATION ===
+				# Part 1: Σ_c t[A,C,p] * int[B,C,p]
+				term2_part1_chunk = np.einsum('acp,bcp->ab', t_chunk, int_BC_chunk, optimize=True)
+				
+				# Part 2: Σ_c t[C,B,p] * int[C,A,p]
+				term2_part2_chunk = np.einsum('cbp,cap->ab', t_chunk, int_BC_chunk, optimize=True)
+				
+				term2_sum += -(term2_part1_chunk + term2_part2_chunk)
+			
+			# === ADD TERM 2 TO HESSIAN ===
+			for e in range(ninactive):
+				rows = np.arange(e, nvir * ninactive, ninactive)
+				cols = np.arange(e, nvir * ninactive, ninactive)
+				H[np.ix_(rows, cols)] += term2_sum
+			
+			# === TERM 3: Dab * (f_aa - f_bb) δ_EF ===
+			f_diff = f_diag_vir[:, None] - f_diag_vir[None, :]
+			term3 = D_ab * f_diff
+			
+			for e in range(ninactive):
+				rows = np.arange(e, nvir * ninactive, ninactive)
+				cols = np.arange(e, nvir * ninactive, ninactive)
+				H[np.ix_(rows, cols)] += term3
+			
+			# === TERM 4: Dab * f_ef (1 - δ_EF) ===
+			term4 = np.einsum('ab,ef->aebf', D_ab, f_inactive_offdiag, optimize=True)
+			H += term4.reshape(nvir * ninactive, nvir * ninactive)
+			
+			return H
 
 		def compute_hessian_block(self, t_block, eri_as_block, D_ab, Fmo_spin):
 			"""
@@ -926,8 +1380,14 @@ class OVOS:
 			
 			return H
 
+		# Get Hessian using optimized method
+		H = compute_hessian_optimized(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin)
+
 		# Get Hessian using block method
-		H = compute_hessian_block(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin)
+		H_block = compute_hessian_block(self, MP1_amplitudes_block, eri_as_block, D_ab_block, Fmo_spin)
+
+		# Sanity check: optimized vs block method
+		assert np.allclose(H, H_block, atol=1e-10), "Optimized Hessian does not match block method results!"
 
 			# Hessian
 		print("  - Hessian:")
