@@ -1347,7 +1347,7 @@ class OVOS:
 		"""
 
 		converged = False
-		max_iter = 500
+		max_iter = 1000
 		iter_count = 0
 
 		E_corr = None
@@ -1424,7 +1424,7 @@ class OVOS:
 					
 					# Detect limit cycle (bouncing between same values)
 					if len(lst_E_corr) >= 8 and not oscillation_detected:
-						for cycle_len in [2, 3, 4]:  # Check for 2-cycle, 3-cycle, 4-cycle
+						for cycle_len in [2, 3, 4, 6, 8]:  # Check for 2-cycle, 3-cycle, 4-cycle
 							if len(lst_E_corr) >= 3 * cycle_len:
 								recent_cycle = lst_E_corr[-cycle_len*2:-cycle_len]
 								current_cycle = lst_E_corr[-cycle_len:]
@@ -1490,7 +1490,7 @@ class OVOS:
 						self.oscillation_counter = 0
 					self.oscillation_counter += 1
 					# Break if oscillation persists
-					if self.oscillation_counter > 25:
+					if self.oscillation_counter > 5:
 						print(f"		Oscillation persisted for {self.oscillation_counter} iterations. Stopping.")
 						converged = False
 						lst_E_corr.append(E_corr)
@@ -1817,6 +1817,10 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 				S = mol.intor('int1e_ovlp')
 				hcore_ao = mol.intor("int1e_kin") + mol.intor("int1e_nuc")
 
+				# Keep track if we ended up at the same best result multiple times, which could indicate a local minimum
+				best_result_count = 0
+				total_iterations_reached_count = 0
+
 				while attempt < attempts_total:
 					attempt += 1
 					print("")
@@ -1866,29 +1870,42 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 					ovos_obj.S = S  # Pass the overlap matrix
 					ovos_obj.hcore_ao = hcore_ao  # Pass the core Hamiltonian in AO basis
 
+					# Run OVOS with the current random unitary rotated orbitals
+					lst_E_corr_attempt, lst_iter_counts_attempt, mo_coeffs_attempt, Fmo_rot_attempts, lst_stop_reason_attempts = ovos_obj.run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
 
-					# Criteria for pre-picking the best result:
-						# Have higher initial MP2 correlation energy (before orbital optimization) compared to the RHF guess
-					E_corr_initial_guess, _, _, _ = ovos_obj.MP2_energy(mo_coeffs=mo_coeffs, Fmo=Fmo_rot)
-					# print(f"Initial MP2 correlation energy for this guess: {E_corr_initial_guess:.6f} Hartree")
+					# Update best result if this attempt is better than the current best
+					if best_E_corr is None or lst_E_corr_attempt[-1] < best_E_corr:
+						best_E_corr = lst_E_corr_attempt[-1]
+						best_lst_E_corr = lst_E_corr_attempt
+						best_lst_iter_counts = lst_iter_counts_attempt
+						best_mo_coeffs = mo_coeffs_attempt
+						best_Fmo_rot = Fmo_rot_attempts
+						best_lst_stop_reason = lst_stop_reason_attempts
 
-						# RHF guess correlation energy for comparison
-					E_corr_RHF_guess, _, _, _ = ovos_obj.MP2_energy(mo_coeffs=np.array([rhf.mo_coeff, rhf.mo_coeff]), Fmo=None)
-					# print(f"MP2 correlation energy for RHF guess: {E_corr_RHF_guess:.6f} Hartree")
+					# Check if we ended up at the same best result multiple times, which could indicate a local minimum
+					if np.isclose(best_E_corr, lst_E_corr_attempt[-1], atol = 1e-6) and best_E_corr is not None:
+						best_result_count += 1
+						# If we eneded up at the same best result multiple times, we can break early as it's likely a local minimum
+						if best_result_count >= 10:
+							print(f"Best result of {best_E_corr:.6f} Hartree has been found {best_result_count} times. Breaking early from attempts.")
+							break
 
-					if E_corr_initial_guess > E_corr_RHF_guess and E_corr_initial_guess < 0:
-						# print("This guess has a better initial MP2 correlation energy than the RHF guess. Running OVOS with this guess.")
+					# If we ended up at a better result, reset the best result count by a tolerance
+					if best_E_corr is not None and lst_E_corr_attempt[-1] < best_E_corr - 1e-6:
+						best_result_count = 0					
 
-						lst_E_corr_attempt, lst_iter_counts_attempt, mo_coeffs_attempt, Fmo_rot_attempts, lst_stop_reason_attempts = ovos_obj.run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
+					# If we keep reaching the maximum number of iterations without convergence
+					if lst_iter_counts_attempt is not None and len(lst_iter_counts_attempt) > 0 and lst_iter_counts_attempt[-1] >= 1000:
+						total_iterations_reached_count += 1
+						# Break early as it's likely not converging
+						if total_iterations_reached_count >= 10:
+							print(f"Reached maximum number of iterations for 10 attempts. Breaking early from attempts.")
+							break
 
-						# Check if this is the best result so far
-						if best_E_corr is None or lst_E_corr_attempt[-1] < best_E_corr:
-							best_E_corr = lst_E_corr_attempt[-1]
-							best_lst_E_corr = lst_E_corr_attempt
-							best_lst_iter_counts = lst_iter_counts_attempt
-							best_mo_coeffs = mo_coeffs_attempt
-							best_Fmo_rot = Fmo_rot_attempts
-							best_lst_stop_reason = lst_stop_reason_attempts
+					# Reset total iterations reached count if we get a converged result
+					if lst_stop_reason_attempts is not None and len(lst_stop_reason_attempts) > 0 and lst_stop_reason_attempts[-1] == "Convergence":
+						total_iterations_reached_count = 0
+
 
 				# Use the best result from all attempts
 				lst_E_corr = best_lst_E_corr
@@ -2042,16 +2059,23 @@ Get data
 				# cc-pVDZ: RHF, prev, ...
 				# cc-pVTZ: ...
 
-# for basis_set in ["6-31G", "cc-pVDZ", "cc-pVTZ"]:
-# 	for molecule in ["CO", "H2O", "HF", "NH3"]:
-# 		print("")
-# 		print("===============================================")
-# 		print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
-# 		print("===============================================")
-# 		print("")
+for basis_set in ["cc-pVTZ"]: # Done: "6-31G", "cc-pVDZ", ... 
+	for molecule in ["CO", "H2O", "HF", "NH3"]: # CO: 106, H2O: 106, HF: 78, NH3: 134
+		print("")
+		print("===============================================")
+		print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
+		print("===============================================")
+		print("")
 
-# 		mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
+		mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
 
-# 		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="RHF", select_atom=molecule, select_basis=basis_set)
-# 		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="prev", select_atom=molecule, select_basis=basis_set)
-# 		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="random", select_atom=molecule, select_basis=basis_set)
+		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="RHF", select_atom=molecule, select_basis=basis_set)
+		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="prev", select_atom=molecule, select_basis=basis_set)
+		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="random", select_atom=molecule, select_basis=basis_set)
+
+
+# UCASSCF, with the same active space as OVOS, to compare the results to a standard orbital optimization method.
+	# This will be done for a few cases to see how OVOS compares to CASSCF when optimizing the same number of virtual orbitals.
+	# ...
+	
+
