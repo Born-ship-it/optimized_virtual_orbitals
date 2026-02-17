@@ -744,7 +744,7 @@ class OVOS:
 			# Extract sub-blocks from eri_as_block (contiguous memory, no fancy indexing)
 			# In eri_as_block, indices [0..nvir_act) = active virtual, [nvir_act..nvir_spin) = inactive
 			# eri_as_block[e, b, i, j] where e=inactive, b=active virtual
-			eri_eb_ij = -eri_as_block[nvir_act:, :nvir_act, :, :]  # (ninactive, nvir_act, nocc, nocc)
+			eri_eb_ij = eri_as_block[nvir_act:, :nvir_act, :, :]  # (ninactive, nvir_act, nocc, nocc)
 			
 			# Extract i>j pairs
 			t_ij = t_block[:, :, i_idx, j_idx]         # (nvir_act, nvir_act, n_pairs)
@@ -838,16 +838,23 @@ class OVOS:
 			t_ij = t_block[:, :, i_idx, j_idx]
 			
 			# eri_as_block[e, f, i, j] for inactive e,f -> (ninactive, ninactive, nocc, nocc)
-			eri_ef_block = -eri_as_block[nvir:, nvir:, :, :]
+			eri_ef_block = eri_as_block[nvir:, nvir:, :, :]
 			eri_ef_ij = eri_ef_block[:, :, i_idx, j_idx]  # (ninactive, ninactive, n_pairs)
 			
 			# eri_as_block[a, b, i, j] for active a,b -> already t_block's index space
-			eri_ab_block = -eri_as_block[:nvir, :nvir, :, :]
+			eri_ab_block = eri_as_block[:nvir, :nvir, :, :]
 			eri_ab_ij = eri_ab_block[:, :, i_idx, j_idx]   # (nvir, nvir, n_pairs)
 			
 			# === TERM 1: 2 * sum_{i>j} t^{ab}_{ij} * <ef||ij> ===
-			term1 = 2.0 * np.einsum('abp,efp->aebf', t_ij, eri_ef_ij, optimize=True)
-			H += term1.reshape(nvir * ninactive, nvir * ninactive)
+			# term1 = 2.0 * np.einsum('abp,efp->aebf', t_ij, eri_ef_ij, optimize=True)
+			# H += term1.reshape(nvir * ninactive, nvir * ninactive)
+
+			for a0 in range(0, nvir, nvir):
+				a1 = nvir  # process all active virtuals at once (since they are contiguous in the block)
+				# t_ij[a0:a1, :, :] shape: (blk, nvir, n_pairs)
+				# Result shape: (blk, ninactive, nvir, ninactive)
+				partial = 2.0 * np.einsum('abp,efp->aebf', t_ij[a0:a1], eri_ef_ij, optimize=True)
+				H[a0*ninactive:(a1)*ninactive, :] += partial.reshape((a1-a0)*ninactive, nvir*ninactive)
 			
 			# === TERM 2: -sum_{i>j,c} [t^{ac}*eri^{bc} + t^{cb}*eri^{ca}] * delta_ef ===
 			# Part 1: sum_{c,p} t[a,c,p] * eri[b,c,p]
@@ -856,23 +863,21 @@ class OVOS:
 			term2_part2 = np.einsum('cbp,cap->ab', t_ij, eri_ab_ij, optimize=True)
 			term2_sum = -(term2_part1 + term2_part2)  # (nvir, nvir)
 			
-			# Apply delta_ef: add term2_sum to each diagonal (e=f) block of H
-			for e in range(ninactive):
-				rows = np.arange(e, nvir * ninactive, ninactive)
-				cols = np.arange(e, nvir * ninactive, ninactive)
-				H[np.ix_(rows, cols)] += term2_sum
-			
 			# === TERM 3: D_ab * (f_aa - f_bb) * delta_ef ===
 			f_diff = f_diag_vir[:, None] - f_diag_vir[None, :]  # (nvir, nvir)
 			term3 = D_ab * f_diff
 			
-			for e in range(ninactive):
-				rows = np.arange(e, nvir * ninactive, ninactive)
-				cols = np.arange(e, nvir * ninactive, ninactive)
-				H[np.ix_(rows, cols)] += term3
-			
+			# Add terms 2 and 3 together for the diagonal blocks (e=f) in the Hessian
+			combined_diag = term2_sum + term3  # (nvir, nvir)
+				# This is equivalent to kron(combined_diag, I_ninactive):
+			block_diag = np.kron(combined_diag, np.eye(ninactive))
+			H += block_diag.reshape(nvir * ninactive, nvir * ninactive)
+
 			# === TERM 4: D_ab * f_ef * (1 - delta_ef) ===
-			term4 = np.einsum('ab,ef->aebf', D_ab, f_inactive_offdiag, optimize=True)
+			# term4 = np.einsum('ab,ef->aebf', D_ab, f_inactive_offdiag, optimize=True)
+				# This is equivalent to kron(f_inactive_offdiag, D_ab):
+			term4 = np.kron(D_ab, f_inactive_offdiag)
+				# Add to H
 			H += term4.reshape(nvir * ninactive, nvir * ninactive)
 			
 			return H
@@ -882,15 +887,17 @@ class OVOS:
 
 			# Hessian
 		print("  - Hessian:")
+		eigvals = np.linalg.eigvalsh(H)
+		det_H = np.prod(eigvals)
+		cond_H = np.linalg.cond(H) if H.size > 0 else np.inf
 
 		# Check eigenvalues
-		eigvals = np.linalg.eigvalsh(H)  # eigh for symmetric
 		print(f"    Hessian norm: {np.linalg.norm(H):.6e}, (Neg. Eigval: {np.sum(eigvals < 0)}/{len(eigvals)})")
 		if np.any(eigvals < -1e-6):
 			print("        WARNING: Hessian has negative eigenvalues!")
 
 			# Determinant of Hessian
-		det_H = np.linalg.det(H) if H.size > 0 else 0.0
+		det_H = det_H if H.size > 0 else 0.0
 		print(f"    Hessian determinant: {det_H:.6e}")
 		if det_H < 1e-4:
 			print("        WARNING: Hessian determinant is small!")
@@ -1009,8 +1016,9 @@ class OVOS:
 					# Direct inversion
 					R_block = -G_block @ np.linalg.inv(H_block)
 
-					# More stable than direct inverse
-					#R_block = np.linalg.solve(H_block, -G_block)
+					# Solve linear system (more stable than direct inversion)
+					# R_block = -np.linalg.solve(H_block, G_block)
+
 				except np.linalg.LinAlgError:
 					# Fallback to pseudoinverse if singular
 					R_block = -G_block @ np.linalg.pinv(H_block)
@@ -1072,12 +1080,11 @@ class OVOS:
 
 			# Solve for R, unoccupied space
 				# Handle if H is singular
-			if np.linalg.cond(H) > 1e12 and np.linalg.matrix_rank(H) < H.shape[0] and det_H == 0.0:
+			if cond_H > 1e12 and np.linalg.matrix_rank(H) < H.shape[0] and det_H == 0.0:
 				print("        WARNING: Using pseudo-inverse for orbital rotations.")
 				R = - G @ np.linalg.pinv(H)
 			else:
 				R = - G @ np.linalg.inv(H)
-
 
 			# Reduced Linear Equation method
 		if use_RLE:				
@@ -1295,42 +1302,30 @@ class OVOS:
 
 
 		# Rotate the Fock matrix in the MO basis as well
-			# Only rotate the active virtual block of the Fock matrix, since that's what we use for the next iteration
-				# Fmo_spin is the Fock matrix in the spin-orbital basis, we need to rotate it to get the new Fock matrix in the MO basis
-					# Fmo_rot = U^T Fmo_spin U
-						# This is the standard transformation for a Fock matrix under orbital rotation
-			# Isolate the active virtual block U to rotate the relevant part of Fmo
-				# In the spin-orbital basis, the active virtual orbitals correspond to certain columns of U, and the occupied orbitals correspond to certain rows/columns of Fmo_spin
-				# Leave the occupied-occupied and inactive-inactive blocks of Fmo unchanged, only rotate the active virtual block
-		U_active_virtual = U[np.ix_(self.active_inocc_indices, self.active_inocc_indices)]
-		Fmo_spin_active_virtual = Fmo_spin[np.ix_(self.active_inocc_indices, self.active_inocc_indices)]
-		Fmo_rot_active_virtual = U_active_virtual.T @ Fmo_spin_active_virtual @ U_active_virtual
-
-			# Construct the full rotated Fock matrix in the spin-orbital basis
-		Fmo_rot = np.copy(Fmo_spin)
-		Fmo_rot[np.ix_(self.active_inocc_indices, self.active_inocc_indices)] = Fmo_rot_active_virtual
-
-			# Diagonalize the full Fock matrix
-		eigvals_rot, eigvecs_rot = np.linalg.eigh(Fmo_rot)
-		Fmo_rot = eigvecs_rot @ np.diag(eigvals_rot) @ eigvecs_rot.T.conj()
+			# Fock matrix in original MO basis: Fmo_spin = C^T Fao C
+			# After rotation: Fmo_rot = U^T Fmo_spin U
+		Fmo_rot = U.T @ Fmo_spin @ U
 
 			# Check that the rotated Fock matrix is still Hermitian
-		if not np.allclose(Fmo_rot, Fmo_rot.T.conj(), atol=1e-10):
-			print("WARNING: Rotated Fock matrix is not Hermitian!")
+		# if not np.allclose(Fmo_rot, Fmo_rot.T.conj(), atol=1e-10):
+		# 	print("WARNING: Rotated Fock matrix is not Hermitian!")
 
 			# Check that the diagonal elements of the rotated Fock matrix are real
-		if not np.all(np.isreal(np.diag(Fmo_rot))):
-			print("WARNING: Diagonal elements of rotated Fock matrix are not real!")
+		# if not np.all(np.isreal(np.diag(Fmo_rot))):
+		# 	print("WARNING: Diagonal elements of rotated Fock matrix are not real!")
 
 			# Check that the rotated Fock matrix has no NaN or Inf values
-		if not np.all(np.isfinite(Fmo_rot)):
-			print("WARNING: Rotated Fock matrix contains NaN or Inf values!")
+		# if not np.all(np.isfinite(Fmo_rot)):
+		# 	print("WARNING: Rotated Fock matrix contains NaN or Inf values!")
 
 		# Check if the rotated diagonalized Fock matrix has the same eigenvalues as the original 
 			# Should be the same since it's a unitary transformation
 		eigvals_original = np.linalg.eigvalsh(Fmo_spin)
+		eigvals_rot = np.linalg.eigvalsh(Fmo_rot)
+			# Check if they are close within a reasonable numerical tolerance
 		if not np.allclose(eigvals_rot, eigvals_original, atol=1e-6):
 			print("WARNING: Eigenvalues of rotated Fock matrix differ from original!")
+			assert np.allclose(eigvals_rot, eigvals_original, atol=1e-6), "Eigenvalues of rotated Fock matrix differ from original!"
 
 		return mo_coeffs_rot, Fmo_rot
 
@@ -1408,7 +1403,7 @@ class OVOS:
 				
 				# ----- 1. OSCILLATION DETECTION -----
 				# Check if we have enough history to detect oscillation patterns
-				if len(lst_E_corr) >= 6:
+				if len(lst_E_corr) >= 500 and change > threshold * 10:
 					# Look at recent oscillations (last 4-6 iterations)
 					recent_changes = [np.abs(lst_E_corr[i] - lst_E_corr[i-1]) for i in range(-5, 0)]
 					recent_signs = [np.sign(lst_E_corr[i] - lst_E_corr[i-1]) for i in range(-5, 0)]
@@ -1423,7 +1418,7 @@ class OVOS:
 								oscillation_detected = True
 					
 					# Detect limit cycle (bouncing between same values)
-					if len(lst_E_corr) >= 8 and not oscillation_detected:
+					if len(lst_E_corr) >= 500 and not oscillation_detected:
 						for cycle_len in [2, 3, 4, 6, 8]:  # Check for 2-cycle, 3-cycle, 4-cycle
 							if len(lst_E_corr) >= 3 * cycle_len:
 								recent_cycle = lst_E_corr[-cycle_len*2:-cycle_len]
@@ -1700,10 +1695,16 @@ def setup_OVOS(select_atom, select_basis):
 	# Get number of electrons and full space size in molecular orbitals
 	unit = "angstrom" # angstrom or bohr
 		# Initialize molecule and UHF
-	mol = pyscf.M(atom=atom, basis=basis, unit=unit)
+	mol = pyscf.M(atom=atom,
+			    basis=basis,
+				unit=unit,
+				spin=0,  # Closed-shell molecule
+				charge=0,
+				symmetry=False
+				)
 		# Set symmetry
 	# mol.symmetry = False  # Disable symmetry for OVOS
-	rhf = pyscf.scf.RHF(mol).run()
+	rhf = mol.RHF().run()
 		# Number of electrons
 	num_electrons = mol.nelec[0] + mol.nelec[1]
 		# Full space size in molecular orbitals
@@ -2039,43 +2040,68 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 Get data
 """
 
-# Select atom and basis set
-	# Atom: CO, H2O, HF, NH3 | Basis set: 6-31G, cc-pVDZ, cc-pVTZ
-		# Combinations i have run so far:
-			# CO: 
-				# 6-31G: RHF, prev, ...
-				# cc-pVDZ: RHF, prev, ...
-				# cc-pVTZ: ...
-			# H2O:
-				# 6-31G: RHF, prev, ...
-				# cc-pVDZ: RHF, prev, ...
-				# cc-pVTZ: ...
-			# HF:
-				# 6-31G: RHF, prev, ...
-				# cc-pVDZ: RHF, prev, ...
-				# cc-pVTZ: ...
-			# NH3:
-				# 6-31G: RHF, prev, ...
-				# cc-pVDZ: RHF, prev, ...
-				# cc-pVTZ: ...
-
-for basis_set in ["cc-pVTZ"]: # Done: "6-31G", "cc-pVDZ", ... 
-	for molecule in ["CO", "H2O", "HF", "NH3"]: # CO: 106, H2O: 106, HF: 78, NH3: 134
+for basis_set in ["6-31G"]: # Done: "6-31G", "cc-pVDZ", ... 
+	for molecule in ["CO", "H2O", "HF", "NH3"]: 
 		print("")
-		print("===============================================")
+		print("====================================================")
 		print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
-		print("===============================================")
+		print("====================================================")
 		print("")
 
 		mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
 
-		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="RHF", select_atom=molecule, select_basis=basis_set)
-		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="prev", select_atom=molecule, select_basis=basis_set)
+		# get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="RHF", select_atom=molecule, select_basis=basis_set)
+		# get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="prev", select_atom=molecule, select_basis=basis_set)
 		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="random", select_atom=molecule, select_basis=basis_set)
 
+assert False, "Done with OVOS runs. Comment out this line to run more or move on to the next part of the code."
 
-# UCASSCF, with the same active space as OVOS, to compare the results to a standard orbital optimization method.
-	# This will be done for a few cases to see how OVOS compares to CASSCF when optimizing the same number of virtual orbitals.
-	# ...
-	
+# Save miscellaneous data about the molecule and basis set
+for basis_set in ["6-31G", "cc-pVDZ"]:
+	for molecule in ["CO", "H2O", "HF", "NH3"]:
+		print("#### Miscellaneous data about the molecule and basis set ####")
+		print("Molecule: ", molecule)
+		print("Basis set: ", basis_set)
+		print()
 
+		mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
+		active_space_size = full_space_size - num_electrons//2 + 1
+		print()
+		print("Number of electrons: ", num_electrons)
+		print("Full space size in molecular orbitals: ", full_space_size)
+		print()
+
+			# Get UHF MP2 correlation energy for full space reference
+		MP2_e_corr = rhf.MP2().run().e_corr
+		print()
+
+			# Run CCSD(T)
+		ccsd = pyscf.cc.CCSD(rhf).run()
+		print()
+
+			# Run CASSCF
+		casscf = rhf.CASSCF(full_space_size, num_electrons).run()
+		print()
+
+			# Run FCI/CASCI
+		casci = mf.CASCI(ncas, nelecas).run()
+		print()
+
+		# Save data to JSON file
+		import json
+
+		data = {
+			"num_electrons": num_electrons,
+			"full_space_size": full_space_size,
+			"active_space_size": active_space_size,
+			"MP2_e_corr": MP2_e_corr,
+			"CCSD_e_corr": ccsd.e_corr,
+			"CCSD(T)_e_corr": ccsd.e_tot + ccsd.ccsd_t() - rhf.e_tot,
+			"FCI_e_corr": casci.e_tot - rhf.e_tot,
+			"CASSCF_e_corr": casscf.e_tot - rhf.e_tot
+		}
+
+		with open(f"branch/data/{molecule}/{basis_set}/molecule_data.json", "w") as f:
+			json.dump(data, f, indent=2)
+		print(f"Miscellaneous data saved to branch/data/{molecule}/{basis_set}/molecule_data.json")
+		print()

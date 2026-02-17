@@ -345,12 +345,12 @@ Note: Am not sure if <ab|ij> means chemist's or physicist's notation, or if it i
 
 **Gradient of J₂ wrt orbital rotations**:
 The gradient of J₂ with respect to orbital rotations between active virtual orbitals $a$ and inactive virtual orbitals $e$ is given by:
-$$G_{ea} = \frac{\partial J_2}{\partial R_{ae}} = 2 \sum_{i>j} \sum_{b} t_{ij}^{ab} <eb|ij> + 2 \sum_{b} D_{ab} f_{be}$$
+$$G_{ea} = \frac{\partial J_2}{\partial R_{ae}} = 2 \sum_{i>j} \sum_{b} t_{ij}^{ab} <ij|eb> + 2 \sum_{b} D_{ab} f_{be}$$
 where $D_{ab} = \sum_{i>j} \sum_{c} t_{ij}^{ac} t_{ij}^{bc}$ is the virtual-virtual block of the MP2 second-order density matrix, and $f_{be}$ are Fock matrix elements in the MO basis, and $i,j$ are occupied orbitals, $a,b,c$ are virtual orbitals, and $e,f$ are the inactive orbitals, and $\epsilon$ are orbital energies.
 Note: Am not sure if <eb|ij> means chemist's or physicist's notation, or if it is the antisymmetrized integral.
 
 **Hessian of J₂ wrt orbital rotations**:
 The Hessian of J₂ with respect to orbital rotations between active virtual orbitals $a$ and inactive virtual orbitals $e$ is given by:
-$$H_{ea,fb} = \frac{\partial J_2}{\partial R_{ae} \partial R_{bf}} = 2 \sum_{i>j} t_{ij}^{ab} <ef|ij> - \sum_{i>j} \sum_{c} [t_{ij}^{ac} <bc|ij> + t_{ij}^{bc} <ac|ij>]\delta_ef + D_{ab} (f_{aa} - f_{bb}) \delta_{ef} + D_{ab} f_{ef} (1-\delta_{ef})$$
+$$H_{ea,fb} = \frac{\partial J_2}{\partial R_{ae} \partial R_{bf}} = 2 \sum_{i>j} t_{ij}^{ab} <ij|ef> - \sum_{i>j} \sum_{c} [t_{ij}^{ac} <ij|bc> + t_{ij}^{bc} <ij|ca>]\delta_ef + D_{ab} (f_{aa} - f_{bb}) \delta_{ef} + D_{ab} f_{ef} (1-\delta_{ef})$$
 where $D_{ab} = \sum_{i>j} \sum_{c} t_{ij}^{ac} t_{ij}^{bc}$ is the virtual-virtual block of the MP2 second-order density matrix, and $e,f$ are the inactive orbitals, and $f_{ef}$ are Fock matrix elements in the MO basis, and $i,j$ are occupied orbitals, $a,b,c,d$ are virtual orbitals, and $\epsilon$ are orbital energies.
 Note: Am not sure if <ef|ij> means chemist's or physicist's notation, or if it is the antisymmetrized integral.
