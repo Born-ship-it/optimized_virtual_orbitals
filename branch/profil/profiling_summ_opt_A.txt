@@ -1,0 +1,25 @@
+==========================================================================================
+PROFILING SUMMARY
+==========================================================================================
+Total Functions: 463
+Total Calls: 1980528
+Total Time (tottime): 38.216000 seconds
+Total Time (cumtime): 228.206000 seconds
+
+Function                                                     Cumtime      %        Calls    Func/Cumtime
+---------------------------------------------------------------------------------------------------------
+{built-in method builtins.exec}                              38.232000    16.75    1        0.026156    
+<string>:1(<module>)                                         38.232000    16.75    1        0.026156    
+ovos.py:365(run_ovos)                                        38.179000    16.73    1        0.026192    
+ovos.py:219(orbital_optimization)                            34.147000    14.96    344      10.074091   
+pyscf/cc/addons.py:20(spatial2spin)                          21.271000    9.32     1032     48.516760   
+pyscf/lib/numpy_helper.py:506(takebak_2d)                    21.194000    9.29     3440     162.310088  
+pyscf/cc/addons.py:85(spin2spatial)                          11.974000    5.25     344      28.728913   
+pyscf/lib/numpy_helper.py:478(take_2d)                       11.954000    5.24     688      57.553957   
+ovos.py:88(MP2_energy)                                       3.967000     1.74     344      86.715402   
+scipy/linalg/_matfuncs.py:233(expm)                          1.733000     0.76     344      198.499711  
+{built-in method scipy.linalg._matfuncs_expm.pade_UV_calc}   1.705000     0.75     344      201.759531  
+ovos.py:271(hessian)                                         1.511000     0.66     49536    32783.587028
+ovos.py:169(t1)                                              0.417000     0.18     990720   2375827.338129
+pyscf/ao2mo/__init__.py:322(kernel)                          0.359000     0.16     1032     2874.651811 
+pyscf/ao2mo/__init__.py:167(general)                         0.354000     0.16     1032     2915.254237 

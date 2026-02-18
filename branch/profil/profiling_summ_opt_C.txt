@@ -1,0 +1,25 @@
+==========================================================================================
+PROFILING SUMMARY
+==========================================================================================
+Total Functions: 483
+Total Calls: 356854
+Total Time (tottime): 8.155000 seconds
+Total Time (cumtime): 49.199000 seconds
+
+Function                                                     Cumtime      %        Calls    Func/Cumtime
+---------------------------------------------------------------------------------------------------------
+{built-in method builtins.exec}                              8.173000     16.61    1        0.122354    
+<string>:1(<module>)                                         8.173000     16.61    1        0.122354    
+ovos.py:359(run_ovos)                                        8.104000     16.47    1        0.123396    
+ovos.py:223(orbital_optimization)                            7.540000     15.33    64       8.488064    
+pyscf/cc/addons.py:20(spatial2spin)                          4.590000     9.33     192      41.830065   
+pyscf/lib/numpy_helper.py:506(takebak_2d)                    4.544000     9.24     640      140.845070  
+pyscf/cc/addons.py:85(spin2spatial)                          1.457000     2.96     64       43.925875   
+pyscf/lib/numpy_helper.py:478(take_2d)                       1.455000     2.96     128      87.972509   
+scipy/linalg/_matfuncs.py:233(expm)                          1.338000     2.72     64       47.832586   
+{built-in method scipy.linalg._matfuncs_expm.pade_UV_calc}   1.328000     2.70     64       48.192771   
+ovos.py:105(MP2_energy)                                      0.554000     1.13     64       115.523466  
+numpy/linalg/linalg.py:492(inv)                              0.218000     0.44     64       293.577982  
+ovos.py:271(hessian)                                         0.180000     0.37     4992     27733.333333
+ovos.py:183(t1)                                              0.077000     0.16     184320   2393766.233766
+ovos.py:36(__init__)                                         0.069000     0.14     1        14.492754   

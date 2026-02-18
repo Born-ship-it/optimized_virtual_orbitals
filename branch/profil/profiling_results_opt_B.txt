@@ -1,0 +1,481 @@
+Fri Jan  9 11:23:00 2026    branch/profil/profiling_results_opt_B.prof
+
+         1566812 function calls (1566762 primitive calls) in 36.840 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000   36.840   36.840 {built-in method builtins.exec}
+        1    0.000    0.000   36.839   36.839 <string>:1(<module>)
+        1    0.010    0.010   36.795   36.795 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/./ovos.py:363(run_ovos)
+      272    0.190    0.001   33.133    0.122 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/./ovos.py:220(orbital_optimization)
+      816    0.244    0.000   20.238    0.025 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/cc/addons.py:20(spatial2spin)
+     2720   19.875    0.007   19.967    0.007 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:506(takebak_2d)
+      272    0.009    0.000    7.094    0.026 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/cc/addons.py:85(spin2spatial)
+      544    7.072    0.013    7.084    0.013 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:478(take_2d)
+      272    0.010    0.000    5.913    0.022 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/_matfuncs.py:233(expm)
+      272    5.883    0.022    5.883    0.022 {built-in method scipy.linalg._matfuncs_expm.pade_UV_calc}
+      272    0.263    0.001    3.590    0.013 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/./ovos.py:92(MP2_energy)
+    39168    1.297    0.000    1.297    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/./ovos.py:272(hessian)
+      272    0.853    0.003    0.857    0.003 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:492(inv)
+   783360    0.338    0.000    0.338    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/./ovos.py:170(t1)
+      816    0.002    0.000    0.304    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/ao2mo/__init__.py:322(kernel)
+      816    0.002    0.000    0.302    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/ao2mo/__init__.py:167(general)
+      816    0.003    0.000    0.300    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/ao2mo/incore.py:68(general)
+      816    0.013    0.000    0.295    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:224(einsum)
+      816    0.044    0.000    0.217    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:706(einsum_path)
+      816    0.023    0.000    0.105    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:312(_greedy_path)
+      844    0.018    0.000    0.081    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/_lib/_util.py:1203(wrapper)
+      544    0.003    0.000    0.070    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/numeric.py:2170(allclose)
+      544    0.011    0.000    0.064    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/numeric.py:2249(isclose)
+     3264    0.063    0.000    0.063    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/./ovos.py:256(gradient)
+     8160    0.016    0.000    0.063    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:215(_parse_possible_contraction)
+      552    0.063    0.000    0.063    0.000 {built-in method builtins.print}
+     3264    0.009    0.000    0.062    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:101(_contract)
+      544    0.030    0.000    0.061    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/_decomp.py:114(eig)
+    19411    0.053    0.000    0.053    0.000 {built-in method numpy.asarray}
+     3330    0.002    0.000    0.050    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:1009(einsum)
+     3330    0.048    0.000    0.048    0.000 {built-in method numpy.core._multiarray_umath.c_einsum}
+        1    0.000    0.000    0.044    0.044 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/./ovos.py:36(__init__)
+        1    0.000    0.000    0.043    0.043 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:630(run)
+        1    0.000    0.000    0.043    0.043 <string>:1(kernel)
+        1    0.000    0.000    0.043    0.043 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1986(scf)
+        1    0.000    0.000    0.041    0.041 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:47(kernel)
+    13526    0.007    0.000    0.033    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_internal.py:267(data_as)
+    12240    0.025    0.000    0.032    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:85(_find_contraction)
+      544    0.013    0.000    0.032    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/numeric.py:2330(within_tol)
+     2186    0.004    0.000    0.027    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:2421(all)
+    13540    0.025    0.000    0.025    0.000 /usr/lib/python3.12/ctypes/__init__.py:517(cast)
+     3264    0.018    0.000    0.024    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:413(_can_dot)
+     2209    0.010    0.000    0.023    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:71(_wrapreduction)
+   201729    0.022    0.000    0.022    0.000 {built-in method builtins.len}
+        1    0.000    0.000    0.021    0.021 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:843(get_init_guess)
+        1    0.000    0.000    0.021    0.021 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1935(get_init_guess)
+        1    0.000    0.000    0.021    0.021 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:852(init_guess_by_minao)
+        1    0.000    0.000    0.021    0.021 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:345(init_guess_by_minao)
+    13526    0.020    0.000    0.020    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_internal.py:250(__init__)
+        2    0.000    0.000    0.020    0.010 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:363(minao_basis)
+        2    0.000    0.000    0.020    0.010 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/basis/__init__.py:579(load)
+        2    0.000    0.000    0.019    0.010 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/basis/parse_nwchem.py:98(load)
+        2    0.000    0.000    0.019    0.010 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/basis/parse_nwchem.py:156(search_seg)
+      827    0.003    0.000    0.017    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:1338(tag_array)
+     9792    0.006    0.000    0.017    0.000 {built-in method builtins.sum}
+    13056    0.007    0.000    0.016    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:18(_flop_count)
+      593    0.003    0.000    0.016    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/_lib/_util.py:410(_asarray_validated)
+     2819    0.015    0.000    0.015    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+    45696    0.014    0.000    0.014    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:56(_compute_size_by_dict)
+     1110    0.013    0.000    0.013    0.000 {method 'view' of 'numpy.ndarray' objects}
+    79842    0.011    0.000    0.011    0.000 {method 'append' of 'list' objects}
+     3046    0.010    0.000    0.010    0.000 {built-in method numpy.zeros}
+      816    0.006    0.000    0.009    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:523(_parse_einsum_input)
+      592    0.003    0.000    0.009    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/function_base.py:564(asarray_chkfinite)
+    24480    0.005    0.000    0.009    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:257(<genexpr>)
+        9    0.000    0.000    0.008    0.001 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1842(dump_chk)
+        2    0.008    0.004    0.008    0.004 {method 'read' of '_io.TextIOWrapper' objects}
+        9    0.000    0.000    0.008    0.001 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/chkfile.py:28(dump_scf)
+      551    0.005    0.000    0.008    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/lapack.py:1025(_compute_lwork)
+        2    0.000    0.000    0.007    0.004 /usr/lib/python3.12/re/__init__.py:199(split)
+        2    0.007    0.003    0.007    0.003 {method 'split' of 're.Pattern' objects}
+     1090    0.003    0.000    0.007    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_ufunc_config.py:33(seterr)
+       10    0.000    0.000    0.007    0.001 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/chkfile.py:76(dump)
+    35088    0.006    0.000    0.006    0.000 {method 'count' of 'str' objects}
+      864    0.001    0.000    0.006    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_methods.py:61(_all)
+      545    0.001    0.000    0.006    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_ufunc_config.py:430(__enter__)
+      592    0.001    0.000    0.006    0.000 {method 'all' of 'numpy.ndarray' objects}
+     3592    0.004    0.000    0.005    0.000 {built-in method builtins.min}
+    13872    0.005    0.000    0.005    0.000 {built-in method builtins.max}
+       19    0.000    0.000    0.005    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:243(get_fock)
+      272    0.004    0.000    0.004    0.000 {built-in method scipy.linalg._matfuncs_expm.pick_pade_structure}
+      273    0.003    0.000    0.004    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/twodim_base.py:158(eye)
+        7    0.000    0.000    0.004    0.001 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/diis.py:48(update)
+       14    0.000    0.000    0.004    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/moleintor.py:41(getints)
+       13    0.000    0.000    0.004    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:3448(intor)
+    46/10    0.000    0.000    0.004    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/chkfile.py:109(save_as_group)
+     8242    0.003    0.000    0.004    0.000 {built-in method builtins.isinstance}
+     3352    0.004    0.000    0.004    0.000 {method 'ravel' of 'numpy.ndarray' objects}
+     5781    0.004    0.000    0.004    0.000 {built-in method numpy.asanyarray}
+     5720    0.004    0.000    0.004    0.000 {built-in method builtins.sorted}
+    19584    0.004    0.000    0.004    0.000 {method 'pop' of 'list' objects}
+       12    0.003    0.000    0.003    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/moleintor.py:475(getints2c)
+     1089    0.001    0.000    0.003    0.000 {built-in method builtins.next}
+        8    0.000    0.000    0.003    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:3528(intor_symmetric)
+       37    0.000    0.000    0.003    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/group.py:450(__setitem__)
+        4    0.003    0.001    0.003    0.001 {built-in method _io.open}
+      593    0.001    0.000    0.003    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/_lib/_sparse.py:10(issparse)
+      562    0.001    0.000    0.003    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:1025(argsort)
+      544    0.001    0.000    0.003    0.000 /usr/lib/python3.12/contextlib.py:141(__exit__)
+        3    0.000    0.000    0.003    0.001 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1828(get_ovlp)
+    12240    0.003    0.000    0.003    0.000 {method 'copy' of 'set' objects}
+      545    0.001    0.000    0.003    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_ufunc_config.py:435(__exit__)
+        7    0.000    0.000    0.003    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/diis.py:119(get_err_vec)
+     21/7    0.000    0.000    0.003    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/diis.py:89(get_err_vec_orth)
+      544    0.001    0.000    0.003    0.000 /usr/lib/python3.12/contextlib.py:299(helper)
+      272    0.001    0.000    0.003    0.000 {method 'all' of 'numpy.generic' objects}
+        3    0.000    0.000    0.003    0.001 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:339(get_ovlp)
+    13056    0.003    0.000    0.003    0.000 {method 'isdisjoint' of 'set' objects}
+       37    0.000    0.000    0.003    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/group.py:74(create_dataset)
+       57    0.000    0.000    0.003    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:831(dot)
+       15    0.000    0.000    0.003    0.000 {built-in method _functools.reduce}
+       57    0.000    0.000    0.003    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:741(ddot)
+     1975    0.002    0.000    0.002    0.000 {method 'reshape' of 'numpy.ndarray' objects}
+      590    0.001    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:53(_wrapfunc)
+       57    0.002    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:896(_dgemm)
+       19    0.000    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:1164(__init__)
+      544    0.001    0.000    0.002    0.000 /usr/lib/python3.12/contextlib.py:132(__enter__)
+     1088    0.001    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_ufunc_config.py:452(_no_nep50_warning)
+     1161    0.002    0.000    0.002    0.000 {built-in method builtins.abs}
+     1090    0.002    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_ufunc_config.py:132(geterr)
+       37    0.002    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/dataset.py:36(make_new_dset)
+       11    0.000    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:971(get_veff)
+      574    0.001    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/blas.py:395(getter)
+    16659    0.002    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:1001(_einsum_dispatcher)
+       19    0.000    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/files.py:382(__init__)
+       11    0.000    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:952(get_jk)
+     2889    0.002    0.000    0.002    0.000 {built-in method builtins.getattr}
+      558    0.002    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/lapack.py:1059(_check_work_float)
+      274    0.001    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/numerictypes.py:357(issubdtype)
+     7344    0.002    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:404(<genexpr>)
+      562    0.002    0.000    0.002    0.000 {method 'argsort' of 'numpy.ndarray' objects}
+       11    0.000    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:885(dot_eri_dm)
+      280    0.001    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:159(_commonType)
+     3264    0.002    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:273(_update_other_results)
+       11    0.001    0.000    0.002    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/_vhf.py:318(incore)
+     5835    0.002    0.000    0.002    0.000 {method 'replace' of 'str' objects}
+      544    0.001    0.000    0.002    0.000 /usr/lib/python3.12/contextlib.py:104(__init__)
+     5716    0.002    0.000    0.002    0.000 {method 'join' of 'str' objects}
+       10    0.000    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:810(eig)
+     9792    0.001    0.000    0.001    0.000 {method 'keys' of 'dict' objects}
+       20    0.000    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1813(_eigh)
+       20    0.000    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1336(eig)
+        1    0.000    0.000    0.001    0.001 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1763(build)
+        1    0.000    0.000    0.001    0.001 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1754(check_sanity)
+     4896    0.001    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:898(<genexpr>)
+       27    0.001    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/_decomp.py:284(eigh)
+     1090    0.001    0.000    0.001    0.000 {built-in method numpy.seterrobj}
+        7    0.000    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/diis.py:202(update)
+      594    0.000    0.000    0.001    0.000 <frozen abc>:117(__instancecheck__)
+       19    0.001    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/files.py:221(make_fid)
+       19    0.000    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/files.py:647(__exit__)
+     2513    0.001    0.000    0.001    0.000 {method 'split' of 'str' objects}
+       38    0.001    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/files.py:622(close)
+        7    0.000    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/diis.py:244(extrapolate)
+      873    0.001    0.000    0.001    0.000 {method 'get' of 'dict' objects}
+        1    0.000    0.000    0.001    0.001 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/chkfile.py:179(save_mol)
+        3    0.001    0.000    0.001    0.000 {method '__exit__' of '_io._IOBase' objects}
+      548    0.000    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/numerictypes.py:283(issubclass_)
+      594    0.001    0.000    0.001    0.000 {built-in method _abc._abc_instancecheck}
+     2213    0.001    0.000    0.001    0.000 {method 'items' of 'dict' objects}
+     8160    0.001    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:395(<lambda>)
+     1775    0.001    0.000    0.001    0.000 {built-in method builtins.issubclass}
+      287    0.000    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:135(_makearray)
+      544    0.001    0.000    0.001    0.000 {method 'set' of '_contextvars.ContextVar' objects}
+      282    0.001    0.000    0.001    0.000 {method 'astype' of 'numpy.ndarray' objects}
+     4353    0.001    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/multiarray.py:346(where)
+      544    0.001    0.000    0.001    0.000 {method 'reset' of '_contextvars.ContextVar' objects}
+        1    0.000    0.000    0.001    0.001 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/addons.py:580(project_mo_nr2nr)
+      617    0.001    0.000    0.001    0.000 {built-in method numpy.empty}
+     2180    0.001    0.000    0.001    0.000 {built-in method numpy.geterrobj}
+      282    0.000    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:1331(__array_wrap__)
+      593    0.000    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/ma/core.py:6485(isMaskedArray)
+     1289    0.001    0.000    0.001    0.000 {built-in method builtins.any}
+      893    0.001    0.000    0.001    0.000 {method 'update' of 'dict' objects}
+     1730    0.001    0.000    0.001    0.000 {method 'conj' of 'numpy.ndarray' objects}
+        2    0.000    0.000    0.001    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/moleintor.py:603(getints4c)
+      279    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:209(_assert_stacked_square)
+       19    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/base.py:31(is_hdf5)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:2710(make_env)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:1040(make_env)
+     2186    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:2416(_all_dispatcher)
+       21    0.000    0.000    0.000    0.000 <frozen genericpath>:27(isfile)
+       21    0.000    0.000    0.000    0.000 {built-in method posix.stat}
+       19    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/files.py:116(make_fapl)
+      288    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:153(_realType)
+      544    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/type_check.py:120(real)
+        9    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:284(get_occ)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:995(make_bas_env)
+       19    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/group.py:518(__contains__)
+     1634    0.000    0.000    0.000    0.000 {method 'pop' of 'dict' objects}
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1824(get_hcore)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:313(get_hcore)
+       13    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:2395(nelectron)
+      280    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:130(get_linalg_error_extobj)
+        9    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/group.py:42(create_group)
+       73    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/base.py:176(_e)
+       13    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:1173(tot_electrons)
+       14    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/moleintor.py:822(make_cintopt)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:1044(_finalize)
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:291(energy_tot)
+        9    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:819(get_grad)
+       12    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:2378(nelec)
+        9    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:325(get_grad)
+      280    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:203(_assert_stacked_2d)
+       11    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:680(hermi_sum)
+      592    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:140(isComplexType)
+       37    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/dataset.py:720(__init__)
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:786(nelec)
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:336(energy_elec)
+        8    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/group.py:496(__delitem__)
+        3    0.000    0.000    0.000    0.000 <frozen codecs>:319(decode)
+      546    0.000    0.000    0.000    0.000 {built-in method _operator.index}
+        3    0.000    0.000    0.000    0.000 {built-in method _codecs.utf_8_decode}
+       44    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:415(hermi_triu)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/basis/parse_nwchem.py:105(_parse)
+       37    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/base.py:102(array_for_new_object)
+      279    0.000    0.000    0.000    0.000 {method '__array_prepare__' of 'numpy.ndarray' objects}
+       46    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/base.py:186(get_lcpl)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:912(intor_cross)
+       14    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:3188(atom_charges)
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:825(make_rdm1)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:1024(spin_square)
+       23    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/shape_base.py:292(hstack)
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:139(make_rdm1)
+       15    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/moleintor.py:804(make_loc)
+      545    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_ufunc_config.py:426(__init__)
+       26    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:2383(norm)
+      544    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/numeric.py:2166(_allclose_dispatcher)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:1533(classical_coulomb_energy)
+       19    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/files.py:189(make_fcpl)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:1008(cond)
+        7    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:329(solve)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/__init__.py:156(UHF)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:1702(cond)
+      544    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/_decomp.py:1397(_check_info)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/linalg_helper.py:1391(cho_solve)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:1262(dumps)
+       22    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:2322(any)
+        8    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:1029(_nomalize_contracted_ao)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/logger.py:138(note)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/logger.py:114(flush)
+        8    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:125(gto_norm)
+       11    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/numpy_helper.py:256(pack_tril)
+      544    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/_decomp.py:46(_make_eigvals)
+        2    0.000    0.000    0.000    0.000 {method 'write' of '_io.TextIOWrapper' objects}
+       37    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/filters.py:151(fill_dcpl)
+      593    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/_misc.py:181(_datacopied)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/_basic.py:76(solve)
+      544    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/numeric.py:2245(_isclose_dispatcher)
+      816    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/einsumfunc.py:696(_einsum_path_dispatcher)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:610(__del__)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:585(cleanup)
+       37    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/base.py:73(guess_dtype)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:779(__init__)
+      545    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/multiarray.py:669(result_type)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:116(_break_dm_spin_symm)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1713(__init__)
+      272    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:488(_unary_dispatcher)
+       20    0.000    0.000    0.000    0.000 <frozen posixpath>:413(abspath)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:676(NamedTemporaryFile)
+      562    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:1021(_argsort_dispatcher)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:2146(_is_mem_enough)
+       15    0.000    0.000    0.000    0.000 {method 'sum' of 'numpy.ndarray' objects}
+       22    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/_vhf.py:25(_fpointer)
+       12    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/numeric.py:1240(rollaxis)
+       61    0.000    0.000    0.000    0.000 {method 'dot' of 'numpy.ndarray' objects}
+       28    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/group.py:34(__init__)
+       16    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:120(gaussian_int)
+       19    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:1190(__del__)
+       20    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:1140(argmax)
+       44    0.000    0.000    0.000    0.000 {built-in method numpy.array}
+       38    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/compat.py:17(filename_encode)
+        1    0.000    0.000    0.000    0.000 {built-in method posix.unlink}
+      544    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/type_check.py:116(_real_dispatcher)
+       60    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1390(_handle_fromlist)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/index_tricks.py:992(diag_indices_from)
+       11    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/logger.py:167(timer)
+        8    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:423(repeat)
+       19    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:1172(_finished)
+       15    0.000    0.000    0.000    0.000 {method 'cumsum' of 'numpy.ndarray' objects}
+       15    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_methods.py:47(_sum)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:1560(inter_distance)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:113(current_memory)
+       24    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/shape_base.py:23(atleast_1d)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:716(opener)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:1499(svd)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:382(_mkstemp_inner)
+      112    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:292(prange)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/json/__init__.py:183(dumps)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/json/encoder.py:183(encode)
+       14    0.000    0.000    0.000    0.000 {built-in method time.process_time}
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:814(conc_env)
+       34    0.000    0.000    0.000    0.000 {built-in method numpy.arange}
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:1852(aoslice_by_atom)
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/numeric.py:67(zeros_like)
+      225    0.000    0.000    0.000    0.000 {method 'encode' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/json/encoder.py:205(iterencode)
+        8    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:40(_wrapit)
+       47    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:645(parent)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/basis/parse_nwchem.py:163(_search_basis_block)
+        1    0.000    0.000    0.000    0.000 {method 'any' of 'numpy.generic' objects}
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/basis/parse_nwchem.py:298(remove_zero)
+       14    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/moleintor.py:273(_get_intor_and_comp)
+       14    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/data/elements.py:1136(charge)
+       38    0.000    0.000    0.000    0.000 <frozen os>:812(fsencode)
+       20    0.000    0.000    0.000    0.000 <frozen posixpath>:60(isabs)
+       22    0.000    0.000    0.000    0.000 {built-in method _ctypes.dlsym}
+       27    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/shape_base.py:215(_vhstack_dispatcher)
+      299    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/base.py:306(id)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:806(dump_flags)
+      128    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+       21    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/lapack.py:1055(<genexpr>)
+      133    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
+        8    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/atom_hf.py:196(frac_occ)
+       28    0.000    0.000    0.000    0.000 {method 'conjugate' of 'numpy.generic' objects}
+       14    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/moleintor.py:847(__del__)
+       37    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/base.py:41(find_item_type)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:972(make_atm_env)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/_basic.py:386(_matrix_norm_general)
+       13    0.000    0.000    0.000    0.000 {built-in method builtins.round}
+       20    0.000    0.000    0.000    0.000 <frozen posixpath>:405(normpath)
+       47    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/type_check.py:302(iscomplexobj)
+       20    0.000    0.000    0.000    0.000 {method 'argmax' of 'numpy.ndarray' objects}
+       11    0.000    0.000    0.000    0.000 {built-in method builtins.locals}
+        7    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/diis.py:141(push_err_vec)
+        4    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/shape_base.py:219(vstack)
+       27    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/shape_base.py:207(_arrays_for_stack_dispatcher)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:1389(nao_nr)
+       12    0.000    0.000    0.000    0.000 {method 'transpose' of 'numpy.ndarray' objects}
+        2    0.000    0.000    0.000    0.000 /usr/lib/python3.12/re/__init__.py:280(_compile)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:364(spin_square)
+        1    0.000    0.000    0.000    0.000 {built-in method posix.open}
+       14    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:3517(_add_suffix)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:677(check_sanity)
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/dispersion.py:109(check_disp)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:281(flatten)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/_basic.py:404(_ensure_dtype_cdsz)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:3200(atom_nelec_core)
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        7    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/diis.py:148(push_vec)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/ctypes/__init__.py:389(__getattr__)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:292(__next__)
+        4    0.000    0.000    0.000    0.000 {method 'splitlines' of 'str' objects}
+       58    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
+        3    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:437(<genexpr>)
+      158    0.000    0.000    0.000    0.000 {built-in method posix.fspath}
+        1    0.000    0.000    0.000    0.000 {method 'close' of '_io.BufferedRandom' objects}
+       47    0.000    0.000    0.000    0.000 {method 'rpartition' of 'str' objects}
+       35    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/diis.py:187(get_err_vec)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/function_base.py:1324(diff)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/function_base.py:5563(append)
+        3    0.000    0.000    0.000    0.000 <frozen posixpath>:71(join)
+       14    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/moleintor.py:864(ascint3)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:1465(ao_loc_nr)
+       14    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/diis.py:123(_store)
+       65    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/base.py:339(__init__)
+        8    0.000    0.000    0.000    0.000 {method 'repeat' of 'numpy.ndarray' objects}
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:3434(nao)
+        1    0.000    0.000    0.000    0.000 {method 'readline' of '_io.TextIOWrapper' objects}
+       28    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/diis.py:193(get_vec)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:2692(max)
+       22    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/data/elements.py:1127(_rm_digit)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/ctypes/__init__.py:396(__getitem__)
+       70    0.000    0.000    0.000    0.000 {method 'strip' of 'str' objects}
+       81    0.000    0.000    0.000    0.000 {method 'isalpha' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:3224(atom_coords)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:3166(atom_charge)
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1977(energy_nuc)
+        5    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/shape_base.py:81(atleast_2d)
+       23    0.000    0.000    0.000    0.000 <frozen posixpath>:41(_get_sep)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:3722(__init__)
+        4    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/data/elements.py:1152(_std_symbol)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/ecp.py:128(core_configuration)
+       28    0.000    0.000    0.000    0.000 {built-in method _ctypes.byref}
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:702(check_sanity)
+       20    0.000    0.000    0.000    0.000 {built-in method posix._path_normpath}
+        8    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:3131(atom_symbol)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/random.py:454(choices)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_methods.py:39(_amax)
+        3    0.000    0.000    0.000    0.000 <frozen codecs>:309(__init__)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:2330(__init__)
+        4    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/data/elements.py:1225(is_ghost_atom)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:253(_sanitize_params)
+       54    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/filters.py:170(rq_tuple)
+        1    0.000    0.000    0.000    0.000 {method 'max' of 'numpy.ndarray' objects}
+        1    0.000    0.000    0.000    0.000 {method 'max' of 'numpy.generic' objects}
+       46    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/base.py:170(_lcpl)
+       51    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/multiarray.py:741(dot)
+       47    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/basis/parse_nwchem.py:311(<genexpr>)
+       12    0.000    0.000    0.000    0.000 {method 'remove' of 'list' objects}
+       14    0.000    0.000    0.000    0.000 {built-in method numpy.core._multiarray_umath.normalize_axis_index}
+       32    0.000    0.000    0.000    0.000 {method 'upper' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_methods.py:55(_any)
+       19    0.000    0.000    0.000    0.000 {built-in method _stat.S_ISREG}
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/function_base.py:873(copy)
+       37    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/base.py:94(is_float16_dtype)
+       47    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/type_check.py:205(_is_type_dispatcher)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/basis/__init__.py:759(_format_basis_name)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/hf.py:1776(dump_flags)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:224(_infer_return_type)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/diis.py:41(__init__)
+        7    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:2371(natm)
+       19    0.000    0.000    0.000    0.000 {method 'copy' of 'dict' objects}
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/index_tricks.py:919(diag_indices)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:281(rng)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:1768(ravel)
+       27    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/filters.py:96(_normalize_external)
+        8    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/data/elements.py:1146(_symbol)
+       17    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+       14    0.000    0.000    0.000    0.000 {built-in method time.perf_counter}
+       12    0.000    0.000    0.000    0.000 {method 'insert' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/logger.py:219(new_logger)
+       11    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/logger.py:142(debug)
+       12    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/logger.py:134(info)
+       29    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/multiarray.py:153(concatenate)
+       14    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/logger.py:146(debug1)
+        7    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/diis.py:60(get_num_vec)
+        4    0.000    0.000    0.000    0.000 {method 'tolist' of 'numpy.ndarray' objects}
+       22    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:2317(_any_dispatcher)
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:2429(enuc)
+       26    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:2379(_norm_dispatcher)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/moleintor.py:856(_stand_sym_code)
+       19    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/base.py:164(_lapl)
+       20    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:1136(_argmax_dispatcher)
+        2    0.000    0.000    0.000    0.000 {built-in method posix.getpid}
+       22    0.000    0.000    0.000    0.000 {method 'lstrip' of 'str' objects}
+       24    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/shape_base.py:19(_atleast_1d_dispatcher)
+        3    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/_basic.py:416(<genexpr>)
+        1    0.000    0.000    0.000    0.000 {method 'union' of 'set' objects}
+       19    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/h5py/_hl/files.py:643(__enter__)
+       12    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/numeric.py:1236(_rollaxis_dispatcher)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.repr}
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:2173(is_au)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/getlimits.py:484(__new__)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/linalg/_basic.py:38(_solve_check)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/logger.py:200(__init__)
+        4    0.000    0.000    0.000    0.000 {method 'lower' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'tolist' of 'numpy.generic' objects}
+        2    0.000    0.000    0.000    0.000 {method 'copy' of 'numpy.ndarray' objects}
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/multiarray.py:1080(copyto)
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/numeric.py:63(_zeros_like_dispatcher)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:622(__init__)
+        7    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:325(_solve_dispatcher)
+        8    0.000    0.000    0.000    0.000 {method 'random' of '_random.Random' objects}
+        8    0.000    0.000    0.000    0.000 {built-in method math.floor}
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/diis.py:100(__init__)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:641(set)
+        3    0.000    0.000    0.000    0.000 <frozen codecs>:260(__init__)
+       10    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/multiarray.py:85(empty_like)
+        8    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:419(_repeat_dispatcher)
+        1    0.000    0.000    0.000    0.000 {method 'flush' of '_io.TextIOWrapper' objects}
+        2    0.000    0.000    0.000    0.000 {built-in method from_iterable}
+        5    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/shape_base.py:77(_atleast_2d_dispatcher)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/gto/mole.py:2374(nbas)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/_internal.py:525(_view_is_safe)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:368(_get_candidate_names)
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.setattr}
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/function_base.py:1320(_diff_dispatcher)
+        1    0.000    0.000    0.000    0.000 {built-in method sys.audit}
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:220(_is_empty_2d)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:1764(_ravel_dispatcher)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/function_base.py:869(_copy_dispatcher)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/function_base.py:5559(_append_dispatcher)
+        1    0.000    0.000    0.000    0.000 <frozen codecs>:331(getstate)
+        2    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/lib/index_tricks.py:988(_diag_indices_from)
+        1    0.000    0.000    0.000    0.000 /usr/lib/python3.12/tempfile.py:579(__init__)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:1495(_svd_dispatcher)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:2687(_max_dispatcher)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:614(pre_kernel)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/lib/misc.py:622(post_kernel)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numpy/linalg/linalg.py:1698(_cond_dispatcher)
+        1    0.000    0.000    0.000    0.000 /mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/pyscf/scf/uhf.py:792(nelec)
+
+

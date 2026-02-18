@@ -1,0 +1,10 @@
+{
+  "num_electrons": 10,
+  "full_space_size": 13,
+  "active_space_size": 9,
+  "MP2_e_corr": -0.1288509181592008,
+  "CCSD_e_corr": -0.13537951079186072,
+  "CCSD(T)_e_corr": -0.13637537070401606,
+  "FCI_e_corr": null,
+  "CASSCF_e_corr": null
+}

@@ -1,0 +1,25 @@
+==========================================================================================
+PROFILING SUMMARY
+==========================================================================================
+Total Functions: 475
+Total Calls: 1450306
+Total Time (tottime): 16.436000 seconds
+Total Time (cumtime): 98.979000 seconds
+
+Function                                                     Cumtime      %        Calls   
+------------------------------------------------------------------------------------------
+{built-in method builtins.exec}                              16.460000    16.63   % 1       
+<string>:1(<module>)                                         16.460000    16.63   % 1       
+ovos.py:368(run_ovos)                                        16.383000    16.55   % 1       
+ovos.py:223(orbital_optimization)                            15.370000    15.53   % 89      
+ovos.py:273(hessian)                                         6.716000     6.79    % 12816   
+ovos.py:246(second_order_density_matrix_element)             6.355000     6.42    % 929160  
+pyscf/cc/addons.py:20(spatial2spin)                          5.092000     5.14    % 267     
+pyscf/lib/numpy_helper.py:506(takebak_2d)                    5.056000     5.11    % 890     
+pyscf/cc/addons.py:85(spin2spatial)                          3.393000     3.43    % 89      
+pyscf/lib/numpy_helper.py:478(take_2d)                       3.390000     3.42    % 178     
+ovos.py:92(MP2_energy)                                       1.001000     1.01    % 89      
+scipy/linalg/_matfuncs.py:233(expm)                          0.739000     0.75    % 89      
+{built-in method scipy.linalg._matfuncs_expm.pade_UV_calc}   0.732000     0.74    % 89      
+ovos.py:173(t1)                                              0.109000     0.11    % 256320  
+pyscf/ao2mo/__init__.py:322(kernel)                          0.086000     0.09    % 267     

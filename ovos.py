@@ -1403,33 +1403,33 @@ class OVOS:
 				
 				# ----- 1. OSCILLATION DETECTION -----
 				# Check if we have enough history to detect oscillation patterns
-				if len(lst_E_corr) >= 500 and change > threshold * 10:
-					# Look at recent oscillations (last 4-6 iterations)
-					recent_changes = [np.abs(lst_E_corr[i] - lst_E_corr[i-1]) for i in range(-5, 0)]
-					recent_signs = [np.sign(lst_E_corr[i] - lst_E_corr[i-1]) for i in range(-5, 0)]
+				# if len(lst_E_corr) >= 500 and change > threshold * 10:
+				# 	# Look at recent oscillations (last 4-6 iterations)
+				# 	recent_changes = [np.abs(lst_E_corr[i] - lst_E_corr[i-1]) for i in range(-5, 0)]
+				# 	recent_signs = [np.sign(lst_E_corr[i] - lst_E_corr[i-1]) for i in range(-5, 0)]
 					
-					# Detect alternating sign pattern (+ - + - or - + - +)
-					if len(recent_signs) >= 4:
-						# Check if signs alternate consistently
-						alternations = sum(1 for i in range(1, len(recent_signs)) if recent_signs[i] != recent_signs[i-1])
-						if alternations >= len(recent_signs) - 1:  # All signs alternate
-							# Check if oscillation amplitude isn't decaying
-							if np.std(recent_changes) > 0.1 * np.mean(recent_changes):
-								oscillation_detected = True
+				# 	# Detect alternating sign pattern (+ - + - or - + - +)
+				# 	if len(recent_signs) >= 4:
+				# 		# Check if signs alternate consistently
+				# 		alternations = sum(1 for i in range(1, len(recent_signs)) if recent_signs[i] != recent_signs[i-1])
+				# 		if alternations >= len(recent_signs) - 1:  # All signs alternate
+				# 			# Check if oscillation amplitude isn't decaying
+				# 			if np.std(recent_changes) > 0.1 * np.mean(recent_changes):
+				# 				oscillation_detected = True
 					
-					# Detect limit cycle (bouncing between same values)
-					if len(lst_E_corr) >= 500 and not oscillation_detected:
-						for cycle_len in [2, 3, 4, 6, 8]:  # Check for 2-cycle, 3-cycle, 4-cycle
-							if len(lst_E_corr) >= 3 * cycle_len:
-								recent_cycle = lst_E_corr[-cycle_len*2:-cycle_len]
-								current_cycle = lst_E_corr[-cycle_len:]
-								# Check if cycles are nearly identical
-								cycle_diff = np.max([np.abs(recent_cycle[i] - current_cycle[i % cycle_len]) 
-												for i in range(cycle_len)])
-								if cycle_diff < threshold * 10:
-									oscillation_detected = True
-									print(f"		WARNING: Detected {cycle_len}-cycle limit cycle oscillation!")
-									break
+				# 	# Detect limit cycle (bouncing between same values)
+				# 	if len(lst_E_corr) >= 500 and not oscillation_detected:
+				# 		for cycle_len in [2, 3, 4, 6, 8]:  # Check for 2-cycle, 3-cycle, 4-cycle
+				# 			if len(lst_E_corr) >= 3 * cycle_len:
+				# 				recent_cycle = lst_E_corr[-cycle_len*2:-cycle_len]
+				# 				current_cycle = lst_E_corr[-cycle_len:]
+				# 				# Check if cycles are nearly identical
+				# 				cycle_diff = np.max([np.abs(recent_cycle[i] - current_cycle[i % cycle_len]) 
+				# 								for i in range(cycle_len)])
+				# 				if cycle_diff < threshold * 10:
+				# 					oscillation_detected = True
+				# 					print(f"		WARNING: Detected {cycle_len}-cycle limit cycle oscillation!")
+				# 					break
 				
 				# ----- 2. DRIFT DETECTION -----
 				# if len(lst_E_corr) >= 8 and not oscillation_detected:
@@ -1468,30 +1468,30 @@ class OVOS:
 				# 		chaos_detected = True
 				
 				# ----- 5. DIVERGENCE DETECTION (consistent increases) -----
-				if len(lst_E_corr) >= 5 and E_corr > lst_E_corr[-1]:
-					last_few = lst_E_corr[-5:]
-					if all(last_few[i] <= last_few[i+1] for i in range(len(last_few)-1)):
-						diverging = True
+				# if len(lst_E_corr) >= 5 and E_corr > lst_E_corr[-1]:
+				# 	last_few = lst_E_corr[-5:]
+				# 	if all(last_few[i] <= last_few[i+1] for i in range(len(last_few)-1)):
+				# 		diverging = True
 				
 				# ==============================================
 				# REPORT NON-CONVERGENCE WARNINGS
 				# ==============================================
-				if oscillation_detected:
-					oscillation_amplitude = np.max(recent_changes) - np.min(recent_changes) if len(recent_changes) > 1 else 0
-					print(f"		WARNING: Oscillation detected! Amplitude: {oscillation_amplitude:.6e}")
-					print(f"		Not converging - in limit cycle.")
-					# Optionally set a flag to break after certain number of oscillation iterations
-					if not hasattr(self, 'oscillation_counter'):
-						self.oscillation_counter = 0
-					self.oscillation_counter += 1
-					# Break if oscillation persists
-					if self.oscillation_counter > 5:
-						print(f"		Oscillation persisted for {self.oscillation_counter} iterations. Stopping.")
-						converged = False
-						lst_E_corr.append(E_corr)
-						lst_iter_counts.append(iter_count)
-						lst_stop_reason.append("Oscillation")
-						break
+				# if oscillation_detected:
+				# 	oscillation_amplitude = np.max(recent_changes) - np.min(recent_changes) if len(recent_changes) > 1 else 0
+				# 	print(f"		WARNING: Oscillation detected! Amplitude: {oscillation_amplitude:.6e}")
+				# 	print(f"		Not converging - in limit cycle.")
+				# 	# Optionally set a flag to break after certain number of oscillation iterations
+				# 	if not hasattr(self, 'oscillation_counter'):
+				# 		self.oscillation_counter = 0
+				# 	self.oscillation_counter += 1
+				# 	# Break if oscillation persists
+				# 	if self.oscillation_counter > 5:
+				# 		print(f"		Oscillation persisted for {self.oscillation_counter} iterations. Stopping.")
+				# 		converged = False
+				# 		lst_E_corr.append(E_corr)
+				# 		lst_iter_counts.append(iter_count)
+				# 		lst_stop_reason.append("Oscillation")
+				# 		break
 				
 				# if drift_detected:
 				# 	print(f"		WARNING: Persistent monotonic drift detected!")
@@ -2040,8 +2040,8 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 Get data
 """
 
-for basis_set in ["6-31G"]: # Done: "6-31G", "cc-pVDZ", ... 
-	for molecule in ["CO", "H2O", "HF", "NH3"]: 
+for basis_set in ["6-31G"]: # Yet: "6-31G","cc-pVDZ", ... 
+	for molecule in ["CO", "H2O", "HF", "NH3"]: # Done: "CO", "H2O", "HF", "NH3"
 		print("")
 		print("====================================================")
 		print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
@@ -2052,56 +2052,70 @@ for basis_set in ["6-31G"]: # Done: "6-31G", "cc-pVDZ", ...
 
 		# get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="RHF", select_atom=molecule, select_basis=basis_set)
 		# get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="prev", select_atom=molecule, select_basis=basis_set)
-		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="random", select_atom=molecule, select_basis=basis_set)
+		# get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="random", select_atom=molecule, select_basis=basis_set)
 
-assert False, "Done with OVOS runs. Comment out this line to run more or move on to the next part of the code."
+		# Get I add the terminal output of the OVOS runs to a text file for later reference
+		import sys
+		original_stdout = sys.stdout  # Save a reference to the original standard output
+		with open(f"branch/data/{molecule}/{basis_set}/OVOS_output.txt", "w") as f:
+			sys.stdout = f  # Change the standard output to the file we created
+			# Run OVOS again to capture the output in the file
+			get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="RHF", select_atom=molecule, select_basis=basis_set)
+			get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="prev", select_atom=molecule, select_basis=basis_set)
+			# get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="random", select_atom=molecule, select_basis=basis_set)
+			sys.stdout = original_stdout  # Reset the standard output to its original value
+		
+
+
+# assert False, "Done with OVOS runs. Comment out this line to run more or move on to the next part of the code."
 
 # Save miscellaneous data about the molecule and basis set
-for basis_set in ["6-31G", "cc-pVDZ"]:
-	for molecule in ["CO", "H2O", "HF", "NH3"]:
-		print("#### Miscellaneous data about the molecule and basis set ####")
-		print("Molecule: ", molecule)
-		print("Basis set: ", basis_set)
-		print()
+if False: # Done...
+	for basis_set in ["6-31G", "cc-pVDZ"]:
+		for molecule in ["CO", "H2O", "HF", "NH3"]:
+			print("#### Miscellaneous data about the molecule and basis set ####")
+			print("Molecule: ", molecule)
+			print("Basis set: ", basis_set)
+			print()
 
-		mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
-		active_space_size = full_space_size - num_electrons//2 + 1
-		print()
-		print("Number of electrons: ", num_electrons)
-		print("Full space size in molecular orbitals: ", full_space_size)
-		print()
+			mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
+			active_space_size = full_space_size - num_electrons//2 + 1
+			print()
+			print("Number of electrons: ", num_electrons)
+			print("Full space size in molecular orbitals: ", full_space_size)
+			print()
 
-			# Get UHF MP2 correlation energy for full space reference
-		MP2_e_corr = rhf.MP2().run().e_corr
-		print()
+				# Get UHF MP2 correlation energy for full space reference
+			MP2_e_corr = rhf.MP2().run().e_corr
+			print()
 
-			# Run CCSD(T)
-		ccsd = pyscf.cc.CCSD(rhf).run()
-		print()
+				# Run CCSD(T)
+			ccsd = pyscf.cc.CCSD(rhf).run()
+			print()
 
-			# Run CASSCF
-		casscf = rhf.CASSCF(full_space_size, num_electrons).run()
-		print()
+				# Run CASSCF
+			# casscf = rhf.CASSCF(full_space_size, num_electrons).run()
+			# print()
 
-			# Run FCI/CASCI
-		casci = mf.CASCI(ncas, nelecas).run()
-		print()
+				# Run FCI/CASCI
+			# casci = rhf.CASCI(full_space_size, num_electrons).run()
+			# print()
 
-		# Save data to JSON file
-		import json
+			# Save data to JSON file
+			import json
 
-		data = {
-			"num_electrons": num_electrons,
-			"full_space_size": full_space_size,
-			"active_space_size": active_space_size,
-			"MP2_e_corr": MP2_e_corr,
-			"CCSD_e_corr": ccsd.e_corr,
-			"CCSD(T)_e_corr": ccsd.e_tot + ccsd.ccsd_t() - rhf.e_tot,
-			"FCI_e_corr": casci.e_tot - rhf.e_tot,
-			"CASSCF_e_corr": casscf.e_tot - rhf.e_tot
-		}
+			data = {
+				"num_electrons": num_electrons,
+				"full_space_size": full_space_size,
+				"active_space_size": active_space_size,
+				"MP2_e_corr": MP2_e_corr,
+				"CCSD_e_corr": ccsd.e_corr,
+				"CCSD(T)_e_corr": ccsd.e_tot + ccsd.ccsd_t() - rhf.e_tot,
+				"FCI_e_corr": None, # casci.e_tot - rhf.e_tot,
+				"CASSCF_e_corr": None # casscf.e_tot - rhf.e_tot
+			}
 
-		with open(f"branch/data/{molecule}/{basis_set}/molecule_data.json", "w") as f:
-			json.dump(data, f, indent=2)
-		print(f"Miscellaneous data saved to branch/data/{molecule}/{basis_set}/molecule_data.json")
-		print()
+			with open(f"branch/data/{molecule}/{basis_set}/molecule_data.json", "w") as f:
+				json.dump(data, f, indent=2)
+			print(f"Miscellaneous data saved to branch/data/{molecule}/{basis_set}/molecule_data.json")
+			print()

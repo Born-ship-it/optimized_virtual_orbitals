@@ -1,8 +1,8 @@
 # Local development folders
-local/
-branch/
-backup/
-images/
+# local/
+# branch/
+# backup/
+# images/
 
 # Python
 __pycache__/
