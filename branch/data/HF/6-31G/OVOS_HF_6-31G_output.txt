@@ -16,135 +16,172 @@ Inactive unoccupied spin-orbitals:  [12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
   - Gradient:
     Gradient norm: 1.142052e-02
   - Hessian:
-    Hessian norm: 4.730592e-02, (Neg. Eigval: 4/20)
+    Hessian norm: 4.908986e-02, (Neg. Eigval: 2/20)
         WARNING: Hessian has negative eigenvalues!
-    Hessian determinant: 2.092019e-47
+                Level-shifting will be applied in block solver (min eigval: -7.863532e-03)
+    Hessian determinant: 2.380969e-46
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 2.468793e+00, (Max el.: 9.973823e-01)
+    Rotation norm 1.039230e+00, (Max el.: 3.000000e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01448219913620228
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.013053369501164338
  Step (ix): Check convergence and stability
-  Change: 1.121116e-02 Ha (thr: 1.0e-08)
+  Change: 9.782326e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.233265e-02
+    Gradient norm: 1.484911e-02
   - Hessian:
-    Hessian norm: 1.334093e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 9.400527e-32
+    Hessian norm: 1.452660e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 2.230965e-31
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 6.021531e-01, (Max el.: 2.137770e-01)
+    Rotation norm 6.085675e-01, (Max el.: 3.000000e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  3  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01820364008757968
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01778768538658436
  Step (ix): Check convergence and stability
-  Change: 3.721441e-03 Ha (thr: 1.0e-08)
+  Change: 4.734316e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 3.928219e-03
+    Gradient norm: 6.174486e-03
   - Hessian:
-    Hessian norm: 1.673298e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 9.554174e-30
+    Hessian norm: 1.993813e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 3.956168e-28
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 1.525887e-01, (Max el.: 5.070559e-02)
+    Rotation norm 2.002035e-01, (Max el.: 9.688599e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  4  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018461178109278477
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018385456916950885
  Step (ix): Check convergence and stability
-  Change: 2.575380e-04 Ha (thr: 1.0e-08)
+  Change: 5.977715e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 8.460132e-04
+    Gradient norm: 2.234781e-03
   - Hessian:
-    Hessian norm: 1.699213e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 1.226235e-29
+    Hessian norm: 2.071262e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 9.266780e-28
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 3.240431e-02, (Max el.: 1.417210e-02)
+    Rotation norm 6.960472e-02, (Max el.: 3.334725e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  5  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018473049389881098
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018461089793651332
  Step (ix): Check convergence and stability
-  Change: 1.187128e-05 Ha (thr: 1.0e-08)
+  Change: 7.563288e-05 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.960989e-04
+    Gradient norm: 8.415195e-04
   - Hessian:
-    Hessian norm: 1.700884e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 1.232096e-29
+    Hessian norm: 2.084430e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 1.071993e-27
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 7.506223e-03, (Max el.: 3.580878e-03)
+    Rotation norm 2.603282e-02, (Max el.: 1.240334e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  6  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01847369721115128
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018471824684443916
  Step (ix): Check convergence and stability
-  Change: 6.478213e-07 Ha (thr: 1.0e-08)
+  Change: 1.073489e-05 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 4.842552e-05
+    Gradient norm: 3.259903e-04
   - Hessian:
-    Hessian norm: 1.701058e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 1.230980e-29
+    Hessian norm: 2.087634e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 1.112413e-27
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 1.853555e-03, (Max el.: 8.821634e-04)
+    Rotation norm 1.006770e-02, (Max el.: 4.744086e-03)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  7  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018473736924060936
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018473440917251095
  Step (ix): Check convergence and stability
-  Change: 3.971291e-08 Ha (thr: 1.0e-08)
+  Change: 1.616233e-06 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.222736e-05
+    Gradient norm: 1.283853e-04
   - Hessian:
-    Hessian norm: 1.701086e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 1.230605e-29
+    Hessian norm: 2.088653e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 1.126076e-27
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 4.680183e-04, (Max el.: 2.169763e-04)
+    Rotation norm 3.962814e-03, (Max el.: 1.837770e-03)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  8  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018473739464185058
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01847369221053559
  Step (ix): Check convergence and stability
-  OVOS converged in 8 iterations.
+  Change: 2.512933e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 5.105705e-05
+  - Hessian:
+    Hessian norm: 2.089029e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 1.131252e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.575636e-03, (Max el.: 7.167519e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  9  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018473732022489267
+ Step (ix): Check convergence and stability
+  Change: 3.981195e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.043456e-05
+  - Hessian:
+    Hessian norm: 2.089177e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 1.133307e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 6.305663e-04, (Max el.: 2.807327e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  10  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01847373840825551
+ Step (ix): Check convergence and stability
+  [2/12] OVOS converged in 10 iterations @ -1.84737E-02
 
 #### OVOS Summary ####
 Initial MP2 correlation energy: -0.0032710433 Hartree
-Final OVOS correlation energy: -0.0184737395 Hartree
-Total change in correlation energy: -0.0152026961 Hartree
+Final OVOS correlation energy: -0.0184737384 Hartree
+Total change in correlation energy: -0.0152026951 Hartree
 OVOS successfully lowered the correlation energy.
-Total number of iterations: 8
+Total number of iterations: 10
 
 #### Active and inactive spaces ####
 Total number of spin-orbitals:  22
@@ -163,225 +200,549 @@ Inactive unoccupied spin-orbitals:  [14, 15, 16, 17, 18, 19, 20, 21]
 
 #### OVOS Iteration  1  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.019835152204079713
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.014797288383788158
  Step (ix): Check convergence and stability
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.699886e-03
+    Gradient norm: 1.462234e-02
   - Hessian:
-    Hessian norm: 1.564311e-01, (Neg. Eigval: 2/32)
+    Hessian norm: 1.487193e-01, (Neg. Eigval: 8/32)
         WARNING: Hessian has negative eigenvalues!
-    Hessian determinant: 1.126873e-79
+                Level-shifting will be applied in block solver (min eigval: -2.806467e-03)
+    Hessian determinant: 8.405802e-68
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.095770e+00, (Max el.: 5.354382e-01)
+    Rotation norm 1.040060e+00, (Max el.: 3.000000e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02126423004927332
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.019771723335774705
  Step (ix): Check convergence and stability
-  Change: 1.429078e-03 Ha (thr: 1.0e-08)
+  Change: 4.974435e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 4.309511e-03
+    Gradient norm: 7.729157e-03
   - Hessian:
-    Hessian norm: 1.581201e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 9.469074e-64
+    Hessian norm: 1.938984e-01, (Neg. Eigval: 8/32)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -5.261574e-04)
+    Hessian determinant: 4.613809e-71
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.385454e+00, (Max el.: 5.261819e-01)
+    Rotation norm 4.465597e-01, (Max el.: 1.461108e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  3  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.027424021889021006
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.0194340302545873
  Step (ix): Check convergence and stability
-  Change: 6.159792e-03 Ha (thr: 1.0e-08)
+  Change: 3.376931e-04 Ha (thr: 1.0e-08)  [WARNING: energy increased]
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 8.488842e-03
+    Gradient norm: 3.808432e-03
   - Hessian:
-    Hessian norm: 1.833027e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 3.100232e-54
+    Hessian norm: 1.903486e-01, (Neg. Eigval: 8/32)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -1.277429e-03)
+    Hessian determinant: 5.746984e-67
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 8.929521e-01, (Max el.: 4.028022e-01)
+    Rotation norm 2.707730e-01, (Max el.: 1.164040e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  4  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03153019057291581
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02000667172076099
  Step (ix): Check convergence and stability
-  Change: 4.106169e-03 Ha (thr: 1.0e-08)
+  Change: 5.726415e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 3.919284e-03
+    Gradient norm: 3.309991e-03
   - Hessian:
-    Hessian norm: 1.990909e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 1.009650e-50
+    Hessian norm: 1.945479e-01, (Neg. Eigval: 6/32)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -4.530616e-04)
+    Hessian determinant: 6.600429e-71
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 2.839626e-01, (Max el.: 1.342670e-01)
+    Rotation norm 1.734350e-01, (Max el.: 7.574005e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  5  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03205554126789615
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.019811425597506094
  Step (ix): Check convergence and stability
-  Change: 5.253507e-04 Ha (thr: 1.0e-08)
+  Change: 1.952461e-04 Ha (thr: 1.0e-08)  [WARNING: energy increased]
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 9.350783e-04
+    Gradient norm: 3.120825e-03
   - Hessian:
-    Hessian norm: 2.006441e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.651703e-50
+    Hessian norm: 1.914198e-01, (Neg. Eigval: 6/32)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -5.235170e-04)
+    Hessian determinant: 2.216021e-69
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 7.042019e-02, (Max el.: 3.433176e-02)
+    Rotation norm 1.962482e-01, (Max el.: 8.649077e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  6  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.032101596416444875
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.020122174538037958
  Step (ix): Check convergence and stability
-  Change: 4.605515e-05 Ha (thr: 1.0e-08)
+  Change: 3.107489e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 2.612917e-04
+    Gradient norm: 4.163232e-03
   - Hessian:
-    Hessian norm: 2.007397e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.903497e-50
+    Hessian norm: 1.921368e-01, (Neg. Eigval: 4/32)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -1.250737e-04)
+    Hessian determinant: 1.337579e-68
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.859927e-02, (Max el.: 8.969472e-03)
+    Rotation norm 2.290223e-01, (Max el.: 7.700328e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  7  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03210865593987068
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.020393553843220957
  Step (ix): Check convergence and stability
-  Change: 7.059523e-06 Ha (thr: 1.0e-08)
+  Change: 2.713793e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 7.920156e-05
+    Gradient norm: 5.527545e-03
   - Hessian:
-    Hessian norm: 2.007639e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.935696e-50
+    Hessian norm: 1.911133e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 2.709079e-64
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 5.306181e-03, (Max el.: 2.506154e-03)
+    Rotation norm 3.065270e-01, (Max el.: 1.024776e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  8  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03211020482413007
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.021208151888464623
  Step (ix): Check convergence and stability
-  Change: 1.548884e-06 Ha (thr: 1.0e-08)
+  Change: 8.145980e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 2.423496e-05
+    Gradient norm: 7.250979e-03
   - Hessian:
-    Hessian norm: 2.007714e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.940929e-50
+    Hessian norm: 1.926891e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 4.393345e-59
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.570716e-03, (Max el.: 7.277877e-04)
+    Rotation norm 3.786966e-01, (Max el.: 1.057526e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  9  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03211059558356669
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02264271191442309
  Step (ix): Check convergence and stability
-  Change: 3.907594e-07 Ha (thr: 1.0e-08)
+  Change: 1.434560e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 7.444394e-06
+    Gradient norm: 8.797447e-03
   - Hessian:
-    Hessian norm: 2.007736e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.941990e-50
+    Hessian norm: 1.967060e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 5.690780e-55
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 4.734875e-04, (Max el.: 2.153994e-04)
+    Rotation norm 4.285261e-01, (Max el.: 1.284675e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  10  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03211069929636039
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02477560693027759
  Step (ix): Check convergence and stability
-  Change: 1.037128e-07 Ha (thr: 1.0e-08)
+  Change: 2.132895e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 2.296460e-06
+    Gradient norm: 9.248461e-03
   - Hessian:
-    Hessian norm: 2.007743e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.942233e-50
+    Hessian norm: 2.049157e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.446751e-51
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.442878e-04, (Max el.: 6.445712e-05)
+    Rotation norm 4.101612e-01, (Max el.: 1.345686e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  11  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.032110727387739374
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02691384612065886
  Step (ix): Check convergence and stability
-  Change: 2.809138e-08 Ha (thr: 1.0e-08)
+  Change: 2.138239e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 7.111561e-07
+    Gradient norm: 7.976225e-03
   - Hessian:
-    Hessian norm: 2.007744e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.942292e-50
+    Hessian norm: 2.147156e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 2.783730e-49
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 4.429687e-05, (Max el.: 1.944142e-05)
+    Rotation norm 3.254000e-01, (Max el.: 1.114068e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  12  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.032110735082878934
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.028335431551444547
  Step (ix): Check convergence and stability
-  OVOS converged in 12 iterations.
+  Change: 1.421585e-03 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 5.748212e-03
+  - Hessian:
+    Hessian norm: 2.218996e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 4.434730e-48
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.232289e-01, (Max el.: 7.699314e-02)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  13  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02902494075651266
+ Step (ix): Check convergence and stability
+  Change: 6.895092e-04 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.716677e-03
+  - Hessian:
+    Hessian norm: 2.254782e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.483985e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.415599e-01, (Max el.: 4.821065e-02)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  14  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.029306938684934843
+ Step (ix): Check convergence and stability
+  Change: 2.819979e-04 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.289102e-03
+  - Hessian:
+    Hessian norm: 2.269021e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 2.394833e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 8.678845e-02, (Max el.: 2.898109e-02)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  15  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.029414457684089464
+ Step (ix): Check convergence and stability
+  Change: 1.075190e-04 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.385022e-03
+  - Hessian:
+    Hessian norm: 2.274042e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 2.877536e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 5.253465e-02, (Max el.: 1.766065e-02)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  16  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.029454731875139847
+ Step (ix): Check convergence and stability
+  Change: 4.027419e-05 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 8.334569e-04
+  - Hessian:
+    Hessian norm: 2.275663e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.088431e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 3.165649e-02, (Max el.: 1.093236e-02)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  17  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02946998515884828
+ Step (ix): Check convergence and stability
+  Change: 1.525328e-05 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 5.009599e-04
+  - Hessian:
+    Hessian norm: 2.276126e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.176018e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.904708e-02, (Max el.: 6.700824e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  18  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.029475961710741145
+ Step (ix): Check convergence and stability
+  Change: 5.976552e-06 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.011652e-04
+  - Hessian:
+    Hessian norm: 2.276222e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.212891e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.145633e-02, (Max el.: 4.083528e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  19  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02947844406681816
+ Step (ix): Check convergence and stability
+  Change: 2.482356e-06 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.811589e-04
+  - Hessian:
+    Hessian norm: 2.276218e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.229131e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 6.891678e-03, (Max el.: 2.480400e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  20  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02947956322321875
+ Step (ix): Check convergence and stability
+  Change: 1.119156e-06 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.090462e-04
+  - Hessian:
+    Hessian norm: 2.276194e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.236724e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 4.147313e-03, (Max el.: 1.503947e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  21  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.029480118479950468
+ Step (ix): Check convergence and stability
+  Change: 5.552567e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 6.568481e-05
+  - Hessian:
+    Hessian norm: 2.276174e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.240503e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.497028e-03, (Max el.: 9.110611e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  22  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.029480420362543856
+ Step (ix): Check convergence and stability
+  Change: 3.018826e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.959339e-05
+  - Hessian:
+    Hessian norm: 2.276159e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.242493e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.504269e-03, (Max el.: 5.516816e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  23  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.029480596750969233
+ Step (ix): Check convergence and stability
+  Change: 1.763884e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.388266e-05
+  - Hessian:
+    Hessian norm: 2.276151e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.243589e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 9.067587e-04, (Max el.: 3.340298e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  24  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02948070488056512
+ Step (ix): Check convergence and stability
+  Change: 1.081296e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.441600e-05
+  - Hessian:
+    Hessian norm: 2.276146e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.244212e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 5.469332e-04, (Max el.: 2.022617e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  25  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02948077303927279
+ Step (ix): Check convergence and stability
+  Change: 6.815871e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 8.707796e-06
+  - Hessian:
+    Hessian norm: 2.276143e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.244575e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 3.301115e-04, (Max el.: 1.224949e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  26  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.029480816617970387
+ Step (ix): Check convergence and stability
+  Change: 4.357870e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 5.263476e-06
+  - Hessian:
+    Hessian norm: 2.276141e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.244788e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.993771e-04, (Max el.: 7.420348e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  27  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.029480844650000955
+ Step (ix): Check convergence and stability
+  Change: 2.803203e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.183734e-06
+  - Hessian:
+    Hessian norm: 2.276141e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.244916e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.204983e-04, (Max el.: 4.496218e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  28  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.029480862709285793
+ Step (ix): Check convergence and stability
+  Change: 1.805928e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.927076e-06
+  - Hessian:
+    Hessian norm: 2.276140e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.244992e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 7.287484e-05, (Max el.: 2.725183e-05)
+
+    Rotated 6 spin orbitals out of 22 total.
+
+#### OVOS Iteration  29  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02948087433436202
+ Step (ix): Check convergence and stability
+  Change: 1.162508e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.167229e-06
+  - Hessian:
+    Hessian norm: 2.276140e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.245038e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 4.410269e-05, (Max el.: 1.652243e-05)
+
+    Rotated 6 spin orbitals out of 22 total.
+
+#### OVOS Iteration  30  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.029480881803207105
+ Step (ix): Check convergence and stability
+  [4/12] OVOS converged in 30 iterations @ -2.94809E-02
 
 #### OVOS Summary ####
-Initial MP2 correlation energy: -0.0198351522 Hartree
-Final OVOS correlation energy: -0.0321107351 Hartree
-Total change in correlation energy: -0.0122755829 Hartree
+Initial MP2 correlation energy: -0.0147972884 Hartree
+Final OVOS correlation energy: -0.0294808818 Hartree
+Total change in correlation energy: -0.0146835934 Hartree
 OVOS successfully lowered the correlation energy.
-Total number of iterations: 12
+Total number of iterations: 30
 
 #### Active and inactive spaces ####
 Total number of spin-orbitals:  22
@@ -400,148 +761,453 @@ Inactive unoccupied spin-orbitals:  [16, 17, 18, 19, 20, 21]
 
 #### OVOS Iteration  1  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06911329530856164
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.03341402976621344
  Step (ix): Check convergence and stability
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 6.525588e-03
+    Gradient norm: 2.908553e-02
   - Hessian:
-    Hessian norm: 2.905282e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.035794e-49
+    Hessian norm: 2.113602e-01, (Neg. Eigval: 6/36)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -2.033956e-03)
+    Hessian determinant: 7.373383e-68
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.481138e-01, (Max el.: 6.949457e-02)
+    Rotation norm 1.164787e+00, (Max el.: 3.000000e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06945972937435564
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.046364728333886704
  Step (ix): Check convergence and stability
-  Change: 3.464341e-04 Ha (thr: 1.0e-08)
+  Change: 1.295070e-02 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 8.300079e-04
+    Gradient norm: 1.074504e-02
   - Hessian:
-    Hessian norm: 2.913898e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.343984e-49
+    Hessian norm: 2.938686e-01, (Neg. Eigval: 4/36)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -3.715441e-04)
+    Hessian determinant: 3.944982e-69
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 2.697951e-02, (Max el.: 9.468149e-03)
+    Rotation norm 4.251027e-01, (Max el.: 1.717591e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  3  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.0694647998349331
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.04620173653809846
  Step (ix): Check convergence and stability
-  Change: 5.070461e-06 Ha (thr: 1.0e-08)
+  Change: 1.629918e-04 Ha (thr: 1.0e-08)  [WARNING: energy increased]
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 2.191656e-04
+    Gradient norm: 6.754253e-03
   - Hessian:
-    Hessian norm: 2.913735e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.354684e-49
+    Hessian norm: 2.924794e-01, (Neg. Eigval: 6/36)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -4.554423e-04)
+    Hessian determinant: 6.125010e-68
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 7.737114e-03, (Max el.: 2.594227e-03)
+    Rotation norm 2.966858e-01, (Max el.: 1.326078e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  4  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06946511904477048
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.047576727170751267
  Step (ix): Check convergence and stability
-  Change: 3.192098e-07 Ha (thr: 1.0e-08)
+  Change: 1.374991e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 6.086230e-05
+    Gradient norm: 8.377923e-03
   - Hessian:
-    Hessian norm: 2.913666e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.356353e-49
+    Hessian norm: 2.982758e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 2.623734e-62
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 2.222426e-03, (Max el.: 7.129063e-04)
+    Rotation norm 3.144125e-01, (Max el.: 1.192475e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  5  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.0694652138897143
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.0486374482057737
  Step (ix): Check convergence and stability
-  Change: 9.484494e-08 Ha (thr: 1.0e-08)
+  Change: 1.060721e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.719444e-05
+    Gradient norm: 1.206681e-02
   - Hessian:
-    Hessian norm: 2.913649e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.356760e-49
+    Hessian norm: 2.983676e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 4.087895e-58
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 6.371549e-04, (Max el.: 2.162351e-04)
+    Rotation norm 4.562642e-01, (Max el.: 1.506000e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  6  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06946525892377363
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.052286945999174786
  Step (ix): Check convergence and stability
-  Change: 4.503406e-08 Ha (thr: 1.0e-08)
+  Change: 3.649498e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 4.892647e-06
+    Gradient norm: 1.663646e-02
   - Hessian:
-    Hessian norm: 2.913645e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.356878e-49
+    Hessian norm: 3.076729e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 3.203274e-53
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.825014e-04, (Max el.: 6.405476e-05)
+    Rotation norm 5.650320e-01, (Max el.: 1.554512e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  7  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06946527708174574
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.057741071357484054
  Step (ix): Check convergence and stability
-  Change: 1.815797e-08 Ha (thr: 1.0e-08)
+  Change: 5.454125e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.397206e-06
+    Gradient norm: 1.766878e-02
   - Hessian:
-    Hessian norm: 2.913644e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.356913e-49
+    Hessian norm: 3.230364e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 2.236740e-49
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 5.227835e-05, (Max el.: 1.876336e-05)
+    Rotation norm 5.338332e-01, (Max el.: 1.686194e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  8  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06946528356371778
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.0627711279703782
  Step (ix): Check convergence and stability
-  OVOS converged in 8 iterations.
+  Change: 5.030057e-03 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.330810e-02
+  - Hessian:
+    Hessian norm: 3.411123e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 4.117117e-47
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 3.616832e-01, (Max el.: 1.211020e-01)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  9  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06515329649461274
+ Step (ix): Check convergence and stability
+  Change: 2.382169e-03 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 8.066857e-03
+  - Hessian:
+    Hessian norm: 3.506502e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 3.077900e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.095615e-01, (Max el.: 7.119836e-02)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  10  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06595614582470366
+ Step (ix): Check convergence and stability
+  Change: 8.028493e-04 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 4.510722e-03
+  - Hessian:
+    Hessian norm: 3.539644e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 5.872942e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.157287e-01, (Max el.: 3.891905e-02)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  11  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06619080148250052
+ Step (ix): Check convergence and stability
+  Change: 2.346557e-04 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.468377e-03
+  - Hessian:
+    Hessian norm: 3.549090e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.147698e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 6.324173e-02, (Max el.: 2.089206e-02)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  12  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06625371698320379
+ Step (ix): Check convergence and stability
+  Change: 6.291550e-05 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.345667e-03
+  - Hessian:
+    Hessian norm: 3.551410e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.585020e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 3.451658e-02, (Max el.: 1.122253e-02)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  13  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.0662683829868416
+ Step (ix): Check convergence and stability
+  Change: 1.466600e-05 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 7.339249e-04
+  - Hessian:
+    Hessian norm: 3.551817e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.723876e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.884896e-02, (Max el.: 6.059203e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  14  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06627051417751925
+ Step (ix): Check convergence and stability
+  Change: 2.131191e-06 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 4.006695e-04
+  - Hessian:
+    Hessian norm: 3.551783e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.767712e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.029941e-02, (Max el.: 3.286631e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  15  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06626992139448491
+ Step (ix): Check convergence and stability
+  Change: 5.927830e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.188990e-04
+  - Hessian:
+    Hessian norm: 3.551688e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.781913e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 5.630117e-03, (Max el.: 1.788396e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  16  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.0662690699716379
+ Step (ix): Check convergence and stability
+  Change: 8.514228e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.196480e-04
+  - Hessian:
+    Hessian norm: 3.551614e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.786745e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 3.078446e-03, (Max el.: 9.750332e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  17  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06626844516270708
+ Step (ix): Check convergence and stability
+  Change: 6.248089e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 6.541659e-05
+  - Hessian:
+    Hessian norm: 3.551566e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.788511e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.683483e-03, (Max el.: 5.321857e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  18  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06626805488343315
+ Step (ix): Check convergence and stability
+  Change: 3.902793e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.577171e-05
+  - Hessian:
+    Hessian norm: 3.551538e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.789214e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 9.207088e-04, (Max el.: 2.906573e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  19  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06626782634832944
+ Step (ix): Check convergence and stability
+  Change: 2.285351e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.956280e-05
+  - Hessian:
+    Hessian norm: 3.551522e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.789520e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 5.035667e-04, (Max el.: 1.588000e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  20  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06626769653017231
+ Step (ix): Check convergence and stability
+  Change: 1.298182e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.069905e-05
+  - Hessian:
+    Hessian norm: 3.551513e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.789665e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.754257e-04, (Max el.: 8.677633e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  21  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06626762390918997
+ Step (ix): Check convergence and stability
+  Change: 7.262098e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 5.851582e-06
+  - Hessian:
+    Hessian norm: 3.551508e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.789737e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.506468e-04, (Max el.: 4.742368e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  22  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06626758360793997
+ Step (ix): Check convergence and stability
+  Change: 4.030125e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.200439e-06
+  - Hessian:
+    Hessian norm: 3.551505e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.789774e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 8.239881e-05, (Max el.: 2.591857e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  23  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06626756133698646
+ Step (ix): Check convergence and stability
+  Change: 2.227095e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.750457e-06
+  - Hessian:
+    Hessian norm: 3.551503e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.789794e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 4.506985e-05, (Max el.: 1.416566e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  24  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06626754905737886
+ Step (ix): Check convergence and stability
+  Change: 1.227961e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 9.574094e-07
+  - Hessian:
+    Hessian norm: 3.551503e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 7.789804e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.465215e-05, (Max el.: 7.742226e-06)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  25  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06626754229473705
+ Step (ix): Check convergence and stability
+  [6/12] OVOS converged in 25 iterations @ -6.62675E-02
 
 #### OVOS Summary ####
-Initial MP2 correlation energy: -0.0691132953 Hartree
-Final OVOS correlation energy: -0.0694652836 Hartree
-Total change in correlation energy: -0.0003519883 Hartree
+Initial MP2 correlation energy: -0.0334140298 Hartree
+Final OVOS correlation energy: -0.0662675423 Hartree
+Total change in correlation energy: -0.0328535125 Hartree
 OVOS successfully lowered the correlation energy.
-Total number of iterations: 8
+Total number of iterations: 25
 
 #### Active and inactive spaces ####
 Total number of spin-orbitals:  22
@@ -560,148 +1226,433 @@ Inactive unoccupied spin-orbitals:  [18, 19, 20, 21]
 
 #### OVOS Iteration  1  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12419509067251805
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.06914084230463971
  Step (ix): Check convergence and stability
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 4.247130e-03
+    Gradient norm: 4.362226e-02
   - Hessian:
-    Hessian norm: 3.614890e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.515563e-40
+    Hessian norm: 2.947446e-01, (Neg. Eigval: 4/32)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -1.627101e-03)
+    Hessian determinant: 9.487026e-54
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 8.863030e-02, (Max el.: 4.131501e-02)
+    Rotation norm 1.000000e+00, (Max el.: 2.992224e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429265573075023
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.09064274832636061
  Step (ix): Check convergence and stability
-  Change: 9.756506e-05 Ha (thr: 1.0e-08)
+  Change: 2.150191e-02 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 6.081331e-04
+    Gradient norm: 9.031692e-03
   - Hessian:
-    Hessian norm: 3.615274e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.935970e-40
+    Hessian norm: 3.869532e-01, (Neg. Eigval: 2/32)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -2.317312e-04)
+    Hessian determinant: 5.827400e-52
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.725379e-02, (Max el.: 6.475802e-03)
+    Rotation norm 3.004076e-01, (Max el.: 1.028229e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  3  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429469751596589
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.09244947047318451
  Step (ix): Check convergence and stability
-  Change: 2.041785e-06 Ha (thr: 1.0e-08)
+  Change: 1.806722e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.044296e-04
+    Gradient norm: 1.072042e-02
   - Hessian:
-    Hessian norm: 3.615692e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.911701e-40
+    Hessian norm: 3.936390e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.739960e-48
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 2.364450e-03, (Max el.: 9.544171e-04)
+    Rotation norm 3.555748e-01, (Max el.: 1.112662e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  4  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429544225411226
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.09508339662694662
  Step (ix): Check convergence and stability
-  Change: 7.447381e-07 Ha (thr: 1.0e-08)
+  Change: 2.633926e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.658676e-05
+    Gradient norm: 1.862135e-02
   - Hessian:
-    Hessian norm: 3.615656e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.917838e-40
+    Hessian norm: 3.968312e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.211291e-44
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 5.154044e-04, (Max el.: 1.913228e-04)
+    Rotation norm 6.005649e-01, (Max el.: 1.731893e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  5  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429566368452312
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.10309110954772092
  Step (ix): Check convergence and stability
-  Change: 2.214304e-07 Ha (thr: 1.0e-08)
+  Change: 8.007713e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 3.553115e-06
+    Gradient norm: 2.603063e-02
   - Hessian:
-    Hessian norm: 3.615670e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.917577e-40
+    Hessian norm: 4.123185e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.442070e-40
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 9.791451e-05, (Max el.: 4.054744e-05)
+    Rotation norm 7.224986e-01, (Max el.: 2.090831e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  6  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429573735360552
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.11358229073915117
  Step (ix): Check convergence and stability
-  Change: 7.366908e-08 Ha (thr: 1.0e-08)
+  Change: 1.049118e-02 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 7.550386e-07
+    Gradient norm: 2.180410e-02
   - Hessian:
-    Hessian norm: 3.615672e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.917797e-40
+    Hessian norm: 4.364987e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.657268e-37
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 2.411905e-05, (Max el.: 1.101232e-05)
+    Rotation norm 5.041145e-01, (Max el.: 1.603902e-01)
 
-    Rotated 6 spin orbitals out of 22 total.
+    Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  7  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429575678494037
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.11880895553973189
  Step (ix): Check convergence and stability
-  Change: 1.943133e-08 Ha (thr: 1.0e-08)
+  Change: 5.226665e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.840148e-07
+    Gradient norm: 1.208070e-02
   - Hessian:
-    Hessian norm: 3.615672e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.917815e-40
+    Hessian norm: 4.511340e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.511434e-36
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 5.581584e-06, (Max el.: 2.578284e-06)
+    Rotation norm 2.531081e-01, (Max el.: 8.252609e-02)
 
-    Rotated 2 spin orbitals out of 22 total.
+    Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  8  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429576201906128
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12013998547387182
  Step (ix): Check convergence and stability
-  OVOS converged in 8 iterations.
+  Change: 1.331030e-03 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 6.076440e-03
+  - Hessian:
+    Hessian norm: 4.550596e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 2.569775e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.240892e-01, (Max el.: 3.988070e-02)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  9  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12042570362957539
+ Step (ix): Check convergence and stability
+  Change: 2.857182e-04 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.025058e-03
+  - Hessian:
+    Hessian norm: 4.558812e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 2.919254e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 6.139056e-02, (Max el.: 1.904612e-02)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  10  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12047299255147728
+ Step (ix): Check convergence and stability
+  Change: 4.728892e-05 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.513916e-03
+  - Hessian:
+    Hessian norm: 4.559933e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.011809e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 3.065893e-02, (Max el.: 9.125192e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  11  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12047246373270801
+ Step (ix): Check convergence and stability
+  Change: 5.288188e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 7.629479e-04
+  - Hessian:
+    Hessian norm: 4.559731e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.035346e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.542439e-02, (Max el.: 4.397049e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  12  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12046574842596146
+ Step (ix): Check convergence and stability
+  Change: 6.715307e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.868908e-04
+  - Hessian:
+    Hessian norm: 4.559427e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.041343e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 7.806235e-03, (Max el.: 2.129546e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  13  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12046051832113948
+ Step (ix): Check convergence and stability
+  Change: 5.230105e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.972232e-04
+  - Hessian:
+    Hessian norm: 4.559215e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.042895e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 3.970500e-03, (Max el.: 1.090851e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  14  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12045729491719377
+ Step (ix): Check convergence and stability
+  Change: 3.223404e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.009821e-04
+  - Hessian:
+    Hessian norm: 4.559089e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.043306e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.028224e-03, (Max el.: 5.769369e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  15  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.1204554586306402
+ Step (ix): Check convergence and stability
+  Change: 1.836287e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 5.189884e-05
+  - Hessian:
+    Hessian norm: 4.559018e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.043420e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.039946e-03, (Max el.: 3.049805e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  16  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12045444719729055
+ Step (ix): Check convergence and stability
+  Change: 1.011433e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.675826e-05
+  - Hessian:
+    Hessian norm: 4.558980e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.043455e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 5.349598e-04, (Max el.: 1.611176e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  17  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12045389911127463
+ Step (ix): Check convergence and stability
+  Change: 5.480860e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.383379e-05
+  - Hessian:
+    Hessian norm: 4.558959e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.043467e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.759709e-04, (Max el.: 8.505985e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  18  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12045360468023905
+ Step (ix): Check convergence and stability
+  Change: 2.944310e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 7.168545e-06
+  - Hessian:
+    Hessian norm: 4.558948e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.043471e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.427157e-04, (Max el.: 4.487689e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  19  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.120453447315455
+ Step (ix): Check convergence and stability
+  Change: 1.573648e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.721976e-06
+  - Hessian:
+    Hessian norm: 4.558942e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.043473e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 7.396021e-05, (Max el.: 2.366211e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  20  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12045336348396925
+ Step (ix): Check convergence and stability
+  Change: 8.383149e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.935688e-06
+  - Hessian:
+    Hessian norm: 4.558939e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.043475e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 3.839818e-05, (Max el.: 1.246915e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  21  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12045331892836995
+ Step (ix): Check convergence and stability
+  Change: 4.455560e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.008092e-06
+  - Hessian:
+    Hessian norm: 4.558937e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.043475e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.996606e-05, (Max el.: 6.567427e-06)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  22  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12045329528914596
+ Step (ix): Check convergence and stability
+  Change: 2.363922e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 5.256168e-07
+  - Hessian:
+    Hessian norm: 4.558937e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.043475e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.039541e-05, (Max el.: 3.457398e-06)
+
+    Rotated 4 spin orbitals out of 22 total.
+
+#### OVOS Iteration  23  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12045328276497944
+ Step (ix): Check convergence and stability
+  Change: 1.252417e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.743199e-07
+  - Hessian:
+    Hessian norm: 4.558936e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.043476e-36
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 5.418377e-06, (Max el.: 1.819362e-06)
+
+    Rotated 4 spin orbitals out of 22 total.
+
+#### OVOS Iteration  24  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12045327613748483
+ Step (ix): Check convergence and stability
+  [8/12] OVOS converged in 24 iterations @ -1.20453E-01
 
 #### OVOS Summary ####
-Initial MP2 correlation energy: -0.1241950907 Hartree
-Final OVOS correlation energy: -0.1242957620 Hartree
-Total change in correlation energy: -0.0001006713 Hartree
+Initial MP2 correlation energy: -0.0691408423 Hartree
+Final OVOS correlation energy: -0.1204532761 Hartree
+Total change in correlation energy: -0.0513124338 Hartree
 OVOS successfully lowered the correlation energy.
-Total number of iterations: 8
+Total number of iterations: 24
 
 #### Active and inactive spaces ####
 Total number of spin-orbitals:  22
@@ -720,122 +1671,665 @@ Inactive unoccupied spin-orbitals:  [20, 21]
 
 #### OVOS Iteration  1  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1281878123042634
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.10316188555695333
  Step (ix): Check convergence and stability
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.594359e-03
+    Gradient norm: 3.275880e-02
   - Hessian:
-    Hessian norm: 2.587153e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 9.944906e-30
+    Hessian norm: 2.882915e-01, (Neg. Eigval: 2/20)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -5.246025e-04)
+    Hessian determinant: 9.482970e-32
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 5.532012e-01, (Max el.: 2.765844e-01)
+    Rotation norm 6.804409e-01, (Max el.: 3.000000e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12827147445648873
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.11471787141916968
  Step (ix): Check convergence and stability
-  Change: 8.366215e-05 Ha (thr: 1.0e-08)
+  Change: 1.155599e-02 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 7.293429e-04
+    Gradient norm: 2.911198e-02
   - Hessian:
-    Hessian norm: 2.578178e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 2.652431e-29
+    Hessian norm: 3.078110e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 6.090208e-29
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.776703e-01, (Max el.: 8.871179e-02)
+    Rotation norm 7.896708e-01, (Max el.: 3.000000e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  3  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282505486620794
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1210705875613323
  Step (ix): Check convergence and stability
-  Change: 2.092579e-05 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+  Change: 6.352716e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.869026e-04
+    Gradient norm: 1.822939e-02
   - Hessian:
-    Hessian norm: 2.576203e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 3.047962e-29
+    Hessian norm: 3.171779e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 2.190954e-27
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 3.896000e-02, (Max el.: 1.942735e-02)
+    Rotation norm 7.575602e-01, (Max el.: 3.000000e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  4  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12824209013147458
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12253387914399003
  Step (ix): Check convergence and stability
-  Change: 8.458531e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+  Change: 1.463292e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 3.695816e-05
+    Gradient norm: 4.185509e-03
   - Hessian:
-    Hessian norm: 2.575831e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 3.109993e-29
+    Hessian norm: 3.204679e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.497432e-27
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 7.251163e-03, (Max el.: 3.613222e-03)
+    Rotation norm 7.951363e-02, (Max el.: 3.328719e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  5  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12824039426516587
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12282928298929963
  Step (ix): Check convergence and stability
-  Change: 1.695866e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+  Change: 2.954038e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 6.724704e-06
+    Gradient norm: 8.612945e-04
   - Hessian:
-    Hessian norm: 2.575766e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 3.120397e-29
+    Hessian norm: 3.215804e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805246e-27
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.274655e-03, (Max el.: 6.348469e-04)
+    Rotation norm 3.156296e-02, (Max el.: 1.172815e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  6  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282400990662046
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1227616300177257
  Step (ix): Check convergence and stability
-  Change: 2.951990e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+  Change: 6.765297e-05 Ha (thr: 1.0e-08)  [WARNING: energy increased]
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.181216e-06
+    Gradient norm: 3.492887e-04
   - Hessian:
-    Hessian norm: 2.575755e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 3.122187e-29
+    Hessian norm: 3.214375e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.789372e-27
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 2.186828e-04, (Max el.: 1.088732e-04)
+    Rotation norm 7.538972e-03, (Max el.: 3.698027e-03)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  7  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282400496043195
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12275835931345533
  Step (ix): Check convergence and stability
-  STOPPING: 5 consecutive energy increases — diverging.
+  Change: 3.270704e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.218897e-04
+  - Hessian:
+    Hessian norm: 3.214501e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.796030e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.613124e-03, (Max el.: 1.197416e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  8  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12275626036443235
+ Step (ix): Check convergence and stability
+  Change: 2.098949e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 5.119032e-05
+  - Hessian:
+    Hessian norm: 3.214499e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.797443e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.041794e-03, (Max el.: 3.130657e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  9  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12275732345263934
+ Step (ix): Check convergence and stability
+  Change: 1.063088e-06 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.704430e-05
+  - Hessian:
+    Hessian norm: 3.214539e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.799051e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 8.201386e-04, (Max el.: 3.349378e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  10  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12275889354716626
+ Step (ix): Check convergence and stability
+  Change: 1.570095e-06 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.849765e-05
+  - Hessian:
+    Hessian norm: 3.214577e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.800323e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 7.438534e-04, (Max el.: 3.164397e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  11  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276046851406172
+ Step (ix): Check convergence and stability
+  Change: 1.574967e-06 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.432211e-05
+  - Hessian:
+    Hessian norm: 3.214612e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.801372e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 6.434506e-04, (Max el.: 2.733311e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  12  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276185575487983
+ Step (ix): Check convergence and stability
+  Change: 1.387241e-06 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.151589e-05
+  - Hessian:
+    Hessian norm: 3.214642e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.802227e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 5.399888e-04, (Max el.: 2.287559e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  13  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276302619645824
+ Step (ix): Check convergence and stability
+  Change: 1.170442e-06 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 9.361959e-06
+  - Hessian:
+    Hessian norm: 3.214667e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.802922e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 4.466051e-04, (Max el.: 1.889003e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  14  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276399603418905
+ Step (ix): Check convergence and stability
+  Change: 9.698377e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 7.637605e-06
+  - Hessian:
+    Hessian norm: 3.214687e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.803488e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 3.669821e-04, (Max el.: 1.551078e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  15  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1227647935881438
+ Step (ix): Check convergence and stability
+  Change: 7.975540e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 6.238786e-06
+  - Hessian:
+    Hessian norm: 3.214704e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.803949e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 3.006921e-04, (Max el.: 1.270477e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  16  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.122765447311047
+ Step (ix): Check convergence and stability
+  Change: 6.537229e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 5.098701e-06
+  - Hessian:
+    Hessian norm: 3.214718e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.804324e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.460671e-04, (Max el.: 1.039526e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  17  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276598237372623
+ Step (ix): Check convergence and stability
+  Change: 5.350627e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 4.167803e-06
+  - Hessian:
+    Hessian norm: 3.214729e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.804630e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.012544e-04, (Max el.: 8.501580e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  18  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276642003785493
+ Step (ix): Check convergence and stability
+  Change: 4.376641e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.407145e-06
+  - Hessian:
+    Hessian norm: 3.214738e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.804880e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.645627e-04, (Max el.: 6.951430e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  19  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276677793206775
+ Step (ix): Check convergence and stability
+  Change: 3.578942e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.785403e-06
+  - Hessian:
+    Hessian norm: 3.214745e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805084e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.345459e-04, (Max el.: 5.683404e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  20  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276707055784511
+ Step (ix): Check convergence and stability
+  Change: 2.926258e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.277143e-06
+  - Hessian:
+    Hessian norm: 3.214751e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805250e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.099989e-04, (Max el.: 4.646485e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  21  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1227673098035773
+ Step (ix): Check convergence and stability
+  Change: 2.392457e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.861630e-06
+  - Hessian:
+    Hessian norm: 3.214756e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805386e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 8.992834e-05, (Max el.: 3.798674e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  22  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276750540083614
+ Step (ix): Check convergence and stability
+  Change: 1.955973e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.521936e-06
+  - Hessian:
+    Hessian norm: 3.214760e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805497e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 7.351905e-05, (Max el.: 3.105527e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  23  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276766531036148
+ Step (ix): Check convergence and stability
+  Change: 1.599095e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.244223e-06
+  - Hessian:
+    Hessian norm: 3.214764e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805587e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 6.010363e-05, (Max el.: 2.538845e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  24  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276779604232665
+ Step (ix): Check convergence and stability
+  Change: 1.307320e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.017183e-06
+  - Hessian:
+    Hessian norm: 3.214767e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805661e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 4.913604e-05, (Max el.: 2.075562e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  25  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276790291989899
+ Step (ix): Check convergence and stability
+  Change: 1.068776e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 8.315712e-07
+  - Hessian:
+    Hessian norm: 3.214769e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805722e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 4.016972e-05, (Max el.: 1.696815e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  26  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276799029536362
+ Step (ix): Check convergence and stability
+  Change: 8.737546e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 6.798277e-07
+  - Hessian:
+    Hessian norm: 3.214771e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805771e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 3.283952e-05, (Max el.: 1.387179e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  27  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276806172706872
+ Step (ix): Check convergence and stability
+  Change: 7.143171e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 5.557732e-07
+  - Hessian:
+    Hessian norm: 3.214772e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805811e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.684691e-05, (Max el.: 1.134045e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  28  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276812012419151
+ Step (ix): Check convergence and stability
+  Change: 5.839712e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 4.543555e-07
+  - Hessian:
+    Hessian norm: 3.214773e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805844e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.194783e-05, (Max el.: 9.271021e-06)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  29  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276816786513786
+ Step (ix): Check convergence and stability
+  Change: 4.774095e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.714442e-07
+  - Hessian:
+    Hessian norm: 3.214774e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805871e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.794273e-05, (Max el.: 7.579221e-06)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  30  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276820689436047
+ Step (ix): Check convergence and stability
+  Change: 3.902922e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.036624e-07
+  - Hessian:
+    Hessian norm: 3.214775e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805893e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.466848e-05, (Max el.: 6.196143e-06)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  31  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276823880152529
+ Step (ix): Check convergence and stability
+  Change: 3.190716e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.482494e-07
+  - Hessian:
+    Hessian norm: 3.214776e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805911e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.199173e-05, (Max el.: 5.065450e-06)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  32  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276826488623896
+ Step (ix): Check convergence and stability
+  Change: 2.608471e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.029482e-07
+  - Hessian:
+    Hessian norm: 3.214776e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805926e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 9.803434e-06, (Max el.: 4.141088e-06)
+
+    Rotated 6 spin orbitals out of 22 total.
+
+#### OVOS Iteration  33  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276828621096991
+ Step (ix): Check convergence and stability
+  Change: 2.132473e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.659135e-07
+  - Hessian:
+    Hessian norm: 3.214777e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805938e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 8.014465e-06, (Max el.: 3.385407e-06)
+
+    Rotated 4 spin orbitals out of 22 total.
+
+#### OVOS Iteration  34  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276830364431553
+ Step (ix): Check convergence and stability
+  Change: 1.743335e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.356371e-07
+  - Hessian:
+    Hessian norm: 3.214777e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805948e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 6.551953e-06, (Max el.: 2.767624e-06)
+
+    Rotated 4 spin orbitals out of 22 total.
+
+#### OVOS Iteration  35  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276831789637653
+ Step (ix): Check convergence and stability
+  Change: 1.425206e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.108855e-07
+  - Hessian:
+    Hessian norm: 3.214777e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805956e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 5.356325e-06, (Max el.: 2.262577e-06)
+
+    Rotated 4 spin orbitals out of 22 total.
+
+#### OVOS Iteration  36  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276832954767697
+ Step (ix): Check convergence and stability
+  Change: 1.165130e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 9.065068e-08
+  - Hessian:
+    Hessian norm: 3.214778e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.805963e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 4.378880e-06, (Max el.: 1.849692e-06)
+
+    Rotated 2 spin orbitals out of 22 total.
+
+#### OVOS Iteration  37  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12276833907280818
+ Step (ix): Check convergence and stability
+  [10/12] OVOS converged in 37 iterations @ -1.22768E-01
+
+#### OVOS Summary ####
+Initial MP2 correlation energy: -0.1031618856 Hartree
+Final OVOS correlation energy: -0.1227683391 Hartree
+Total change in correlation energy: -0.0196064535 Hartree
+OVOS successfully lowered the correlation energy.
+Total number of iterations: 37
 
 #### Active and inactive spaces ####
 Total number of spin-orbitals:  22
@@ -843,7 +2337,6 @@ Active occupied spin-orbitals:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 Active unoccupied spin-orbitals:  [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
 Inactive unoccupied spin-orbitals:  [20, 21]
 
-OVOS did not converge within the maximum number of iterations.
 
 #### OVOS with  12  out of  12  optimized virtual orbitals (Retry count:  0 ) ####
 
@@ -855,7 +2348,7 @@ Inactive unoccupied spin-orbitals:  []
 
 #### OVOS Iteration  1  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[12/12]: Computed MP2 correlation energy (spin-orbital):  -0.13057670491912193
+[12/12]: Computed MP2 correlation energy (spin-orbital):  -0.12869421382805524
  Step (ix): Check convergence and stability
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
@@ -881,15 +2374,15 @@ Inactive unoccupied spin-orbitals:  []
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[12/12]: Computed MP2 correlation energy (spin-orbital):  -0.13057670491912193
+[12/12]: Computed MP2 correlation energy (spin-orbital):  -0.12869421382805712
  Step (ix): Check convergence and stability
-  OVOS converged in 2 iterations.
+  [12/12] OVOS converged in 2 iterations @ -1.28694E-01
 
 #### OVOS Summary ####
-Initial MP2 correlation energy: -0.1305767049 Hartree
-Final OVOS correlation energy: -0.1305767049 Hartree
-Total change in correlation energy: 0.0000000000 Hartree
-WARNING: OVOS increased the correlation energy!
+Initial MP2 correlation energy: -0.1286942138 Hartree
+Final OVOS correlation energy: -0.1286942138 Hartree
+Total change in correlation energy: -0.0000000000 Hartree
+OVOS successfully lowered the correlation energy.
 Total number of iterations: 2
 
 #### Active and inactive spaces ####
@@ -903,13 +2396,13 @@ Full space size in molecular orbitals:  11
 Maximum number of optimized virtual orbitals tested:  12
 Total OVOS runs completed:  6
 
-MP2 correlation energy, for  2  optimized virtual orbitals:  -1.84737E-02  (14.35%) @  8  iterations till convergence ( Convergence )
-MP2 correlation energy, for  4  optimized virtual orbitals:  -3.21107E-02  (24.95%) @  12  iterations till convergence ( Convergence )
-MP2 correlation energy, for  6  optimized virtual orbitals:  -6.94653E-02  (53.98%) @  8  iterations till convergence ( Convergence )
-MP2 correlation energy, for  8  optimized virtual orbitals:  -1.24296E-01  (96.58%) @  8  iterations till convergence ( Convergence )
-MP2 correlation energy, for  10  optimized virtual orbitals:  -1.28240E-01  (99.65%) @  7  iterations till convergence ( Divergence )
-MP2 correlation energy, for  12  optimized virtual orbitals:  -1.30577E-01  (101.5%) @  2  iterations till convergence ( Convergence )
-MP2 correlation energy, for full space:  -1.28694E-01 | Difference: 1.88249E-03
+MP2 correlation energy, for  2  optimized virtual orbitals:  -1.84737E-02  (14.35%) @  10  iterations till convergence ( Convergence )
+MP2 correlation energy, for  4  optimized virtual orbitals:  -2.94809E-02  (22.91%) @  30  iterations till convergence ( Convergence )
+MP2 correlation energy, for  6  optimized virtual orbitals:  -6.62675E-02  (51.49%) @  25  iterations till convergence ( Convergence )
+MP2 correlation energy, for  8  optimized virtual orbitals:  -1.20453E-01  (93.6%) @  24  iterations till convergence ( Convergence )
+MP2 correlation energy, for  10  optimized virtual orbitals:  -1.22768E-01  (95.4%) @  37  iterations till convergence ( Convergence )
+MP2 correlation energy, for  12  optimized virtual orbitals:  -1.28694E-01  (100.0%) @  2  iterations till convergence ( Convergence )
+MP2 correlation energy, for full space:  -1.28694E-01 | Difference: -2.35989E-09
 
 
 
@@ -934,135 +2427,172 @@ Inactive unoccupied spin-orbitals:  [12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
   - Gradient:
     Gradient norm: 1.142052e-02
   - Hessian:
-    Hessian norm: 4.730592e-02, (Neg. Eigval: 4/20)
+    Hessian norm: 4.908986e-02, (Neg. Eigval: 2/20)
         WARNING: Hessian has negative eigenvalues!
-    Hessian determinant: 2.092019e-47
+                Level-shifting will be applied in block solver (min eigval: -7.863532e-03)
+    Hessian determinant: 2.380969e-46
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 2.468793e+00, (Max el.: 9.973823e-01)
+    Rotation norm 1.039230e+00, (Max el.: 3.000000e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01448219913620228
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.013053369501164338
  Step (ix): Check convergence and stability
-  Change: 1.121116e-02 Ha (thr: 1.0e-08)
+  Change: 9.782326e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.233265e-02
+    Gradient norm: 1.484911e-02
   - Hessian:
-    Hessian norm: 1.334093e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 9.400527e-32
+    Hessian norm: 1.452660e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 2.230965e-31
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 6.021531e-01, (Max el.: 2.137770e-01)
+    Rotation norm 6.085675e-01, (Max el.: 3.000000e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  3  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01820364008757968
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01778768538658436
  Step (ix): Check convergence and stability
-  Change: 3.721441e-03 Ha (thr: 1.0e-08)
+  Change: 4.734316e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 3.928219e-03
+    Gradient norm: 6.174486e-03
   - Hessian:
-    Hessian norm: 1.673298e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 9.554174e-30
+    Hessian norm: 1.993813e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 3.956168e-28
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 1.525887e-01, (Max el.: 5.070559e-02)
+    Rotation norm 2.002035e-01, (Max el.: 9.688599e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  4  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018461178109278477
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018385456916950885
  Step (ix): Check convergence and stability
-  Change: 2.575380e-04 Ha (thr: 1.0e-08)
+  Change: 5.977715e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 8.460132e-04
+    Gradient norm: 2.234781e-03
   - Hessian:
-    Hessian norm: 1.699213e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 1.226235e-29
+    Hessian norm: 2.071262e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 9.266780e-28
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 3.240431e-02, (Max el.: 1.417210e-02)
+    Rotation norm 6.960472e-02, (Max el.: 3.334725e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  5  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018473049389881098
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018461089793651332
  Step (ix): Check convergence and stability
-  Change: 1.187128e-05 Ha (thr: 1.0e-08)
+  Change: 7.563288e-05 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.960989e-04
+    Gradient norm: 8.415195e-04
   - Hessian:
-    Hessian norm: 1.700884e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 1.232096e-29
+    Hessian norm: 2.084430e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 1.071993e-27
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 7.506223e-03, (Max el.: 3.580878e-03)
+    Rotation norm 2.603282e-02, (Max el.: 1.240334e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  6  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01847369721115128
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018471824684443916
  Step (ix): Check convergence and stability
-  Change: 6.478213e-07 Ha (thr: 1.0e-08)
+  Change: 1.073489e-05 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 4.842552e-05
+    Gradient norm: 3.259903e-04
   - Hessian:
-    Hessian norm: 1.701058e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 1.230980e-29
+    Hessian norm: 2.087634e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 1.112413e-27
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 1.853555e-03, (Max el.: 8.821634e-04)
+    Rotation norm 1.006770e-02, (Max el.: 4.744086e-03)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  7  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018473736924060936
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018473440917251095
  Step (ix): Check convergence and stability
-  Change: 3.971291e-08 Ha (thr: 1.0e-08)
+  Change: 1.616233e-06 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.222736e-05
+    Gradient norm: 1.283853e-04
   - Hessian:
-    Hessian norm: 1.701086e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 1.230605e-29
+    Hessian norm: 2.088653e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 1.126076e-27
         WARNING: Hessian determinant is small!
   - Rotation matrix:
-    Rotation norm 4.680183e-04, (Max el.: 2.169763e-04)
+    Rotation norm 3.962814e-03, (Max el.: 1.837770e-03)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  8  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018473739464185058
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01847369221053559
  Step (ix): Check convergence and stability
-  OVOS converged in 8 iterations.
+  Change: 2.512933e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 5.105705e-05
+  - Hessian:
+    Hessian norm: 2.089029e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 1.131252e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.575636e-03, (Max el.: 7.167519e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  9  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.018473732022489267
+ Step (ix): Check convergence and stability
+  Change: 3.981195e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.043456e-05
+  - Hessian:
+    Hessian norm: 2.089177e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 1.133307e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 6.305663e-04, (Max el.: 2.807327e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  10  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[2/12]: Computed MP2 correlation energy (spin-orbital):  -0.01847373840825551
+ Step (ix): Check convergence and stability
+  [2/12] OVOS converged in 10 iterations @ -1.84737E-02
 
 #### OVOS Summary ####
 Initial MP2 correlation energy: -0.0032710433 Hartree
-Final OVOS correlation energy: -0.0184737395 Hartree
-Total change in correlation energy: -0.0152026961 Hartree
+Final OVOS correlation energy: -0.0184737384 Hartree
+Total change in correlation energy: -0.0152026951 Hartree
 OVOS successfully lowered the correlation energy.
-Total number of iterations: 8
+Total number of iterations: 10
 
 #### Active and inactive spaces ####
 Total number of spin-orbitals:  22
@@ -1082,225 +2612,339 @@ Inactive unoccupied spin-orbitals:  [14, 15, 16, 17, 18, 19, 20, 21]
 
 #### OVOS Iteration  1  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.019835152204079713
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.019837210038402414
  Step (ix): Check convergence and stability
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.699886e-03
+    Gradient norm: 1.567544e-03
   - Hessian:
-    Hessian norm: 1.564311e-01, (Neg. Eigval: 2/32)
-        WARNING: Hessian has negative eigenvalues!
-    Hessian determinant: 1.126873e-79
+    Hessian norm: 1.918901e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 3.616266e-68
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.095770e+00, (Max el.: 5.354382e-01)
+    Rotation norm 2.160718e-01, (Max el.: 1.007731e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.02126423004927332
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.019976592577525827
  Step (ix): Check convergence and stability
-  Change: 1.429078e-03 Ha (thr: 1.0e-08)
+  Change: 1.393825e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 4.309511e-03
+    Gradient norm: 1.934277e-03
   - Hessian:
-    Hessian norm: 1.581201e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 9.469074e-64
+    Hessian norm: 1.911848e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.253760e-65
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.385454e+00, (Max el.: 5.261819e-01)
+    Rotation norm 2.677817e-01, (Max el.: 1.336310e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  3  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.027424021889021006
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.020296814506975507
  Step (ix): Check convergence and stability
-  Change: 6.159792e-03 Ha (thr: 1.0e-08)
+  Change: 3.202219e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 8.488842e-03
+    Gradient norm: 2.823402e-03
   - Hessian:
-    Hessian norm: 1.833027e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 3.100232e-54
+    Hessian norm: 1.915491e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 2.653111e-63
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 8.929521e-01, (Max el.: 4.028022e-01)
+    Rotation norm 3.916670e-01, (Max el.: 1.869252e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  4  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03153019057291581
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.021209457776460577
  Step (ix): Check convergence and stability
-  Change: 4.106169e-03 Ha (thr: 1.0e-08)
+  Change: 9.126433e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 3.919284e-03
+    Gradient norm: 4.643971e-03
   - Hessian:
-    Hessian norm: 1.990909e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 1.009650e-50
+    Hessian norm: 1.952613e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 4.397681e-60
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 2.839626e-01, (Max el.: 1.342670e-01)
+    Rotation norm 6.384972e-01, (Max el.: 2.653038e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  5  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03205554126789615
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.023821298878061226
  Step (ix): Check convergence and stability
-  Change: 5.253507e-04 Ha (thr: 1.0e-08)
+  Change: 2.611841e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 9.350783e-04
+    Gradient norm: 7.410904e-03
   - Hessian:
-    Hessian norm: 2.006441e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.651703e-50
+    Hessian norm: 2.078540e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 7.154343e-55
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 7.042019e-02, (Max el.: 3.433176e-02)
+    Rotation norm 8.503639e-01, (Max el.: 3.000000e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  6  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.032101596416444875
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.028429026065929563
  Step (ix): Check convergence and stability
-  Change: 4.605515e-05 Ha (thr: 1.0e-08)
+  Change: 4.607727e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 2.612917e-04
+    Gradient norm: 8.112025e-03
   - Hessian:
-    Hessian norm: 2.007397e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.903497e-50
+    Hessian norm: 2.306857e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.593107e-49
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.859927e-02, (Max el.: 8.969472e-03)
+    Rotation norm 6.086817e-01, (Max el.: 2.649083e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  7  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03210865593987068
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03123493863163592
  Step (ix): Check convergence and stability
-  Change: 7.059523e-06 Ha (thr: 1.0e-08)
+  Change: 2.805913e-03 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 7.920156e-05
+    Gradient norm: 4.728005e-03
   - Hessian:
-    Hessian norm: 2.007639e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.935696e-50
+    Hessian norm: 2.451798e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 2.756561e-47
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 5.306181e-03, (Max el.: 2.506154e-03)
+    Rotation norm 2.750282e-01, (Max el.: 1.260510e-01)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  8  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03211020482413007
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03192073421143195
  Step (ix): Check convergence and stability
-  Change: 1.548884e-06 Ha (thr: 1.0e-08)
+  Change: 6.857956e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 2.423496e-05
+    Gradient norm: 2.123026e-03
   - Hessian:
-    Hessian norm: 2.007714e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.940929e-50
+    Hessian norm: 2.485650e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 8.736890e-47
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.570716e-03, (Max el.: 7.277877e-04)
+    Rotation norm 1.207384e-01, (Max el.: 5.682376e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  9  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03211059558356669
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03206494235041199
  Step (ix): Check convergence and stability
-  Change: 3.907594e-07 Ha (thr: 1.0e-08)
+  Change: 1.442081e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 7.444394e-06
+    Gradient norm: 9.361322e-04
   - Hessian:
-    Hessian norm: 2.007736e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.941990e-50
+    Hessian norm: 2.491623e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.120592e-46
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 4.734875e-04, (Max el.: 2.153994e-04)
+    Rotation norm 5.318779e-02, (Max el.: 2.531652e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  10  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03211069929636039
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03209790048210453
  Step (ix): Check convergence and stability
-  Change: 1.037128e-07 Ha (thr: 1.0e-08)
+  Change: 3.295813e-05 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 2.296460e-06
+    Gradient norm: 4.261923e-04
   - Hessian:
-    Hessian norm: 2.007743e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.942233e-50
+    Hessian norm: 2.492649e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.185021e-46
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.442878e-04, (Max el.: 6.445712e-05)
+    Rotation norm 2.383652e-02, (Max el.: 1.135680e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  11  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.032110727387739374
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03210682219696154
  Step (ix): Check convergence and stability
-  Change: 2.809138e-08 Ha (thr: 1.0e-08)
+  Change: 8.921715e-06 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 7.111561e-07
+    Gradient norm: 1.983803e-04
   - Hessian:
-    Hessian norm: 2.007744e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 2.942292e-50
+    Hessian norm: 2.492845e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.200832e-46
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 4.429687e-05, (Max el.: 1.944142e-05)
+    Rotation norm 1.085226e-02, (Max el.: 5.152281e-03)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  12  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.032110735082878934
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03210971136177279
  Step (ix): Check convergence and stability
-  OVOS converged in 12 iterations.
+  Change: 2.889165e-06 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 9.313531e-05
+  - Hessian:
+    Hessian norm: 2.492896e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.204799e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 4.995226e-03, (Max el.: 2.360912e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  13  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03211079511238958
+ Step (ix): Check convergence and stability
+  Change: 1.083751e-06 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 4.381105e-05
+  - Hessian:
+    Hessian norm: 2.492914e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.205837e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.315272e-03, (Max el.: 1.089810e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  14  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.032111243470077364
+ Step (ix): Check convergence and stability
+  Change: 4.483577e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.060407e-05
+  - Hessian:
+    Hessian norm: 2.492923e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.206124e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.077731e-03, (Max el.: 5.055787e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  15  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.032111439590705046
+ Step (ix): Check convergence and stability
+  Change: 1.961206e-07 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 9.683385e-06
+  - Hessian:
+    Hessian norm: 2.492928e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.206208e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 5.030090e-04, (Max el.: 2.353151e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  16  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.0321115278773933
+ Step (ix): Check convergence and stability
+  Change: 8.828669e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 4.548229e-06
+  - Hessian:
+    Hessian norm: 2.492930e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.206236e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.351662e-04, (Max el.: 1.097586e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  17  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.032111568184501345
+ Step (ix): Check convergence and stability
+  Change: 4.030711e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.135395e-06
+  - Hessian:
+    Hessian norm: 2.492932e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.206245e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.100655e-04, (Max el.: 5.126708e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  18  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03211158671256701
+ Step (ix): Check convergence and stability
+  Change: 1.852807e-08 Ha (thr: 1.0e-08)
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.002318e-06
+  - Hessian:
+    Hessian norm: 2.492932e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 1.206249e-46
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 5.155232e-05, (Max el.: 2.396905e-05)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  19  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[4/12]: Computed MP2 correlation energy (spin-orbital):  -0.03211159525838453
+ Step (ix): Check convergence and stability
+  [4/12] OVOS converged in 19 iterations @ -3.21116E-02
 
 #### OVOS Summary ####
-Initial MP2 correlation energy: -0.0198351522 Hartree
-Final OVOS correlation energy: -0.0321107351 Hartree
-Total change in correlation energy: -0.0122755829 Hartree
+Initial MP2 correlation energy: -0.0198372100 Hartree
+Final OVOS correlation energy: -0.0321115953 Hartree
+Total change in correlation energy: -0.0122743852 Hartree
 OVOS successfully lowered the correlation energy.
-Total number of iterations: 12
+Total number of iterations: 19
 
 #### Active and inactive spaces ####
 Total number of spin-orbitals:  22
@@ -1320,148 +2964,123 @@ Inactive unoccupied spin-orbitals:  [16, 17, 18, 19, 20, 21]
 
 #### OVOS Iteration  1  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06911329530856164
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06911924357902383
  Step (ix): Check convergence and stability
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 6.525588e-03
+    Gradient norm: 6.523210e-03
   - Hessian:
-    Hessian norm: 2.905282e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.035794e-49
+    Hessian norm: 3.712228e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 1.561268e-45
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.481138e-01, (Max el.: 6.949457e-02)
+    Rotation norm 1.207281e-01, (Max el.: 5.829078e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06945972937435564
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06944781549942064
  Step (ix): Check convergence and stability
-  Change: 3.464341e-04 Ha (thr: 1.0e-08)
+  Change: 3.285719e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 8.300079e-04
+    Gradient norm: 1.709752e-03
   - Hessian:
-    Hessian norm: 2.913898e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.343984e-49
+    Hessian norm: 3.730099e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 2.002204e-45
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 2.697951e-02, (Max el.: 9.468149e-03)
+    Rotation norm 3.344904e-02, (Max el.: 1.422698e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  3  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.0694647998349331
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06946912028946803
  Step (ix): Check convergence and stability
-  Change: 5.070461e-06 Ha (thr: 1.0e-08)
+  Change: 2.130479e-05 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 2.191656e-04
+    Gradient norm: 5.676092e-04
   - Hessian:
-    Hessian norm: 2.913735e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.354684e-49
+    Hessian norm: 3.730796e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 2.066867e-45
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 7.737114e-03, (Max el.: 2.594227e-03)
+    Rotation norm 1.287933e-02, (Max el.: 4.131612e-03)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  4  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06946511904477048
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06947097570310728
  Step (ix): Check convergence and stability
-  Change: 3.192098e-07 Ha (thr: 1.0e-08)
+  Change: 1.855414e-06 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 6.086230e-05
+    Gradient norm: 2.178633e-04
   - Hessian:
-    Hessian norm: 2.913666e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.356353e-49
+    Hessian norm: 3.730704e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 2.080220e-45
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 2.222426e-03, (Max el.: 7.129063e-04)
+    Rotation norm 5.626380e-03, (Max el.: 1.890004e-03)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  5  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.0694652138897143
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06947108863752868
  Step (ix): Check convergence and stability
-  Change: 9.484494e-08 Ha (thr: 1.0e-08)
+  Change: 1.129344e-07 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.719444e-05
+    Gradient norm: 9.046971e-05
   - Hessian:
-    Hessian norm: 2.913649e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.356760e-49
+    Hessian norm: 3.730641e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 2.083514e-45
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 6.371549e-04, (Max el.: 2.162351e-04)
+    Rotation norm 2.530540e-03, (Max el.: 9.011669e-04)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  6  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06946525892377363
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06947107304314716
  Step (ix): Check convergence and stability
-  Change: 4.503406e-08 Ha (thr: 1.0e-08)
+  Change: 1.559438e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 4.892647e-06
+    Gradient norm: 3.899591e-05
   - Hessian:
-    Hessian norm: 2.913645e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.356878e-49
+    Hessian norm: 3.730616e-01, (Neg. Eigval: 0/36)
+    Hessian determinant: 2.084452e-45
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.825014e-04, (Max el.: 6.405476e-05)
+    Rotation norm 1.140973e-03, (Max el.: 4.126904e-04)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  7  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06946527708174574
+[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06947107029479532
  Step (ix): Check convergence and stability
-  Change: 1.815797e-08 Ha (thr: 1.0e-08)
- Step (v)-(viii): Orbital optimization
-  Orbital Optimization Diagnostics:
-  - Gradient:
-    Gradient norm: 1.397206e-06
-  - Hessian:
-    Hessian norm: 2.913644e-01, (Neg. Eigval: 0/36)
-    Hessian determinant: 1.356913e-49
-        WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
-  - Rotation matrix:
-    Rotation norm 5.227835e-05, (Max el.: 1.876336e-05)
-
-    Rotated 8 spin orbitals out of 22 total.
-
-#### OVOS Iteration  8  ####
- Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[6/12]: Computed MP2 correlation energy (spin-orbital):  -0.06946528356371778
- Step (ix): Check convergence and stability
-  OVOS converged in 8 iterations.
+  [6/12] OVOS converged in 7 iterations @ -6.94711E-02
 
 #### OVOS Summary ####
-Initial MP2 correlation energy: -0.0691132953 Hartree
-Final OVOS correlation energy: -0.0694652836 Hartree
-Total change in correlation energy: -0.0003519883 Hartree
+Initial MP2 correlation energy: -0.0691192436 Hartree
+Final OVOS correlation energy: -0.0694710703 Hartree
+Total change in correlation energy: -0.0003518267 Hartree
 OVOS successfully lowered the correlation energy.
-Total number of iterations: 8
+Total number of iterations: 7
 
 #### Active and inactive spaces ####
 Total number of spin-orbitals:  22
@@ -1481,148 +3100,87 @@ Inactive unoccupied spin-orbitals:  [18, 19, 20, 21]
 
 #### OVOS Iteration  1  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12419509067251805
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12420452442183731
  Step (ix): Check convergence and stability
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 4.247130e-03
+    Gradient norm: 4.258006e-03
   - Hessian:
-    Hessian norm: 3.614890e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.515563e-40
+    Hessian norm: 4.702402e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 5.480719e-36
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 8.863030e-02, (Max el.: 4.131501e-02)
+    Rotation norm 7.003311e-02, (Max el.: 3.368174e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429265573075023
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12430611071231473
  Step (ix): Check convergence and stability
-  Change: 9.756506e-05 Ha (thr: 1.0e-08)
+  Change: 1.015863e-04 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 6.081331e-04
+    Gradient norm: 6.595217e-04
   - Hessian:
-    Hessian norm: 3.615274e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.935970e-40
+    Hessian norm: 4.707289e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 5.771149e-36
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.725379e-02, (Max el.: 6.475802e-03)
+    Rotation norm 1.266442e-02, (Max el.: 4.262286e-03)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  3  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429469751596589
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12430613266863542
  Step (ix): Check convergence and stability
-  Change: 2.041785e-06 Ha (thr: 1.0e-08)
+  Change: 2.195632e-08 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.044296e-04
+    Gradient norm: 2.013722e-04
   - Hessian:
-    Hessian norm: 3.615692e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.911701e-40
+    Hessian norm: 4.707287e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 5.788942e-36
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 2.364450e-03, (Max el.: 9.544171e-04)
+    Rotation norm 4.611807e-03, (Max el.: 1.715385e-03)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  4  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429544225411226
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12430580971108829
  Step (ix): Check convergence and stability
-  Change: 7.447381e-07 Ha (thr: 1.0e-08)
+  Change: 3.229575e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.658676e-05
+    Gradient norm: 7.636669e-05
   - Hessian:
-    Hessian norm: 3.615656e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.917838e-40
+    Hessian norm: 4.707260e-01, (Neg. Eigval: 0/32)
+    Hessian determinant: 5.790942e-36
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 5.154044e-04, (Max el.: 1.913228e-04)
+    Rotation norm 1.841511e-03, (Max el.: 6.822076e-04)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  5  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429566368452312
+[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12430581439943088
  Step (ix): Check convergence and stability
-  Change: 2.214304e-07 Ha (thr: 1.0e-08)
- Step (v)-(viii): Orbital optimization
-  Orbital Optimization Diagnostics:
-  - Gradient:
-    Gradient norm: 3.553115e-06
-  - Hessian:
-    Hessian norm: 3.615670e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.917577e-40
-        WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
-  - Rotation matrix:
-    Rotation norm 9.791451e-05, (Max el.: 4.054744e-05)
-
-    Rotated 8 spin orbitals out of 22 total.
-
-#### OVOS Iteration  6  ####
- Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429573735360552
- Step (ix): Check convergence and stability
-  Change: 7.366908e-08 Ha (thr: 1.0e-08)
- Step (v)-(viii): Orbital optimization
-  Orbital Optimization Diagnostics:
-  - Gradient:
-    Gradient norm: 7.550386e-07
-  - Hessian:
-    Hessian norm: 3.615672e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.917797e-40
-        WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
-  - Rotation matrix:
-    Rotation norm 2.411905e-05, (Max el.: 1.101232e-05)
-
-    Rotated 6 spin orbitals out of 22 total.
-
-#### OVOS Iteration  7  ####
- Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429575678494037
- Step (ix): Check convergence and stability
-  Change: 1.943133e-08 Ha (thr: 1.0e-08)
- Step (v)-(viii): Orbital optimization
-  Orbital Optimization Diagnostics:
-  - Gradient:
-    Gradient norm: 1.840148e-07
-  - Hessian:
-    Hessian norm: 3.615672e-01, (Neg. Eigval: 0/32)
-    Hessian determinant: 8.917815e-40
-        WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
-  - Rotation matrix:
-    Rotation norm 5.581584e-06, (Max el.: 2.578284e-06)
-
-    Rotated 2 spin orbitals out of 22 total.
-
-#### OVOS Iteration  8  ####
- Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[8/12]: Computed MP2 correlation energy (spin-orbital):  -0.12429576201906128
- Step (ix): Check convergence and stability
-  OVOS converged in 8 iterations.
+  [8/12] OVOS converged in 5 iterations @ -1.24306E-01
 
 #### OVOS Summary ####
-Initial MP2 correlation energy: -0.1241950907 Hartree
-Final OVOS correlation energy: -0.1242957620 Hartree
-Total change in correlation energy: -0.0001006713 Hartree
+Initial MP2 correlation energy: -0.1242045244 Hartree
+Final OVOS correlation energy: -0.1243058144 Hartree
+Total change in correlation energy: -0.0001012900 Hartree
 OVOS successfully lowered the correlation energy.
-Total number of iterations: 8
+Total number of iterations: 5
 
 #### Active and inactive spaces ####
 Total number of spin-orbitals:  22
@@ -1642,122 +3200,393 @@ Inactive unoccupied spin-orbitals:  [20, 21]
 
 #### OVOS Iteration  1  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1281878123042634
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12825754475052636
  Step (ix): Check convergence and stability
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.594359e-03
+    Gradient norm: 1.274683e-03
   - Hessian:
-    Hessian norm: 2.587153e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 9.944906e-30
+    Hessian norm: 3.366109e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 4.548254e-27
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 5.532012e-01, (Max el.: 2.765844e-01)
+    Rotation norm 1.788807e-01, (Max el.: 8.942867e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12827147445648873
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12828516928045408
  Step (ix): Check convergence and stability
-  Change: 8.366215e-05 Ha (thr: 1.0e-08)
+  Change: 2.762453e-05 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 7.293429e-04
+    Gradient norm: 9.480056e-04
   - Hessian:
-    Hessian norm: 2.578178e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 2.652431e-29
+    Hessian norm: 3.362696e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 5.902761e-27
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.776703e-01, (Max el.: 8.871179e-02)
+    Rotation norm 1.328833e-01, (Max el.: 6.642821e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  3  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282505486620794
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12828897427458014
  Step (ix): Check convergence and stability
-  Change: 2.092579e-05 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+  Change: 3.804994e-06 Ha (thr: 1.0e-08)
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.869026e-04
+    Gradient norm: 6.624270e-04
   - Hessian:
-    Hessian norm: 2.576203e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 3.047962e-29
+    Hessian norm: 3.360227e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 6.806200e-27
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 3.896000e-02, (Max el.: 1.942735e-02)
+    Rotation norm 9.200882e-02, (Max el.: 4.598992e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  4  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12824209013147458
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12828180239809855
  Step (ix): Check convergence and stability
-  Change: 8.458531e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+  Change: 7.171876e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 3.695816e-05
+    Gradient norm: 4.418776e-04
   - Hessian:
-    Hessian norm: 2.575831e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 3.109993e-29
+    Hessian norm: 3.358579e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.330225e-27
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 7.251163e-03, (Max el.: 3.613222e-03)
+    Rotation norm 6.121402e-02, (Max el.: 3.059672e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  5  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12824039426516587
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12827229315898617
  Step (ix): Check convergence and stability
-  Change: 1.695866e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+  Change: 9.509239e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 6.724704e-06
+    Gradient norm: 2.872690e-04
   - Hessian:
-    Hessian norm: 2.575766e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 3.120397e-29
+    Hessian norm: 3.357523e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.617447e-27
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 1.274655e-03, (Max el.: 6.348469e-04)
+    Rotation norm 3.981987e-02, (Max el.: 1.990360e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  6  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282400990662046
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12826401866719628
  Step (ix): Check convergence and stability
-  Change: 2.951990e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+  Change: 8.274492e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
   - Gradient:
-    Gradient norm: 1.181216e-06
+    Gradient norm: 1.842383e-04
   - Hessian:
-    Hessian norm: 2.575755e-01, (Neg. Eigval: 0/20)
-    Hessian determinant: 3.122187e-29
+    Hessian norm: 3.356857e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.773969e-27
         WARNING: Hessian determinant is small!
-        WARNING: Hessian H is not symmetric!
   - Rotation matrix:
-    Rotation norm 2.186828e-04, (Max el.: 1.088732e-04)
+    Rotation norm 2.557523e-02, (Max el.: 1.278388e-02)
 
     Rotated 8 spin orbitals out of 22 total.
 
 #### OVOS Iteration  7  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282400496043195
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12825782452931306
  Step (ix): Check convergence and stability
-  STOPPING: 5 consecutive energy increases — diverging.
+  Change: 6.194138e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.173087e-04
+  - Hessian:
+    Hessian norm: 3.356439e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.860941e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.630644e-02, (Max el.: 8.151016e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  8  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282535136617939
+ Step (ix): Check convergence and stability
+  Change: 4.310868e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 7.439655e-05
+  - Hessian:
+    Hessian norm: 3.356177e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.910634e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.035215e-02, (Max el.: 5.174759e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  9  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12825063031431322
+ Step (ix): Check convergence and stability
+  Change: 2.883347e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 4.707512e-05
+  - Hessian:
+    Hessian norm: 3.356013e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.939801e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 6.555152e-03, (Max el.: 3.276780e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  10  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282487455768237
+ Step (ix): Check convergence and stability
+  Change: 1.884737e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.974765e-05
+  - Hessian:
+    Hessian norm: 3.355910e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.957301e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 4.144330e-03, (Max el.: 2.071677e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  11  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12824753040738085
+ Step (ix): Check convergence and stability
+  Change: 1.215169e-06 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.878310e-05
+  - Hessian:
+    Hessian norm: 3.355845e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.967975e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.617622e-03, (Max el.: 1.308509e-03)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  12  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282467534765231
+ Step (ix): Check convergence and stability
+  Change: 7.769309e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.185416e-05
+  - Hessian:
+    Hessian norm: 3.355804e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.974560e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.652341e-03, (Max el.: 8.259819e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  13  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12824625930175185
+ Step (ix): Check convergence and stability
+  Change: 4.941748e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 7.479010e-06
+  - Hessian:
+    Hessian norm: 3.355778e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.978654e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.042630e-03, (Max el.: 5.211970e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  14  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12824594598669697
+ Step (ix): Check convergence and stability
+  Change: 3.133151e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 4.717768e-06
+  - Hessian:
+    Hessian norm: 3.355762e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.981212e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 6.577474e-04, (Max el.: 3.287997e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  15  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12824574773861408
+ Step (ix): Check convergence and stability
+  Change: 1.982481e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.975628e-06
+  - Hessian:
+    Hessian norm: 3.355752e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.982816e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 4.148819e-04, (Max el.: 2.073944e-04)
+
+    Rotated 8 spin orbitals out of 22 total.
+
+#### OVOS Iteration  16  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282456224562581
+ Step (ix): Check convergence and stability
+  Change: 1.252824e-07 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.876675e-06
+  - Hessian:
+    Hessian norm: 3.355745e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.983824e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.616675e-04, (Max el.: 1.308045e-04)
+
+    Rotated 6 spin orbitals out of 22 total.
+
+#### OVOS Iteration  17  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12824554334692628
+ Step (ix): Check convergence and stability
+  Change: 7.910933e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.183532e-06
+  - Hessian:
+    Hessian norm: 3.355741e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.984458e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.650251e-04, (Max el.: 8.249409e-05)
+
+    Rotated 6 spin orbitals out of 22 total.
+
+#### OVOS Iteration  18  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282454934182555
+ Step (ix): Check convergence and stability
+  Change: 4.992867e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 7.463768e-07
+  - Hessian:
+    Hessian norm: 3.355739e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.984857e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 1.040721e-04, (Max el.: 5.202441e-05)
+
+    Rotated 6 spin orbitals out of 22 total.
+
+#### OVOS Iteration  19  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282454619163494
+ Step (ix): Check convergence and stability
+  Change: 3.150191e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 4.706831e-07
+  - Hessian:
+    Hessian norm: 3.355737e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.985109e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 6.563092e-05, (Max el.: 3.280813e-05)
+
+    Rotated 4 spin orbitals out of 22 total.
+
+#### OVOS Iteration  20  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12824544204449068
+ Step (ix): Check convergence and stability
+  Change: 1.987186e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.968207e-07
+  - Hessian:
+    Hessian norm: 3.355736e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.985267e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 4.138819e-05, (Max el.: 2.068948e-05)
+
+    Rotated 4 spin orbitals out of 22 total.
+
+#### OVOS Iteration  21  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.1282454295105802
+ Step (ix): Check convergence and stability
+  Change: 1.253391e-08 Ha (thr: 1.0e-08)  [WARNING: energy increased]
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.871788e-07
+  - Hessian:
+    Hessian norm: 3.355735e-01, (Neg. Eigval: 0/20)
+    Hessian determinant: 7.985367e-27
+        WARNING: Hessian determinant is small!
+  - Rotation matrix:
+    Rotation norm 2.610000e-05, (Max el.: 1.304709e-05)
+
+    Rotated 4 spin orbitals out of 22 total.
+
+#### OVOS Iteration  22  ####
+ Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
+[10/12]: Computed MP2 correlation energy (spin-orbital):  -0.12824542160559643
+ Step (ix): Check convergence and stability
+  [10/12] OVOS converged in 22 iterations @ -1.28245E-01
+
+#### OVOS Summary ####
+Initial MP2 correlation energy: -0.1282575448 Hartree
+Final OVOS correlation energy: -0.1282454216 Hartree
+Total change in correlation energy: 0.0000121231 Hartree
+WARNING: OVOS increased the correlation energy!
+Total number of iterations: 22
 
 #### Active and inactive spaces ####
 Total number of spin-orbitals:  22
@@ -1765,7 +3594,6 @@ Active occupied spin-orbitals:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 Active unoccupied spin-orbitals:  [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
 Inactive unoccupied spin-orbitals:  [20, 21]
 
-OVOS did not converge within the maximum number of iterations.
 
 #### OVOS with  12  out of  12  optimized virtual orbitals (Retry count:  0 ) ####
     Using previously optimized orbitals as starting guess.
@@ -1778,7 +3606,7 @@ Inactive unoccupied spin-orbitals:  []
 
 #### OVOS Iteration  1  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[12/12]: Computed MP2 correlation energy (spin-orbital):  -0.13057670491912193
+[12/12]: Computed MP2 correlation energy (spin-orbital):  -0.1305792963045399
  Step (ix): Check convergence and stability
  Step (v)-(viii): Orbital optimization
   Orbital Optimization Diagnostics:
@@ -1804,13 +3632,13 @@ Inactive unoccupied spin-orbitals:  []
 
 #### OVOS Iteration  2  ####
  Step (iii)-(iv): Compute MP2 correlation energy and amplitudes
-[12/12]: Computed MP2 correlation energy (spin-orbital):  -0.13057670491912193
+[12/12]: Computed MP2 correlation energy (spin-orbital):  -0.1305792963045399
  Step (ix): Check convergence and stability
-  OVOS converged in 2 iterations.
+  [12/12] OVOS converged in 2 iterations @ -1.30579E-01
 
 #### OVOS Summary ####
-Initial MP2 correlation energy: -0.1305767049 Hartree
-Final OVOS correlation energy: -0.1305767049 Hartree
+Initial MP2 correlation energy: -0.1305792963 Hartree
+Final OVOS correlation energy: -0.1305792963 Hartree
 Total change in correlation energy: 0.0000000000 Hartree
 WARNING: OVOS increased the correlation energy!
 Total number of iterations: 2
@@ -1826,13 +3654,13 @@ Full space size in molecular orbitals:  11
 Maximum number of optimized virtual orbitals tested:  12
 Total OVOS runs completed:  6
 
-MP2 correlation energy, for  2  optimized virtual orbitals:  -1.84737E-02  (14.35%) @  8  iterations till convergence ( Convergence )
-MP2 correlation energy, for  4  optimized virtual orbitals:  -3.21107E-02  (24.95%) @  12  iterations till convergence ( Convergence )
-MP2 correlation energy, for  6  optimized virtual orbitals:  -6.94653E-02  (53.98%) @  8  iterations till convergence ( Convergence )
-MP2 correlation energy, for  8  optimized virtual orbitals:  -1.24296E-01  (96.58%) @  8  iterations till convergence ( Convergence )
-MP2 correlation energy, for  10  optimized virtual orbitals:  -1.28240E-01  (99.65%) @  7  iterations till convergence ( Divergence )
-MP2 correlation energy, for  12  optimized virtual orbitals:  -1.30577E-01  (101.5%) @  2  iterations till convergence ( Convergence )
-MP2 correlation energy, for full space:  -1.28694E-01 | Difference: 1.88249E-03
+MP2 correlation energy, for  2  optimized virtual orbitals:  -1.84737E-02  (14.35%) @  10  iterations till convergence ( Convergence )
+MP2 correlation energy, for  4  optimized virtual orbitals:  -3.21116E-02  (24.95%) @  19  iterations till convergence ( Convergence )
+MP2 correlation energy, for  6  optimized virtual orbitals:  -6.94711E-02  (53.98%) @  7  iterations till convergence ( Convergence )
+MP2 correlation energy, for  8  optimized virtual orbitals:  -1.24306E-01  (96.59%) @  5  iterations till convergence ( Convergence )
+MP2 correlation energy, for  10  optimized virtual orbitals:  -1.28245E-01  (99.65%) @  22  iterations till convergence ( Convergence )
+MP2 correlation energy, for  12  optimized virtual orbitals:  -1.30579E-01  (101.5%) @  2  iterations till convergence ( Convergence )
+MP2 correlation energy, for full space:  -1.28694E-01 | Difference: 1.88508E-03
 
 
 Previously optimized virtual orbitals were used as starting guess for each OVOS run.

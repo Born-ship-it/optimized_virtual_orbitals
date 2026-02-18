@@ -12,16 +12,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 
-import pyscf
-
-
-
-# Define molecule and basis set parameters
-    # Molecule, choose from: 
-        # CO, H2O, HF, NH3
-# atom = "CO" 
-    # Basis set, choose from: 6-31G, cc-pVDZ, cc-pVTZ
-# basis = "6-31G" 
 
 def plot_OVOS_convergence(atom, basis):
 
@@ -47,7 +37,7 @@ def plot_OVOS_convergence(atom, basis):
     use_combine = True  # Set to True to combine previous OVOS results with RLE results
     if use_combine == True:
         use_previous_ovos = True
-        use_random_rotation = True
+        # use_random_rotation = True
         # use_uhf_start = True
         use_rhf_start = True
 
@@ -605,7 +595,7 @@ def plot_OVOS_convergence(atom, basis):
         
         secax = ax_vo.secondary_yaxis('right', functions=(energy_to_percentage, percentage_to_energy))
         secax.set_ylabel('Percentage of Correlation Energy Recovered (%)')
-        secax.set_yticks([25, 50, 75, 100,  125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400])
+        secax.set_yticks([25, 50, 75, 80, 85, 90, 95, 100, 105, 110])
         secax.set_ylim(energy_to_percentage(ax_vo.get_ylim()[0]), energy_to_percentage(ax_vo.get_ylim()[1]))
         
         
