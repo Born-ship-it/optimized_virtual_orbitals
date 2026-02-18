@@ -1014,14 +1014,16 @@ class OVOS:
 				# Solve H_ii * R_i = -G_i
 				try:
 					# Direct inversion
-					R_block = -G_block @ np.linalg.inv(H_block)
+					# R_block = -G_block @ np.linalg.inv(H_block)
 
 					# Solve linear system (more stable than direct inversion)
-					# R_block = -np.linalg.solve(H_block, G_block)
+					R_block = -np.linalg.solve(H_block, G_block)
 
 				except np.linalg.LinAlgError:
 					# Fallback to pseudoinverse if singular
 					R_block = -G_block @ np.linalg.pinv(H_block)
+					# R_block = -np.linalg.solve(H_block, G_block)
+
 				
 				R[start:end] = R_block
 			
@@ -1122,7 +1124,6 @@ class OVOS:
 			R_2d = R.reshape(nvir, ninact)
 			R_matrix[np.ix_(inact, vir)] = R_2d.T    # R[E,A] = R_AE
 			R_matrix[np.ix_(vir, inact)] = -R_2d     # R[A,E] = -R_AE (antisymmetry)
-
 
 			# Rotation matrix
 		print("  - Rotation matrix:")
@@ -1368,236 +1369,77 @@ class OVOS:
 			# Step (ix): check convergence and stability
 			print(" Step (ix): Check convergence and stability")
 
-			# Initialize flags for non-convergence detection
-			oscillation_detected = False
-			drift_detected = False
-			false_convergence_detected = False
-			chaos_detected = False
-			diverging = False
+			# =========================================================
+			# CONVERGENCE CONTROL  (replaces lines 1370-1600)
+			# =========================================================
 
-			# First iteration, initialize lists
+			# ---- First iteration: just store and step ----
 			if iter_count == 1:
-				lst_E_corr = []
-				lst_E_corr.append(E_corr)
-				
-				lst_iter_counts = []
-				lst_iter_counts.append(iter_count)
-
+				lst_E_corr = [E_corr]
+				lst_iter_counts = [iter_count]
 				lst_stop_reason = []
-				
+
 				# Step (v)-(viii): Orbital optimization
 				print(" Step (v)-(viii): Orbital optimization")
-				mo_coeffs, Fmo_rot = self.orbital_optimization(mo_coeffs=mo_coeffs, 
-															MP1_amplitudes=MP1_amplitudes, 
-															eri_as=eri_as, 
-															Fmo_spin=Fmo_spin)
+				mo_coeffs, Fmo_rot = self.orbital_optimization(
+					mo_coeffs=mo_coeffs,
+					MP1_amplitudes=MP1_amplitudes,
+					eri_as=eri_as,
+					Fmo_spin=Fmo_spin)
 
-			# Subsequent iterations: check convergence and stability
-			elif iter_count < max_iter and iter_count > 1:
+			# ---- Subsequent iterations ----
+			elif iter_count < max_iter:
 				threshold = 1e-8
-				change = np.abs(E_corr - lst_E_corr[-1])
-				
-				# ==============================================
-				# NON-CONVERGENCE DETECTION CHECKS
-				# ==============================================
-				
-				# ----- 1. OSCILLATION DETECTION -----
-				# Check if we have enough history to detect oscillation patterns
-				# if len(lst_E_corr) >= 500 and change > threshold * 10:
-				# 	# Look at recent oscillations (last 4-6 iterations)
-				# 	recent_changes = [np.abs(lst_E_corr[i] - lst_E_corr[i-1]) for i in range(-5, 0)]
-				# 	recent_signs = [np.sign(lst_E_corr[i] - lst_E_corr[i-1]) for i in range(-5, 0)]
-					
-				# 	# Detect alternating sign pattern (+ - + - or - + - +)
-				# 	if len(recent_signs) >= 4:
-				# 		# Check if signs alternate consistently
-				# 		alternations = sum(1 for i in range(1, len(recent_signs)) if recent_signs[i] != recent_signs[i-1])
-				# 		if alternations >= len(recent_signs) - 1:  # All signs alternate
-				# 			# Check if oscillation amplitude isn't decaying
-				# 			if np.std(recent_changes) > 0.1 * np.mean(recent_changes):
-				# 				oscillation_detected = True
-					
-				# 	# Detect limit cycle (bouncing between same values)
-				# 	if len(lst_E_corr) >= 500 and not oscillation_detected:
-				# 		for cycle_len in [2, 3, 4, 6, 8]:  # Check for 2-cycle, 3-cycle, 4-cycle
-				# 			if len(lst_E_corr) >= 3 * cycle_len:
-				# 				recent_cycle = lst_E_corr[-cycle_len*2:-cycle_len]
-				# 				current_cycle = lst_E_corr[-cycle_len:]
-				# 				# Check if cycles are nearly identical
-				# 				cycle_diff = np.max([np.abs(recent_cycle[i] - current_cycle[i % cycle_len]) 
-				# 								for i in range(cycle_len)])
-				# 				if cycle_diff < threshold * 10:
-				# 					oscillation_detected = True
-				# 					print(f"		WARNING: Detected {cycle_len}-cycle limit cycle oscillation!")
-				# 					break
-				
-				# ----- 2. DRIFT DETECTION -----
-				# if len(lst_E_corr) >= 8 and not oscillation_detected:
-				# 	# Check for monotonic drift over many iterations
-				# 	recent_trend = lst_E_corr[-8:]
-				# 	is_monotonic = all(recent_trend[i] <= recent_trend[i+1] for i in range(len(recent_trend)-1)) or \
-				# 				all(recent_trend[i] >= recent_trend[i+1] for i in range(len(recent_trend)-1))
-					
-				# 	if is_monotonic:
-				# 		# Calculate drift rate
-				# 		total_drift = np.abs(recent_trend[-1] - recent_trend[0])
-				# 		drift_per_iter = total_drift / 7
-						
-				# 		# If still drifting significantly after many iterations
-				# 		if drift_per_iter > threshold * 0.1 and len(lst_E_corr) > 15:
-				# 			drift_detected = True
-				
-				# ----- 3. STAGNATION DETECTION (false convergence) -----
-				# if len(lst_E_corr) >= 10:
-				# 	# Check if change was small then grew again
-				# 	was_small = any(np.abs(lst_E_corr[i] - lst_E_corr[i-1]) < threshold * 0.1 
-				# 				for i in range(-8, -3))
-				# 	is_now_large = change > threshold * 2
-					
-				# 	if was_small and is_now_large:
-				# 		false_convergence_detected = True
-				
-				# ----- 4. CHAOS DETECTION (erratic jumps) -----
-				# if len(lst_E_corr) >= 5:
-				# 	recent_changes = [np.abs(lst_E_corr[i] - lst_E_corr[i-1]) for i in range(-4, 0)]
-				# 	mean_change = np.mean(recent_changes)
-				# 	std_change = np.std(recent_changes)
-					
-				# 	# High variance relative to mean indicates erratic behavior
-				# 	if mean_change > threshold * 10 and std_change > 0.5 * mean_change:
-				# 		chaos_detected = True
-				
-				# ----- 5. DIVERGENCE DETECTION (consistent increases) -----
-				# if len(lst_E_corr) >= 5 and E_corr > lst_E_corr[-1]:
-				# 	last_few = lst_E_corr[-5:]
-				# 	if all(last_few[i] <= last_few[i+1] for i in range(len(last_few)-1)):
-				# 		diverging = True
-				
-				# ==============================================
-				# REPORT NON-CONVERGENCE WARNINGS
-				# ==============================================
-				# if oscillation_detected:
-				# 	oscillation_amplitude = np.max(recent_changes) - np.min(recent_changes) if len(recent_changes) > 1 else 0
-				# 	print(f"		WARNING: Oscillation detected! Amplitude: {oscillation_amplitude:.6e}")
-				# 	print(f"		Not converging - in limit cycle.")
-				# 	# Optionally set a flag to break after certain number of oscillation iterations
-				# 	if not hasattr(self, 'oscillation_counter'):
-				# 		self.oscillation_counter = 0
-				# 	self.oscillation_counter += 1
-				# 	# Break if oscillation persists
-				# 	if self.oscillation_counter > 5:
-				# 		print(f"		Oscillation persisted for {self.oscillation_counter} iterations. Stopping.")
-				# 		converged = False
-				# 		lst_E_corr.append(E_corr)
-				# 		lst_iter_counts.append(iter_count)
-				# 		lst_stop_reason.append("Oscillation")
-				# 		break
-				
-				# if drift_detected:
-				# 	print(f"		WARNING: Persistent monotonic drift detected!")
-				# 	print(f"		Drift rate: {drift_per_iter:.6e} per iteration")
-				# 	print(f"		Not converging - linear drift.")
-				# 	# Optionally break after confirming drift
-				# 	if not hasattr(self, 'drift_counter'):
-				# 		self.drift_counter = 0
-				# 	self.drift_counter += 1
-				# 	if self.drift_counter > 5:
-				# 		print(f"		Drift persisted for {self.drift_counter} iterations. Stopping.")
-				# 		converged = False
-				# 		lst_E_corr.append(E_corr)
-				# 		lst_iter_counts.append(iter_count)
-				# 		lst_stop_reason.append("Drift")
-				# 		break
-				
-				# if false_convergence_detected:
-				# 	print(f"		WARNING: False convergence detected!")
-				# 	print(f"		Change was small, then grew again: {change:.6e}")
-				# 	print(f"		Not stable - will not converge.")
-				# 	# This is serious - break immediately
-				# 	converged = False
-				# 	lst_E_corr.append(E_corr)
-				# 	lst_iter_counts.append(iter_count)
-				# 	lst_stop_reason.append("False Convergence")
-				# 	break
-				
-				# if chaos_detected:
-				# 	print(f"		WARNING: Erratic convergence behavior detected!")
-				# 	print(f"		Change variance: {std_change:.6e}, Mean: {mean_change:.6e}")
-				# 	print(f"		Not stable - may be chaotic.")
-				# 	# Optionally break after persistent chaos
-				# 	if not hasattr(self, 'chaos_counter'):
-				# 		self.chaos_counter = 0
-				# 	self.chaos_counter += 1
-				# 	if self.chaos_counter > 8:
-				# 		print(f"		Chaotic behavior persisted. Stopping.")
-				# 		converged = False
-				# 		lst_E_corr.append(E_corr)
-				# 		lst_iter_counts.append(iter_count)
-				# 		lst_stop_reason.append("Chaos")
-				# 		break
-				
-				if diverging:
-					print("		WARNING: Consistent energy increases - may be diverging!")
-				
-				# ==============================================
-				# NORMAL CONVERGENCE CHECK
-				# ==============================================
-				if change < threshold and not (oscillation_detected or drift_detected or chaos_detected):
-					# # Additional check: make sure it's not just a temporary plateau
-					# if len(lst_E_corr) >= 4:
-					# 	# Look back 3 iterations
-					# 	recent_changes_small = all(np.abs(lst_E_corr[i] - lst_E_corr[i-1]) < threshold 
-					# 							for i in range(-1, 0))
-					# 	if recent_changes_small:
-					# 		converged = True
-					# 		print("OVOS converged in ", iter_count, " iterations.")
-					# 		lst_E_corr.append(E_corr)
-					# 		lst_iter_counts.append(iter_count)
-					# 		lst_stop_reason.append("Convergence")
-					# 		break
-					# 	else:
-					# 		print(f"	Change in correlation energy: {change:.6e} Hartree (threshold: {threshold:.1e})")
-					# 		print(f"		Change below threshold but recent history shows instability.")
-					# 		print(f"		Continuing to verify convergence...")
-					# 		print()
-							
-					# 		# Step (v)-(viii): Orbital optimization
-					# 		print(" Step (v)-(viii): Orbital optimization")
-					# 		mo_coeffs, Fmo_rot = self.orbital_optimization(mo_coeffs=mo_coeffs, 
-					# 													MP1_amplitudes=MP1_amplitudes, 
-					# 													eri_as=eri_as, 
-					# 													Fmo_spin=Fmo_spin)
-					# else:
+				change = abs(E_corr - lst_E_corr[-1])
+				energy_increased = (E_corr > lst_E_corr[-1])
+
+				# --- Divergence: 5 consecutive energy increases ---
+				if len(lst_E_corr) >= 5:
+					last5 = lst_E_corr[-5:] + [E_corr]
+					n_increases = sum(1 for k in range(1, len(last5)) if last5[k] > last5[k-1])
+					if n_increases >= 5:
+						print(f"  STOPPING: 5 consecutive energy increases — diverging.")
+						lst_E_corr.append(E_corr)
+						lst_iter_counts.append(iter_count)
+						lst_stop_reason.append("Divergence")
+						break
+
+				# --- Convergence check ---
+				if change < threshold:
 					converged = True
-					print("OVOS converged in ", iter_count, " iterations.")
+					print(f"  OVOS converged in {iter_count} iterations.")
 					lst_E_corr.append(E_corr)
 					lst_iter_counts.append(iter_count)
 					lst_stop_reason.append("Convergence")
 					break
-				else:
-					# Only append if we didn't break due to non-convergence
-					if not (oscillation_detected and hasattr(self, 'oscillation_counter') and self.oscillation_counter > 10) and \
-					not (drift_detected and hasattr(self, 'drift_counter') and self.drift_counter > 5) and \
-					not false_convergence_detected and \
-					not (chaos_detected and hasattr(self, 'chaos_counter') and self.chaos_counter > 8):
-						
-						lst_E_corr.append(E_corr)
-						lst_iter_counts.append(iter_count)
-						lst_stop_reason.append("Not Converged")
-						
-						print(f"	Change in correlation energy: {change:.6e} Hartree (threshold: {threshold:.1e})")
-						
-						# If the change is positive, warn the user
-						if E_corr > lst_E_corr[-2]:
-							print("		WARNING: Correlation energy increased in this iteration!")
-						print()
-						
-						# Step (v)-(viii): Orbital optimization
-						print(" Step (v)-(viii): Orbital optimization")
-						mo_coeffs, Fmo_rot = self.orbital_optimization(mo_coeffs=mo_coeffs, 
-																	MP1_amplitudes=MP1_amplitudes, 
-																	eri_as=eri_as, 
-																	Fmo_spin=Fmo_spin)
+
+				# --- Not converged yet: log and continue ---
+				lst_E_corr.append(E_corr)
+				lst_iter_counts.append(iter_count)
+				lst_stop_reason.append("Not Converged")
+
+				print(f"  Change: {change:.6e} Ha (thr: {threshold:.1e})", end="")
+				if energy_increased:
+					print("  [WARNING: energy increased]", end="")
+				print()
+
+				# Step (v)-(viii): Orbital optimization
+				print(" Step (v)-(viii): Orbital optimization")
+				mo_coeffs, Fmo_rot = self.orbital_optimization(
+					mo_coeffs=mo_coeffs,
+					MP1_amplitudes=MP1_amplitudes,
+					eri_as=eri_as,
+					Fmo_spin=Fmo_spin)
+
+			# ---- Max iterations reached ----
+			else:
+				print(f"  WARNING: max iterations ({max_iter}) reached without convergence.")
+				lst_E_corr.append(E_corr)
+				lst_iter_counts.append(iter_count)
+				lst_stop_reason.append("Max Iterations")
+				break
+
+
 		# Which direction did we go?
 		if converged:
 			final_E_corr = lst_E_corr[-1]
@@ -1874,37 +1716,42 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 					# Run OVOS with the current random unitary rotated orbitals
 					lst_E_corr_attempt, lst_iter_counts_attempt, mo_coeffs_attempt, Fmo_rot_attempts, lst_stop_reason_attempts = ovos_obj.run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
 
-					# Update best result if this attempt is better than the current best
-					if best_E_corr is None or lst_E_corr_attempt[-1] < best_E_corr:
-						best_E_corr = lst_E_corr_attempt[-1]
+					# --- Evaluate this attempt ---
+					E_this = lst_E_corr_attempt[-1]
+
+					# Get rid of final is higher than initial energy attempts right away
+					if E_this > lst_E_corr_attempt[0]:
+						print(f"  Attempt {attempt}: Final energy {E_this:.6f} Ha is higher than initial energy {lst_E_corr_attempt[0]:.6f} Ha. Skipping.")
+						continue					
+
+					# Count similarity to best BEFORE updating best
+					if best_E_corr is not None and np.isclose(E_this, best_E_corr, atol=1e-4):
+						best_result_count += 1
+						if best_result_count >= 10:
+							print(f"Best result of {best_E_corr:.6f} Ha found {best_result_count} times. Breaking early.")
+							break
+
+					# Update best result
+					if best_E_corr is None or E_this < best_E_corr:
+						best_E_corr = E_this
 						best_lst_E_corr = lst_E_corr_attempt
 						best_lst_iter_counts = lst_iter_counts_attempt
 						best_mo_coeffs = mo_coeffs_attempt
 						best_Fmo_rot = Fmo_rot_attempts
 						best_lst_stop_reason = lst_stop_reason_attempts
+						best_result_count = 0  # Reset: found something genuinely better
 
-					# Check if we ended up at the same best result multiple times, which could indicate a local minimum
-					if np.isclose(best_E_corr, lst_E_corr_attempt[-1], atol = 1e-6) and best_E_corr is not None:
-						best_result_count += 1
-						# If we eneded up at the same best result multiple times, we can break early as it's likely a local minimum
-						if best_result_count >= 10:
-							print(f"Best result of {best_E_corr:.6f} Hartree has been found {best_result_count} times. Breaking early from attempts.")
-							break
-
-					# If we ended up at a better result, reset the best result count by a tolerance
-					if best_E_corr is not None and lst_E_corr_attempt[-1] < best_E_corr - 1e-6:
-						best_result_count = 0					
-
-					# If we keep reaching the maximum number of iterations without convergence
-					if lst_iter_counts_attempt is not None and len(lst_iter_counts_attempt) > 0 and lst_iter_counts_attempt[-1] >= 1000:
+					# Track max-iter failures
+					if (lst_iter_counts_attempt is not None 
+							and len(lst_iter_counts_attempt) > 0 
+							and lst_iter_counts_attempt[-1] >= 1000):
 						total_iterations_reached_count += 1
-						# Break early as it's likely not converging
 						if total_iterations_reached_count >= 10:
-							print(f"Reached maximum number of iterations for 10 attempts. Breaking early from attempts.")
+							print(f"Reached max iterations for 10 attempts. Breaking early.")
 							break
-
-					# Reset total iterations reached count if we get a converged result
-					if lst_stop_reason_attempts is not None and len(lst_stop_reason_attempts) > 0 and lst_stop_reason_attempts[-1] == "Convergence":
+					elif (lst_stop_reason_attempts is not None 
+							and len(lst_stop_reason_attempts) > 0 
+							and lst_stop_reason_attempts[-1] == "Convergence"):
 						total_iterations_reached_count = 0
 
 
@@ -2052,20 +1899,25 @@ for basis_set in ["6-31G"]: # Yet: "6-31G","cc-pVDZ", ...
 
 		# get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="RHF", select_atom=molecule, select_basis=basis_set)
 		# get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="prev", select_atom=molecule, select_basis=basis_set)
-		# get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="random", select_atom=molecule, select_basis=basis_set)
+		get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="random", select_atom=molecule, select_basis=basis_set)
 
 		# Get I add the terminal output of the OVOS runs to a text file for later reference
-		import sys
-		original_stdout = sys.stdout  # Save a reference to the original standard output
-		with open(f"branch/data/{molecule}/{basis_set}/OVOS_output.txt", "w") as f:
-			sys.stdout = f  # Change the standard output to the file we created
-			# Run OVOS again to capture the output in the file
-			get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="RHF", select_atom=molecule, select_basis=basis_set)
-			get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="prev", select_atom=molecule, select_basis=basis_set)
-			# get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="random", select_atom=molecule, select_basis=basis_set)
-			sys.stdout = original_stdout  # Reset the standard output to its original value
-		
+		# import sys
+		# original_stdout = sys.stdout  # Save a reference to the original standard output
+		# with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_output.txt", "w") as f:
+		# 	sys.stdout = f  # Change the standard output to the file we created
+		# 	# Run OVOS again to capture the output in the file
+		# 	get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="RHF", select_atom=molecule, select_basis=basis_set)
+		# 	get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess="prev", select_atom=molecule, select_basis=basis_set)
+		# 	sys.stdout = original_stdout  # Reset the standard output to its original value
 
+"""
+The oscillations are a property of the Newton-Raphson method applied to a non-quadratic functional. 
+The Hessian gives a quadratic approximation that can overshoot when far from the minimum, causing the energy to temporarily increase. 
+This is normal and expected behavior for Newton's method without line search or trust region damping.
+
+Negative eigenvalues in Hessian can also be level-shifted to stabilize convergence, but this can slow down progress.
+"""		
 
 # assert False, "Done with OVOS runs. Comment out this line to run more or move on to the next part of the code."
 
