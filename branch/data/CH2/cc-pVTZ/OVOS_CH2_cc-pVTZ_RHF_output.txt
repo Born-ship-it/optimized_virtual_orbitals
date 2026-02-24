@@ -1,0 +1,2697 @@
+Initial specific numbers of optimized virtual orbitals to test (before rounding):  [ 12.312  18.468  33.912  54.     70.956 108.   ]
+Specific numbers of optimized virtual orbitals to test:  [12, 18, 34, 54, 70, 108]
+
+#### OVOS with  12  out of  108  optimized virtual orbitals (Retry count:  0 ) ####
+
+#### Active and inactive spaces ####
+Total number of spin-orbitals:  116
+Active occupied spin-orbitals:  [0, 1, 2, 3, 4, 5, 6, 7]
+Active unoccupied spin-orbitals:  [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+Inactive unoccupied spin-orbitals:  [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115]
+
+#### OVOS Iteration  1  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.012223777338361868
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.227011e-02
+  - Hessian:
+    Hessian norm: 2.508527e-01, (Neg. Eigval: 150/1152)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -7.171172e-03)
+    Hessian condition number: 4.122987e+03
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 5.214706e+00, (Max el.: 1.196040e+00)
+[12/108]: MP2 (spin-orbital):  -0.040596782424934114
+    Line search accepted at alpha=1.0000e+00 (energy change: -2.837301e-02)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  2  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04059678242493421
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.487203e-02
+  - Hessian:
+    Hessian norm: 7.078695e-01, (Neg. Eigval: 78/1152)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -1.287661e-03)
+    Hessian condition number: 1.383129e+04
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.274775e+00, (Max el.: 4.893339e-01)
+[12/108]: MP2 (spin-orbital):  -0.04833481409241282
+    Line search accepted at alpha=1.0000e+00 (energy change: -7.738032e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  3  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04833481409241275
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 1.711591e-02
+  - Hessian:
+    Hessian norm: 8.946510e-01, (Neg. Eigval: 46/1152)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -1.036960e-03)
+    Hessian condition number: 2.029983e+04
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 4.146219e+00, (Max el.: 1.276000e+00)
+[12/108]: MP2 (spin-orbital):  -0.049084275510625705
+    Line search accepted at alpha=1.0000e+00 (energy change: -7.494614e-04)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  4  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.049084275510625705
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.073228e-02
+  - Hessian:
+    Hessian norm: 9.256774e-01, (Neg. Eigval: 23/1152)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -1.128369e-03)
+    Hessian condition number: 3.908196e+04
+    Hessian determinant: -0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.155932e+00, (Max el.: 7.979096e-01)
+[12/108]: MP2 (spin-orbital):  -0.05024830680736229
+    Line search accepted at alpha=1.0000e+00 (energy change: -1.164031e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  5  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05024830680736241
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.624419e-02
+  - Hessian:
+    Hessian norm: 8.589462e-01, (Neg. Eigval: 2/1152)
+        WARNING: Hessian has negative eigenvalues!
+                Level-shifting will be applied in block solver (min eigval: -3.575124e-04)
+    Hessian condition number: 4.057820e+02
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.361460e+00, (Max el.: 5.647373e-01)
+[12/108]: MP2 (spin-orbital):  -0.04629425010607547
+    Line search accepted at alpha=1.0000e+00 (energy change: 3.954057e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  6  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.046294250106075685
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.509311e-02
+  - Hessian:
+    Hessian norm: 7.402635e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.119699e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.798589e+00, (Max el.: 7.027947e-01)
+[12/108]: MP2 (spin-orbital):  -0.05651902748652619
+    Line search accepted at alpha=1.0000e+00 (energy change: -1.022478e-02)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  7  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05651902748652626
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.332907e-02
+  - Hessian:
+    Hessian norm: 8.979167e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.540404e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.263426e+00, (Max el.: 5.083538e-01)
+[12/108]: MP2 (spin-orbital):  -0.05909357406708389
+    Line search accepted at alpha=1.0000e+00 (energy change: -2.574547e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  8  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.059093574067083945
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.314115e-02
+  - Hessian:
+    Hessian norm: 9.492977e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.454441e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.536882e+00, (Max el.: 5.480434e-01)
+[12/108]: MP2 (spin-orbital):  -0.049508434985276115
+    Line search accepted at alpha=1.0000e+00 (energy change: 9.585139e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  9  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.0495084349852761
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.354331e-02
+  - Hessian:
+    Hessian norm: 7.866407e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 8.860244e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.991517e+00, (Max el.: 6.261169e-01)
+[12/108]: MP2 (spin-orbital):  -0.0503608383114369
+    Line search accepted at alpha=1.0000e+00 (energy change: -8.524033e-04)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  10  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05036083831143709
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.977071e-02
+  - Hessian:
+    Hessian norm: 8.065133e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.437880e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.753430e+00, (Max el.: 4.625748e-01)
+[12/108]: MP2 (spin-orbital):  -0.055037298494262116
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.676460e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  11  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05503729849426246
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.878497e-02
+  - Hessian:
+    Hessian norm: 8.818789e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.031684e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.661921e+00, (Max el.: 5.163505e-01)
+[12/108]: MP2 (spin-orbital):  -0.05391464507363009
+    Line search accepted at alpha=1.0000e+00 (energy change: 1.122653e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  12  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05391464507362985
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.583205e-02
+  - Hessian:
+    Hessian norm: 8.766055e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.057160e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.936372e+00, (Max el.: 6.464431e-01)
+[12/108]: MP2 (spin-orbital):  -0.04708257830267749
+    Line search accepted at alpha=1.0000e+00 (energy change: 6.832067e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  13  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.047082578302677286
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.169031e-02
+  - Hessian:
+    Hessian norm: 7.473284e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 8.882877e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.007653e+00, (Max el.: 6.378641e-01)
+[12/108]: MP2 (spin-orbital):  -0.05246100784129809
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.378430e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  14  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.052461007841298195
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.620796e-02
+  - Hessian:
+    Hessian norm: 8.476937e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.881473e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.581878e+00, (Max el.: 4.266054e-01)
+[12/108]: MP2 (spin-orbital):  -0.0585342591424107
+    Line search accepted at alpha=1.0000e+00 (energy change: -6.073251e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  15  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.058534259142410935
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.064989e-02
+  - Hessian:
+    Hessian norm: 9.463222e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.069033e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.576714e+00, (Max el.: 4.415055e-01)
+[12/108]: MP2 (spin-orbital):  -0.0516046758548281
+    Line search accepted at alpha=1.0000e+00 (energy change: 6.929583e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  16  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.051604675854828114
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.660324e-02
+  - Hessian:
+    Hessian norm: 8.368656e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.031143e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.081273e+00, (Max el.: 7.265477e-01)
+[12/108]: MP2 (spin-orbital):  -0.04610586444690053
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.498811e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  17  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.046105864446900666
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.037271e-02
+  - Hessian:
+    Hessian norm: 7.291924e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 8.772672e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.966421e+00, (Max el.: 6.379988e-01)
+[12/108]: MP2 (spin-orbital):  -0.053326402971142516
+    Line search accepted at alpha=1.0000e+00 (energy change: -7.220539e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  18  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.053326402971142675
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.434164e-02
+  - Hessian:
+    Hessian norm: 8.596926e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.006619e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.514615e+00, (Max el.: 4.268353e-01)
+[12/108]: MP2 (spin-orbital):  -0.06095669850097072
+    Line search accepted at alpha=1.0000e+00 (energy change: -7.630296e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  19  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.0609566985009709
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.583971e-02
+  - Hessian:
+    Hessian norm: 9.922245e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.100777e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.392773e+00, (Max el.: 4.159321e-01)
+[12/108]: MP2 (spin-orbital):  -0.05586018228830138
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.096516e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  20  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.055860182288301266
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.612238e-02
+  - Hessian:
+    Hessian norm: 9.085994e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.089761e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.830593e+00, (Max el.: 5.015796e-01)
+[12/108]: MP2 (spin-orbital):  -0.04721821854674344
+    Line search accepted at alpha=1.0000e+00 (energy change: 8.641964e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  21  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.0472182185467431
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.334064e-02
+  - Hessian:
+    Hessian norm: 7.512904e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.014487e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.085911e+00, (Max el.: 6.736346e-01)
+[12/108]: MP2 (spin-orbital):  -0.05040263873729585
+    Line search accepted at alpha=1.0000e+00 (energy change: -3.184420e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  22  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.050402638737295904
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.971514e-02
+  - Hessian:
+    Hessian norm: 8.106875e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.830336e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.741258e+00, (Max el.: 4.327896e-01)
+[12/108]: MP2 (spin-orbital):  -0.05524273369040177
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.840095e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  23  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.055242733690401884
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.031226e-02
+  - Hessian:
+    Hessian norm: 8.879268e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.048746e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.668412e+00, (Max el.: 4.889668e-01)
+[12/108]: MP2 (spin-orbital):  -0.05284149266646953
+    Line search accepted at alpha=1.0000e+00 (energy change: 2.401241e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  24  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05284149266646941
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.709360e-02
+  - Hessian:
+    Hessian norm: 8.583037e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.049830e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.997596e+00, (Max el.: 6.351080e-01)
+[12/108]: MP2 (spin-orbital):  -0.04657137256290603
+    Line search accepted at alpha=1.0000e+00 (energy change: 6.270120e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  25  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.046571372562906124
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.150241e-02
+  - Hessian:
+    Hessian norm: 7.378045e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 8.877424e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.991471e+00, (Max el.: 6.427397e-01)
+[12/108]: MP2 (spin-orbital):  -0.05265234960801304
+    Line search accepted at alpha=1.0000e+00 (energy change: -6.080977e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  26  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.052652349608013
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.572818e-02
+  - Hessian:
+    Hessian norm: 8.492187e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.010439e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.571548e+00, (Max el.: 4.398816e-01)
+[12/108]: MP2 (spin-orbital):  -0.05937136837728246
+    Line search accepted at alpha=1.0000e+00 (energy change: -6.719019e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  27  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05937136837728232
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.064596e-02
+  - Hessian:
+    Hessian norm: 9.657195e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.094848e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.549208e+00, (Max el.: 4.175230e-01)
+[12/108]: MP2 (spin-orbital):  -0.05158947378687386
+    Line search accepted at alpha=1.0000e+00 (energy change: 7.781895e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  28  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05158947378687363
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.784172e-02
+  - Hessian:
+    Hessian norm: 8.353775e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.036024e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.072199e+00, (Max el.: 6.581901e-01)
+[12/108]: MP2 (spin-orbital):  -0.04629511721635382
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.294357e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  29  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04629511721635402
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.083553e-02
+  - Hessian:
+    Hessian norm: 7.320500e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 8.873269e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.954283e+00, (Max el.: 6.227833e-01)
+[12/108]: MP2 (spin-orbital):  -0.05307447720783299
+    Line search accepted at alpha=1.0000e+00 (energy change: -6.779360e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  30  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05307447720783308
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.555397e-02
+  - Hessian:
+    Hessian norm: 8.528024e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.024860e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.555897e+00, (Max el.: 4.366428e-01)
+[12/108]: MP2 (spin-orbital):  -0.060008827053007266
+    Line search accepted at alpha=1.0000e+00 (energy change: -6.934350e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  31  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.06000882705300739
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.880592e-02
+  - Hessian:
+    Hessian norm: 9.786006e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.105635e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.489651e+00, (Max el.: 4.176216e-01)
+[12/108]: MP2 (spin-orbital):  -0.05371422422247641
+    Line search accepted at alpha=1.0000e+00 (energy change: 6.294603e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  32  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.053714224222475994
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.643544e-02
+  - Hessian:
+    Hessian norm: 8.716895e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.069586e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.905441e+00, (Max el.: 5.091877e-01)
+[12/108]: MP2 (spin-orbital):  -0.047521051393694315
+    Line search accepted at alpha=1.0000e+00 (energy change: 6.193173e-03)
+
+    Rotated 94 spin orbitals out of 116 total.
+
+#### OVOS Iteration  33  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04752105139369416
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.340221e-02
+  - Hessian:
+    Hessian norm: 7.565141e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.139547e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.040988e+00, (Max el.: 6.420291e-01)
+[12/108]: MP2 (spin-orbital):  -0.0508829018742519
+    Line search accepted at alpha=1.0000e+00 (energy change: -3.361850e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  34  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.050882901874251873
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.966409e-02
+  - Hessian:
+    Hessian norm: 8.203087e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.004620e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.735494e+00, (Max el.: 4.594474e-01)
+[12/108]: MP2 (spin-orbital):  -0.05521225406636952
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.329352e-03)
+
+    Rotated 106 spin orbitals out of 116 total.
+
+#### OVOS Iteration  35  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05521225406636882
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.334898e-02
+  - Hessian:
+    Hessian norm: 8.923208e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.059725e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.749746e+00, (Max el.: 4.653277e-01)
+[12/108]: MP2 (spin-orbital):  -0.05004401885654542
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.168235e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  36  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05004401885654191
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.669391e-02
+  - Hessian:
+    Hessian norm: 8.083054e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.010421e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.085930e+00, (Max el.: 6.406606e-01)
+[12/108]: MP2 (spin-orbital):  -0.04731621724913539
+    Line search accepted at alpha=1.0000e+00 (energy change: 2.727802e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  37  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.047316217249125825
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.177490e-02
+  - Hessian:
+    Hessian norm: 7.503468e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.064811e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.937530e+00, (Max el.: 5.915658e-01)
+[12/108]: MP2 (spin-orbital):  -0.05238265897469341
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.066442e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  38  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.052382658974647986
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.747227e-02
+  - Hessian:
+    Hessian norm: 8.429852e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.020694e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.655169e+00, (Max el.: 4.428560e-01)
+[12/108]: MP2 (spin-orbital):  -0.05649116640650387
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.108507e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  39  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.056491166406354446
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.645191e-02
+  - Hessian:
+    Hessian norm: 9.271827e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.052413e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.928114e+00, (Max el.: 3.793880e-01)
+[12/108]: MP2 (spin-orbital):  -0.044665139858336624
+    Line search accepted at alpha=1.0000e+00 (energy change: 1.182603e-02)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  40  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04466513985761591
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.324609e-02
+  - Hessian:
+    Hessian norm: 7.163658e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.789599e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.064749e+00, (Max el.: 4.780587e-01)
+[12/108]: MP2 (spin-orbital):  -0.050143180291887045
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.478040e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  41  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05014318029159584
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.536362e-02
+  - Hessian:
+    Hessian norm: 7.991623e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 8.477473e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.912598e+00, (Max el.: 4.937811e-01)
+[12/108]: MP2 (spin-orbital):  -0.047128365787753
+    Line search accepted at alpha=1.0000e+00 (energy change: 3.014815e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  42  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04712836578672544
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.109936e-02
+  - Hessian:
+    Hessian norm: 7.551517e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.031576e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.891548e+00, (Max el.: 4.991874e-01)
+[12/108]: MP2 (spin-orbital):  -0.050996887922365765
+    Line search accepted at alpha=1.0000e+00 (energy change: -3.868522e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  43  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05099688792150552
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.687444e-02
+  - Hessian:
+    Hessian norm: 8.180895e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.333294e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.016786e+00, (Max el.: 5.756310e-01)
+[12/108]: MP2 (spin-orbital):  -0.04489539728027703
+    Line search accepted at alpha=1.0000e+00 (energy change: 6.101491e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  44  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04489539727841028
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 2.990795e-02
+  - Hessian:
+    Hessian norm: 7.159384e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.074247e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.802689e+00, (Max el.: 4.640600e-01)
+[12/108]: MP2 (spin-orbital):  -0.05445107185558861
+    Line search accepted at alpha=1.0000e+00 (energy change: -9.555675e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  45  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05445107185595739
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.404249e-02
+  - Hessian:
+    Hessian norm: 8.723736e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 8.527231e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.629222e+00, (Max el.: 4.600134e-01)
+[12/108]: MP2 (spin-orbital):  -0.04898727025375196
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.463802e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  46  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04898727025439932
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.606094e-02
+  - Hessian:
+    Hessian norm: 7.741220e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 7.730574e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.004717e+00, (Max el.: 5.636734e-01)
+[12/108]: MP2 (spin-orbital):  -0.04564148415574544
+    Line search accepted at alpha=1.0000e+00 (energy change: 3.345786e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  47  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04564148415485058
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.150508e-02
+  - Hessian:
+    Hessian norm: 7.209675e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.004009e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.983956e+00, (Max el.: 5.026673e-01)
+[12/108]: MP2 (spin-orbital):  -0.05016262412224349
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.521140e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  48  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05016262412006514
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.310610e-02
+  - Hessian:
+    Hessian norm: 8.064549e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.673726e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.917010e+00, (Max el.: 5.607968e-01)
+[12/108]: MP2 (spin-orbital):  -0.04769381242805393
+    Line search accepted at alpha=1.0000e+00 (energy change: 2.468812e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  49  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.047693812425237535
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.355346e-02
+  - Hessian:
+    Hessian norm: 7.738543e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.099412e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.989174e+00, (Max el.: 5.504448e-01)
+[12/108]: MP2 (spin-orbital):  -0.04763457325234689
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.923917e-05)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  50  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04763457325051154
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.441482e-02
+  - Hessian:
+    Hessian norm: 7.537408e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 8.225427e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.003176e+00, (Max el.: 5.199383e-01)
+[12/108]: MP2 (spin-orbital):  -0.047132430695041284
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.021426e-04)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  51  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04713243069328504
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.190207e-02
+  - Hessian:
+    Hessian norm: 7.509906e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.028278e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.939025e+00, (Max el.: 5.538398e-01)
+[12/108]: MP2 (spin-orbital):  -0.04964237967586356
+    Line search accepted at alpha=1.0000e+00 (energy change: -2.509949e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  52  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.049642379673750306
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.312845e-02
+  - Hessian:
+    Hessian norm: 7.979615e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.658146e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.916387e+00, (Max el.: 5.611159e-01)
+[12/108]: MP2 (spin-orbital):  -0.04777702277845916
+    Line search accepted at alpha=1.0000e+00 (energy change: 1.865357e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  53  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04777702277645817
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.405414e-02
+  - Hessian:
+    Hessian norm: 7.695890e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.026200e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.007724e+00, (Max el.: 5.613475e-01)
+[12/108]: MP2 (spin-orbital):  -0.04709879852058793
+    Line search accepted at alpha=1.0000e+00 (energy change: 6.782243e-04)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  54  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04709879851886685
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.328950e-02
+  - Hessian:
+    Hessian norm: 7.460255e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 8.553091e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.974388e+00, (Max el.: 5.226086e-01)
+[12/108]: MP2 (spin-orbital):  -0.04838191579972172
+    Line search accepted at alpha=1.0000e+00 (energy change: -1.283117e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  55  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04838191579841321
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.316810e-02
+  - Hessian:
+    Hessian norm: 7.720186e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.899498e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.964994e+00, (Max el.: 5.741013e-01)
+[12/108]: MP2 (spin-orbital):  -0.04818430983231195
+    Line search accepted at alpha=1.0000e+00 (energy change: 1.976060e-04)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  56  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04818430982964323
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.202618e-02
+  - Hessian:
+    Hessian norm: 7.763296e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 1.010368e+01
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.892536e+00, (Max el.: 5.291013e-01)
+[12/108]: MP2 (spin-orbital):  -0.04960912438908797
+    Line search accepted at alpha=1.0000e+00 (energy change: -1.424815e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  57  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04960912438822745
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.625759e-02
+  - Hessian:
+    Hessian norm: 7.929411e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.037223e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.040881e+00, (Max el.: 5.677158e-01)
+[12/108]: MP2 (spin-orbital):  -0.045254686924190005
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.354437e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  58  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.045254686921351595
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.029196e-02
+  - Hessian:
+    Hessian norm: 7.186360e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 9.415563e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.867557e+00, (Max el.: 4.733315e-01)
+[12/108]: MP2 (spin-orbital):  -0.05347821408196682
+    Line search accepted at alpha=1.0000e+00 (energy change: -8.223527e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  59  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05347821408304359
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.579276e-02
+  - Hessian:
+    Hessian norm: 8.538982e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 8.491238e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.819343e+00, (Max el.: 4.844880e-01)
+[12/108]: MP2 (spin-orbital):  -0.04678961295075659
+    Line search accepted at alpha=1.0000e+00 (energy change: 6.688601e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  60  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04678961294936963
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.251672e-02
+  - Hessian:
+    Hessian norm: 7.426739e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 8.603723e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.026244e+00, (Max el.: 5.163884e-01)
+[12/108]: MP2 (spin-orbital):  -0.05027825595460429
+    Line search accepted at alpha=1.0000e+00 (energy change: -3.488643e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  61  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.0502782559530076
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.570567e-02
+  - Hessian:
+    Hessian norm: 7.967565e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 7.923493e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.075831e+00, (Max el.: 5.826948e-01)
+[12/108]: MP2 (spin-orbital):  -0.04780924080725191
+    Line search accepted at alpha=1.0000e+00 (energy change: 2.469015e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  62  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04780924080149808
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.111123e-02
+  - Hessian:
+    Hessian norm: 7.608572e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 7.478142e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.946218e+00, (Max el.: 4.807264e-01)
+[12/108]: MP2 (spin-orbital):  -0.05483314825996865
+    Line search accepted at alpha=1.0000e+00 (energy change: -7.023907e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  63  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.054833148260079644
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.781221e-02
+  - Hessian:
+    Hessian norm: 8.673257e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.793478e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.042162e+00, (Max el.: 5.173395e-01)
+[12/108]: MP2 (spin-orbital):  -0.04730024209556209
+    Line search accepted at alpha=1.0000e+00 (energy change: 7.532906e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  64  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.047300242090090365
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.105745e-02
+  - Hessian:
+    Hessian norm: 7.476990e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.937295e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.001071e+00, (Max el.: 4.840946e-01)
+[12/108]: MP2 (spin-orbital):  -0.056774799990836976
+    Line search accepted at alpha=1.0000e+00 (energy change: -9.474558e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  65  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05677479999230003
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.776978e-02
+  - Hessian:
+    Hessian norm: 8.919445e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.170287e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 1.955064e+00, (Max el.: 4.727550e-01)
+[12/108]: MP2 (spin-orbital):  -0.04835416896153613
+    Line search accepted at alpha=1.0000e+00 (energy change: 8.420631e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  66  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.048354168958916866
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.332104e-02
+  - Hessian:
+    Hessian norm: 7.593641e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.182510e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.165635e+00, (Max el.: 5.103494e-01)
+[12/108]: MP2 (spin-orbital):  -0.05318939698810839
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.835228e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  67  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05318939698460669
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.605184e-02
+  - Hessian:
+    Hessian norm: 8.399075e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.334380e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.141278e+00, (Max el.: 5.133270e-01)
+[12/108]: MP2 (spin-orbital):  -0.05009769671246127
+    Line search accepted at alpha=1.0000e+00 (energy change: 3.091700e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  68  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.050097696700614334
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.300342e-02
+  - Hessian:
+    Hessian norm: 7.960250e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 7.088883e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.050496e+00, (Max el.: 5.059243e-01)
+[12/108]: MP2 (spin-orbital):  -0.05517219703938478
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.074500e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  69  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05517219704136962
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.823940e-02
+  - Hessian:
+    Hessian norm: 8.623865e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.390342e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.087201e+00, (Max el.: 5.324241e-01)
+[12/108]: MP2 (spin-orbital):  -0.0490984040133321
+    Line search accepted at alpha=1.0000e+00 (energy change: 6.073793e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  70  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04909840400918639
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.286737e-02
+  - Hessian:
+    Hessian norm: 7.664996e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.099523e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.092063e+00, (Max el.: 5.168371e-01)
+[12/108]: MP2 (spin-orbital):  -0.05568109655841988
+    Line search accepted at alpha=1.0000e+00 (energy change: -6.582693e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  71  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05568109655760195
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.710679e-02
+  - Hessian:
+    Hessian norm: 8.709208e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.772149e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.060771e+00, (Max el.: 5.097058e-01)
+[12/108]: MP2 (spin-orbital):  -0.05028782011933576
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.393276e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  72  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.050287820105676305
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.337586e-02
+  - Hessian:
+    Hessian norm: 7.909862e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.813012e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.061835e+00, (Max el.: 5.282054e-01)
+[12/108]: MP2 (spin-orbital):  -0.05542163954751757
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.133819e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  73  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.0554216395503882
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.802443e-02
+  - Hessian:
+    Hessian norm: 8.623690e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.189622e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.062428e+00, (Max el.: 5.356817e-01)
+[12/108]: MP2 (spin-orbital):  -0.049932637856194756
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.489002e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  74  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04993263784860812
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.327360e-02
+  - Hessian:
+    Hessian norm: 7.767413e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.708562e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.085308e+00, (Max el.: 5.337184e-01)
+[12/108]: MP2 (spin-orbital):  -0.055288554006513904
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.355916e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  75  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05528855400049931
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.684891e-02
+  - Hessian:
+    Hessian norm: 8.641794e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.823951e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.069452e+00, (Max el.: 5.274251e-01)
+[12/108]: MP2 (spin-orbital):  -0.05070359282625327
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.584961e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  76  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.050703592796735364
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.353635e-02
+  - Hessian:
+    Hessian norm: 7.956282e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.550695e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.052504e+00, (Max el.: 5.382173e-01)
+[12/108]: MP2 (spin-orbital):  -0.05524625873733573
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.542666e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  77  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05524625873837738
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.789604e-02
+  - Hessian:
+    Hessian norm: 8.587967e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.123696e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.064479e+00, (Max el.: 5.446777e-01)
+[12/108]: MP2 (spin-orbital):  -0.05012416418671256
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.122095e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  78  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05012416416730094
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.318885e-02
+  - Hessian:
+    Hessian norm: 7.791400e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.664390e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.069099e+00, (Max el.: 5.375889e-01)
+[12/108]: MP2 (spin-orbital):  -0.05546017791389998
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.336014e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  79  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05546017790180599
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.692844e-02
+  - Hessian:
+    Hessian norm: 8.658519e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.711455e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.061220e+00, (Max el.: 5.343745e-01)
+[12/108]: MP2 (spin-orbital):  -0.0506788930874235
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.781285e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  80  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05067889302936895
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.344464e-02
+  - Hessian:
+    Hessian norm: 7.943966e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.507580e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.047517e+00, (Max el.: 5.412991e-01)
+[12/108]: MP2 (spin-orbital):  -0.05535817569543236
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.679283e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  81  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05535817569689712
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.796160e-02
+  - Hessian:
+    Hessian norm: 8.603153e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.099393e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.061967e+00, (Max el.: 5.468574e-01)
+[12/108]: MP2 (spin-orbital):  -0.05006519242251116
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.292983e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  82  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05006519238245701
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.308355e-02
+  - Hessian:
+    Hessian norm: 7.779538e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.666625e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.066545e+00, (Max el.: 5.398174e-01)
+[12/108]: MP2 (spin-orbital):  -0.055570288118975034
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.505096e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  83  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.055570288095233525
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.700372e-02
+  - Hessian:
+    Hessian norm: 8.675636e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.688280e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.060165e+00, (Max el.: 5.366973e-01)
+[12/108]: MP2 (spin-orbital):  -0.05059068590493383
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.979602e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  84  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05059068578636814
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.338549e-02
+  - Hessian:
+    Hessian norm: 7.929297e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.524387e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.048615e+00, (Max el.: 5.432082e-01)
+[12/108]: MP2 (spin-orbital):  -0.05540764225551449
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.816956e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  85  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05540764226043779
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.804677e-02
+  - Hessian:
+    Hessian norm: 8.611783e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.084429e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.062782e+00, (Max el.: 5.480416e-01)
+[12/108]: MP2 (spin-orbital):  -0.04997769429512688
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.429948e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  86  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04997769421633241
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.304675e-02
+  - Hessian:
+    Hessian norm: 7.764703e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.645525e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.070873e+00, (Max el.: 5.417079e-01)
+[12/108]: MP2 (spin-orbital):  -0.055559044392326784
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.581350e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  87  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.055559044341537696
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.701604e-02
+  - Hessian:
+    Hessian norm: 8.678903e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.722035e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.064183e+00, (Max el.: 5.377937e-01)
+[12/108]: MP2 (spin-orbital):  -0.050535662769314225
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.023382e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  88  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05053566251951025
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.339879e-02
+  - Hessian:
+    Hessian norm: 7.923878e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.547679e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.053559e+00, (Max el.: 5.449397e-01)
+[12/108]: MP2 (spin-orbital):  -0.055341935369189396
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.806273e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  89  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05534193538084669
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.810345e-02
+  - Hessian:
+    Hessian norm: 8.604231e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.077908e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.067920e+00, (Max el.: 5.492897e-01)
+[12/108]: MP2 (spin-orbital):  -0.04990586132665873
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.436074e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  90  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04990586116955971
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.305174e-02
+  - Hessian:
+    Hessian norm: 7.754488e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.623386e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.077162e+00, (Max el.: 5.430519e-01)
+[12/108]: MP2 (spin-orbital):  -0.05549058259434355
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.584721e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  91  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05549058248465755
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.700512e-02
+  - Hessian:
+    Hessian norm: 8.674513e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.767186e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.070150e+00, (Max el.: 5.388583e-01)
+[12/108]: MP2 (spin-orbital):  -0.050495364118811246
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.995218e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  92  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05049536359408301
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.345548e-02
+  - Hessian:
+    Hessian norm: 7.922018e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.561451e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.061335e+00, (Max el.: 5.465767e-01)
+[12/108]: MP2 (spin-orbital):  -0.05520115077231402
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.705787e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  93  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05520115079052325
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.813485e-02
+  - Hessian:
+    Hessian norm: 8.586380e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.085344e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.076356e+00, (Max el.: 5.502421e-01)
+[12/108]: MP2 (spin-orbital):  -0.04984268996827299
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.358461e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  94  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04984268964467368
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.307409e-02
+  - Hessian:
+    Hessian norm: 7.748243e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.621442e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.083982e+00, (Max el.: 5.438856e-01)
+[12/108]: MP2 (spin-orbital):  -0.05540533336985465
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.562644e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  95  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.055405333142384924
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.700524e-02
+  - Hessian:
+    Hessian norm: 8.667204e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.801278e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.076802e+00, (Max el.: 5.401872e-01)
+[12/108]: MP2 (spin-orbital):  -0.05044547210525642
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.959861e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  96  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05044547102949529
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.353362e-02
+  - Hessian:
+    Hessian norm: 7.918694e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.561122e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.071791e+00, (Max el.: 5.481768e-01)
+[12/108]: MP2 (spin-orbital):  -0.05501482961400706
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.569359e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  97  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05501482962050537
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.814544e-02
+  - Hessian:
+    Hessian norm: 8.562964e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.111960e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.087265e+00, (Max el.: 5.507136e-01)
+[12/108]: MP2 (spin-orbital):  -0.049782530197061046
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.232299e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  98  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04978252951031443
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.311045e-02
+  - Hessian:
+    Hessian norm: 7.745142e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.644719e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.091463e+00, (Max el.: 5.444317e-01)
+[12/108]: MP2 (spin-orbital):  -0.05530615224893783
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.523623e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  99  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.055306151799171796
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.702642e-02
+  - Hessian:
+    Hessian norm: 8.657165e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.820042e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.084107e+00, (Max el.: 5.418491e-01)
+[12/108]: MP2 (spin-orbital):  -0.05037928139030786
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.926870e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  100  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05037927925535655
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.362395e-02
+  - Hessian:
+    Hessian norm: 7.912445e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.543741e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.084553e+00, (Max el.: 5.497743e-01)
+[12/108]: MP2 (spin-orbital):  -0.054798168590712064
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.418889e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  101  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.054798168506892876
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.813406e-02
+  - Hessian:
+    Hessian norm: 8.536395e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.159730e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.099883e+00, (Max el.: 5.507994e-01)
+[12/108]: MP2 (spin-orbital):  -0.04972898692066618
+    Line search accepted at alpha=1.0000e+00 (energy change: 5.069182e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  102  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04972898543884541
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.316335e-02
+  - Hessian:
+    Hessian norm: 7.745240e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.687904e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.099512e+00, (Max el.: 5.448803e-01)
+[12/108]: MP2 (spin-orbital):  -0.05518964242044389
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.460657e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  103  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05518964156202822
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.706523e-02
+  - Hessian:
+    Hessian norm: 8.643763e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.824675e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.091875e+00, (Max el.: 5.437955e-01)
+[12/108]: MP2 (spin-orbital):  -0.05030312152840734
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.886520e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  104  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.050303117425413796
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.371878e-02
+  - Hessian:
+    Hessian norm: 7.903875e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.507863e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.098355e+00, (Max el.: 5.512991e-01)
+[12/108]: MP2 (spin-orbital):  -0.054571149746179624
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.268032e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  105  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05457114933715141
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.809991e-02
+  - Hessian:
+    Hessian norm: 8.509286e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.225406e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.112875e+00, (Max el.: 5.506573e-01)
+[12/108]: MP2 (spin-orbital):  -0.04969041819742287
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.880731e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  106  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.049690415000405525
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.323122e-02
+  - Hessian:
+    Hessian norm: 7.748673e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.740448e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.107381e+00, (Max el.: 5.453217e-01)
+[12/108]: MP2 (spin-orbital):  -0.05506107049394619
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.370655e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  107  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05506106887667205
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.711313e-02
+  - Hessian:
+    Hessian norm: 8.627542e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.817437e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.099453e+00, (Max el.: 5.458371e-01)
+[12/108]: MP2 (spin-orbital):  -0.050228642636662865
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.832426e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  108  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.050228634937661575
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.380695e-02
+  - Hessian:
+    Hessian norm: 7.894420e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.457216e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.111232e+00, (Max el.: 5.525841e-01)
+[12/108]: MP2 (spin-orbital):  -0.05436322517524261
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.134590e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  109  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05436322387664489
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.804895e-02
+  - Hessian:
+    Hessian norm: 8.485192e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.299187e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.124494e+00, (Max el.: 5.504342e-01)
+[12/108]: MP2 (spin-orbital):  -0.04967141996703479
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.691804e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  110  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04967141318163512
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.330686e-02
+  - Hessian:
+    Hessian norm: 7.754709e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.791024e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.114222e+00, (Max el.: 5.457738e-01)
+[12/108]: MP2 (spin-orbital):  -0.05493239353235542
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.260980e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  111  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05493239045856907
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.716210e-02
+  - Hessian:
+    Hessian norm: 8.610213e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.802659e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.106214e+00, (Max el.: 5.476937e-01)
+[12/108]: MP2 (spin-orbital):  -0.05016442925070561
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.767961e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  112  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.0501644149622104
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.387749e-02
+  - Hessian:
+    Hessian norm: 7.885358e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.401125e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.121577e+00, (Max el.: 5.534812e-01)
+[12/108]: MP2 (spin-orbital):  -0.05420017239433593
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.035757e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  113  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05420016903561951
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.799312e-02
+  - Hessian:
+    Hessian norm: 8.467086e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.368375e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.133464e+00, (Max el.: 5.502516e-01)
+[12/108]: MP2 (spin-orbital):  -0.04966819006995242
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.531979e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  114  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04966817604504947
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.338087e-02
+  - Hessian:
+    Hessian norm: 7.761742e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.832714e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.119675e+00, (Max el.: 5.462301e-01)
+[12/108]: MP2 (spin-orbital):  -0.05481522506197747
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.147049e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  115  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.054815219123922884
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.720817e-02
+  - Hessian:
+    Hessian norm: 8.593720e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.785749e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.111919e+00, (Max el.: 5.491502e-01)
+[12/108]: MP2 (spin-orbital):  -0.05011195590688311
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.703263e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  116  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05011192940273641
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.392522e-02
+  - Hessian:
+    Hessian norm: 7.877223e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.349266e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.128933e+00, (Max el.: 5.539714e-01)
+[12/108]: MP2 (spin-orbital):  -0.054090942702598795
+    Line search accepted at alpha=1.0000e+00 (energy change: -3.979013e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  117  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.054090935037314936
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.794317e-02
+  - Hessian:
+    Hessian norm: 8.455848e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.424423e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.139547e+00, (Max el.: 5.501747e-01)
+[12/108]: MP2 (spin-orbital):  -0.049672491304080336
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.418444e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  118  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.049672463100734233
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.344610e-02
+  - Hessian:
+    Hessian norm: 7.768226e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.864530e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.123877e+00, (Max el.: 5.466850e-01)
+[12/108]: MP2 (spin-orbital):  -0.05471611375925801
+    Line search accepted at alpha=1.0000e+00 (energy change: -5.043651e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  119  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05471610217308695
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.725079e-02
+  - Hessian:
+    Hessian norm: 8.579367e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.770451e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.116625e+00, (Max el.: 5.501586e-01)
+[12/108]: MP2 (spin-orbital):  -0.05006840790222163
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.647694e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  120  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.050068358557141264
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.395189e-02
+  - Hessian:
+    Hessian norm: 7.869970e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.306612e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.133801e+00, (Max el.: 5.541542e-01)
+[12/108]: MP2 (spin-orbital):  -0.054028143158208274
+    Line search accepted at alpha=1.0000e+00 (energy change: -3.959785e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  121  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.054028126972261316
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.790355e-02
+  - Hessian:
+    Hessian norm: 8.450394e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.465951e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.143296e+00, (Max el.: 5.502043e-01)
+[12/108]: MP2 (spin-orbital):  -0.0496780065116515
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.350120e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  122  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.049677951038570256
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.350001e-02
+  - Hessian:
+    Hessian norm: 7.773436e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.888825e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.127152e+00, (Max el.: 5.471370e-01)
+[12/108]: MP2 (spin-orbital):  -0.054635664905896955
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.957714e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  123  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.054635642278695315
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.729021e-02
+  - Hessian:
+    Hessian norm: 8.567498e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.758053e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.120502e+00, (Max el.: 5.508022e-01)
+[12/108]: MP2 (spin-orbital):  -0.05003095290328638
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.604689e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  124  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.05003086071344302
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.396316e-02
+  - Hessian:
+    Hessian norm: 7.863442e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 6.273336e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.136977e+00, (Max el.: 5.541596e-01)
+[12/108]: MP2 (spin-orbital):  -0.053997465194258285
+    Line search accepted at alpha=1.0000e+00 (energy change: -3.966604e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  125  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.053997432566697944
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.787340e-02
+  - Hessian:
+    Hessian norm: 8.448838e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.496050e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.145480e+00, (Max el.: 5.503079e-01)
+[12/108]: MP2 (spin-orbital):  -0.04968236628620222
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.315066e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  126  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.049682258832297696
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.354363e-02
+  - Hessian:
+    Hessian norm: 7.777405e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.908003e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.129787e+00, (Max el.: 5.475821e-01)
+[12/108]: MP2 (spin-orbital):  -0.054570740384423916
+    Line search accepted at alpha=1.0000e+00 (energy change: -4.888482e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  127  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.0545706963824331
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.732623e-02
+  - Hessian:
+    Hessian norm: 8.557792e-01, (Neg. Eigval: 0/1152)
+    Hessian condition number: 5.748376e+00
+    Hessian determinant: 0.000000e+00
+        WARNING: Hessian determinant is small!
+        WARNING: Hessian is singular!
+  - Rotation matrix:
+    Rotation norm 2.123726e+00, (Max el.: 5.512028e-01)
+[12/108]: MP2 (spin-orbital):  -0.049998209244929155
+    Line search accepted at alpha=1.0000e+00 (energy change: 4.572487e-03)
+
+    Rotated 108 spin orbitals out of 116 total.
+
+#### OVOS Iteration  128  ####
+ Step (iii)-(iv): Compute MP2 corr. energy & amps.
+[12/108]: MP2 (spin-orbital):  -0.04999803665696315
+ Step (ix): Check convergence and stability
+ Step (v)-(viii): Orbital optimization
+  Orbital Optimization Diagnostics:
+  - Gradient:
+    Gradient norm: 3.396501e-02
+  - Hessian:

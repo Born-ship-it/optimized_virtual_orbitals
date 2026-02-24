@@ -37,7 +37,8 @@ def plot_OVOS_convergence(atom, basis):
     use_combine = True  # Set to True to combine previous OVOS results with RLE results
     if use_combine == True:
         use_previous_ovos = True
-        # use_random_rotation = True
+        if basis == "6-31G":
+            use_random_rotation = True
         # use_uhf_start = True
         use_rhf_start = True
 
@@ -477,23 +478,23 @@ def plot_OVOS_convergence(atom, basis):
         # A horizontal line at the mp2 energy value at full space
             # Get full space MP2 energy
         full_space_MP2 = MP2_e_corr
-        ax_vo.axhline(full_space_MP2, color='red', linestyle='--', label='Full Space MP2 Energy', linewidth=2, alpha=0.75)
+        ax_vo.axhline(full_space_MP2, color='red', linestyle='--', label='Full Space MP2 Energy', linewidth=2, alpha=0.75) if MP2_e_corr is not None else None
         
             # Get full space CCSD energy
         # full_space_CCSD = CCSD_e_corr
-        # ax_vo.axhline(full_space_CCSD, color='green', linestyle='--', label='Full Space CCSD Energy', linewidth=2, alpha=0.75)
+        # ax_vo.axhline(full_space_CCSD, color='green', linestyle='--', label='Full Space CCSD Energy', linewidth=2, alpha=0.75) if CCSD_e_corr is not None else None
         
             # Get full space CCSD(T) energy
         full_space_CCSD_T = CCSD_T_e_corr
-        ax_vo.axhline(full_space_CCSD_T, color='blue', linestyle='--', label='Full Space CCSD(T) Energy', linewidth=2, alpha=0.75)
+        ax_vo.axhline(full_space_CCSD_T, color='blue', linestyle='--', label='Full Space CCSD(T) Energy', linewidth=2, alpha=0.75) if CCSD_T_e_corr is not None else None
 
-        #     # Get full space FCI energy
-        # full_space_FCI = FCI_e_corr
-        # ax_vo.axhline(full_space_FCI, color='purple', linestyle='--', label='Full Space FCI Energy', linewidth=2, alpha=0.75)
+            # Get full space FCI energy
+        full_space_FCI = FCI_e_corr
+        ax_vo.axhline(full_space_FCI, color='purple', linestyle='--', label='Full Space FCI Energy', linewidth=2, alpha=0.75) if FCI_e_corr is not None else None
 
             # Get full space CASSCF energy
-        # full_space_CASSCF = CASSCF_e_corr
-        # ax_vo.axhline(full_space_CASSCF, color='orange', linestyle='--', label='Full Space CASSCF Energy', linewidth=2, alpha=0.75)
+        full_space_CASSCF = CASSCF_e_corr
+        ax_vo.axhline(full_space_CASSCF, color='orange', linestyle='--', label='Full Space CASSCF Energy', linewidth=2, alpha=0.75) if CASSCF_e_corr is not None else None
 
         # Set y-axis limits for better visualization
         lower_bound = []
@@ -518,11 +519,14 @@ def plot_OVOS_convergence(atom, basis):
                 lower_bound.append(MP2_vorb)
 
         # Include MP2 energy at full space and CCSD(T) energy at full space in lower bound calculation
-        lower_bound.append(full_space_MP2)
-        lower_bound.append(full_space_CCSD_T)
+        lower_bound.append(full_space_MP2) if MP2_e_corr is not None else None
+        # lower_bound.append(full_space_CCSD) if CCSD_e_corr is not None else None
+        lower_bound.append(full_space_CCSD_T) if CCSD_T_e_corr is not None else None
+        lower_bound.append(full_space_FCI) if FCI_e_corr is not None else None
+        lower_bound.append(full_space_CASSCF) if CASSCF_e_corr is not None else None
 
             # Find lower bound
-        ax_vo.set_ylim(min(lower_bound) - 0.0005, 0)
+        ax_vo.set_ylim(min(lower_bound) - 0.0025, 0)
 
         # Draw a line between the best of options for each number of virtual orbitals
             # the numbers of virtual orbitals, e.g. [2, 4, 6, 8, 10, 12, 14, 16, 18]
@@ -595,7 +599,7 @@ def plot_OVOS_convergence(atom, basis):
         
         secax = ax_vo.secondary_yaxis('right', functions=(energy_to_percentage, percentage_to_energy))
         secax.set_ylabel('Percentage of Correlation Energy Recovered (%)')
-        secax.set_yticks([25, 50, 75, 80, 85, 90, 95, 100, 105, 110])
+        secax.set_yticks([25, 50, 75, 90, 95, 100, 105, 110])
         secax.set_ylim(energy_to_percentage(ax_vo.get_ylim()[0]), energy_to_percentage(ax_vo.get_ylim()[1]))
         
         
@@ -725,6 +729,158 @@ def plot_OVOS_convergence(atom, basis):
             plt.savefig("branch/images/vorb/"+atom+"/ovos_conv_vs_vorb_"+atom+"_"+basis+".png", dpi=150)
             print("Plot saved to branch/images/vorb/.png standard")
 
-for atom in ["CO", "H2O", "HF", "NH3"]:
-    for basis in ["6-31G", "cc-pVDZ"]:
+for basis in ["6-31G"]:
+    for atom in ["H2O", "CO", "HF", "NH3"]: # Do: "CO", "H2O", "HF", "NH3"    
         plot_OVOS_convergence(atom, basis)
+
+
+
+def plot_OVOS_convergence_iterations(atom, basis, n_vir_orb, start_guess):
+    """
+    Plot a certain molecule, basis set and number of virtual orbitals -> the MP2 energy vs steps for a start guess
+
+    e.g get CO/6-31G for 8 virtual orbitals the MP2 energies at each iteration step for a certain start guess (e.g. RHF, previous OVOS, random rotation)
+
+    """
+
+    start_guess_ = start_guess
+    if start_guess == "RHF":
+        start_guess = "RHF_init"
+
+    def load_data(atom, basis, start_guess):
+        # Load data from file
+        filename = f"branch/data/{atom}/{basis}/lst_MP2_different_virt_orbs_"+start_guess+".json"
+        with open(filename, 'r') as f:
+            data = json.load(f)
+        return data
+
+    # Load data for the specified molecule and basis set
+    data = load_data(atom, basis, start_guess)
+
+    # Load data for misc for the specified molecule and basis set
+    filename_misc = f"branch/data/{atom}/{basis}/molecule_data.json"
+    with open(filename_misc, 'r') as f:
+        data_misc = json.load(f)
+        MP2_e_corr = data_misc['MP2_e_corr']
+        CCSD_T_e_corr = data_misc['CCSD(T)_e_corr']
+    
+    # Find the index for the specified number of virtual orbitals
+    if n_vir_orb in data[1]:
+        idx = data[1].index(n_vir_orb)
+    else:
+        print(f"Number of virtual orbitals {n_vir_orb} not found in data for {atom}/{basis} with {start_guess} start guess.")
+        return
+
+    # Extract MP2 energies per iteration for the specified number of virtual orbitals
+    mp2_energies_iter = data[0][idx]
+    iterations = list(range(1, len(mp2_energies_iter) + 1))
+
+    # Plot MP2 energies per iteration
+    plt.figure(figsize=(8, 5))
+    plt.plot(iterations, mp2_energies_iter, marker='o')
+    plt.title(f'MP2 Conv. for {atom}/{basis} w. {n_vir_orb} Virtual Orbitals and {start_guess_} Start Guess')
+    plt.xlabel('Iteration')
+    plt.ylabel('MP2 Correlation Energy (Hartree)')
+
+    # Add MP2 & CCSD(T) full space line
+    full_space_MP2 = MP2_e_corr
+    full_space_CCSD_T = CCSD_T_e_corr
+        # Add line
+    plt.hlines(full_space_MP2, xmin=0, xmax=len(mp2_energies_iter), colors='red', linestyles='--', label='Full Space MP2 Energy') if MP2_e_corr is not None else None
+    plt.hlines(full_space_CCSD_T, xmin=0, xmax=len(mp2_energies_iter), colors='blue', linestyles='--', label='Full Space CCSD(T) Energy') if CCSD_T_e_corr is not None else None
+
+    # Set y-axis limits for better visualization
+    lower_bound = min(mp2_energies_iter + [full_space_MP2, full_space_CCSD_T])
+    plt.ylim(lower_bound - 0.0025, 0)
+
+    # Set x-axis limits for better visualization
+    plt.xlim(0, len(mp2_energies_iter))
+
+    # Set a vertical line at 28 iterations to show where the oscillations start
+    plt.axvline(28, color='orange', linestyle='--', label='Oscillations Start') if len(mp2_energies_iter) > 28 else None
+
+    # Finalize plot
+    # Legend, grid, tight layout    
+    # plt.legend(loc='upper left')
+    plt.grid()
+    plt.tight_layout()
+
+    # Set a zoom box to better show osciallations
+    y_zoom_upper = -0.168    # -0.235  # -0.1485
+    y_zoom_lower = -0.169    # -0.255  # -0.15
+        # Add grey background to the main plot between the y_zoom_lower and y_zoom_upper to highlight the zoomed in area
+    plt.axhspan(y_zoom_lower, y_zoom_upper, color='lightgray', alpha=0.5)
+        # Add an inset plot
+    from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+    ax_inset = inset_axes(plt.gca(), width="40%", height="30%", loc='upper right', borderpad=2)
+        # Plot the iterations for the zoomed in box
+            # Showcasing the oscillations around -0.15 Hartree
+                # Find the indices where the MP2 energies are between -0.16 and -0.14 Hartree
+    
+    zoom_indices = [i for i, energy in enumerate(mp2_energies_iter) if y_zoom_lower < energy < y_zoom_upper]
+    ax_inset.plot([iterations[i] for i in zoom_indices], [mp2_energies_iter[i] for i in zoom_indices], marker='o')    
+    ax_inset.set_xlim(35, 45) # (100, 200) for CO/6-31G/8vir,
+    ax_inset.set_ylim(y_zoom_lower - 0.00025, y_zoom_upper + 0.00025)
+        # Make a vertical line at 30 iterations to show where the oscillations start
+    # ax_inset.axvline(30, color='orange', linestyle='--', label='Oscillations Start') if len(mp2_energies_iter) > 30 else None
+    ax_inset.set_title('Zoomed In', fontsize=10)
+    ax_inset.set_xlabel('Iteration', fontsize=8)
+    ax_inset.set_ylabel('MP2 Energy', fontsize=8)   
+
+
+    # Save plot
+    plt.savefig(f"branch/images/vorb/{atom}/mp2_convergence_{atom}_{basis}_{n_vir_orb}vir_{start_guess.replace(' ', '_')}.png", dpi=150)
+    print(f"Plot saved to branch/images/vorb/{atom}/mp2_convergence_{atom}_{basis}_{n_vir_orb}vir_{start_guess.replace(' ', '_')}.png")
+
+# Example usage:   
+# plot_OVOS_convergence_iterations("CO", "6-31G", 8, "RHF")
+# plot_OVOS_convergence_iterations("CO", "cc-pVDZ", 8, "RHF")
+# plot_OVOS_convergence_iterations("CO", "cc-pVDZ", 34, "RHF")
+    
+
+def plot_OVOS_mo_coeffs_visualize(atom, basis, n_vir_orb, start_guess):
+    """
+    Plot a certain molecule, basis set and number of virtual orbitals -> the MO coefficients for each orbital for a certain start guess
+
+    e.g get CO/6-31G for 8 virtual orbitals the MO coefficients for each orbital for a certain start guess (e.g. RHF, previous OVOS, random rotation)
+
+    """
+
+    start_guess_ = start_guess
+    if start_guess == "RHF":
+        start_guess = "RHF_init"
+
+    def load_data(atom, basis, start_guess):
+        # Load data from file
+        filename = f"branch/data/{atom}/{basis}/lst_MP2_different_virt_orbs_"+start_guess+".json"
+        with open(filename, 'r') as f:
+            data = json.load(f)
+        return data
+
+    # Load data for the specified molecule and basis set
+    data = load_data(atom, basis, start_guess)
+
+    # Find the index for the specified number of virtual orbitals
+    if n_vir_orb in data[1]:
+        idx = data[1].index(n_vir_orb)
+    else:
+        print(f"Number of virtual orbitals {n_vir_orb} not found in data for {atom}/{basis} with {start_guess} start guess.")
+        return
+
+    # Extract MO coefficients for the specified number of virtual orbitals
+    mo_coeffs = data[4][idx]
+
+    # Plot MO coefficients
+    plt.figure(figsize=(10, 6))
+    plt.imshow(mo_coeffs, aspect='auto', cmap='viridis')
+    plt.colorbar(label='MO Coefficient Value')
+    plt.title(f'MO Coefficients for {atom}/{basis} w. {n_vir_orb} Virtual Orbitals and {start_guess_} Start Guess')
+    plt.xlabel('Molecular Orbital Index')
+    plt.ylabel('Atomic Orbital Index')
+
+    # Save plot
+    plt.savefig(f"branch/images/vorb/{atom}/mo_coeffs_{atom}_{basis}_{n_vir_orb}vir_"+start_guess+".png", dpi=150)
+    print(f"Plot saved to branch/images/vorb/{atom}/mo_coeffs_{atom}_{basis}_{n_vir_orb}vir_{start_guess.replace(' ', '_')}.png")
+
+# Example usage:
+# plot_OVOS_mo_coeffs_visualize("H2O", "6-31G", 8, "RHF")
