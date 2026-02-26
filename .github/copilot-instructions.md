@@ -354,3 +354,27 @@ The Hessian of J₂ with respect to orbital rotations between active virtual orb
 $$H_{ea,fb} = \frac{\partial J_2}{\partial R_{ae} \partial R_{bf}} = 2 \sum_{i>j} t_{ij}^{ab} <ij|ef> - \sum_{i>j} \sum_{c} [t_{ij}^{ac} <ij|bc> + t_{ij}^{bc} <ij|ca>]\delta_ef + D_{ab} (f_{aa} - f_{bb}) \delta_{ef} + D_{ab} f_{ef} (1-\delta_{ef})$$
 where $D_{ab} = \sum_{i>j} \sum_{c} t_{ij}^{ac} t_{ij}^{bc}$ is the virtual-virtual block of the MP2 second-order density matrix, and $e,f$ are the inactive orbitals, and $f_{ef}$ are Fock matrix elements in the MO basis, and $i,j$ are occupied orbitals, $a,b,c,d$ are virtual orbitals, and $\epsilon$ are orbital energies.
 Note: Am not sure if <ef|ij> means chemist's or physicist's notation, or if it is the antisymmetrized integral.
+
+
+## Algorithmic Steps Reference
+The application of the Newton-Raphson method to the second-order Hylleraas functional results in the following computational strategy: 
+
+(i) Compute the SCF solution. 
+
+(ii) Perform a partial transformation of atomic integrals to molecularintegrals ( <ij|ab> type only). The molecular integrals <ij|ab> are sorted into a record structure. Each record contains integrals with the same occupied indexes (ij) and all possible virtual indexes (ab). 
+
+(iii) Make a selection of an initial active space. The choice is based upon the contribution from each individual virtual orbital to the second-order correlation energy. The contribution is calculated as a sum of the diagonal and a half of the off-diagonal part. 
+
+(iv) Transform the molecular integrals <ij|ab> -> <ij|a'b'> and compute the first-order amplitudes t_{ij}^{a'b'} for the active virtual orbitals. The integral transformation is not needed in the first iteration. 
+
+(v) Construct the gradient and Hessian matrices. 
+
+(vi) Solve the Newton-Raphson equation for the orbital rotation parameters R. A block generalization of the reduced linear equation technique of Purvis and Bartlett is used. It is recognized that the Hessian matrix is dominated by square blocks located diagonally. A particular block is related to the rotation of all possible active orbitals with one nonactive orbital (H_{ea,eb}). Only inverses of all diagonally located blocks are kept in the core. 
+
+(vii) Generate the unitary transformation matrix U by using the formula U = exp(R) = X cosh(d)X^\dagger + R X sinh(d) d^{-1} X^\dagger, where d is the square root of a diagonal matrix, which results from the diagonalization of R2: d^2 = X^\dagger R^2 X. 
+
+(viii) Construct the Fock matrix for the rotated active space by a simple transformation which involves the orbital energy matrix and the transformation matrix U. Next, the Fock matrix is diagonalized to generate new canonical active orbitals. (Active orbitals are defined as the orbitals which are rotated, while the inactive orbitals are not rotated.)
+
+(ix) Calculate the second-order correlation energy for the new active space. If the energy convergence is satisfactory, the iteration process is terminated, if not a return to (iv) is performed.
+
+As seen, the proposed strategy is, in essence, a two-step optimization procedure. Configuration coefficients are calculated independently from the orbital rotation parameters. Our preliminary experience indicates that the most time consuming step is the solution of the Newton-Raphson linear equation. However, if the block structure of the Hessian is fully exploited, the reduced linear equation method converges quickly. 

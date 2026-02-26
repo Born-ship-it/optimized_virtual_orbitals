@@ -297,8 +297,7 @@ class OVOS:
 			# Set for convenience
 			eps = self.eps
 		else:
-			# If Fock is already in spin-orbital basis, we can just take the diagonal as orbital energies
-			self.eps = np.diag(Fmo)
+			self.eps = np.diag(Fmo_spin)  # Approximate orbital energies from diagonal of Fock matrix in spin-orbital basis
 			eps = self.eps
 
 		# Sanity checks
@@ -440,6 +439,9 @@ class OVOS:
 			
 			# Compute denominator tensor
 			denominator = eps_vir_a + eps_vir_b - eps_occ_i - eps_occ_j
+
+				# Check that denominator does not contain zeros to avoid division by zero
+			assert not np.any(np.isclose(denominator, 0.0, atol=1e-10)), "Energy denominator contains values close to zero, which may lead to numerical instability in MP1 amplitude calculation!"
 			
 			# Extract the relevant block of antisymmetrized integrals
 				# eri_as_block is (nvir_spin, nvir_spin, nocc_spin, nocc_spin)
@@ -691,6 +693,10 @@ class OVOS:
 			
 			# Compute D_ab = sum_{i>j,c} t^{ac}_{ij} * t^{bc}_{ij}
 			D_ab = np.einsum('acp,bcp->ab', t_unique, t_unique, optimize=True)
+
+			# For big active spaces, D_ab can have very small values that are effectively zero but not exactly zero due to numerical precision.
+			# We can set a threshold to zero out very small values to improve numerical stability in the orbital optimization step.
+			D_ab[np.abs(D_ab) < 1e-12] = 0.0
 			
 			return D_ab
 
@@ -774,12 +780,8 @@ class OVOS:
 		G = compute_gradient_block(self, MP1_amplitudes, eri_as, D_ab, Fmo_spin)
 	
 		# Print diagnostics
-		if not self.use_random_unitary_init:
-			print("  Orbital Optimization Diagnostics:")
 
 			# Gradient
-		if not self.use_random_unitary_init:
-			print("  - Gradient:")
 
 		# Norm of the gradient
 		self.grad_norm = np.linalg.norm(G.flatten())
@@ -904,28 +906,18 @@ class OVOS:
 
 			# Hessian
 		if not self.use_random_unitary_init:
-			print("  - Hessian:")
 			eigvals = np.linalg.eigvalsh(H)
 			n_neg_eigval_H = np.sum(eigvals < 0)
+			self.n_block_neg_eigval_H = 0
 			det_H = np.prod(eigvals)
 			cond_H = np.linalg.cond(H) if H.size > 0 else np.inf
 
 			# Check eigenvalues
 			print(f"    Hessian norm: {np.linalg.norm(H):.6e}, (Neg. Eigval: {n_neg_eigval_H}/{len(eigvals)})")
 			if np.any(eigvals < 0.0):
-				print("        WARNING: Hessian has negative eigenvalues!")
-				print(f"                Level-shifting will be applied in block solver (min eigval: {eigvals.min():.6e})")
-				
+				print("        WARNING: Hessian has negative eigenvalues!")				
 				# Condition number
-			print(f"    Hessian condition number: {cond_H:.6e}")
-
-				# Determinant of Hessian
-			det_H = det_H if H.size > 0 else 0.0
-			print(f"    Hessian determinant: {det_H:.6e}")
-			if det_H < 1e-4:
-				print("        WARNING: Hessian determinant is small!")
-			if det_H == 0.0:
-				print("        WARNING: Hessian is singular!")
+			print(f"    Hessian condition number: {cond_H:.6e}, determinant: {det_H:.6e}, size: {H.shape}")
 
 			# Sanity checks for H
 			if np.count_nonzero(H) == 0:
@@ -947,210 +939,42 @@ class OVOS:
 
 
 		# Step (vi): Use the Newton-Raphson method to minimize the second-order Hylleraas functional
-
-		# solve for rotation parameters
-			# Original direct inversion method
-				# equation 14: R = - G H^-1 -> R = -G @ np.linalg.inv(H)
-			# Alternatively, use Reduced Linear Equation (RLE) method
-				# This is a more stable approach that avoids direct inversion of the Hessian, which can be ill-conditioned.
-				# The RLE method solves the linear equation H*R = -G using an iterative solver or a block-diagonal approximation, which can be more robust for large systems or when the Hessian has small eigenvalues.
-					# The block-diagonal approximation assumes that the Hessian can be approximated as block-diagonal, where each block corresponds to rotations between all active orbitals and one specific inactive orbital.
-					# This reduces the problem to solving smaller linear equations for each block, which can be more stable and efficient than inverting the full Hessian.
-					# The RLE method can be implemented using an iterative solver like Conjugate Gradient or GMRES, or by directly solving the smaller block-diagonal systems if the Hessian is sufficiently well-approximated by a block-diagonal structure.
-
-		def solve_block_diagonal_RLE(H, G, n_active, n_inactive):
-			"""
-			Block diagonal RLE method for solving H*R = -G.
-			
-			Follows the Newton-Raphson approach for orbital rotation parameters R.
-			Uses block-diagonal approximation where each block corresponds to
-			rotations between all active orbitals and one specific inactive orbital.
-			
-			Parameters:
-			-----------
-			H : ndarray
-				Hessian matrix (total_size x total_size) where total_size = n_active * n_inactive
-			G : ndarray
-				Gradient vector (total_size,) or matrix that can be flattened
-			n_active : int
-				Number of active orbitals
-			n_inactive : int
-				Number of inactive (virtual) orbitals
-				
-			Returns:
-			--------
-			R : ndarray
-				Solution vector R = -H⁻¹G (using block-diagonal approximation)
-			"""
-			# Handle edge cases
-			if n_inactive == 0:
-				# No inactive orbitals - return empty solution
-				return np.array([], dtype=H.dtype)
-			
-			if n_active == 0:
-				# No active orbitals - return empty solution
-				return np.array([], dtype=H.dtype)
-			
-			total_size = n_active * n_inactive
-			block_size = n_active
-			
-			# Validate dimensions
-			if total_size == 0:
-				return np.array([], dtype=H.dtype)
-			
-			# Validate and reshape inputs
-			if H.shape != (total_size, total_size):
-				# Try to reshape, but only if dimensions are compatible
-				if H.size == total_size * total_size:
-					H = H.reshape(total_size, total_size)
-				else:
-					raise ValueError(f"Hessian dimension mismatch: H has {H.size} elements, "
-								f"expected {total_size * total_size}")
-			
-			if G.ndim != 1:
-				G = G.flatten()
-			if G.shape[0] != total_size:
-				raise ValueError(f"Gradient dimension mismatch: G has {G.shape[0]} elements, "
-							f"expected {total_size}")
-			
-			# Method 1: Direct block-diagonal solve (most efficient if blocks are truly independent)
-			# This assumes H is block-diagonal with minimal coupling between blocks
-			return _solve_strict_block_diagonal(H, G, n_active, n_inactive)
-
 		
-		def _solve_strict_block_diagonal(H, G, n_active, n_inactive):
-			"""
-			Solve assuming strictly block-diagonal Hessian.
-			Level-shifts + trust region for step-size control.
-			"""
-			if n_inactive == 0 or n_active == 0:
-				# Full space or no space to rotate - return empty solution
-				return np.array([], dtype=H.dtype)
-			
-			block_size = n_active
-			n_blocks = n_inactive
-			
-			R = np.zeros(n_active * n_inactive, dtype=H.dtype)
-			
-			for block_idx in range(n_blocks):
-				start = block_idx * block_size
-				end = (block_idx + 1) * block_size
-				
-				H_block = H[start:end, start:end]
-				G_block = G[start:end]
+			# Set to True to use Reduced Linear Equation method instead of direct inversion
+		use_RLE = False
 
-				# --- level-shift for stability ---
-				lvl_shift = 1e-3
-					# Check eigenvalues of the block Hessian
-				eigvals_block, eigvecs_block = np.linalg.eigh(H_block)
-				min_eigval_block = eigvals_block.min()
-					# If the minimum eigenvalue is below the threshold, apply level-shift
-				if min_eigval_block < lvl_shift:
-					shift = lvl_shift - min_eigval_block
-					eigvals_shifted = eigvals_block + shift
-					H_block = eigvecs_block @ np.diag(eigvals_shifted) @ eigvecs_block.T
-				
-				# Solve block system
-				try:
-					R_block = - G_block @ np.linalg.inv(H_block)
-				except np.linalg.LinAlgError:
-					R_block = - G_block @ np.linalg.pinv(H_block)
-
-				R[start:end] = R_block 
-			
-			return R
-	
-		# Alternative: A simpler wrapper that handles all edge cases
-		def solve_block_diagonal_RLE_safe(H, G, n_active, n_inactive):
-			"""
-			Safe version that handles all edge cases including n_inactive = 0.
-			"""
-			# Quick return for empty cases
-			if n_inactive == 0 or n_active == 0:
-				return np.array([], dtype=np.float64)
-			
-			total_size = n_active * n_inactive
-			
-			# If H or G are empty/zero-sized, return appropriate result
-			if total_size == 0:
-				return np.array([], dtype=np.float64)
-			
-			# Ensure inputs are properly shaped
-			if H.shape != (total_size, total_size):
-				if H.size == total_size * total_size:
-					H = H.reshape(total_size, total_size)
-				else:
-					raise ValueError(f"Hessian size mismatch. Expected {(total_size, total_size)}, got {H.shape}")
-			
-			G_flat = np.asarray(G).flatten()
-			if len(G_flat) != total_size:
-				raise ValueError(f"Gradient size mismatch. Expected {total_size}, got {len(G_flat)}")
-			
-			# Call the main function
-			return solve_block_diagonal_RLE(H, G_flat, n_active, n_inactive)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		# Set to True to use Reduced Linear Equation method
-			# Use it when Hessian is ill-conditioned:
-		use_RLE = True
-
-			# Direct inversion method
-		if not use_RLE:
-			G = G.flatten()  # Flatten G to 1D array
-
-			# --- level-shift for stability ---
-			lvl_shift = 1e-3
-				# Check eigenvalues of the block Hessian
-			eigvals_block, eigvecs_block = np.linalg.eigh(H)
-			min_eigval_block = eigvals_block.min()
-				# If the minimum eigenvalue is below the threshold, apply level-shift
-			if min_eigval_block < lvl_shift:
-				shift = lvl_shift - min_eigval_block
-				eigvals_shifted = eigvals_block + shift
-				H = eigvecs_block @ np.diag(eigvals_shifted) @ eigvecs_block.T
-
-			# Solve for R using direct inversion (with pseudo-inverse fallback)
-			try:
-				R = - G @ np.linalg.inv(H)
-			except np.linalg.LinAlgError:
-				R = - G @ np.linalg.pinv(H)
-
-			# Reduced Linear Equation method
+		# Reduced Linear Equation method
 		if use_RLE:				
-			R = solve_block_diagonal_RLE_safe(H, G, len(self.active_inocc_indices), len(self.inactive_indices))
+			# Modify Hessian to only inverse the block-diagonal part corresponding H_{ea,eb}
+			len_inac = len(self.inactive_indices)
+			len_ac   = len(self.active_inocc_indices)
+
+			# Hessian has shape (len_ac*len_inac, len_ac*len_inac)
+			# We want to extract the block-diagonal part corresponding to rotations between all active orbitals and each inactive orbital, which is a block of size (len_ac, len_ac) for each inactive orbital.
+			# This corresponds to the indices in the Hessian that are multiples of len_ac, i.e. H_{ea,eb} where e are inactive orbitals
+			H_block_diag = np.zeros_like(H)
+			for i in range(len_inac):
+				start = i * len_ac
+				end = (i + 1) * len_ac
+				H_block_diag[start:end, start:end] = H[start:end, start:end]
+
+			# Set H to the block-diagonal approximation
+			H = H_block_diag
+
+		else:
+			if cond_H > 1e12 and not self.use_random_unitary_init:
+				inv_H = np.linalg.inv(H)  # Direct inversion (can be unstable for large systems or ill-conditioned Hessians)
+			else:
+				inv_H = np.linalg.pinv(H) # Use pseudo-inverse for better stability if Hessian is ill-conditioned
+
+		# Solve for R
+		G = G.flatten()  # Flatten G to 1D array
+		R = -G @ inv_H # R = -G H^-1	
 			
 		
 		# Initialize R,
 			# Matrix: self.full_indices x self.full_indices
 		R_matrix = np.zeros((len(self.full_indices), len(self.full_indices), ), dtype=np.float64)
-
-		# Build R_matrix from R[A, E]
-		# for idx_A, A in enumerate(self.active_inocc_indices):
-		# 	for idx_E, E in enumerate(self.inactive_indices):
-		# 		# Extract R_EA and R_AE
-		# 		R_AE = R[idx_A * len(self.inactive_indices) + idx_E]
-		# 		R_EA = -1.0*R_AE  # Antisymmetry
-
-		# 		# Check antisymmetry
-		# 		if abs(R_EA + R_AE) > 1e-10:
-		# 			print(f"WARNING: R matrix antisymmetry violated for indices ({E},{A}): R_EA={R_EA:.6e}, R_AE={R_AE:.6e}, sum={R_EA + R_AE:.6e}")
-
-		# 		# Fill in R_matrix
-		# 		R_matrix[E, A] = R_AE
-		# 		R_matrix[A, E] = R_EA
 
 		# Handle the case when there are no inactive orbitals (full virtual space)
 		if len(self.inactive_indices) == 0:
@@ -1168,7 +992,6 @@ class OVOS:
 
 			# Rotation matrix
 		if not self.use_random_unitary_init:
-			print("  - Rotation matrix:")
 			# Convergence check based on max element of R_matrix
 			max_R_elem = np.max(np.abs(R_matrix))
 			print(f"    Rotation norm {np.linalg.norm(R_matrix):.6e}, (Max el.: {max_R_elem:.6e})")
@@ -1185,159 +1008,61 @@ class OVOS:
 			if max_R_elem < 1e-6:
 				print("        WARNING: Rotation parameters are very small -> Orbitals are optimized!")
 
+			# Check if R_matrix is Anti-Hermitian matrix (R† = -R) that generates the transformation
+			# For real matrices, this reduces to R^T = -R (anti-symmetric)
+			# if not np.allclose(R_matrix, -R_matrix.T, atol=1e-10):
+			# 	print("        WARNING: R_matrix is not anti-symmetric! Max symm diff: ", np.max(np.abs(R_matrix + R_matrix.T)))
 
 
+		# # Look for stagnation in R_matrix values
+		# 	# Create a history of max R element values to detect stagnation
+		# if not hasattr(self, '_R_history'):
+		# 	self._R_history = []
+		# if not hasattr(self, '_R_change_history'):
+		# 	self._R_change_history = []
 
+		# self._R_history.append(np.max(np.abs(R_matrix)))
+		# stagnation_threshold_count = 0 # Number of iterations to check for stagnation
 
+		# if len(self._R_history) > 10:
+		# 	self._R_history = self._R_history[-10:]
+		
+		# 	# Check if max R element has been stagnating (not changing significantly)
+		# 	R_change = np.max(np.abs(np.diff(self._R_history)))
+		# 	self._R_change_history.append(R_change)
+		# 		# Check if the last two R_changes are the same and below a threshold
+		# 	_R_change_history_recent = self._R_change_history[-2:]
+
+		# 	if len(_R_change_history_recent) == 2 and _R_change_history_recent[0] == _R_change_history_recent[-1]:
+		# 		if not self.use_random_unitary_init:
+		# 			print("        WARNING: Rotation parameters are stagnating -> Possible convergence or local minimum!")
+
+		# 		stagnation_threshold_count += 1
+
+		# 		# Remedy 1: Scale down step (trust region approach)
+		# 		if stagnation_threshold_count == 1: # Scale down on the second sign of stagnation
+		# 			scale = 0.5
+		# 			R_matrix *= scale
+		# 			if not self.use_random_unitary_init:
+		# 				print(f"                 Scaling down R_matrix by {scale} to escape stagnation.")
+
+		# 		# Remedy 2: Add random perturbation to R_matrix to escape local minimum
+		# 		if stagnation_threshold_count >= 2: # Add perturbation on the first sign of stagnation
+		# 			eps = 1e-3 * (0.5 ** (stagnation_threshold_count - 1))
+		# 			rnd = np.random.randn(*R_matrix.shape)
+		# 			perturbation = eps * (rnd - rnd.T)  # Ensure perturbation is anti-symmetric
+		# 			R_matrix += perturbation
+		# 			if not self.use_random_unitary_init:
+		# 				print("                 Adding random perturbation to R_matrix to escape local minimum.")
+		# 	# else:
+		# 	# 	# Reset stagnation count if we don't have enough history yet
+		# 	# 	stagnation_threshold_count = 0
 
 
 
 		# Step (vii): Construct the unitary orbital rotation matrix U = exp(R)
-
-		def backtracking_line_search_old(self, mo_coeffs, R_matrix, Fmo_spin, E_current, G_flat, alpha=1.0, rho=0.5, c=1e-4, max_iter=10):
-			"""
-			Backtracking line search on the orbital rotation step size.
-			
-			Given a full Newton step R_matrix, find a step size alpha such that
-			the energy decreases sufficiently (Armijo condition).
-			
-			Parameters:
-			-----------
-			mo_coeffs : np.ndarray, shape (2, n_ao, n_spatial)
-				Current MO coefficients [alpha, beta].
-			R_matrix : np.ndarray, shape (n_spin, n_spin)
-				Full anti-symmetric rotation matrix from Newton step.
-			Fmo_spin : np.ndarray, shape (n_spin, n_spin)
-				Current spin-orbital Fock matrix.
-			E_current : float
-				Current MP2 correlation energy (J_2 at alpha=0).
-			G_flat : np.ndarray, shape (n_active * n_inactive,)
-				Flattened gradient vector (used for Armijo sufficient decrease condition).
-			alpha : float
-				Initial step size (default 1.0 = full Newton step).
-			rho : float
-				Step size reduction factor per iteration (default 0.5).
-			c : float
-				Armijo condition parameter (default 1e-4).
-			max_iter : int
-				Maximum number of backtracking iterations (default 10).
 				
-			Returns:
-			--------
-			best_alpha : float
-				Accepted step size.
-			U_best : np.ndarray, shape (n_spin, n_spin)
-				Unitary rotation matrix at the accepted step size: exp(best_alpha * R_matrix).
-			"""
-			# Compute the directional derivative: dE/dalpha at alpha=0
-			# For Newton step R = -H^{-1} G, the directional derivative is G^T dot R_flat
-			# where R_flat are the (A,E) rotation parameters.
-			# Since R = -H^{-1}G, we have G^T R = -G^T H^{-1} G < 0 (descent direction
-			# when H is positive definite or level-shifted to be so).
-			
-			# Extract the rotation parameters from R_matrix for the directional derivative
-			vir = np.array(self.active_inocc_indices)
-			inact = np.array(self.inactive_indices)
-			nvir = len(vir)
-			ninact = len(inact)
-			
-			if ninact == 0 or nvir == 0:
-				# No rotation possible — return identity
-				U_identity = np.eye(R_matrix.shape[0])
-				return 1.0, U_identity
-			
-			# Extract R_AE parameters from R_matrix (the independent rotation parameters)
-			# R_matrix[E, A] = R_AE, and R_matrix[A, E] = -R_AE (antisymmetry)
-			# We stored R[A,E] = -R_AE in R_matrix, so R_flat[a*ninact + e] = -R_matrix[vir[a], inact[e]]
-			R_flat = np.zeros(nvir * ninact)
-			for idx_a, a in enumerate(vir):
-				for idx_e, e in enumerate(inact):
-					R_flat[idx_a * ninact + idx_e] = R_matrix[e, a]  # R_AE stored at [E, A]
-			
-			# Directional derivative: slope = G^T @ R_flat
-			# This should be negative for a descent direction
-			slope = np.dot(G_flat, R_flat)
-			
-			if slope > 0 and not self.use_random_unitary_init:
-				print(f"    WARNING: Line search slope is positive ({slope:.6e}), not a descent direction!")
-				# Still proceed — the level-shifted Hessian may have changed the direction
-			
-			# Helper: spatial <-> spin conversion (same as in orbital_optimization)
-			def spatial_to_spin_mo_local(mo_coeffs):
-				C_alpha, C_beta = mo_coeffs[0], mo_coeffs[1]
-				n_ao, n_spatial = C_alpha.shape
-				n_spin = 2 * n_spatial
-				C_spin = np.zeros((n_ao, n_spin), dtype=C_alpha.dtype)
-				C_spin[:, 0::2] = C_alpha
-				C_spin[:, 1::2] = C_beta
-				orbspin = np.array([i % 2 for i in range(n_spin)], dtype=int)
-				return C_spin, orbspin
-			
-			def spin_to_spatial_mo_local(mo_coeffs_spin):
-				n_ao, n_spin = mo_coeffs_spin.shape
-				n_spatial = n_spin // 2
-				C_alpha = mo_coeffs_spin[:, 0::2].copy()
-				C_beta = mo_coeffs_spin[:, 1::2].copy()
-				return np.array([C_alpha, C_beta])
-			
-			# Convert current MO coefficients to spin-orbital basis once
-			mo_coeffs_spin, orbspin = spatial_to_spin_mo_local(mo_coeffs)
-			
-			best_alpha = alpha
-			U_best = None
-			
-			for ls_iter in range(max_iter):
-				# Compute scaled rotation
-				U_scaled = scipy.linalg.expm(best_alpha * R_matrix)
-				
-				# Apply rotation to get trial MO coefficients
-				mo_coeffs_spin_trial = mo_coeffs_spin @ U_scaled
-				mo_coeffs_trial = spin_to_spatial_mo_local(mo_coeffs_spin_trial)
-				
-				# Rotate the Fock matrix
-				Fmo_trial = U_scaled.T @ Fmo_spin @ U_scaled
-				
-				# Compute trial MP2 energy
-				try:
-					E_trial, _, _, _ = self.MP2_energy(mo_coeffs=mo_coeffs_trial, Fmo=Fmo_trial)
-				except (AssertionError, Exception) as e:
-					# If MP2 computation fails (e.g., orthonormality issues), reject step
-					# if not self.use_random_unitary_init:
-						# print(f"    Line search iter {ls_iter}: alpha={best_alpha:.4e} — MP2 failed ({e}), reducing step")
-					best_alpha *= rho
-					continue
-				
-				# Armijo sufficient decrease condition:
-				# E_trial <= E_current + c * alpha * slope
-				# (slope should be negative, so this requires sufficient energy decrease)
-				armijo_threshold = E_current + c * best_alpha * slope
-				
-				# if not self.use_random_unitary_init:
-				# 	print(f"    Line search iter {ls_iter}: alpha={best_alpha:.4e}, "
-				# 		f"E_trial={E_trial:.10f}, E_current={E_current:.10f}, "
-				# 		f"threshold={armijo_threshold:.10f}")
-				
-				if E_trial <= armijo_threshold:
-					# Sufficient decrease achieved — accept this step
-					U_best = U_scaled
-					if not self.use_random_unitary_init:
-						print(f"    Line search accepted at alpha={best_alpha:.4e} "
-							f"(energy change: {E_trial - E_current:.6e})")
-					return best_alpha, U_best
-				
-				# Reduce step size
-				best_alpha *= rho
-			
-			# If no step was accepted, use the smallest step tried
-			if U_best is None:
-				U_best = scipy.linalg.expm(best_alpha * R_matrix)
-				if not self.use_random_unitary_init:
-					print(f"    Line search: no step accepted after {max_iter} iterations. "
-						f"Using smallest alpha={best_alpha:.4e}")
-			
-			return best_alpha, U_best
-		
-		def backtracking_line_search(self, mo_coeffs, R_matrix, Fmo_spin, E_current, G_flat, alpha=1.0, rho=0.5, c=1e-4, max_iter=10):
+		def backtracking_line_search_mono(self, mo_coeffs, R_matrix, Fmo_spin, E_current, G_flat, alpha=1.0, rho=0.5, c=1e-4, max_iter=10):
 			"""
 			Non-monotone line search on the orbital rotation step size.
 			
@@ -1400,12 +1125,10 @@ class OVOS:
 			# --- Non-monotone reference energy ---
 			# Use history of recent energies to allow temporary increases
 			M_history = 100  # Number of past energies to track
-			if not hasattr(self, '_energy_history'):
-				self._energy_history = []
 			self._energy_history.append(E_current)
 			if len(self._energy_history) > M_history:
 				self._energy_history = self._energy_history[-M_history:]
-			
+
 			# Reference energy: max of recent history (non-monotone)
 			E_reference = max(self._energy_history)
 			
@@ -1434,7 +1157,7 @@ class OVOS:
 			alpha_best_energy = alpha
 			
 			for ls_iter in range(max_iter):
-				U_scaled = scipy.linalg.expm(best_alpha * R_matrix)
+				U_scaled = expm_antisymmetric(best_alpha * R_matrix)
 				
 				mo_coeffs_spin_trial = mo_coeffs_spin @ U_scaled
 				mo_coeffs_trial = spin_to_spatial_mo_local(mo_coeffs_spin_trial)
@@ -1455,9 +1178,14 @@ class OVOS:
 				
 				# Non-monotone Armijo condition:
 				# Compare against max of recent history, not just current energy
-				armijo_threshold = E_reference + c * best_alpha * slope
+				armijo_threshold_ref = E_reference + c * best_alpha * slope
+				# armijo_threshold_cur = E_current + c * best_alpha * slope
 				
-				if E_trial <= armijo_threshold:
+				# armijo_threshold = max(armijo_threshold_ref, armijo_threshold_cur)
+
+				print(f"	Arminjo alpha: {best_alpha:.4e}")
+				
+				if E_trial <= armijo_threshold_ref:
 					U_best = U_scaled
 					if not self.use_random_unitary_init:
 						print(f"    Line search accepted at alpha={best_alpha:.4e} "
@@ -1484,38 +1212,88 @@ class OVOS:
 			
 			return best_alpha, U_best
 
-		# Unitary rotation matrix
-			# Padé approximation for matrix exponential, more stable than eigendecomposition for large matrices	
-		U = scipy.linalg.expm(R_matrix)
+		def expm_antisymmetric(R):
+			"""
+			Compute U = exp(R) for an anti-symmetric matrix R using the
+			formula from Adamowicz & Bartlett (1987), Eq. 15:
 
-		# --- Backtracking line search ---				
-		# Run line search to find acceptable step size
-		best_alpha, U = backtracking_line_search(
-			self,
-			mo_coeffs=mo_coeffs,
-			R_matrix=R_matrix,
-			Fmo_spin=Fmo_spin,
-			E_current=self.E_current,
-			G_flat=G.flatten(),
-			alpha=1.0,    # Start with full Newton step
-			rho=0.5,      # Halve step size each iteration
-			c=1e-4,       # Armijo parameter
-			max_iter=10   # Max backtracking iterations
-		)
+				U = X cosh(d) X^T + R X sinh(d) d^{-1} X^T
+
+			where d^2 = X^T R^2 X  (eigendecomposition of R^2).
+
+			For antisymmetric R, R^2 is symmetric negative-semidefinite,
+			so its eigenvalues are <= 0: d^2_k = -theta_k^2.
+			Then cosh(d_k) = cos(theta_k) and sinh(d_k)/d_k = sinc(theta_k).
+
+			Parameters:
+			-----------
+			R_matrix : np.ndarray, shape (n, n)
+				Anti-symmetric matrix (R = -R^T).
+
+			Returns:
+			--------
+			U : np.ndarray, shape (n, n)
+				Orthogonal matrix U = exp(R).
+			"""
+
+			# Diagonalize R^2
+			eigenvalues, X = np.linalg.eigh(R @ R)
+			
+			# eigenvalues ≤ 0, so θ = √(-eigenvalues)
+			theta = np.sqrt(np.maximum(-eigenvalues, 0))
+			
+			# Compute trigonometric functions
+			cos_theta = np.diag(np.cos(theta))
+			
+			# sinc(θ) = sin(θ)/θ, with sinc(0) = 1
+			sinc_theta = np.diag(np.where(theta > 1e-12, 
+										np.sin(theta) / theta, 
+										1.0))
+			
+			# Build U
+			U = X @ cos_theta @ X.T + R @ X @ sinc_theta @ X.T
+
+			# print(U.T @ U)
+
+			return U
+
+		# Unitary rotation matrix
+			# Use eigendecomposition of anti-symmetric matrix for guaranteed unitarity
+		# print(R_matrix)
+		U = expm_antisymmetric(R_matrix)
+
+		# # --- Backtracking line search ---				
+		# 	# After 5 iterations, start backtracking line search to ensure stability
+		# if self.iteration >= 5:
+		# 	# Run line search to find acceptable step size
+		# 	best_alpha, U = backtracking_line_search_mono(
+		# 		self,
+		# 		mo_coeffs=mo_coeffs,
+		# 		R_matrix=R_matrix,
+		# 		Fmo_spin=Fmo_spin,
+		# 		E_current=self.E_current,
+		# 		G_flat=G.flatten(),
+		# 		alpha=1.0,    # Start with full Newton step
+		# 		rho=0.75,     # Halve step size each iteration
+		# 		c=1e-4,       # Armijo parameter
+		# 		max_iter=10   # Max backtracking iterations
+		# 	)
 
 		# Numerical checks on U
-			# Check U if U^T U = I
-		assert np.allclose(U.T @ U, np.eye(len(U)), atol=1e-4), "Unitary rotation matrix U is not unitary!"
+			# Check U if U^T U = I 
+		assert np.allclose(U.T @ U, np.eye(len(U)), atol=1e-10), "Unitary rotation matrix U is not unitary!"
 			# Check is U has no NaN or Inf values
 		assert np.all(np.isfinite(U)), "Unitary rotation matrix U contains NaN or Inf values!"
 			# Check that U is not all zeros
 		assert not np.allclose(U, 0), "Unitary rotation matrix U is all zeros!"
 
+		# assert False, "Debug stop after computing U"  # Remove this after debugging U
+
 		# Check that U is orthogonal
 			# Note, sometimes due to numerical errors (e-11) U@U.T is not exactly identity, but very close
 				# If the difference is too large, raise an error
 		diff = np.linalg.norm(U@U.T - np.eye(len(U)))
-		assert diff < 1e-6, f"U is not orthogonal, ||U@U.T - I|| = {diff}"
+		assert diff < 1e-10, f"U is not orthogonal, ||U@U.T - I|| = {diff}"
 
 		# Check the active occupied area of U is close to identity
 		for i in self.active_occ_indices:
@@ -1632,23 +1410,20 @@ class OVOS:
 
 
 		# Step (viii): Rotate the orbitals
+			# Apply rotations directly to spatial C_alpha and C_beta
 
-			# convert to spin orbital basis
-				# Manual spatial→spin conversion: interleave α and β columns
-					# PySCF convention: mo_coeffs shape is (n_ao, n_spatial_orbs), columns are orbitals
-					# mo_coeffs[0] = alpha, mo_coeffs[1] = beta
-					# Result: (n_ao, n_spin_orbs) where spin_orbs = [α0, β0, α1, β1, ...]
-		mo_coeffs_spin, orb_map, orbspin = spatial_to_spin_mo(mo_coeffs)
+		# The spin-orbital U has block structure:
+		# U[0::2, 0::2] acts on alpha orbitals
+		# U[1::2, 1::2] acts on beta orbitals  
+		# U[0::2, 1::2] ≈ 0 (no alpha-beta mixing in R_matrix by construction)
 
-			# apply rotation
-				# mo_coeffs_spin shape: (n_ao, num_spin_orbitals)
-				# U shape: (num_spin_orbitals, num_spin_orbitals)
-				# Result: C_new = C_old @ U (standard orbital rotation)
-		mo_coeffs_spin_rot = mo_coeffs_spin @ U
+		U_alpha = U[0::2, 0::2]  # shape (n_spatial, n_spatial)
+		U_beta  = U[1::2, 1::2]  # shape (n_spatial, n_spatial)
 
-			# convert back to spatial orbital basis
-				# Manual spin→spatial conversion: extract α and β columns using orbspin
-		mo_coeffs_rot = spin_to_spatial_mo(mo_coeffs_spin_rot, orbspin=orbspin)
+		mo_coeffs_rot = np.array([
+			mo_coeffs[0] @ U_alpha,
+			mo_coeffs[1] @ U_beta
+			])
 
 			# Check on what orbitals were rotated
 		num_rotated = 0
@@ -1664,14 +1439,13 @@ class OVOS:
 				# else:
 					# print(f"    Orbital {s} (spin {spin}) not rotated.")
 		if not self.use_random_unitary_init:
-			print()
 			print(f"    Rotated {num_rotated} spin orbitals out of {mo_coeffs[0].shape[1] + mo_coeffs[1].shape[1]} total.")
-			print()
 
 		# In the case of non-canonical orbitals,
 			# Does the MO coefficients supposed to stay orthonormal after rotation?
 				# Yes, the rotation is unitary, so it should preserve orthonormality
 			# Check that the rotated orbitals are still orthonormal
+		bool_orthonormal = "False"
 
 				# check shape
 		for spin in [0, 1]:
@@ -1688,56 +1462,80 @@ class OVOS:
 
 				assert np.allclose(orig_orb, rot_orb, atol=1e-4), f"Active occupied spin orbital {idx} (spin {spin}) was changed during rotation!"
 			
-			# Check that rotated orbitals are orthonormal
-				# Sum a coloumn of mo_coeffs to check normalization for a given spin
-					# Check: C^T S C = I
-				C_i = mo_coeffs_rot[spin]
-				norm = C_i.T @ self.S @ C_i
-				print(f"MO coefficients for spin {spin} are not orthonormal!")
-				if not np.allclose(norm, np.eye(norm.shape[0]), atol=1e-6):
-					print(f"    Deviation from orthonormality (spin {spin}): ||C^T S C - I|| = {np.linalg.norm(norm - np.eye(norm.shape[0])):.6e}")
-					# Optionally re-orthogonalize if deviation is large
-					if np.linalg.norm(norm - np.eye(norm.shape[0])) > 1e-5:
-						print(f"    Re-orthogonalizing MO coefficients for spin {spin}...")
-						mo_coeffs_rot[spin] = reorthogonalize_mo(mo_coeffs_rot[spin], self.S)
-						# Check orthonormality again after re-orthogonalization
-						C_i = mo_coeffs_rot[spin]
-						norm = C_i.T @ self.S @ C_i
-						assert np.allclose(norm, np.eye(norm.shape[0]), atol=1e-6), f"MO coefficients for spin {spin} are still not orthonormal after re-orthogonalization!"
+		# Check that rotated orbitals are orthonormal
+			# Sum a coloumn of mo_coeffs to check normalization for a given spin
+				# Check: C^T S C = I
+			C_i = mo_coeffs_rot[spin]
+			norm_dev = np.linalg.norm(C_i.T @ self.S @ C_i - np.eye(C_i.shape[1]))
+			if norm_dev > 1e-6:
+				print(f"WARNING: Rotated MO coefficients for spin {spin} are not orthonormal! ||C^T S C - I|| = {norm_dev:.6e}")
 
-
+					
 		# Rotate the Fock matrix in the MO basis as well
-			# Fock matrix in original MO basis: Fmo_spin = C^T Fao C
-			# After rotation: Fmo_rot = U^T Fmo_spin U
-		Fmo_rot = U.T @ Fmo_spin @ U
+			# Paper: "The Fock matrix is diagonalized to generate new canonical active orbitals."
 
-			# Check that the rotated Fock matrix is still Hermitian
-		# if not np.allclose(Fmo_rot, Fmo_rot.T.conj(), atol=1e-10):
-		# 	print("WARNING: Rotated Fock matrix is not Hermitian!")
+		Fmo_alpha = Fmo_spin[0::2, 0::2]   # (n_spatial, n_spatial)
+		Fmo_beta  = Fmo_spin[1::2, 1::2]   # (n_spatial, n_spatial)
 
-			# Check that the diagonal elements of the rotated Fock matrix are real
-		# if not np.all(np.isreal(np.diag(Fmo_rot))):
-		# 	print("WARNING: Diagonal elements of rotated Fock matrix are not real!")
+		# Rotate Fock matrix
+		Fmo_alpha_rot = U_alpha.T @ Fmo_alpha @ U_alpha
+		Fmo_beta_rot  = U_beta.T  @ Fmo_beta  @ U_beta
 
-			# Check that the rotated Fock matrix has no NaN or Inf values
-		# if not np.all(np.isfinite(Fmo_rot)):
-		# 	print("WARNING: Rotated Fock matrix contains NaN or Inf values!")
+		# Diagonalize ONLY the active virtual block to get canonical active orbitals
+		# Active virtual spin indices: self.active_inocc_indices = [nelec, nelec+nact)
+		# In spatial indices (alpha block):
+		nocc_spatial = self.mol.nelec[0]
+		nact_spatial = self.num_opt_virtual_orbs // 2  # number of active spatial virtual orbs
 
-		# Check if the rotated diagonalized Fock matrix has the same eigenvalues as the original 
-			# Should be the same since it's a unitary transformation
+		act_slice = slice(nocc_spatial, nocc_spatial + nact_spatial)
+
+		# Alpha: diagonalize active virtual block
+		F_act_alpha = Fmo_alpha_rot[act_slice, act_slice]
+		eigvals_a, eigvecs_a = np.linalg.eigh(F_act_alpha)
+		# Apply canonicalization rotation to active block of orbitals
+		mo_coeffs_rot[0][:, act_slice] = mo_coeffs_rot[0][:, act_slice] @ eigvecs_a
+		# Update rotated Fock: rotate the active block with eigvecs
+		Fmo_alpha_rot[act_slice, :] = eigvecs_a.T @ Fmo_alpha_rot[act_slice, :]
+		Fmo_alpha_rot[:, act_slice] = Fmo_alpha_rot[:, act_slice] @ eigvecs_a
+		# After diagonalization, the active-active block should be diagonal
+		# (off-diagonal ~0), and the diagonal = canonical orbital energies
+
+		# Beta: same
+		nocc_spatial_b = self.mol.nelec[1]
+		act_slice_b = slice(nocc_spatial_b, nocc_spatial_b + nact_spatial)
+
+		F_act_beta = Fmo_beta_rot[act_slice_b, act_slice_b]
+		eigvals_b, eigvecs_b = np.linalg.eigh(F_act_beta)
+		mo_coeffs_rot[1][:, act_slice_b] = mo_coeffs_rot[1][:, act_slice_b] @ eigvecs_b
+		Fmo_beta_rot[act_slice_b, :] = eigvecs_b.T @ Fmo_beta_rot[act_slice_b, :]
+		Fmo_beta_rot[:, act_slice_b] = Fmo_beta_rot[:, act_slice_b] @ eigvecs_b
+
+		# Rebuild spin-orbital Fock matrix
+		Fmo_rot = np.zeros_like(Fmo_spin)
+		Fmo_rot[0::2, 0::2] = Fmo_alpha_rot
+		Fmo_rot[1::2, 1::2] = Fmo_beta_rot
+
+		if not self.use_random_unitary_init:
+			print(f"    Active virt. Fock eignval. \n (alpha): {eigvals_a} \n  (beta): {eigvals_b}")
+			# Check eigenvalues match the diagonal of the rotated active block
+			diag_check = np.diag(Fmo_alpha_rot[act_slice, act_slice])
+			if not np.allclose(diag_check, eigvals_a, atol=1e-8):
+				print("    WARNING: Active Fock block is not diagonal after canonicalization!")
+
+		# Sanity checks
+		assert np.allclose(Fmo_rot, Fmo_rot.T, atol=1e-8), "Rotated+canonicalized Fock is not symmetric!"
 		eigvals_original = np.linalg.eigvalsh(Fmo_spin)
-		eigvals_rot = np.linalg.eigvalsh(Fmo_rot)
-			# Check if they are close within a reasonable numerical tolerance
-		if not np.allclose(eigvals_rot, eigvals_original, atol=1e-6) and not self.use_random_unitary_init:
-			print("WARNING: Eigenvalues of rotated Fock matrix differ from original!")
-			assert np.allclose(eigvals_rot, eigvals_original, atol=1e-6), "Eigenvalues of rotated Fock matrix differ from original!"
+		eigvals_rot_new  = np.linalg.eigvalsh(Fmo_rot)
+		assert np.allclose(np.sort(eigvals_rot_new), np.sort(eigvals_original), atol=1e-8), \
+			"Eigenvalues changed after canonicalization — unitary property violated!"
 
-		return mo_coeffs_rot, Fmo_rot
+		print()
 
-
+		# Re-orthogonalize the rotated orbitals to correct for any numerical drift (should be small)
+		mo_coeffs_rot[0] = reorthogonalize_mo(mo_coeffs_rot[0], self.S)
+		mo_coeffs_rot[1] = reorthogonalize_mo(mo_coeffs_rot[1], self.S)
 	
-
-
+		return mo_coeffs_rot, Fmo_rot, bool_orthonormal
 
 
 
@@ -1755,6 +1553,8 @@ class OVOS:
 
 		while iter_count < max_iter:
 			iter_count += 1
+			self.iteration = iter_count
+
 			if not self.use_random_unitary_init:
 				print("#### OVOS Iteration ", iter_count, " ####")
 
@@ -1786,11 +1586,28 @@ class OVOS:
 				# Step (v)-(viii): Orbital optimization
 				if not self.use_random_unitary_init:
 					print(" Step (v)-(viii): Orbital optimization")
-				mo_coeffs, Fmo_rot = self.orbital_optimization(
+				mo_coeffs, Fmo_rot, bool_orthonormal = self.orbital_optimization(
 					mo_coeffs=mo_coeffs,
 					MP1_amplitudes=MP1_amplitudes,
 					eri_as=eri_as,
 					Fmo_spin=Fmo_spin)
+				
+				# If orbitals become non-orthonormal, we cannot continue because MP2 will fail
+				if bool_orthonormal == "True":
+					if not self.use_random_unitary_init:
+						print("Orbitals became non-orthonormal after first iteration, stopping OVOS.")
+					
+					# Delete the last stored results since we won't be using them
+					lst_E_corr.pop()
+					lst_iter_counts.pop()
+					lst_stop_reason.pop()
+					lst_mo_coeffs.pop()
+					lst_Fmo_rot.pop()
+
+						# Set last stop reason to "Non-orthonormal"
+					lst_stop_reason[-1] = "Non-orthonormal"
+
+					break
 
 
 			# ---- Subsequent iterations ----
@@ -1804,23 +1621,40 @@ class OVOS:
 				# Step (v)-(viii): Orbital optimization
 				if not self.use_random_unitary_init:
 					print(" Step (v)-(viii): Orbital optimization")
-				mo_coeffs, Fmo_rot = self.orbital_optimization(
+				mo_coeffs, Fmo_rot, bool_orthonormal = self.orbital_optimization(
 					mo_coeffs=mo_coeffs,
 					MP1_amplitudes=MP1_amplitudes,
 					eri_as=eri_as,
 					Fmo_spin=Fmo_spin)
+				
+				# If orbitals become non-orthonormal, we cannot continue because MP2 will fail
+				if bool_orthonormal == "True":
+					if not self.use_random_unitary_init:
+						print("Orbitals became non-orthonormal, stopping OVOS.")
+
+					# Delete the last stored results since we won't be using them
+					lst_E_corr.pop()
+					lst_iter_counts.pop()
+					lst_stop_reason.pop()
+					lst_mo_coeffs.pop()
+					lst_Fmo_rot.pop()
+
+						# Set last stop reason to "Non-orthonormal"
+					lst_stop_reason[-1] = "Non-orthonormal"
+
+					break
 
 			# ---- Update convergence status ----
 				# Check if correlation energy has improved significantly
 				diff_E_corr = abs(lst_E_corr[-1] - lst_E_corr[-2])
-				if diff_E_corr < 1e-10 and self.grad_norm < 1e-6:
+				if diff_E_corr < 1e-8 and self.grad_norm < 1e-6:  # Convergence threshold
 					converged = True
 					lst_stop_reason.append("Convergence")
 					
 					keep_track += 1
 					if keep_track >= 5:  # Require 5 consecutive iterations below threshold to confirm convergence
 						if not self.use_random_unitary_init:
-							print("OVOS converged with stable correlation energy for 50 consecutive iterations.")
+							print("OVOS converged with stable correlation energy for 5 consecutive iterations.")
 						break
 				else:
 					converged = False
@@ -1828,16 +1662,10 @@ class OVOS:
 					
 					keep_track = 0  # <--- IMPORTANT: Reset counter when not converged
 
-			# If we reach max iterations without convergence, we add 100 more iterations to check if it eventually converges
-			# if iter_count == max_iter and not converged:
-			# 	if not self.use_random_unitary_init:
-			# 		print(f"Reached maximum iterations ({max_iter}) without convergence. Extending max iterations to {max_iter + 100} to check for eventual convergence.")
-			# 	max_iter += 100
-
 				# set upper limit of iterations to prevent infinite loop in case of non-convergence
 			if iter_count >= 1000:
 				if not self.use_random_unitary_init:
-					print("Reached upper limit of iterations (5000) without convergence. Stopping OVOS.")
+					print("Reached upper limit of iterations (1000) without convergence. Stopping OVOS.")
 				break
 
 		# Which direction did we go?
@@ -1870,13 +1698,15 @@ class OVOS:
 			print(f"  [{len(self.active_inocc_indices)}/{len(self.active_inocc_indices)+len(self.inactive_indices)}] OVOS did not converge within the maximum number of iterations.")
 
 		# Return the results
+		best_converged_idx = None
 			# Get the full list of energies where the lst_stop_reason is "Convergence", and sort by energy to find the best converged point
 		if lst_stop_reason.count("Convergence") > 0:
 			lst_converged_points = [(idx, E) for idx, (E, reason) in enumerate(zip(lst_E_corr, lst_stop_reason)) if reason == "Convergence"]
 			best_converged_idx, best_converged_E = min(lst_converged_points, key=lambda x: x[1])
 		else:
-			# If no converged points, get initial point as best
-			best_converged_idx, best_converged_E = 0, lst_E_corr[0]
+			# If no converged points, get best energy from all iterations
+			best_converged_idx = np.argmin(lst_E_corr)
+			
 			
 
 				# If we found a converged point, truncate the lists to that point
@@ -1889,6 +1719,9 @@ class OVOS:
 		else:
 			mo_coeffs = lst_mo_coeffs[-1]
 			Fmo_rot = lst_Fmo_rot[-1]
+
+		# Ensure reset
+		self._energy_history = []
 		
 		return lst_E_corr, lst_iter_counts, mo_coeffs, Fmo_rot, lst_stop_reason
 	
@@ -1943,7 +1776,6 @@ def setup_OVOS(select_atom, select_basis):
 		"cc-pVDZ",
 		"cc-pVTZ",
 		"cc-pVQZ"
-		# my_basis # Custom minimal basis for testing
 	]
 
 	find_atom = {
@@ -1965,7 +1797,7 @@ def setup_OVOS(select_atom, select_basis):
 		"cc-pVTZ": 3
 	}
 
-	atom, basis = (atom_choose_between[find_atom[select_atom]], basis_choose_between[find_basis[select_basis]])
+	atom, basis = (atom_choose_between[find_atom[select_atom]], select_basis)
 
 	# Print start message
 	print(" Running OVOS on ", atom, " with basis set ", basis)
