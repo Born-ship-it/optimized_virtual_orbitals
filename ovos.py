@@ -50,9 +50,6 @@ class OVOS:
 		# Is it use_random_unitary_init?
 		self.use_random_unitary_init = (start_guess == "random")
 
-		# Initialize energy history for non-monotone line search
-		self._energy_history = []
-
 		# Store parameters
 		self.mol = mol
 		self.num_opt_virtual_orbs = num_opt_virtual_orbs
@@ -639,7 +636,7 @@ class OVOS:
 				# which is the sum of active inocc and inactive indices. 
 			# This gives a sense of how much of the virtual space is being included in the MP2 energy calculation.
 		if not self.use_random_unitary_init:
-			print(f"[{len(self.active_inocc_indices)}/{len(self.active_inocc_indices + self.inactive_indices)}]: MP2 (spin-orbital): ", J_2)
+			print(f"    [{len(self.active_inocc_indices)}/{len(self.active_inocc_indices + self.inactive_indices)}]: MP2 (spin-orbital): ", J_2)
 
 		# Sanity checks
 			# Check that MP2 correlation energy is finite
@@ -787,18 +784,6 @@ class OVOS:
 		self.grad_norm = np.linalg.norm(G.flatten())
 		if not self.use_random_unitary_init:
 			print(f"    Gradient norm: {self.grad_norm:.6e}")
-		if self.grad_norm < 1e-8 and not self.use_random_unitary_init:
-			print("        WARNING: Gradient norm is very small!")
-
-		# Check if gradient is reasonable
-		if self.grad_norm < 1e-8 and not self.use_random_unitary_init:
-			print("        WARNING: Gradient is essentially zero!")
-
-		# Sanity checks for G
-		# 	# Check if gradient is empty
-		if np.count_nonzero(G) == 0 and not self.use_random_unitary_init:
-			print("        WARNING: No inactive orbitals -> gradient is empty (expected)")
-			print("                 Orbitals cannot be optimized further (full virtual space)")
 		
 			# Check if gradient has finite values
 		assert np.all(np.isfinite(G)), "Gradient G contains non-finite values!"
@@ -941,7 +926,7 @@ class OVOS:
 		# Step (vi): Use the Newton-Raphson method to minimize the second-order Hylleraas functional
 		
 			# Set to True to use Reduced Linear Equation method instead of direct inversion
-		use_RLE = False
+		use_RLE = True
 
 		# Reduced Linear Equation method
 		if use_RLE:				
@@ -957,261 +942,73 @@ class OVOS:
 				start = i * len_ac
 				end = (i + 1) * len_ac
 				H_block_diag[start:end, start:end] = H[start:end, start:end]
+			
+			# Try to level shift the Hessian if it is ill-conditioned or has negative eigenvalues
+			eigvals = np.linalg.eigvalsh(H)
+			min_eigval = np.min(eigvals)
+			level_shift_threshold = 1e-6
+			if min_eigval < level_shift_threshold:
+				shift_value = (level_shift_threshold - min_eigval) if min_eigval < 0 else level_shift_threshold
+				H += shift_value * np.eye(H.shape[0])
+				if not self.use_random_unitary_init:
+					print(f"    Hessian was ill-conditioned or had negative eigenvalues. Applied level shift of {shift_value:.2e} to the diagonal.")
+
+					# Re-check eigenvalues after shift
+				eigvals_shifted = np.linalg.eigvalsh(H)
+				n_neg_eigval_H_shifted = np.sum(eigvals_shifted < 0)
+				if n_neg_eigval_H_shifted > 0 and not self.use_random_unitary_init:
+					print(f"    WARNING: Hessian still has negative eigenvalues after level shift! Neg. Eigval: {n_neg_eigval_H_shifted}/{len(eigvals_shifted)}")
+
+					# Check that Hessian is now positive definite
+				assert np.all(eigvals_shifted >= 0), "Hessian still has negative eigenvalues after level shift!"
+
+					# Check condition number after shift
+				cond_H_shifted = np.linalg.cond(H) if H.size > 0 else np.inf
+				if cond_H_shifted > 1e12 and not self.use_random_unitary_init:
+					print(f"    WARNING: Hessian is still ill-conditioned after level shift! Condition number: {cond_H_shifted:.2e}")
+			
 
 			# Set H to the block-diagonal approximation
 			H = H_block_diag
 
-		else:
-			if cond_H > 1e12 and not self.use_random_unitary_init:
-				inv_H = np.linalg.inv(H)  # Direct inversion (can be unstable for large systems or ill-conditioned Hessians)
-			else:
-				inv_H = np.linalg.pinv(H) # Use pseudo-inverse for better stability if Hessian is ill-conditioned
-
-		# Solve for R
-		G = G.flatten()  # Flatten G to 1D array
-		R = -G @ inv_H # R = -G H^-1	
+		R = -np.linalg.solve(H, G.flatten())  # Solve H R = -G for R using a stable linear solver
 			
 		
 		# Initialize R,
-			# Matrix: self.full_indices x self.full_indices
-		R_matrix = np.zeros((len(self.full_indices), len(self.full_indices), ), dtype=np.float64)
+			# Misc
+		vir = np.array(self.active_inocc_indices)
+		inact = np.array(self.inactive_indices)
+		nvir = len(vir)
+		ninact = len(inact)
+			# R is a vector of length nvir*ninact, reshape to matrix form for orbital rotations
+		R_2d = R.reshape(nvir, ninact)
+			# Matrix: nvir+ninact x nvir+ninact
+		R_matrix = np.zeros((nvir+ninact, nvir+ninact), dtype=np.float64)
+			# Place R_2d in the appropriate block of R_matrix corresponding to rotations between active virtuals and inactive orbitals
+		R_vir = np.arange(nvir) # Local indices for active virtuals
+		R_inact = np.arange(ninact) + nvir  # Local indices for inactive orbitals
+			# Fill the anti-symmetric R_matrix with R_2d and its negative transpose
+		for i, a in enumerate(R_vir):
+			for j, e in enumerate(R_inact):
+				R_ae = R_2d[i, j]
+				R_matrix[e, a] = R_ae 			# Note the order of indices for correct placement
+				R_matrix[a, e] = -R_ae			# Ensure anti-symmetry
 
-		# Handle the case when there are no inactive orbitals (full virtual space)
-		if len(self.inactive_indices) == 0:
-			if not self.use_random_unitary_init:
-				print("        WARNING: No inactive orbitals -> R matrix is empty (expected)")
-		else:
-			vir = np.array(self.active_inocc_indices)
-			inact = np.array(self.inactive_indices)
-			nvir = len(vir)
-			ninact = len(inact)
-
-			R_2d = R.reshape(nvir, ninact)
-			R_matrix[np.ix_(inact, vir)] = R_2d.T    # R[E,A] = R_AE
-			R_matrix[np.ix_(vir, inact)] = -R_2d     # R[A,E] = -R_AE (antisymmetry)
+		
 
 			# Rotation matrix
+		# Convergence check based on max element of R_matrix
+		max_R_elem = np.max(np.abs(R_matrix))
 		if not self.use_random_unitary_init:
-			# Convergence check based on max element of R_matrix
-			max_R_elem = np.max(np.abs(R_matrix))
 			print(f"    Rotation norm {np.linalg.norm(R_matrix):.6e}, (Max el.: {max_R_elem:.6e})")
-			# Check that R is anti-symmetric
-			diff_R = np.linalg.norm(R_matrix + R_matrix.T)
-			assert diff_R < 1e-6, f"R_matrix is not anti-symmetric, ||R + R.T|| = {diff_R}"
-			# Check that R_matrix has no NaN or Inf values
-			assert np.all(np.isfinite(R_matrix)), "R_matrix contains NaN or Inf values!"
-			# Check that R_matrix is not all zeros
-			count_nonzero_R = np.count_nonzero(R_matrix)
-			if count_nonzero_R == 0:
-				print("        WARNING: R_matrix is all zeros!")
-			# Check that R_matrix is small for convergence
-			if max_R_elem < 1e-6:
-				print("        WARNING: Rotation parameters are very small -> Orbitals are optimized!")
-
-			# Check if R_matrix is Anti-Hermitian matrix (R† = -R) that generates the transformation
-			# For real matrices, this reduces to R^T = -R (anti-symmetric)
-			# if not np.allclose(R_matrix, -R_matrix.T, atol=1e-10):
-			# 	print("        WARNING: R_matrix is not anti-symmetric! Max symm diff: ", np.max(np.abs(R_matrix + R_matrix.T)))
-
-
-		# # Look for stagnation in R_matrix values
-		# 	# Create a history of max R element values to detect stagnation
-		# if not hasattr(self, '_R_history'):
-		# 	self._R_history = []
-		# if not hasattr(self, '_R_change_history'):
-		# 	self._R_change_history = []
-
-		# self._R_history.append(np.max(np.abs(R_matrix)))
-		# stagnation_threshold_count = 0 # Number of iterations to check for stagnation
-
-		# if len(self._R_history) > 10:
-		# 	self._R_history = self._R_history[-10:]
-		
-		# 	# Check if max R element has been stagnating (not changing significantly)
-		# 	R_change = np.max(np.abs(np.diff(self._R_history)))
-		# 	self._R_change_history.append(R_change)
-		# 		# Check if the last two R_changes are the same and below a threshold
-		# 	_R_change_history_recent = self._R_change_history[-2:]
-
-		# 	if len(_R_change_history_recent) == 2 and _R_change_history_recent[0] == _R_change_history_recent[-1]:
-		# 		if not self.use_random_unitary_init:
-		# 			print("        WARNING: Rotation parameters are stagnating -> Possible convergence or local minimum!")
-
-		# 		stagnation_threshold_count += 1
-
-		# 		# Remedy 1: Scale down step (trust region approach)
-		# 		if stagnation_threshold_count == 1: # Scale down on the second sign of stagnation
-		# 			scale = 0.5
-		# 			R_matrix *= scale
-		# 			if not self.use_random_unitary_init:
-		# 				print(f"                 Scaling down R_matrix by {scale} to escape stagnation.")
-
-		# 		# Remedy 2: Add random perturbation to R_matrix to escape local minimum
-		# 		if stagnation_threshold_count >= 2: # Add perturbation on the first sign of stagnation
-		# 			eps = 1e-3 * (0.5 ** (stagnation_threshold_count - 1))
-		# 			rnd = np.random.randn(*R_matrix.shape)
-		# 			perturbation = eps * (rnd - rnd.T)  # Ensure perturbation is anti-symmetric
-		# 			R_matrix += perturbation
-		# 			if not self.use_random_unitary_init:
-		# 				print("                 Adding random perturbation to R_matrix to escape local minimum.")
-		# 	# else:
-		# 	# 	# Reset stagnation count if we don't have enough history yet
-		# 	# 	stagnation_threshold_count = 0
-
+		# Check that R is anti-symmetric
+		diff_R = np.linalg.norm(R_matrix + R_matrix.T)
+		assert diff_R < 1e-6, f"R_matrix is not anti-symmetric, ||R + R.T|| = {diff_R}"
+		# Check that R_matrix has no NaN or Inf values
+		assert np.all(np.isfinite(R_matrix)), "R_matrix contains NaN or Inf values!"
 
 
 		# Step (vii): Construct the unitary orbital rotation matrix U = exp(R)
-				
-		def backtracking_line_search_mono(self, mo_coeffs, R_matrix, Fmo_spin, E_current, G_flat, alpha=1.0, rho=0.5, c=1e-4, max_iter=10):
-			"""
-			Non-monotone line search on the orbital rotation step size.
-			
-			Uses the Grippo-Lampariello-Lucidi (GLL) non-monotone strategy:
-			instead of requiring E_trial <= E_current + c*alpha*slope,
-			we require E_trial <= max(E_history) + c*alpha*slope,
-			where E_history tracks the last M energies.
-			
-			This allows the energy to temporarily increase, enabling escape
-			from shallow local minima while still guaranteeing global convergence.
-			
-			Parameters:
-			-----------
-			mo_coeffs : np.ndarray, shape (2, n_ao, n_spatial)
-				Current MO coefficients [alpha, beta].
-			R_matrix : np.ndarray, shape (n_spin, n_spin)
-				Full anti-symmetric rotation matrix from Newton step.
-			Fmo_spin : np.ndarray, shape (n_spin, n_spin)
-				Current spin-orbital Fock matrix.
-			E_current : float
-				Current MP2 correlation energy (J_2 at alpha=0).
-			G_flat : np.ndarray, shape (n_active * n_inactive,)
-				Flattened gradient vector (used for sufficient decrease condition).
-			alpha : float
-				Initial step size (default 1.0 = full Newton step).
-			rho : float
-				Step size reduction factor per iteration (default 0.5).
-			c : float
-				Sufficient decrease parameter (default 1e-4).
-			max_iter : int
-				Maximum number of backtracking iterations (default 10).
-				
-			Returns:
-			--------
-			best_alpha : float
-				Accepted step size.
-			U_best : np.ndarray, shape (n_spin, n_spin)
-				Unitary rotation matrix at the accepted step size.
-			"""
-			vir = np.array(self.active_inocc_indices)
-			inact = np.array(self.inactive_indices)
-			nvir = len(vir)
-			ninact = len(inact)
-			
-			if ninact == 0 or nvir == 0:
-				U_identity = np.eye(R_matrix.shape[0])
-				return 1.0, U_identity
-			
-			# Extract R_AE parameters for directional derivative
-			R_flat = np.zeros(nvir * ninact)
-			for idx_a, a in enumerate(vir):
-				for idx_e, e in enumerate(inact):
-					R_flat[idx_a * ninact + idx_e] = R_matrix[e, a]
-			
-			slope = np.dot(G_flat, R_flat)
-			
-			if slope > 0 and not self.use_random_unitary_init:
-				print(f"    WARNING: Line search slope is positive ({slope:.6e}), not a descent direction!")
-			
-			# --- Non-monotone reference energy ---
-			# Use history of recent energies to allow temporary increases
-			M_history = 100  # Number of past energies to track
-			self._energy_history.append(E_current)
-			if len(self._energy_history) > M_history:
-				self._energy_history = self._energy_history[-M_history:]
-
-			# Reference energy: max of recent history (non-monotone)
-			E_reference = max(self._energy_history)
-			
-			def spatial_to_spin_mo_local(mo_coeffs):
-				C_alpha, C_beta = mo_coeffs[0], mo_coeffs[1]
-				n_ao, n_spatial = C_alpha.shape
-				n_spin = 2 * n_spatial
-				C_spin = np.zeros((n_ao, n_spin), dtype=C_alpha.dtype)
-				C_spin[:, 0::2] = C_alpha
-				C_spin[:, 1::2] = C_beta
-				orbspin = np.array([i % 2 for i in range(n_spin)], dtype=int)
-				return C_spin, orbspin
-			
-			def spin_to_spatial_mo_local(mo_coeffs_spin):
-				n_ao, n_spin = mo_coeffs_spin.shape
-				n_spatial = n_spin // 2
-				C_alpha = mo_coeffs_spin[:, 0::2].copy()
-				C_beta = mo_coeffs_spin[:, 1::2].copy()
-				return np.array([C_alpha, C_beta])
-			
-			mo_coeffs_spin, orbspin = spatial_to_spin_mo_local(mo_coeffs)
-			
-			best_alpha = alpha
-			U_best = None
-			E_best = np.inf  # Track the best energy seen during line search
-			alpha_best_energy = alpha
-			
-			for ls_iter in range(max_iter):
-				U_scaled = expm_antisymmetric(best_alpha * R_matrix)
-				
-				mo_coeffs_spin_trial = mo_coeffs_spin @ U_scaled
-				mo_coeffs_trial = spin_to_spatial_mo_local(mo_coeffs_spin_trial)
-				
-				Fmo_trial = U_scaled.T @ Fmo_spin @ U_scaled
-				
-				try:
-					E_trial, _, _, _ = self.MP2_energy(mo_coeffs=mo_coeffs_trial, Fmo=Fmo_trial)
-				except (AssertionError, Exception) as e:
-					best_alpha *= rho
-					continue
-				
-				# Track best energy found during line search
-				if E_trial < E_best:
-					E_best = E_trial
-					alpha_best_energy = best_alpha
-					U_best_energy = U_scaled
-				
-				# Non-monotone Armijo condition:
-				# Compare against max of recent history, not just current energy
-				armijo_threshold_ref = E_reference + c * best_alpha * slope
-				# armijo_threshold_cur = E_current + c * best_alpha * slope
-				
-				# armijo_threshold = max(armijo_threshold_ref, armijo_threshold_cur)
-
-				print(f"	Arminjo alpha: {best_alpha:.4e}")
-				
-				if E_trial <= armijo_threshold_ref:
-					U_best = U_scaled
-					if not self.use_random_unitary_init:
-						print(f"    Line search accepted at alpha={best_alpha:.4e} "
-							f"(energy change: {E_trial - E_current:.6e})")
-					return best_alpha, U_best
-				
-				best_alpha *= rho
-			
-			# If no step satisfied non-monotone Armijo, use the step that gave
-			# the best (most negative) energy during the search
-			if U_best is None:
-				if E_best < np.inf:
-					U_best = U_best_energy
-					best_alpha = alpha_best_energy
-					if not self.use_random_unitary_init:
-						print(f"    Line search: no Armijo step accepted. "
-							f"Using best-energy alpha={best_alpha:.4e} "
-							f"(E_best={E_best:.10f}, E_current={E_current:.10f})")
-				else:
-					U_best = scipy.linalg.expm(best_alpha * R_matrix)
-					if not self.use_random_unitary_init:
-						print(f"    Line search: no step accepted after {max_iter} iterations. "
-							f"Using smallest alpha={best_alpha:.4e}")
-			
-			return best_alpha, U_best
-
 		def expm_antisymmetric(R):
 			"""
 			Compute U = exp(R) for an anti-symmetric matrix R using the
@@ -1259,41 +1056,33 @@ class OVOS:
 
 		# Unitary rotation matrix
 			# Use eigendecomposition of anti-symmetric matrix for guaranteed unitarity
-		# print(R_matrix)
-		U = expm_antisymmetric(R_matrix)
+		U_sub = expm_antisymmetric(R_matrix)
 
-		# # --- Backtracking line search ---				
-		# 	# After 5 iterations, start backtracking line search to ensure stability
-		# if self.iteration >= 5:
-		# 	# Run line search to find acceptable step size
-		# 	best_alpha, U = backtracking_line_search_mono(
-		# 		self,
-		# 		mo_coeffs=mo_coeffs,
-		# 		R_matrix=R_matrix,
-		# 		Fmo_spin=Fmo_spin,
-		# 		E_current=self.E_current,
-		# 		G_flat=G.flatten(),
-		# 		alpha=1.0,    # Start with full Newton step
-		# 		rho=0.75,     # Halve step size each iteration
-		# 		c=1e-4,       # Armijo parameter
-		# 		max_iter=10   # Max backtracking iterations
-		# 	)
+			# Expand U to full spin-orbital space
+		n_full_space = len(self.full_indices)
+		U_full = np.eye(n_full_space)
+			# Here U is the rotation in the active virtual space, we need to embed it into the full space.
+			# Full space indices: self.full_indices = self.active_inocc_indices + self.inactive_indices
+			# We need to place U in the block corresponding to the active virtuals and inactive orbitals, and identity elsewhere.
+		for i, idx_i in enumerate(self.full_indices):
+			for j, idx_j in enumerate(self.full_indices):
+				if idx_i > len(self.active_occ_indices) - 1 and idx_j > len(self.active_occ_indices) - 1:
+					# Both indices are in the active virtual + inactive space, use U
+					U_full[idx_i, idx_j] = U_sub[i - len(self.active_occ_indices), j - len(self.active_occ_indices)]
+				else:
+					# At least one index is in the occupied space, keep identity
+					U_full[idx_i, idx_j] = 1.0 if idx_i == idx_j else 0.0
+
+		U = U_full
 
 		# Numerical checks on U
+		assert np.allclose(U_sub.T @ U_sub, np.eye(len(U_sub)), atol=1e-6), "Unitary rotation matrix U is not unitary!"
 			# Check U if U^T U = I 
-		assert np.allclose(U.T @ U, np.eye(len(U)), atol=1e-10), "Unitary rotation matrix U is not unitary!"
+		assert np.allclose(U.T @ U, np.eye(len(U)), atol=1e-6), "Unitary rotation matrix U is not unitary!"
 			# Check is U has no NaN or Inf values
 		assert np.all(np.isfinite(U)), "Unitary rotation matrix U contains NaN or Inf values!"
 			# Check that U is not all zeros
 		assert not np.allclose(U, 0), "Unitary rotation matrix U is all zeros!"
-
-		# assert False, "Debug stop after computing U"  # Remove this after debugging U
-
-		# Check that U is orthogonal
-			# Note, sometimes due to numerical errors (e-11) U@U.T is not exactly identity, but very close
-				# If the difference is too large, raise an error
-		diff = np.linalg.norm(U@U.T - np.eye(len(U)))
-		assert diff < 1e-10, f"U is not orthogonal, ||U@U.T - I|| = {diff}"
 
 		# Check the active occupied area of U is close to identity
 		for i in self.active_occ_indices:
@@ -1303,110 +1092,6 @@ class OVOS:
 					if not self.use_random_unitary_init:
 						print(f"WARNING: U deviates from identity in active occupied block at ({i},{j}): U={U[i,j]:.6e}, expected={expected:.6e}")
 
-
-
-
-
-
-
-
-		# Helper functions for orbital coefficient conversions
-		def spatial_to_spin_mo(mo_coeffs):
-			"""
-			Convert spatial MO coefficients (alpha,beta) -> spin-orbital MO matrix.
-			Args:
-				mo_coeffs: array-like with shape (2, n_ao, n_spatial) or [C_alpha, C_beta]
-						where C_alpha/C_beta are (n_ao, n_spatial).
-			Returns:
-				mo_coeffs_spin: ndarray (n_ao, 2*n_spatial) with columns [α0,β0,α1,β1,...]
-				orb_map: ndarray (n_spin,) mapping spin-index -> spatial-index (p//2)
-				orbspin: ndarray (n_spin,) spin label (0=alpha,1=beta)
-			"""
-			# Normalize input form
-			if isinstance(mo_coeffs, (list, tuple)):
-				C_alpha, C_beta = mo_coeffs
-			else:
-				# assume array-like (2, n_ao, n_spatial)
-				C_alpha, C_beta = mo_coeffs[0], mo_coeffs[1]
-
-			n_ao, n_spatial = C_alpha.shape
-			# assert C_beta.shape == (n_ao, n_spatial), "Alpha/beta shapes mismatch"
-
-			n_spin = 2 * n_spatial
-			C_spin = np.zeros((n_ao, n_spin), dtype=C_alpha.dtype)
-
-			# for s in range(n_spatial):
-				# C_spin[:, 2*s]   = C_alpha[:, s]  # alpha s
-				# C_spin[:, 2*s+1] = C_beta[:, s]   # beta s
-			C_spin[:, 0::2] = C_alpha
-			C_spin[:, 1::2] = C_beta
-
-			orb_map = np.array([i // 2 for i in range(n_spin)], dtype=int)
-			orbspin = np.array([i % 2 for i in range(n_spin)], dtype=int)
-			return C_spin, orb_map, orbspin
-
-		def spin_to_spatial_mo(mo_coeffs_spin, orbspin=None):
-			"""
-			Convert interleaved spin-orbital MO matrix -> spatial (alpha,beta).
-			Args:
-				mo_coeffs_spin: ndarray (n_ao, n_spin) with interleaved columns [α0,β0,...]
-				orbspin: optional ndarray of length n_spin (0/1). If None, assume interleaved.
-			Returns:
-				mo_coeffs_spatial: ndarray shape (2, n_ao, n_spatial) -> [C_alpha, C_beta]
-			"""
-			n_ao, n_spin = mo_coeffs_spin.shape
-			if orbspin is None:
-				orbspin = np.array([i % 2 for i in range(n_spin)], dtype=int)
-			# infer n_spatial
-			n_spatial = n_spin // 2
-			C_alpha = np.zeros((n_ao, n_spatial), dtype=mo_coeffs_spin.dtype)
-			C_beta  = np.zeros((n_ao, n_spatial), dtype=mo_coeffs_spin.dtype)
-
-			# if strictly interleaved, faster slicing:
-			if np.all(orbspin == np.array([i % 2 for i in range(n_spin)])):
-				C_alpha[:, :] = mo_coeffs_spin[:, 0::2]
-				C_beta[:, :]  = mo_coeffs_spin[:, 1::2]
-			else:
-				# general extraction using orbspin and orb_map
-				idx_alpha = np.where(orbspin == 0)[0]
-				idx_beta  = np.where(orbspin == 1)[0]
-				# assert len(idx_alpha) == len(idx_beta) == n_spatial, "Unexpected orbspin layout"
-				C_alpha[:, :] = mo_coeffs_spin[:, idx_alpha]
-				C_beta[:, :]  = mo_coeffs_spin[:, idx_beta]
-
-			return np.array([C_alpha, C_beta])
-
-		def reorthogonalize_mo(C, S):
-			"""
-			Re-orthogonalize MO coefficients C with respect to overlap matrix S.
-			Ensures C^T S C = I exactly.
-			Uses symmetric (Löwdin) orthogonalization to minimize
-			the change from the input orbitals.
-
-			Note: The singular Hessian is expected because α-α and β-β rotations are redundant (they should be identical for RHF). 
-			But np.linalg.pinv in the block solver doesn't properly handle this redundancy,
-			leading to slightly different α and β rotations being applied.
-
-			After ~100+ iterations of applying expm(R) where R has tiny α-β mixing components:
-
-			The accumulated product of ~118 unitary matrices, each with small numerical α-β mixing,
-			eventually breaks spatial orthonormality even though spin-orbital orthonormality is preserved.
-			"""
-			# Compute current overlap in MO basis
-			M = C.T @ S @ C  # Should be close to I
-			
-			# Symmetric orthogonalization: C_new = C @ M^{-1/2}
-			eigvals, eigvecs = np.linalg.eigh(M)
-			
-			# Check for numerical issues
-			if np.any(eigvals < 1e-12):
-				print("WARNING: Near-linear-dependence in MO overlap during re-orthogonalization")
-				eigvals = np.maximum(eigvals, 1e-12)
-			
-			M_inv_sqrt = eigvecs @ np.diag(1.0 / np.sqrt(eigvals)) @ eigvecs.T
-			C_new = C @ M_inv_sqrt
-			
-			return C_new
 
 
 		# Step (viii): Rotate the orbitals
@@ -1425,52 +1110,6 @@ class OVOS:
 			mo_coeffs[1] @ U_beta
 			])
 
-			# Check on what orbitals were rotated
-		num_rotated = 0
-		for spin in [0, 1]:
-				# In each spin block
-			for s in range(mo_coeffs[spin].shape[1]):
-					# Get original and rotated orbitals
-				orig_orb = mo_coeffs[spin][:, s]
-				rot_orb = mo_coeffs_rot[spin][:, s]
-					# Check if they differ significantly
-				if not np.allclose(orig_orb, rot_orb, atol=1e-6):
-					num_rotated += 1
-				# else:
-					# print(f"    Orbital {s} (spin {spin}) not rotated.")
-		if not self.use_random_unitary_init:
-			print(f"    Rotated {num_rotated} spin orbitals out of {mo_coeffs[0].shape[1] + mo_coeffs[1].shape[1]} total.")
-
-		# In the case of non-canonical orbitals,
-			# Does the MO coefficients supposed to stay orthonormal after rotation?
-				# Yes, the rotation is unitary, so it should preserve orthonormality
-			# Check that the rotated orbitals are still orthonormal
-		bool_orthonormal = "False"
-
-				# check shape
-		for spin in [0, 1]:
-			expected_shape_spatial = mo_coeffs[spin].shape
-			assert mo_coeffs_rot[spin].shape == expected_shape_spatial, f"mo_coeffs_rot shape is {mo_coeffs_rot[spin].shape}, expected {expected_shape_spatial}"
-
-		# Check that the active occupied orbitals are unchanged
-			# Convert to spatial orbital index
-			for idx in self.active_occ_indices:
-				idx = idx // 2  # spatial orbital index
-				# Get original and rotated orbitals
-				orig_orb = mo_coeffs[spin][:, idx]
-				rot_orb = mo_coeffs_rot[spin][:, idx]
-
-				assert np.allclose(orig_orb, rot_orb, atol=1e-4), f"Active occupied spin orbital {idx} (spin {spin}) was changed during rotation!"
-			
-		# Check that rotated orbitals are orthonormal
-			# Sum a coloumn of mo_coeffs to check normalization for a given spin
-				# Check: C^T S C = I
-			C_i = mo_coeffs_rot[spin]
-			norm_dev = np.linalg.norm(C_i.T @ self.S @ C_i - np.eye(C_i.shape[1]))
-			if norm_dev > 1e-6:
-				print(f"WARNING: Rotated MO coefficients for spin {spin} are not orthonormal! ||C^T S C - I|| = {norm_dev:.6e}")
-
-					
 		# Rotate the Fock matrix in the MO basis as well
 			# Paper: "The Fock matrix is diagonalized to generate new canonical active orbitals."
 
@@ -1515,27 +1154,12 @@ class OVOS:
 		Fmo_rot[0::2, 0::2] = Fmo_alpha_rot
 		Fmo_rot[1::2, 1::2] = Fmo_beta_rot
 
-		if not self.use_random_unitary_init:
-			print(f"    Active virt. Fock eignval. \n (alpha): {eigvals_a} \n  (beta): {eigvals_b}")
-			# Check eigenvalues match the diagonal of the rotated active block
-			diag_check = np.diag(Fmo_alpha_rot[act_slice, act_slice])
-			if not np.allclose(diag_check, eigvals_a, atol=1e-8):
-				print("    WARNING: Active Fock block is not diagonal after canonicalization!")
-
 		# Sanity checks
 		assert np.allclose(Fmo_rot, Fmo_rot.T, atol=1e-8), "Rotated+canonicalized Fock is not symmetric!"
-		eigvals_original = np.linalg.eigvalsh(Fmo_spin)
-		eigvals_rot_new  = np.linalg.eigvalsh(Fmo_rot)
-		assert np.allclose(np.sort(eigvals_rot_new), np.sort(eigvals_original), atol=1e-8), \
+		assert np.allclose(np.sort(np.linalg.eigvalsh(Fmo_rot)), np.sort(np.linalg.eigvalsh(Fmo_spin)), atol=1e-8), \
 			"Eigenvalues changed after canonicalization — unitary property violated!"
-
-		print()
-
-		# Re-orthogonalize the rotated orbitals to correct for any numerical drift (should be small)
-		mo_coeffs_rot[0] = reorthogonalize_mo(mo_coeffs_rot[0], self.S)
-		mo_coeffs_rot[1] = reorthogonalize_mo(mo_coeffs_rot[1], self.S)
 	
-		return mo_coeffs_rot, Fmo_rot, bool_orthonormal
+		return mo_coeffs_rot, Fmo_rot
 
 
 
@@ -1545,7 +1169,7 @@ class OVOS:
 		"""
 
 		converged = False
-		max_iter = 1000
+		max_iter = 5000
 		iter_count = 0
 
 		E_corr = None
@@ -1556,6 +1180,7 @@ class OVOS:
 			self.iteration = iter_count
 
 			if not self.use_random_unitary_init:
+				print()
 				print("#### OVOS Iteration ", iter_count, " ####")
 
 			# Step (iii-iv): Compute MP2 correlation energy and amplitudes
@@ -1564,8 +1189,6 @@ class OVOS:
 			E_corr, MP1_amplitudes, eri_as, Fmo_spin = self.MP2_energy(mo_coeffs = mo_coeffs, Fmo = Fmo_rot)
 
 			# Step (ix): check convergence and stability
-			if not self.use_random_unitary_init:
-				print(" Step (ix): Check convergence and stability")
 
 			# =========================================================
 			# CONVERGENCE CONTROL 
@@ -1586,28 +1209,11 @@ class OVOS:
 				# Step (v)-(viii): Orbital optimization
 				if not self.use_random_unitary_init:
 					print(" Step (v)-(viii): Orbital optimization")
-				mo_coeffs, Fmo_rot, bool_orthonormal = self.orbital_optimization(
+				mo_coeffs, Fmo_rot = self.orbital_optimization(
 					mo_coeffs=mo_coeffs,
 					MP1_amplitudes=MP1_amplitudes,
 					eri_as=eri_as,
 					Fmo_spin=Fmo_spin)
-				
-				# If orbitals become non-orthonormal, we cannot continue because MP2 will fail
-				if bool_orthonormal == "True":
-					if not self.use_random_unitary_init:
-						print("Orbitals became non-orthonormal after first iteration, stopping OVOS.")
-					
-					# Delete the last stored results since we won't be using them
-					lst_E_corr.pop()
-					lst_iter_counts.pop()
-					lst_stop_reason.pop()
-					lst_mo_coeffs.pop()
-					lst_Fmo_rot.pop()
-
-						# Set last stop reason to "Non-orthonormal"
-					lst_stop_reason[-1] = "Non-orthonormal"
-
-					break
 
 
 			# ---- Subsequent iterations ----
@@ -1621,40 +1227,43 @@ class OVOS:
 				# Step (v)-(viii): Orbital optimization
 				if not self.use_random_unitary_init:
 					print(" Step (v)-(viii): Orbital optimization")
-				mo_coeffs, Fmo_rot, bool_orthonormal = self.orbital_optimization(
+				mo_coeffs, Fmo_rot = self.orbital_optimization(
 					mo_coeffs=mo_coeffs,
 					MP1_amplitudes=MP1_amplitudes,
 					eri_as=eri_as,
 					Fmo_spin=Fmo_spin)
-				
-				# If orbitals become non-orthonormal, we cannot continue because MP2 will fail
-				if bool_orthonormal == "True":
-					if not self.use_random_unitary_init:
-						print("Orbitals became non-orthonormal, stopping OVOS.")
-
-					# Delete the last stored results since we won't be using them
-					lst_E_corr.pop()
-					lst_iter_counts.pop()
-					lst_stop_reason.pop()
-					lst_mo_coeffs.pop()
-					lst_Fmo_rot.pop()
-
-						# Set last stop reason to "Non-orthonormal"
-					lst_stop_reason[-1] = "Non-orthonormal"
-
-					break
 
 			# ---- Update convergence status ----
+				if not self.use_random_unitary_init:
+					print(" Step (ix): Check convergence and stability")
+
+				# Check if gradient norm is small enough for convergence
+					# Gradient norm history, keep track of the last 2 values to check for convergence
+				if iter_count == 2:
+					lst_grad_norm = [self.grad_norm]
+				else:
+					lst_grad_norm.append(self.grad_norm)
+					if len(lst_grad_norm) > 5:
+						lst_grad_norm.pop(0)  # Keep only the last 5 values
+
+				diff_grad_norm = abs(lst_grad_norm[-1] - lst_grad_norm[-2]) if len(lst_grad_norm) > 1 else None
+
 				# Check if correlation energy has improved significantly
 				diff_E_corr = abs(lst_E_corr[-1] - lst_E_corr[-2])
-				if diff_E_corr < 1e-8 and self.grad_norm < 1e-6:  # Convergence threshold
+
+					# Print convergence diagnostics
+				if not self.use_random_unitary_init and diff_grad_norm is not None:
+					print(f"    ΔE_corr = {diff_E_corr:.2e} Hartree, Δ Gradient norm = {diff_grad_norm:.2e}")
+
+				# Convergence criteria: correlation energy change below threshold AND small gradient norm
+				if diff_E_corr < 1e-10 and self.grad_norm < 1e-8:  # Convergence threshold
 					converged = True
 					lst_stop_reason.append("Convergence")
 					
 					keep_track += 1
-					if keep_track >= 5:  # Require 5 consecutive iterations below threshold to confirm convergence
+					if keep_track >= 25:  # Require 5 consecutive iterations below threshold to confirm convergence
 						if not self.use_random_unitary_init:
-							print("OVOS converged with stable correlation energy for 5 consecutive iterations.")
+							print("OVOS converged with stable correlation energy for 25 consecutive iterations.")
 						break
 				else:
 					converged = False
@@ -1663,9 +1272,9 @@ class OVOS:
 					keep_track = 0  # <--- IMPORTANT: Reset counter when not converged
 
 				# set upper limit of iterations to prevent infinite loop in case of non-convergence
-			if iter_count >= 1000:
+			if iter_count >= max_iter:
 				if not self.use_random_unitary_init:
-					print("Reached upper limit of iterations (1000) without convergence. Stopping OVOS.")
+					print(f"Reached upper limit of iterations ({max_iter}) without convergence. Stopping OVOS.")
 				break
 
 		# Which direction did we go?
@@ -1719,9 +1328,6 @@ class OVOS:
 		else:
 			mo_coeffs = lst_mo_coeffs[-1]
 			Fmo_rot = lst_Fmo_rot[-1]
-
-		# Ensure reset
-		self._energy_history = []
 		
 		return lst_E_corr, lst_iter_counts, mo_coeffs, Fmo_rot, lst_stop_reason
 	
@@ -1885,19 +1491,19 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 
 
 	# Specific num_opt_virtual_orbs
-	num_opt_virtual_orbs_current_specific = np.array([0.114, 0.171, 0.314, 0.5, 0.657, 1]) * max_opt_virtual_orbs
-	print("Initial specific numbers of optimized virtual orbitals to test (before rounding): ", num_opt_virtual_orbs_current_specific)
-		# Int and round to nearest even number
-	num_opt_virtual_orbs_current_specific = [int(round(x / 2) * 2) for x in num_opt_virtual_orbs_current_specific]
-	print("Specific numbers of optimized virtual orbitals to test: ", num_opt_virtual_orbs_current_specific)
-	num_opt_increment = 0
+	# num_opt_virtual_orbs_current_specific = np.array([0.114, 0.171, 0.314, 0.5, 0.657, 1]) * max_opt_virtual_orbs
+	# print("Initial specific numbers of optimized virtual orbitals to test (before rounding): ", num_opt_virtual_orbs_current_specific)
+	# 	# Int and round to nearest even number
+	# num_opt_virtual_orbs_current_specific = [int(round(x / 2) * 2) for x in num_opt_virtual_orbs_current_specific]
+	# print("Specific numbers of optimized virtual orbitals to test: ", num_opt_virtual_orbs_current_specific)
+	# num_opt_increment = 0
 
-	# while num_opt_virtual_orbs_current < max_opt_virtual_orbs:
-	while num_opt_increment < len(num_opt_virtual_orbs_current_specific):
+	while num_opt_virtual_orbs_current < max_opt_virtual_orbs:
+	# while num_opt_increment < len(num_opt_virtual_orbs_current_specific):
 		# Increment num_opt_virtual_orbs until OVOS converges successfully
-		# num_opt_virtual_orbs_current += increment 
-		num_opt_virtual_orbs_current = num_opt_virtual_orbs_current_specific[num_opt_increment]
-		num_opt_increment += 1
+		num_opt_virtual_orbs_current += increment 
+		# num_opt_virtual_orbs_current = num_opt_virtual_orbs_current_specific[num_opt_increment]
+		# num_opt_increment += 1
 
 		lst_E_corr = None  # Reset lst_E_corr for each run
 
@@ -2008,7 +1614,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 					# --- Evaluate this attempt ---
 					E_this = lst_E_corr_attempt[-1]
 						# Print the result of this attempt
-					print(f"[{num_opt_virtual_orbs_current}/{max_opt_virtual_orbs}] MP2: {E_this} @ {len(lst_E_corr_attempt)} iterations")
+					print(f"    [{num_opt_virtual_orbs_current}/{max_opt_virtual_orbs}] MP2: {E_this} @ {len(lst_E_corr_attempt)} iterations")
 					
 					# Discard this attempt if it did not converge (or falsely converged...)
 						# False converged if the last five are not converged points
@@ -2187,8 +1793,8 @@ class Tee:
             s.flush()
 
 if True: # Done with OVOS runs. Comment out this line to run more or move on to the next part of the code.
-	for basis_set in ["6-31G", "cc-pVDZ", "cc-pVTZ", "cc-pVQZ"]: 	# Yet:	"6-31G" | Yet: "cc-pVDZ", ... 
-		for molecule in ["CH2"]: 	# Done: "H2O" | Yet: "CO", "HF", "NH3"
+	for basis_set in ["6-31G", "cc-pVDZ"]: 				# Yet:	"6-31G" | Yet: "cc-pVDZ", ... 
+		for molecule in ["H2O"]: 	# Done: "H2O" | Yet: "CO", "HF", "NH3"
 			print("")
 			print("==========================================================")
 			print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
@@ -2197,7 +1803,7 @@ if True: # Done with OVOS runs. Comment out this line to run more or move on to 
 
 			mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
 			
-			for start_guess in ["RHF"]: # "RHF", "prev", "random"
+			for start_guess in ["RHF", "prev"]: # "RHF", "prev", "random"
 				with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
 					sys.stdout = Tee(sys.__stdout__, f)
 					try:
