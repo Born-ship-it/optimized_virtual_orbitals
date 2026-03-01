@@ -1256,7 +1256,7 @@ class OVOS:
 					print(f"    ΔE_corr = {diff_E_corr:.2e} Hartree, Δ Gradient norm = {diff_grad_norm:.2e}")
 
 				# Convergence criteria: correlation energy change below threshold AND small gradient norm
-				if diff_E_corr < 1e-10 and self.grad_norm < 1e-8:  # Convergence threshold
+				if diff_E_corr < 1e-8 and self.grad_norm < 1e-6: #) or diff_E_corr < 1e-12:  # Convergence threshold
 					converged = True
 					lst_stop_reason.append("Convergence")
 					
@@ -1793,7 +1793,7 @@ class Tee:
             s.flush()
 
 if True: # Done with OVOS runs. Comment out this line to run more or move on to the next part of the code.
-	for basis_set in ["6-31G", "cc-pVDZ"]: 				# Yet:	"6-31G" | Yet: "cc-pVDZ", ... 
+	for basis_set in ["6-31G"]: 				# Yet:	"6-31G" | Yet: "cc-pVDZ", ... 
 		for molecule in ["H2O"]: 	# Done: "H2O" | Yet: "CO", "HF", "NH3"
 			print("")
 			print("==========================================================")
@@ -1803,7 +1803,7 @@ if True: # Done with OVOS runs. Comment out this line to run more or move on to 
 
 			mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
 			
-			for start_guess in ["RHF", "prev"]: # "RHF", "prev", "random"
+			for start_guess in ["random"]: # "RHF", "prev", "random"
 				with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
 					sys.stdout = Tee(sys.__stdout__, f)
 					try:
