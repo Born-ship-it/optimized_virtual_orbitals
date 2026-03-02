@@ -944,28 +944,29 @@ class OVOS:
 				H_block_diag[start:end, start:end] = H[start:end, start:end]
 			
 			# Try to level shift the Hessian if it is ill-conditioned or has negative eigenvalues
-			eigvals = np.linalg.eigvalsh(H)
-			min_eigval = np.min(eigvals)
-			level_shift_threshold = 1e-6
-			if min_eigval < level_shift_threshold:
-				shift_value = (level_shift_threshold - min_eigval) if min_eigval < 0 else level_shift_threshold
-				H += shift_value * np.eye(H.shape[0])
-				if not self.use_random_unitary_init:
-					print(f"    Hessian was ill-conditioned or had negative eigenvalues. Applied level shift of {shift_value:.2e} to the diagonal.")
+			if True: # Set to True to always apply level shift if negative eigenvalues are present
+				eigvals = np.linalg.eigvalsh(H)
+				min_eigval = np.min(eigvals)
+				level_shift_threshold = 1e-6
+				if min_eigval < level_shift_threshold:
+					shift_value = (level_shift_threshold - min_eigval) if min_eigval < 0 else level_shift_threshold
+					H += shift_value * np.eye(H.shape[0])
+					if not self.use_random_unitary_init:
+						print(f"    Hessian was ill-conditioned or had negative eigenvalues. Applied level shift of {shift_value:.2e} to the diagonal.")
 
-					# Re-check eigenvalues after shift
-				eigvals_shifted = np.linalg.eigvalsh(H)
-				n_neg_eigval_H_shifted = np.sum(eigvals_shifted < 0)
-				if n_neg_eigval_H_shifted > 0 and not self.use_random_unitary_init:
-					print(f"    WARNING: Hessian still has negative eigenvalues after level shift! Neg. Eigval: {n_neg_eigval_H_shifted}/{len(eigvals_shifted)}")
+						# Re-check eigenvalues after shift
+					eigvals_shifted = np.linalg.eigvalsh(H)
+					n_neg_eigval_H_shifted = np.sum(eigvals_shifted < 0)
+					if n_neg_eigval_H_shifted > 0 and not self.use_random_unitary_init:
+						print(f"    WARNING: Hessian still has negative eigenvalues after level shift! Neg. Eigval: {n_neg_eigval_H_shifted}/{len(eigvals_shifted)}")
 
-					# Check that Hessian is now positive definite
-				assert np.all(eigvals_shifted >= 0), "Hessian still has negative eigenvalues after level shift!"
+						# Check that Hessian is now positive definite
+					assert np.all(eigvals_shifted >= 0), "Hessian still has negative eigenvalues after level shift!"
 
-					# Check condition number after shift
-				cond_H_shifted = np.linalg.cond(H) if H.size > 0 else np.inf
-				if cond_H_shifted > 1e12 and not self.use_random_unitary_init:
-					print(f"    WARNING: Hessian is still ill-conditioned after level shift! Condition number: {cond_H_shifted:.2e}")
+						# Check condition number after shift
+					cond_H_shifted = np.linalg.cond(H) if H.size > 0 else np.inf
+					if cond_H_shifted > 1e12 and not self.use_random_unitary_init:
+						print(f"    WARNING: Hessian is still ill-conditioned after level shift! Condition number: {cond_H_shifted:.2e}")
 			
 
 			# Set H to the block-diagonal approximation
@@ -1559,6 +1560,11 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 				# Keep track if we ended up at the same best result multiple times, which could indicate a local minimum
 				best_result_count = 0
 
+				# If at full space update the attempts_total, as we can not optimize here
+				if num_opt_virtual_orbs_current == max_opt_virtual_orbs:
+					# Scale up attempts_total
+					attempts_total *= 10
+
 				while attempt < attempts_total:
 					attempt += 1
 					print("")
@@ -1618,7 +1624,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 					
 					# Discard this attempt if it did not converge (or falsely converged...)
 						# False converged if the last five are not converged points
-					if lst_stop_reason_attempts[-5:].count("Convergence") < 5:
+					if lst_stop_reason_attempts[-5:].count("Convergence") < 5 and len(lst_stop_reason_attempts) > 5:
 						print(f"Attempt {attempt} did not show stable convergence in the last 5 iterations. Discarding this attempt.")
 						best_result_count = 0  # Reset count for this new best result
 						continue
@@ -1794,7 +1800,7 @@ class Tee:
 
 if True: # Done with OVOS runs. Comment out this line to run more or move on to the next part of the code.
 	for basis_set in ["6-31G"]: 				# Yet:	"6-31G" | Yet: "cc-pVDZ", ... 
-		for molecule in ["H2O"]: 	# Done: "H2O" | Yet: "CO", "HF", "NH3"
+		for molecule in ["H2O", "CO", "HF", "NH3"]: 	# Done: "H2O" | Yet: "CO", "HF", "NH3"
 			print("")
 			print("==========================================================")
 			print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
@@ -1803,7 +1809,7 @@ if True: # Done with OVOS runs. Comment out this line to run more or move on to 
 
 			mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
 			
-			for start_guess in ["random"]: # "RHF", "prev", "random"
+			for start_guess in ["RHF", "prev", "random"]: # "RHF", "prev", "random"
 				with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
 					sys.stdout = Tee(sys.__stdout__, f)
 					try:
