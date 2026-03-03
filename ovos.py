@@ -924,12 +924,33 @@ class OVOS:
 
 
 		# Step (vi): Use the Newton-Raphson method to minimize the second-order Hylleraas functional
-		
-			# Set to True to use Reduced Linear Equation method instead of direct inversion
-		use_RLE = True
+			# Try to level shift the Hessian if it is ill-conditioned or has negative eigenvalues
+		if False: # Set to True to always apply level shift if negative eigenvalues are present
+			eigvals = np.linalg.eigvalsh(H)
+			min_eigval = np.min(eigvals)
+			level_shift_threshold = 1e-3
+			if min_eigval < 0.0:
+				shift_value = (level_shift_threshold - min_eigval) if min_eigval < 0 else level_shift_threshold
+				H += shift_value * np.eye(H.shape[0])
+				if not self.use_random_unitary_init:
+					print(f"    Hessian was ill-conditioned or had negative eigenvalues. Applied level shift of {shift_value:.2e} to the diagonal.")
+
+					# Re-check eigenvalues after shift
+				eigvals_shifted = np.linalg.eigvalsh(H)
+				n_neg_eigval_H_shifted = np.sum(eigvals_shifted < 0)
+				if n_neg_eigval_H_shifted > 0 and not self.use_random_unitary_init:
+					print(f"    WARNING: Hessian still has negative eigenvalues after level shift! Neg. Eigval: {n_neg_eigval_H_shifted}/{len(eigvals_shifted)}")
+
+					# Check that Hessian is now positive definite
+				assert np.all(eigvals_shifted >= 0), "Hessian still has negative eigenvalues after level shift!"
+
+					# Check condition number after shift
+				cond_H_shifted = np.linalg.cond(H) if H.size > 0 else np.inf
+				if cond_H_shifted > 1e12 and not self.use_random_unitary_init:
+					print(f"    WARNING: Hessian is still ill-conditioned after level shift! Condition number: {cond_H_shifted:.2e}")
 
 		# Reduced Linear Equation method
-		if use_RLE:				
+		if True: # Set to True to always apply block-diagonal approximation				
 			# Modify Hessian to only inverse the block-diagonal part corresponding H_{ea,eb}
 			len_inac = len(self.inactive_indices)
 			len_ac   = len(self.active_inocc_indices)
@@ -943,36 +964,19 @@ class OVOS:
 				end = (i + 1) * len_ac
 				H_block_diag[start:end, start:end] = H[start:end, start:end]
 			
-			# Try to level shift the Hessian if it is ill-conditioned or has negative eigenvalues
-			if True: # Set to True to always apply level shift if negative eigenvalues are present
-				eigvals = np.linalg.eigvalsh(H)
-				min_eigval = np.min(eigvals)
-				level_shift_threshold = 1e-6
-				if min_eigval < level_shift_threshold:
-					shift_value = (level_shift_threshold - min_eigval) if min_eigval < 0 else level_shift_threshold
-					H += shift_value * np.eye(H.shape[0])
-					if not self.use_random_unitary_init:
-						print(f"    Hessian was ill-conditioned or had negative eigenvalues. Applied level shift of {shift_value:.2e} to the diagonal.")
-
-						# Re-check eigenvalues after shift
-					eigvals_shifted = np.linalg.eigvalsh(H)
-					n_neg_eigval_H_shifted = np.sum(eigvals_shifted < 0)
-					if n_neg_eigval_H_shifted > 0 and not self.use_random_unitary_init:
-						print(f"    WARNING: Hessian still has negative eigenvalues after level shift! Neg. Eigval: {n_neg_eigval_H_shifted}/{len(eigvals_shifted)}")
-
-						# Check that Hessian is now positive definite
-					assert np.all(eigvals_shifted >= 0), "Hessian still has negative eigenvalues after level shift!"
-
-						# Check condition number after shift
-					cond_H_shifted = np.linalg.cond(H) if H.size > 0 else np.inf
-					if cond_H_shifted > 1e12 and not self.use_random_unitary_init:
-						print(f"    WARNING: Hessian is still ill-conditioned after level shift! Condition number: {cond_H_shifted:.2e}")
-			
-
 			# Set H to the block-diagonal approximation
 			H = H_block_diag
 
-		R = -np.linalg.solve(H, G.flatten())  # Solve H R = -G for R using a stable linear solver
+
+		if True: # Set to True to always apply SVD 
+			# Apply SVD truncation to the Hessian to improve stability
+			U, S, Vh = np.linalg.svd(H)
+			svd_threshold = np.max(S) if np.max(S) > 1e-6 else 1e-6		  # Threshold for singular values, can be tuned
+			S_truncated = np.where(S > svd_threshold, S, svd_threshold)
+			H_svd_inv = (Vh.T / S_truncated) @ U.T
+			R = -H_svd_inv @ G.flatten()
+		else:
+			R = -np.linalg.solve(H, G.flatten())  # Solve H R = -G for R using a stable linear solver
 			
 		
 		# Initialize R,
@@ -1418,9 +1422,7 @@ def setup_OVOS(select_atom, select_basis):
 				unit=unit,
 				spin=0,  				  # Closed-shell molecule
 				charge=0,				  # symmetry=False 		      # Disable symmetry for OVOS
-				symmetry=True,      	  # # For the CH2 comparison to the article! 
-    			symmetry_subgroup='C2v',  # CH2 belongs to C2v point group
-				cart = False  			  # Use Cartesian basis functions (not spherical harmonics)
+				symmetry=False
 				)
 		# Set symmetry
 	# mol.symmetry = False  # Disable symmetry for OVOS
@@ -1624,10 +1626,10 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 					
 					# Discard this attempt if it did not converge (or falsely converged...)
 						# False converged if the last five are not converged points
-					if lst_stop_reason_attempts[-5:].count("Convergence") < 5 and len(lst_stop_reason_attempts) > 5:
-						print(f"Attempt {attempt} did not show stable convergence in the last 5 iterations. Discarding this attempt.")
-						best_result_count = 0  # Reset count for this new best result
-						continue
+					# if lst_stop_reason_attempts[-5:].count("Convergence") < 5 and len(lst_stop_reason_attempts) > 5:
+					# 	print(f"Attempt {attempt} did not show stable convergence in the last 5 iterations. Discarding this attempt.")
+					# 	best_result_count = 0  # Reset count for this new best result
+					# 	continue
 
 					# Update best result
 					if best_E_corr is None or E_this < best_E_corr:
@@ -1641,19 +1643,19 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 
 					# Check if we got the same best result again, which could indicate a local minimum
 					if 1 < attempt <= 125:  # Only start checking after the first attempt
-						if best_E_corr is not None and abs(E_this - best_E_corr) < 1e-10:
+						if best_E_corr is not None and abs(E_this - best_E_corr) < 1e-6:
 							best_result_count += 1
 					# After 125 attempts, we can loosen the criterion for being the same best result
 					if attempt > 125:  # Only start checking after the first attempt
-						if abs(E_this - best_E_corr) < 1e-8:
+						if abs(E_this - best_E_corr) < 1e-5:
 							best_result_count += 1
 					# After 250 attempts, we can loosen the criterion even more
 					elif attempt > 250:
-						if abs(E_this - best_E_corr) < 1e-6:
+						if abs(E_this - best_E_corr) < 1e-4:
 							best_result_count += 1
 					# After 500 attempts, we can loosen the criterion even more
 					elif attempt > 500:
-						if abs(E_this - best_E_corr) < 1e-4:
+						if abs(E_this - best_E_corr) < 1e-3:
 							best_result_count += 1
 					# After 750 attempts, we can loosen the criterion even more
 					elif attempt > 750:
@@ -1799,8 +1801,9 @@ class Tee:
             s.flush()
 
 if True: # Done with OVOS runs. Comment out this line to run more or move on to the next part of the code.
-	for basis_set in ["6-31G"]: 				# Yet:	"6-31G" | Yet: "cc-pVDZ", ... 
-		for molecule in ["H2O", "CO", "HF", "NH3"]: 	# Done: "H2O" | Yet: "CO", "HF", "NH3"
+	for basis_set in ["6-31G", "cc-pVDZ"]: 				# Yet:	"6-31G" | Yet: "cc-pVDZ", ... 
+		for molecule in ["H2O"]: 	# Done: "H2O", "CO", "HF", "NH3"
+									#        (16)  (22)  (12)  (20)
 			print("")
 			print("==========================================================")
 			print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
@@ -1830,7 +1833,7 @@ Negative eigenvalues in Hessian can also be level-shifted to stabilize convergen
 # Save miscellaneous data about the molecule and basis set
 if False: # Done...
 	for basis_set in ["6-31G"]:
-		for molecule in ["CO"]: # Do: "CO", "H2O", "HF", "NH3"
+		for molecule in ["H2O"]: # Do: "CO", "H2O", "HF", "NH3"
 			print("#### Miscellaneous data about the molecule and basis set ####")
 			print("Molecule: ", molecule)
 			print("Basis set: ", basis_set)
@@ -1874,6 +1877,8 @@ if False: # Done...
 				# Run CCSD(T)
 			ccsd = pyscf.cc.CCSD(rhf).run()
 			print()
+
+			# OOMP2
 
 				# Run FCI/CASCI
 			cisolver = pyscf.fci.FCI(mol, my_custom_mos)
