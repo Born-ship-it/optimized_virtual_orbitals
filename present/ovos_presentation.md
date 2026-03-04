@@ -279,27 +279,44 @@ $$
 ---
 
 <!-- header: Optimized Virtual Orbital Space (OVOS) -->
+<!-- _paginate: hold -->
 
 ![center w:1050](images/ovos_conv_vs_vorb_H2O_6-31G_comb_box.png)
 
 ---
 
 <!-- header: Optimized Virtual Orbital Space (OVOS) -->
+<!-- _paginate: hold -->
 
-## Outlook
+<br>
+<br>
+<br>
 
-1) **Perhaps MO's from OVOS could be used as a better starting point for VQE, improving convergence and accuracy of quantum algorithms for correlation energy estimation.**
 
+![center w:1350](images/ovos_conv_vs_vorb_H2O_cc-pVDZ_comb.png)
 
 ---
 
 <!-- header: Optimized Virtual Orbital Space (OVOS) -->
 <!-- _paginate: hold -->
 
+<br>
+
+
+![center w:1350](images/ovos_conv_vs_vorb_H2O_cc-pVDZ_comb_cut.png)
+
+---
+
+<!-- header: Optimized Virtual Orbital Space (OVOS) -->
+
 ## Outlook
 
-1) **Perhaps MO's from OVOS could be used as a better starting point for VQE, improving convergence and accuracy of quantum algorithms for correlation energy estimation.**
+1) **For >1000 orbitals OVOS might be more efficient for classical computing.**
 
 <br>
 
-2) **The MO's from OVOS might approximate Brueckner orbitals, which are known to be optimal for correlated methods. This could lead to improved performance of classical and quantum algorithms that rely on orbital optimization.**
+2) **MO's from OVOS might be a better starting point for VQE-type algorithms.**
+
+<br>
+
+2) **The MO's from OVOS might approximate Brueckner orbitals, for better overlap with FCI groundstate.**

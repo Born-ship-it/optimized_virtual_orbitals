@@ -18,8 +18,27 @@ import pyscf
 
 from decimal import Decimal
 
-# import time
 
+# Utilities for non-blocking keyboard input (for interactive stopping of optimization)
+import sys
+import select
+import tty
+import termios
+import time
+
+def is_key_pressed(timeout=0):
+    """Return True if a key has been pressed on stdin within `timeout` seconds."""
+    return select.select([sys.stdin], [], [], timeout) == ([sys.stdin], [], [])
+
+def get_key():
+    """Read a single character from stdin (non‑blocking, assumes raw mode is on)."""
+    return sys.stdin.read(1)
+
+def raw_print(*args, **kwargs):
+    # Ensure each printed line ends with \r\n
+    kwargs.setdefault('end', '\r\n')
+    kwargs.setdefault('flush', True)
+    print(*args, **kwargs)
 
 # Options:
 np.set_printoptions(precision=4, suppress=False, linewidth=200)
@@ -111,13 +130,13 @@ class OVOS:
 
 		# Print information about the spaces
 		if not self.use_random_unitary_init:
-			print()
-			print("#### Active and inactive spaces ####")
-			print("Total number of spin-orbitals: ", self.tot_num_spin_orbs)
-			print("Active occupied spin-orbitals: ", self.active_occ_indices)
-			print("Active unoccupied spin-orbitals: ", self.active_inocc_indices)
-			print("Inactive unoccupied spin-orbitals: ", self.inactive_indices)
-			print()
+			raw_print()
+			raw_print("#### Active and inactive spaces ####")
+			raw_print("Total number of spin-orbitals: ", self.tot_num_spin_orbs)
+			raw_print("Active occupied spin-orbitals: ", self.active_occ_indices)
+			raw_print("Active unoccupied spin-orbitals: ", self.active_inocc_indices)
+			raw_print("Inactive unoccupied spin-orbitals: ", self.inactive_indices)
+			raw_print()
 
 		# Checks and balances
 			# Check that the number of optimized virtual orbitals is not too large
@@ -636,7 +655,7 @@ class OVOS:
 				# which is the sum of active inocc and inactive indices. 
 			# This gives a sense of how much of the virtual space is being included in the MP2 energy calculation.
 		if not self.use_random_unitary_init:
-			print(f"    [{len(self.active_inocc_indices)}/{len(self.active_inocc_indices + self.inactive_indices)}]: MP2 (spin-orbital): ", J_2)
+			raw_print(f"    [{len(self.active_inocc_indices)}/{len(self.active_inocc_indices + self.inactive_indices)}]: MP2 (spin-orbital): ", J_2)
 
 		# Sanity checks
 			# Check that MP2 correlation energy is finite
@@ -703,11 +722,11 @@ class OVOS:
 		# Check symmetry
 		sym_diff = np.max(np.abs(D_ab - D_ab.T))
 		if sym_diff > 1e-10  and not self.use_random_unitary_init:
-			print("WARNING: D_ab is not symmetric!")
+			raw_print("WARNING: D_ab is not symmetric!")
 			# Print the non-symmetric parts
 			diff_matrix = np.abs(D_ab - D_ab.T)
 			idx = np.unravel_index(np.argmax(diff_matrix), diff_matrix.shape)
-			print(f"Max diff at ({idx[0]},{idx[1]}): D={D_ab[idx]:.6e}, D.T={D_ab.T[idx]:.6e}")
+			raw_print(f"Max diff at ({idx[0]},{idx[1]}): D={D_ab[idx]:.6e}, D.T={D_ab.T[idx]:.6e}")
 
 		# Sanity checks for D_ab
 		assert np.count_nonzero(D_ab) > 0, "Density matrix D is all zeros!"
@@ -783,7 +802,7 @@ class OVOS:
 		# Norm of the gradient
 		self.grad_norm = np.linalg.norm(G.flatten())
 		if not self.use_random_unitary_init:
-			print(f"    Gradient norm: {self.grad_norm:.6e}")
+			raw_print(f"    Gradient norm: {self.grad_norm:.6e}")
 		
 			# Check if gradient has finite values
 		assert np.all(np.isfinite(G)), "Gradient G contains non-finite values!"
@@ -898,23 +917,20 @@ class OVOS:
 			cond_H = np.linalg.cond(H) if H.size > 0 else np.inf
 
 			# Check eigenvalues
-			print(f"    Hessian norm: {np.linalg.norm(H):.6e}, (Neg. Eigval: {n_neg_eigval_H}/{len(eigvals)})")
+			raw_print(f"    Hessian norm: {np.linalg.norm(H):.6e}, (Neg. Eigval: {n_neg_eigval_H}/{len(eigvals)})")
 			if np.any(eigvals < 0.0):
-				print("        WARNING: Hessian has negative eigenvalues!")				
+				raw_print("        WARNING: Hessian has negative eigenvalues!")				
 				# Condition number
-			print(f"    Hessian condition number: {cond_H:.6e}, determinant: {det_H:.6e}, size: {H.shape}")
+			raw_print(f"    Hessian condition number: {cond_H:.6e}, determinant: {det_H:.6e}, size: {H.shape}")
 
 			# Sanity checks for H
 			if np.count_nonzero(H) == 0:
-				print("        WARNING: Hessian is zero.")
+				raw_print("        WARNING: Hessian is zero.")
 			if not np.all(np.isfinite(H)):
-				print("        WARNING: Hessian H contains non-finite values!")
+				raw_print("        WARNING: Hessian H contains non-finite values!")
 			if not np.allclose(H, H.T, atol=1e-10):
 				H_symm_diff = np.max(np.abs(H - H.T))
-				print("        WARNING: Hessian H is not symmetric! Max symm diff: ", H_symm_diff)
-
-				# 
-
+				raw_print("        WARNING: Hessian H is not symmetric! Max symm diff: ", H_symm_diff)
 
 
 
@@ -924,33 +940,8 @@ class OVOS:
 
 
 		# Step (vi): Use the Newton-Raphson method to minimize the second-order Hylleraas functional
-			# Try to level shift the Hessian if it is ill-conditioned or has negative eigenvalues
-		if False: # Set to True to always apply level shift if negative eigenvalues are present
-			eigvals = np.linalg.eigvalsh(H)
-			min_eigval = np.min(eigvals)
-			level_shift_threshold = 1e-3
-			if min_eigval < 0.0:
-				shift_value = (level_shift_threshold - min_eigval) if min_eigval < 0 else level_shift_threshold
-				H += shift_value * np.eye(H.shape[0])
-				if not self.use_random_unitary_init:
-					print(f"    Hessian was ill-conditioned or had negative eigenvalues. Applied level shift of {shift_value:.2e} to the diagonal.")
-
-					# Re-check eigenvalues after shift
-				eigvals_shifted = np.linalg.eigvalsh(H)
-				n_neg_eigval_H_shifted = np.sum(eigvals_shifted < 0)
-				if n_neg_eigval_H_shifted > 0 and not self.use_random_unitary_init:
-					print(f"    WARNING: Hessian still has negative eigenvalues after level shift! Neg. Eigval: {n_neg_eigval_H_shifted}/{len(eigvals_shifted)}")
-
-					# Check that Hessian is now positive definite
-				assert np.all(eigvals_shifted >= 0), "Hessian still has negative eigenvalues after level shift!"
-
-					# Check condition number after shift
-				cond_H_shifted = np.linalg.cond(H) if H.size > 0 else np.inf
-				if cond_H_shifted > 1e12 and not self.use_random_unitary_init:
-					print(f"    WARNING: Hessian is still ill-conditioned after level shift! Condition number: {cond_H_shifted:.2e}")
-
-		# Reduced Linear Equation method
-		if True: # Set to True to always apply block-diagonal approximation				
+			# Reduced Linear Equation method
+		if False: # Set to True to always apply block-diagonal approximation				
 			# Modify Hessian to only inverse the block-diagonal part corresponding H_{ea,eb}
 			len_inac = len(self.inactive_indices)
 			len_ac   = len(self.active_inocc_indices)
@@ -968,13 +959,37 @@ class OVOS:
 			H = H_block_diag
 
 
-		if True: # Set to True to always apply SVD 
+		if False: # Set to True to always apply SVD 
 			# Apply SVD truncation to the Hessian to improve stability
 			U, S, Vh = np.linalg.svd(H)
-			svd_threshold = np.max(S) if np.max(S) > 1e-6 else 1e-6		  # Threshold for singular values, can be tuned
+			svd_threshold = 1e-6		  # Threshold for singular values, can be tuned
 			S_truncated = np.where(S > svd_threshold, S, svd_threshold)
 			H_svd_inv = (Vh.T / S_truncated) @ U.T
 			R = -H_svd_inv @ G.flatten()
+		elif True:
+			# Levenberg‑Marquardt regularisation (Tikhonov with adaptive damping)
+			# Initial guess for the damping parameter (problem‑dependent)
+			lambda_init = 1e-6   # adjust based on scale of H
+
+			# Solve (H + lambda * I) * delta = -G
+			# Use a linear solver (Cholesky if H is spd, else general)
+			try:
+				# Attempt Cholesky for efficiency (assumes H is positive definite after regularisation)
+				L = np.linalg.cholesky(H + lambda_init * np.eye(len(H)))
+				delta = -np.linalg.solve(L.T, np.linalg.solve(L, G.flatten()))
+			except np.linalg.LinAlgError:
+				# Fallback to a general solver if Cholesky fails
+				delta = np.linalg.solve(H + lambda_init * np.eye(len(H)), -G.flatten())
+
+			# Optional: dynamic update of lambda based on actual vs. predicted reduction
+			# (Simplified version – in practice you would evaluate the objective)
+			# rho = (f(x) - f(x+delta)) / (predicted reduction)
+			# if rho > 0:
+			#     lambda = max(lambda/2, lambda_min)   # successful step, reduce damping
+			# else:
+			#     lambda = min(lambda*2, lambda_max)   # unsuccessful, increase damping
+
+			R = delta   # step to apply
 		else:
 			R = -np.linalg.solve(H, G.flatten())  # Solve H R = -G for R using a stable linear solver
 			
@@ -1005,7 +1020,7 @@ class OVOS:
 		# Convergence check based on max element of R_matrix
 		max_R_elem = np.max(np.abs(R_matrix))
 		if not self.use_random_unitary_init:
-			print(f"    Rotation norm {np.linalg.norm(R_matrix):.6e}, (Max el.: {max_R_elem:.6e})")
+			raw_print(f"    Rotation norm {np.linalg.norm(R_matrix):.6e}, (Max el.: {max_R_elem:.6e})")
 		# Check that R is anti-symmetric
 		diff_R = np.linalg.norm(R_matrix + R_matrix.T)
 		assert diff_R < 1e-6, f"R_matrix is not anti-symmetric, ||R + R.T|| = {diff_R}"
@@ -1095,7 +1110,7 @@ class OVOS:
 				expected = 1.0 if i == j else 0.0
 				if abs(U[i, j] - expected) > 1e-6:
 					if not self.use_random_unitary_init:
-						print(f"WARNING: U deviates from identity in active occupied block at ({i},{j}): U={U[i,j]:.6e}, expected={expected:.6e}")
+						raw_print(f"WARNING: U deviates from identity in active occupied block at ({i},{j}): U={U[i,j]:.6e}, expected={expected:.6e}")
 
 
 
@@ -1174,23 +1189,36 @@ class OVOS:
 		"""
 
 		converged = False
-		max_iter = 5000
+		max_iter = 10000
 		iter_count = 0
 
 		E_corr = None
 		keep_track = 0
+		keep_track_max = 25
 
 		while iter_count < max_iter:
+
+			# Allow user to skip to next iteration by pressing 's' key (with a short timeout to avoid blocking)
+				# Check if a key was pressed (with a very short timeout)
+			if is_key_pressed(0.01):   # 10 ms timeout
+				key = get_key()
+				if key == 's':
+					raw_print("\n[Skipping to next iteration...]")
+					break
+				if key == '\x03':  # Ctrl-C to quit
+					raw_print("\n[Exiting OVOS...]")
+					sys.exit(0)
+
 			iter_count += 1
 			self.iteration = iter_count
 
 			if not self.use_random_unitary_init:
-				print()
-				print("#### OVOS Iteration ", iter_count, " ####")
+				raw_print()
+				raw_print("#### OVOS Iteration ", iter_count, " ####")
 
 			# Step (iii-iv): Compute MP2 correlation energy and amplitudes
 			if not self.use_random_unitary_init:
-				print(" Step (iii)-(iv): Compute MP2 corr. energy & amps.")
+				raw_print(" Step (iii)-(iv): Compute MP2 corr. energy & amps.")
 			E_corr, MP1_amplitudes, eri_as, Fmo_spin = self.MP2_energy(mo_coeffs = mo_coeffs, Fmo = Fmo_rot)
 
 			# Step (ix): check convergence and stability
@@ -1213,7 +1241,7 @@ class OVOS:
 
 				# Step (v)-(viii): Orbital optimization
 				if not self.use_random_unitary_init:
-					print(" Step (v)-(viii): Orbital optimization")
+					raw_print(" Step (v)-(viii): Orbital optimization")
 				mo_coeffs, Fmo_rot = self.orbital_optimization(
 					mo_coeffs=mo_coeffs,
 					MP1_amplitudes=MP1_amplitudes,
@@ -1231,7 +1259,7 @@ class OVOS:
 
 				# Step (v)-(viii): Orbital optimization
 				if not self.use_random_unitary_init:
-					print(" Step (v)-(viii): Orbital optimization")
+					raw_print(" Step (v)-(viii): Orbital optimization")
 				mo_coeffs, Fmo_rot = self.orbital_optimization(
 					mo_coeffs=mo_coeffs,
 					MP1_amplitudes=MP1_amplitudes,
@@ -1240,7 +1268,7 @@ class OVOS:
 
 			# ---- Update convergence status ----
 				if not self.use_random_unitary_init:
-					print(" Step (ix): Check convergence and stability")
+					raw_print(" Step (ix): Check convergence and stability")
 
 				# Check if gradient norm is small enough for convergence
 					# Gradient norm history, keep track of the last 2 values to check for convergence
@@ -1258,17 +1286,25 @@ class OVOS:
 
 					# Print convergence diagnostics
 				if not self.use_random_unitary_init and diff_grad_norm is not None:
-					print(f"    ΔE_corr = {diff_E_corr:.2e} Hartree, Δ Gradient norm = {diff_grad_norm:.2e}")
+					raw_print(f"    ΔE_corr = {diff_E_corr:.2e} Hartree, Δ Gradient norm = {diff_grad_norm:.2e}")
 
 				# Convergence criteria: correlation energy change below threshold AND small gradient norm
-				if diff_E_corr < 1e-8 and self.grad_norm < 1e-6: #) or diff_E_corr < 1e-12:  # Convergence threshold
+				if (diff_E_corr < 1e-8 and self.grad_norm < 1e-6) or diff_E_corr < 1e-14: #) or diff_E_corr < 1e-12:  # Convergence threshold
 					converged = True
 					lst_stop_reason.append("Convergence")
 					
 					keep_track += 1
-					if keep_track >= 25:  # Require 5 consecutive iterations below threshold to confirm convergence
+					if keep_track >= keep_track_max + 1:  # Require 25 consecutive iterations below threshold to confirm convergence
 						if not self.use_random_unitary_init:
-							print("OVOS converged with stable correlation energy for 25 consecutive iterations.")
+							raw_print("OVOS converged with stable correlation energy for 25 consecutive iterations.")
+
+						# Now that we found a sure convergence, we can remove the last 25 points where the energy was still changing but below the threshold, and keep only the final converged point
+						lst_E_corr = lst_E_corr[:-keep_track_max]
+						lst_iter_counts = lst_iter_counts[:-keep_track_max]
+						lst_mo_coeffs = lst_mo_coeffs[:-keep_track_max]
+						lst_Fmo_rot = lst_Fmo_rot[:-keep_track_max]
+						lst_stop_reason = lst_stop_reason[:-keep_track_max]
+
 						break
 				else:
 					converged = False
@@ -1279,37 +1315,37 @@ class OVOS:
 				# set upper limit of iterations to prevent infinite loop in case of non-convergence
 			if iter_count >= max_iter:
 				if not self.use_random_unitary_init:
-					print(f"Reached upper limit of iterations ({max_iter}) without convergence. Stopping OVOS.")
+					raw_print(f"Reached upper limit of iterations ({max_iter}) without convergence. Stopping OVOS.")
 				break
 
 		# Which direction did we go?
 		if converged and not self.use_random_unitary_init:
 			final_E_corr = lst_E_corr[-1]
 			initial_E_corr = lst_E_corr[0]
-			print()
-			print("#### OVOS Summary ####")
-			print(f"Initial MP2 correlation energy: {initial_E_corr:.10f} Hartree")
-			print(f"Final OVOS correlation energy: {final_E_corr:.10f} Hartree")
-			print(f"Total change in correlation energy: {final_E_corr - initial_E_corr:.10f} Hartree")
+			raw_print()
+			raw_print("#### OVOS Summary ####")
+			raw_print(f"Initial MP2 correlation energy: {initial_E_corr:.10f} Hartree")
+			raw_print(f"Final OVOS correlation energy: {final_E_corr:.10f} Hartree")
+			raw_print(f"Total change in correlation energy: {final_E_corr - initial_E_corr:.10f} Hartree")
 			if final_E_corr < initial_E_corr:
-				print("OVOS successfully lowered the correlation energy.")
+				raw_print("OVOS successfully lowered the correlation energy.")
 			else:
-				print("WARNING: OVOS increased the correlation energy!")
-			print(f"Total number of iterations: {iter_count}")
+				raw_print("WARNING: OVOS increased the correlation energy!")
+			raw_print(f"Total number of iterations: {iter_count}")
 
 		# Print information about the spaces
 		if not self.use_random_unitary_init:
-			print()
-			print("#### Active and inactive spaces ####")
-			print("Total number of spin-orbitals: ", self.tot_num_spin_orbs)
-			print("Active occupied spin-orbitals: ", self.active_occ_indices)
-			print("Active unoccupied spin-orbitals: ", self.active_inocc_indices)
-			print("Inactive unoccupied spin-orbitals: ", self.inactive_indices)
-			print()
+			raw_print()
+			raw_print("#### Active and inactive spaces ####")
+			raw_print("Total number of spin-orbitals: ", self.tot_num_spin_orbs)
+			raw_print("Active occupied spin-orbitals: ", self.active_occ_indices)
+			raw_print("Active unoccupied spin-orbitals: ", self.active_inocc_indices)
+			raw_print("Inactive unoccupied spin-orbitals: ", self.inactive_indices)
+			raw_print()
 		
 		# Check if OVOS converged
 		if not converged:
-			print(f"  [{len(self.active_inocc_indices)}/{len(self.active_inocc_indices)+len(self.inactive_indices)}] OVOS did not converge within the maximum number of iterations.")
+			raw_print(f"  [{len(self.active_inocc_indices)}/{len(self.active_inocc_indices)+len(self.inactive_indices)}] OVOS did not converge within the maximum number of iterations.")
 
 		# Return the results
 		best_converged_idx = None
@@ -1411,7 +1447,7 @@ def setup_OVOS(select_atom, select_basis):
 	atom, basis = (atom_choose_between[find_atom[select_atom]], select_basis)
 
 	# Print start message
-	print(" Running OVOS on ", atom, " with basis set ", basis)
+	raw_print(" Running OVOS on ", atom, " with basis set ", basis)
 	print("")
 
 	# Get number of electrons and full space size in molecular orbitals
@@ -1461,9 +1497,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 	if select_basis == "6-31G":
 		attempts_total = 1000
 	elif select_basis == "cc-pVDZ":
-		attempts_total = 500
-	elif select_basis == "cc-pVTZ":
-		attempts_total = 125
+		attempts_total = 100
 
 	if use_random_unitary_init == True:
 		try_best_of = True
@@ -1510,8 +1544,8 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 
 		lst_E_corr = None  # Reset lst_E_corr for each run
 
-		print("")
-		print("#### OVOS with ", num_opt_virtual_orbs_current, " out of ", max_opt_virtual_orbs," optimized virtual orbitals (Retry count: ", retry_count,") ####")
+		raw_print("")
+		raw_print("#### OVOS with ", num_opt_virtual_orbs_current, " out of ", max_opt_virtual_orbs," optimized virtual orbitals (Retry count: ", retry_count,") ####")
 
 		try:
 
@@ -1540,13 +1574,13 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 					Fmo_rot = Fmo_rot  
 					init_orbs = "RHF"
 
-					print("    Using previously optimized orbitals as starting guess.")				
+					raw_print("    Using previously optimized orbitals as starting guess.")				
 
 					# Run OVOS
 				lst_E_corr, lst_iter_counts, mo_coeffs, Fmo_rot, lst_stop_reason = OVOS(mol=mol, scf=rhf, Fao=Fao, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs, mo_coeff=mo_coeffs).run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
 
 			if try_best_of == True: # Multiple runs of OVOS with different random initializations
-				print("Using random unitary rotated UHF virtual orbitals as starting guess.")
+				raw_print("Using random unitary rotated RHF virtual orbitals as starting guess.")
 
 				# Try multiple random initializations and pick the best result
 				attempt = 0
@@ -1566,11 +1600,25 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 				if num_opt_virtual_orbs_current == max_opt_virtual_orbs:
 					# Scale up attempts_total
 					attempts_total *= 10
+					raw_print(f"Optimizing in the full virtual space, increasing total attempts to {attempts_total} to ensure we find the best result.")
 
 				while attempt < attempts_total:
+					
+					# Allow user to skip to next iteration by pressing 's' key (with a short timeout to avoid blocking)
+						# Check if a key was pressed (with a very short timeout)
+					if is_key_pressed(0.01):   # 10 ms timeout
+						key = get_key()
+						raw_print(f"DEBUG: got {repr(key)}", flush=True)   # remove after testing
+						if key == 's':          # Skip key
+							raw_print("\n[Skipping to next attempt...]")
+							break                # exit inner loop
+						if key == '\x03':  # Ctrl-C to quit
+							raw_print("\n[Exiting OVOS...]")
+							sys.exit(0)
+
 					attempt += 1
-					print("")
-					print("---- Attempt ", attempt, " of ", attempts_total, " ----")
+					raw_print("")
+					raw_print("---- Attempt ", attempt, " of ", attempts_total, " ----")
 
 					# Get new random unitary rotation for virtual orbitals
 						# Get RHF orbitals
@@ -1622,7 +1670,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 					# --- Evaluate this attempt ---
 					E_this = lst_E_corr_attempt[-1]
 						# Print the result of this attempt
-					print(f"    [{num_opt_virtual_orbs_current}/{max_opt_virtual_orbs}] MP2: {E_this} @ {len(lst_E_corr_attempt)} iterations")
+					raw_print(f"    [{num_opt_virtual_orbs_current}/{max_opt_virtual_orbs}] MP2: {E_this} @ {len(lst_E_corr_attempt)} iterations")
 					
 					# Discard this attempt if it did not converge (or falsely converged...)
 						# False converged if the last five are not converged points
@@ -1640,30 +1688,27 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 						best_Fmo_rot = Fmo_rot_attempts
 						best_lst_stop_reason = lst_stop_reason_attempts
 						best_result_count = 0  # Reset count for this new best result
+						raw_print(f"    New best result found: {best_E_corr} Hartree with {num_opt_virtual_orbs_current} optimized virtual orbitals at attempt {attempt}.")
 
 					# Check if we got the same best result again, which could indicate a local minimum
 					if 1 < attempt <= 125:  # Only start checking after the first attempt
-						if best_E_corr is not None and abs(E_this - best_E_corr) < 1e-6:
+						if best_E_corr is not None and abs(E_this - best_E_corr) < 1e-4:
 							best_result_count += 1
 					# After 125 attempts, we can loosen the criterion for being the same best result
 					if attempt > 125:  # Only start checking after the first attempt
-						if abs(E_this - best_E_corr) < 1e-5:
+						if abs(E_this - best_E_corr) < 1e-3:
 							best_result_count += 1
 					# After 250 attempts, we can loosen the criterion even more
 					elif attempt > 250:
-						if abs(E_this - best_E_corr) < 1e-4:
+						if abs(E_this - best_E_corr) < 1e-2:
 							best_result_count += 1
 					# After 500 attempts, we can loosen the criterion even more
 					elif attempt > 500:
-						if abs(E_this - best_E_corr) < 1e-3:
-							best_result_count += 1
-					# After 750 attempts, we can loosen the criterion even more
-					elif attempt > 750:
-						if abs(E_this - best_E_corr) < 1e-2:
+						if abs(E_this - best_E_corr) < 1e-1:
 							best_result_count += 1
 
-					if best_result_count > 25:  # If we got the same best result more than 25 times, we can stop trying more random initializations
-						print(f"Got the same best correlation energy {best_E_corr} for {best_result_count} attempts (with further loosened criterion), which could indicate a local minimum. Stopping further attempts.")
+					if best_result_count > 25 and attempt > 5:  # If we got the same best result more than 25 times, we can stop trying more random initializations
+						raw_print(f"Got the same best correlation energy {best_E_corr} for {best_result_count-1} attempts (with further loosened criterion), which could indicate a local minimum. Stopping further attempts.")
 						break
 
 				# Use the best result from all attempts
@@ -1676,7 +1721,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 			# Check alpha/beta are the same for a tolerance - Done after orbital optimization
 			diff_alpha_beta = np.max(np.abs(mo_coeffs[0] - mo_coeffs[1]))
 			if diff_alpha_beta > 1e-4 and not use_random_unitary_init:
-				print("Warning: OVOS with ", num_opt_virtual_orbs_current, " optimized vorbs resulted in different alpha and beta orbitals (max diff: ", diff_alpha_beta, ").")
+				raw_print("Warning: OVOS with ", num_opt_virtual_orbs_current, " optimized vorbs resulted in different alpha and beta orbitals (max diff: ", diff_alpha_beta, ").")
 					# Store message
 				lst_message.append(f"OVOS w. {num_opt_virtual_orbs_current} optimized vorbs resulted in different alpha and beta orbitals (max diff: {diff_alpha_beta}). Here largest alpha {np.max(mo_coeffs[0])} and beta {np.max(mo_coeffs[1])} orbital coeffs.")
 					# Append True-False flag to lst_E_corr_virt_orbs
@@ -1686,7 +1731,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 
 			# run_OVOS converged to a positive MP2 correlation energy
 			if lst_E_corr[-1] > 0 and not use_random_unitary_init:
-				print("Warning: OVOS with ", num_opt_virtual_orbs_current, " optimized virtual orbitals converged to a positive MP2 correlation energy.")
+				raw_print("Warning: OVOS with ", num_opt_virtual_orbs_current, " optimized virtual orbitals converged to a positive MP2 correlation energy.")
 
 			# Store results
 			lst_MP2_virt_orbs.append((num_opt_virtual_orbs_current, lst_E_corr[-1], lst_iter_counts[-1], lst_stop_reason[-1]))
@@ -1703,8 +1748,8 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 
 		# Catch errors during OVOS
 		except AssertionError as e:
-			print(f"Error during OVOS with {num_opt_virtual_orbs_current} optimized virtual orbitals: {e}")
-			print("Rerunning with the same number of virtual orbitals.")
+			raw_print(f"Error during OVOS with {num_opt_virtual_orbs_current} optimized virtual orbitals: {e}")
+			raw_print("Rerunning with the same number of virtual orbitals.")
 
 			# Add error message to list
 
@@ -1713,7 +1758,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 
 			retry_count += 1
 			if retry_count >= max_retries:
-				print(f"Maximum retries reached for {num_opt_virtual_orbs_current} optimized virtual orbitals. Skipping to next.")
+				raw_print(f"Maximum retries reached for {num_opt_virtual_orbs_current} optimized virtual orbitals. Skipping to next.")
 				retry_count = 0
 				continue
 
@@ -1723,37 +1768,37 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 
 
 	# Print summary of the run
-	print("Number of electrons: ", num_electrons)
-	print("Full space size in molecular orbitals: ", full_space_size)
-	print("Maximum number of optimized virtual orbitals tested: ", max_opt_virtual_orbs)
-	print("Total OVOS runs completed: ", len(lst_MP2_virt_orbs))
-	print("")
+	raw_print("Number of electrons: ", num_electrons)
+	raw_print("Full space size in molecular orbitals: ", full_space_size)
+	raw_print("Maximum number of optimized virtual orbitals tested: ", max_opt_virtual_orbs)
+	raw_print("Total OVOS runs completed: ", len(lst_MP2_virt_orbs))
+	raw_print("")
 
 	# Print the final MP2 correlation energy after all OVOS and amount of iterations till convergence
 	for num_opt_virtual_orbs_current, E_corr, iter_, lst_stop_reason in lst_MP2_virt_orbs:
-		print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.5E' % Decimal(E_corr),f" ({(E_corr/MP2.e_corr)*100:.4}%)"+" @ ", iter_, " iterations till convergence (",lst_stop_reason,")")
-	print("MP2 correlation energy, for full space: ", '%.5E' % Decimal(MP2.e_corr), "| Difference:", '%.5E' % Decimal(MP2.e_corr - lst_MP2_virt_orbs[-1][1]))
-	print("")
+		raw_print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.5E' % Decimal(E_corr),f" ({(E_corr/MP2.e_corr)*100:.4}%)"+" @ ", iter_, " iterations till convergence (",lst_stop_reason,")")
+	raw_print("MP2 correlation energy, for full space: ", '%.5E' % Decimal(MP2.e_corr), "| Difference:", '%.5E' % Decimal(MP2.e_corr - lst_MP2_virt_orbs[-1][1]))
+	raw_print("")
 
 	# Print if the check of alpha and beta orbitals were the same
 	for msg in lst_message:
-		print(msg)
-	print("")
+		raw_print(msg)
+	raw_print("")
 	
 
 	# Print what methods were used
 	if use_prev_virt_orbs == True:
-		print("Previously optimized virtual orbitals were used as starting guess for each OVOS run.")
+		raw_print("Previously optimized virtual orbitals were used as starting guess for each OVOS run.")
 	if use_random_unitary_init == True:
-		print("Random unitary rotations of UHF virtual orbitals were used as starting guess for each OVOS run.")
-	print("")
+		raw_print("Random unitary rotations of UHF virtual orbitals were used as starting guess for each OVOS run.")
+	raw_print("")
 
 	# Print error messages summary
 	if len(lst_error_messages) > 0:
-		print("#### Error messages summary ####")
+		raw_print("#### Error messages summary ####")
 		for num_opt_virtual_orbs_current, error_msg, iter_ in lst_error_messages:
-			print("  OVOS w. ", num_opt_virtual_orbs_current, " optimized vorbs failed at iteration ", iter_ ," w. error: ", error_msg)
-		print("")
+			raw_print("  OVOS w. ", num_opt_virtual_orbs_current, " optimized vorbs failed at iteration ", iter_ ," w. error: ", error_msg)
+		raw_print("")
 
 
 	# Save data to JSON files
@@ -1774,13 +1819,13 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 	str_atom = select_atom
 	str_basis = select_basis
 
-	print("Saving data to branch/data/"+str_atom+"/"+str_basis+"/...")
+	raw_print("Saving data to branch/data/"+str_atom+"/"+str_basis+"/...")
 
 	# Save MP2 correlation energy convergence data
 	with open("branch/data/"+str_atom+"/"+str_basis+"/lst_MP2_"+str_name+".json", "w") as f:
 		json.dump(lst_E_corr_virt_orbs, f, indent=2)
 
-	print("Data saved to branch/data/"+str_atom+"/"+str_basis+"/lst_MP2_"+str_name+".json")
+	raw_print("Data saved to branch/data/"+str_atom+"/"+str_basis+"/lst_MP2_"+str_name+".json")
 
 
 """
@@ -1801,24 +1846,33 @@ class Tee:
             s.flush()
 
 if True: # Done with OVOS runs. Comment out this line to run more or move on to the next part of the code.
-	for basis_set in ["6-31G", "cc-pVDZ"]: 				# Yet:	"6-31G" | Yet: "cc-pVDZ", ... 
-		for molecule in ["H2O"]: 	# Done: "H2O", "CO", "HF", "NH3"
-									#        (16)  (22)  (12)  (20)
-			print("")
-			print("==========================================================")
-			print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
-			print("==========================================================")
-			print("")
+	# Save original terminal settings
+	old_settings = termios.tcgetattr(sys.stdin)
+	try:
+		# Put terminal in raw mode (so we get keys instantly)
+		tty.setraw(sys.stdin.fileno())
+		
+		for basis_set in ["cc-pVDZ"]: 				#   	"6-31G" | Yet: "cc-pVDZ", ... 
+			for molecule in ["H2O"]: 				#       "H2O", "CO", "HF", "NH3"
+													#        (16)  (22)  (12)  (20)
+				raw_print("")
+				raw_print("==========================================================")
+				raw_print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
+				raw_print("==========================================================")
+				raw_print("")
 
-			mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
-			
-			for start_guess in ["RHF", "prev", "random"]: # "RHF", "prev", "random"
-				with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
-					sys.stdout = Tee(sys.__stdout__, f)
-					try:
-						get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess=start_guess, select_atom=molecule, select_basis=basis_set)
-					finally:
-						sys.stdout = sys.__stdout__
+				mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
+				
+				for start_guess in ["RHF", "prev", "random"]: # "RHF", "prev", "random"
+					with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
+						sys.stdout = Tee(sys.__stdout__, f)
+						try:
+							get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess=start_guess, select_atom=molecule, select_basis=basis_set)
+						finally:
+							sys.stdout = sys.__stdout__
+	finally:
+		# Restore terminal settings no matter what
+		termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
 """
 The oscillations are a property of the Newton-Raphson method applied to a non-quadratic functional. 
@@ -1834,18 +1888,18 @@ Negative eigenvalues in Hessian can also be level-shifted to stabilize convergen
 if False: # Done...
 	for basis_set in ["6-31G"]:
 		for molecule in ["H2O"]: # Do: "CO", "H2O", "HF", "NH3"
-			print("#### Miscellaneous data about the molecule and basis set ####")
-			print("Molecule: ", molecule)
-			print("Basis set: ", basis_set)
-			print()
+			raw_print("#### Miscellaneous data about the molecule and basis set ####")
+			raw_print("Molecule: ", molecule)
+			raw_print("Basis set: ", basis_set)
+			raw_print()
 
 			mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
 			active_space_size = full_space_size - num_electrons//2 + 1
 
-			print()
-			print("Number of electrons: ", num_electrons)
-			print("Full space size in molecular orbitals: ", full_space_size)
-			print()
+			raw_print()
+			raw_print("Number of electrons: ", num_electrons)
+			raw_print("Full space size in molecular orbitals: ", full_space_size)
+			raw_print()
 
 			# Check which starting should be used for the FCI/CASCI reference calculation
 				# Costum full-space random MO for FCI/CASCI reference
@@ -1872,23 +1926,23 @@ if False: # Done...
 
 				# Get RHF MP2 correlation energy for full space reference
 			MP2_e_corr = rhf.MP2().run().e_corr
-			print()
+			raw_print()
 
 				# Run CCSD(T)
 			ccsd = pyscf.cc.CCSD(rhf).run()
-			print()
+			raw_print()
 
 			# OOMP2
 
 				# Run FCI/CASCI
 			cisolver = pyscf.fci.FCI(mol, my_custom_mos)
 			cisolver_e_tot = cisolver.kernel()[0]
-			print('E(FCI) = %.12f' % cisolver_e_tot, "E_corr = %.12f" % (cisolver_e_tot - rhf.e_tot))
+			raw_print('E(FCI) = %.12f' % cisolver_e_tot, "E_corr = %.12f" % (cisolver_e_tot - rhf.e_tot))
 
 			casci = rhf.CASCI(full_space_size, num_electrons)
 			casci.kernel(my_custom_mos)
-			print('E(CASCI) = %.12f' % casci.e_tot, "E_corr = %.12f" % (casci.e_tot - rhf.e_tot))
-			print()
+			raw_print('E(CASCI) = %.12f' % casci.e_tot, "E_corr = %.12f" % (casci.e_tot - rhf.e_tot))
+			raw_print()
 
 			# Save data to JSON file
 			import json
@@ -1906,8 +1960,8 @@ if False: # Done...
 
 			with open(f"branch/data/{molecule}/{basis_set}/molecule_data.json", "w") as f:
 				json.dump(data, f, indent=2)
-			print(f"Miscellaneous data saved to branch/data/{molecule}/{basis_set}/molecule_data.json")
-			print()
+			raw_print(f"Miscellaneous data saved to branch/data/{molecule}/{basis_set}/molecule_data.json")
+			raw_print()
 
 
 """
