@@ -913,7 +913,7 @@ class OVOS:
 			eigvals = np.linalg.eigvalsh(H)
 			n_neg_eigval_H = np.sum(eigvals < 0)
 			self.n_block_neg_eigval_H = 0
-			det_H = np.prod(eigvals)
+			det_H = np.linalg.det(H)
 			cond_H = np.linalg.cond(H) if H.size > 0 else np.inf
 
 			# Check eigenvalues
@@ -941,7 +941,7 @@ class OVOS:
 
 		# Step (vi): Use the Newton-Raphson method to minimize the second-order Hylleraas functional
 			# Reduced Linear Equation method
-		if False: # Set to True to always apply block-diagonal approximation				
+		if True: # Set to True to always apply block-diagonal approximation				
 			# Modify Hessian to only inverse the block-diagonal part corresponding H_{ea,eb}
 			len_inac = len(self.inactive_indices)
 			len_ac   = len(self.active_inocc_indices)
@@ -958,38 +958,64 @@ class OVOS:
 			# Set H to the block-diagonal approximation
 			H = H_block_diag
 
+		# # Only once save the block diagonal approximation to a file
+		# 	if not os.path.exists("H_block_diag.csv"):
+		# 		np.savetxt("H_block_diag.csv", H_block_diag, fmt='%.6e', delimiter=',',
+        #    header='Block‑diagonal Hessian (rows/cols: inactive×active rotations)')
 
-		if False: # Set to True to always apply SVD 
+		# Correct determinant and condition number for block-diagonal approximation
+		if True: # Set to True to always apply block-diagonal approximation
+			eigvals_block = np.linalg.eigvalsh(H)
+			n_neg_eigval_block = np.sum(eigvals_block < 0)
+			det_H_block = np.linalg.det(H)
+			cond_H_block = np.linalg.cond(H) if H.size > 0 else np.inf
+			raw_print(f"    Block-diag Hessian cond.: {cond_H_block:.6e}, det.: {det_H_block:.6e}, Neg. Eigval: {n_neg_eigval_block}/{len(eigvals_block)}")
+
+				# Sanity checks for block-diagonal H
+			if cond_H_block > 1e12:
+				raw_print("        WARNING: Block-diagonal Hessian is ill-conditioned!")
+			if det_H_block == 0.0:
+				raw_print("        WARNING: Block-diagonal Hessian is singular (zero determinant)!")
+			if np.any(eigvals_block < 0.0):
+				raw_print("        WARNING: Block-diagonal Hessian has negative eigenvalues!")
+
+				# Correct if singular or ill-conditioned
+			if cond_H_block > 1e12 or det_H_block < 0.0:
+				raw_print("                 Applying Tikhonov regularization to block-diagonal Hessian.")
+				# Find which shift to apply: we can use a small fraction of the largest absolute eigenvalue as a regularization parameter
+				# if self.block_diag_shift == None:
+				shift_e = 0
+					# Regularize until the Hessian is no longer singular or ill-conditioned, or until we have tried a reasonable number of shifts
+				while cond_H_block > 1e12 or det_H_block == 0.0:
+						# This fraction can be found by...
+					shift_e += 1
+					shift = 1e-6 * 10**shift_e  # Start with a small shift
+					reg_lambda = shift * np.max(np.abs(H))  # Regularization parameter, can be tuned
+					H += reg_lambda * np.eye(H.shape[0])
+					det_H_block = np.linalg.det(H)
+					cond_H_block = np.linalg.cond(H)
+				# 	self.block_diag_shift = shift
+				# else:
+				# 	while det_H_block < 1e-100 or cond_H_block > 1e12:
+				# 		self.block_diag_shift *= 10
+				# 		H += self.block_diag_shift * np.max(np.abs(H)) * np.eye(H.shape[0])
+				# 		det_H_block = np.linalg.det(H)
+				# 		cond_H_block = np.linalg.cond(H)
+
+				raw_print(f"                 Block-diag Hessian cond.: {cond_H_block:.6e}, det.: {det_H_block:.6e}")
+
+					
+
+		if True: # Set to True to always apply SVD 
 			# Apply SVD truncation to the Hessian to improve stability
 			U, S, Vh = np.linalg.svd(H)
-			svd_threshold = 1e-6		  # Threshold for singular values, can be tuned
+			svd_threshold = 1e-3 * np.max(S)		  # Threshold for singular values, can be tuned
 			S_truncated = np.where(S > svd_threshold, S, svd_threshold)
 			H_svd_inv = (Vh.T / S_truncated) @ U.T
-			R = -H_svd_inv @ G.flatten()
-		elif True:
-			# Levenberg‑Marquardt regularisation (Tikhonov with adaptive damping)
-			# Initial guess for the damping parameter (problem‑dependent)
-			lambda_init = 1e-6   # adjust based on scale of H
-
-			# Solve (H + lambda * I) * delta = -G
-			# Use a linear solver (Cholesky if H is spd, else general)
-			try:
-				# Attempt Cholesky for efficiency (assumes H is positive definite after regularisation)
-				L = np.linalg.cholesky(H + lambda_init * np.eye(len(H)))
-				delta = -np.linalg.solve(L.T, np.linalg.solve(L, G.flatten()))
-			except np.linalg.LinAlgError:
-				# Fallback to a general solver if Cholesky fails
-				delta = np.linalg.solve(H + lambda_init * np.eye(len(H)), -G.flatten())
-
-			# Optional: dynamic update of lambda based on actual vs. predicted reduction
-			# (Simplified version – in practice you would evaluate the objective)
-			# rho = (f(x) - f(x+delta)) / (predicted reduction)
-			# if rho > 0:
-			#     lambda = max(lambda/2, lambda_min)   # successful step, reduce damping
-			# else:
-			#     lambda = min(lambda*2, lambda_max)   # unsuccessful, increase damping
-
-			R = delta   # step to apply
+			R = - G.flatten() @ H_svd_inv
+		elif False: # Set to True to always apply pseudo-inverse
+			H_pinv = np.linalg.pinv(H, rcond=1e-2)
+			R = - G.flatten() @ H_pinv
 		else:
 			R = -np.linalg.solve(H, G.flatten())  # Solve H R = -G for R using a stable linear solver
 			
@@ -1063,9 +1089,10 @@ class OVOS:
 			cos_theta = np.diag(np.cos(theta))
 			
 			# sinc(θ) = sin(θ)/θ, with sinc(0) = 1
-			sinc_theta = np.diag(np.where(theta > 1e-12, 
-										np.sin(theta) / theta, 
-										1.0))
+			sinc_vals = np.ones_like(theta)
+			mask = np.abs(theta) > 1e-12
+			sinc_vals[mask] = np.sin(theta[mask]) / theta[mask]
+			sinc_theta = np.diag(sinc_vals)
 			
 			# Build U
 			U = X @ cos_theta @ X.T + R @ X @ sinc_theta @ X.T
@@ -1076,7 +1103,8 @@ class OVOS:
 
 		# Unitary rotation matrix
 			# Use eigendecomposition of anti-symmetric matrix for guaranteed unitarity
-		U_sub = expm_antisymmetric(R_matrix)
+		# U_sub = expm_antisymmetric(R_matrix)
+		U_sub = scipy.linalg.expm(R_matrix)
 
 			# Expand U to full spin-orbital space
 		n_full_space = len(self.full_indices)
@@ -1196,6 +1224,8 @@ class OVOS:
 		keep_track = 0
 		keep_track_max = 25
 
+		self.block_diag_shift = None  # Initialize block diagonal shift for regularization if needed
+
 		while iter_count < max_iter:
 
 			# Allow user to skip to next iteration by pressing 's' key (with a short timeout to avoid blocking)
@@ -1289,7 +1319,7 @@ class OVOS:
 					raw_print(f"    ΔE_corr = {diff_E_corr:.2e} Hartree, Δ Gradient norm = {diff_grad_norm:.2e}")
 
 				# Convergence criteria: correlation energy change below threshold AND small gradient norm
-				if (diff_E_corr < 1e-8 and self.grad_norm < 1e-6) or diff_E_corr < 1e-14: #) or diff_E_corr < 1e-12:  # Convergence threshold
+				if (diff_E_corr < 1e-8 and self.grad_norm < 1e-6) or diff_E_corr < 1e-9: #) or diff_E_corr < 1e-12:  # Convergence threshold
 					converged = True
 					lst_stop_reason.append("Convergence")
 					
@@ -1534,6 +1564,12 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 	# num_opt_virtual_orbs_current_specific = [int(round(x / 2) * 2) for x in num_opt_virtual_orbs_current_specific]
 	# print("Specific numbers of optimized virtual orbitals to test: ", num_opt_virtual_orbs_current_specific)
 	# num_opt_increment = 0
+
+		# For specifc run....
+	# num_opt_virtual_orbs_current = 28 - increment  # Start with number of occupied orbitals
+	# one_num_opt = True  # If True, only run OVOS for one number of optimized virtual orbitals (num_opt_virtual_orbs_current), otherwise loop through increments until max_opt_virtual_orbs
+	# while one_num_opt == True:
+	# 	one_num_opt = False
 
 	while num_opt_virtual_orbs_current < max_opt_virtual_orbs:
 	# while num_opt_increment < len(num_opt_virtual_orbs_current_specific):
@@ -1852,7 +1888,7 @@ if True: # Done with OVOS runs. Comment out this line to run more or move on to 
 		# Put terminal in raw mode (so we get keys instantly)
 		tty.setraw(sys.stdin.fileno())
 		
-		for basis_set in ["cc-pVDZ"]: 				#   	"6-31G" | Yet: "cc-pVDZ", ... 
+		for basis_set in ["6-31G", "cc-pVDZ"]: 				#   	"6-31G" | Yet: "cc-pVDZ", ... 
 			for molecule in ["H2O"]: 				#       "H2O", "CO", "HF", "NH3"
 													#        (16)  (22)  (12)  (20)
 				raw_print("")
@@ -1863,7 +1899,7 @@ if True: # Done with OVOS runs. Comment out this line to run more or move on to 
 
 				mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
 				
-				for start_guess in ["RHF", "prev", "random"]: # "RHF", "prev", "random"
+				for start_guess in ["prev", "random"]: # "RHF", "prev", "random"
 					with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
 						sys.stdout = Tee(sys.__stdout__, f)
 						try:
