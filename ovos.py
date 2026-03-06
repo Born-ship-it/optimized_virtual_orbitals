@@ -34,6 +34,9 @@ def get_key():
     """Read a single character from stdin (non‑blocking, assumes raw mode is on)."""
     return sys.stdin.read(1)
 
+class BreakOuterLoop(Exception):
+    pass
+
 def raw_print(*args, **kwargs):
     # Ensure each printed line ends with \r\n
     kwargs.setdefault('end', '\r\n')
@@ -983,7 +986,8 @@ class OVOS:
 
 				# Correct if singular or ill-conditioned
 			if cond_H_block > 1e12 or det_H_block == 0.0:
-				raw_print("                 Applying Tikhonov regularization to block-diagonal Hessian.")
+				if not self.use_random_unitary_init:
+					raw_print("                 Applying Tikhonov regularization to block-diagonal Hessian.")
 				# Find which shift to apply: we can use a small fraction of the largest absolute eigenvalue as a regularization parameter
 				# if self.block_diag_shift == None:
 				shift_e = 0
@@ -1003,8 +1007,8 @@ class OVOS:
 				# 		H += self.block_diag_shift * np.max(np.abs(H)) * np.eye(H.shape[0])
 				# 		det_H_block = np.linalg.det(H)
 				# 		cond_H_block = np.linalg.cond(H)
-
-				raw_print(f"                 Block-diag Hessian cond.: {cond_H_block:.6e}, det.: {det_H_block:.6e}")
+				if not self.use_random_unitary_init:
+					raw_print(f"                 Block-diag Hessian cond.: {cond_H_block:.6e}, det.: {det_H_block:.6e}")
 
 					
 
@@ -1234,9 +1238,11 @@ class OVOS:
 				# Check if a key was pressed (with a very short timeout)
 			if is_key_pressed(0.01):   # 10 ms timeout
 				key = get_key()
-				if key == 's':
+				if key == 'i': 
 					raw_print("\n[Skipping to next iteration...]")
 					break
+				if key == 's':
+					raise BreakOuterLoop
 				if key == '\x03':  # Ctrl-C to quit
 					raw_print("\n[Exiting OVOS...]")
 					sys.exit(0)
@@ -1640,113 +1646,104 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 					attempts_total *= 10
 					raw_print(f"Optimizing in the full virtual space, increasing total attempts to {attempts_total} to ensure we find the best result.")
 
-				while attempt < attempts_total:
-					
-					# Allow user to skip to next iteration by pressing 's' key (with a short timeout to avoid blocking)
-						# Check if a key was pressed (with a very short timeout)
-					if is_key_pressed(0.01):   # 10 ms timeout
-						key = get_key()
-						if key == 'p':          # Skip key
-							raw_print("\n[Skipping to next attempt...]")
-							break                # exit inner loop
-						if key == '\x03':  # Ctrl-C to quit
-							raw_print("\n[Exiting OVOS...]")
-							sys.exit(0)
+				try:
+					while attempt < attempts_total:
+						attempt += 1
+						raw_print("")
+						raw_print("---- Attempt ", attempt, " of ", attempts_total, " ----")
 
-					attempt += 1
-					raw_print("")
-					raw_print("---- Attempt ", attempt, " of ", attempts_total, " ----")
+						# Get new random unitary rotation for virtual orbitals
+							# Get RHF orbitals
+						mo_coeffs_rhf = np.array([rhf.mo_coeff, rhf.mo_coeff]) # Start with RHF orbitals for both alpha and beta spins
+						Fao_rhf = np.array([rhf.get_fock(), rhf.get_fock()]) # Get Fock matrix in AO basis for later use in orbital optimization
 
-					# Get new random unitary rotation for virtual orbitals
-						# Get RHF orbitals
-					mo_coeffs_rhf = np.array([rhf.mo_coeff, rhf.mo_coeff]) # Start with RHF orbitals for both alpha and beta spins
-					Fao_rhf = np.array([rhf.get_fock(), rhf.get_fock()]) # Get Fock matrix in AO basis for later use in orbital optimization
+						# Apply random unitary rotation to virtual orbitals only
+							# Number of occupied orbitals
+						num_occupied_orbitals = num_electrons // 2
+							# Total number of spatial orbitals
+						total_spatial_orbitals = mo_coeffs_rhf[0].shape[1]
+							# Number of virtual orbitals
+						num_virtual_orbitals = total_spatial_orbitals - num_occupied_orbitals
 
-					# Apply random unitary rotation to virtual orbitals only
-						# Number of occupied orbitals
-					num_occupied_orbitals = num_electrons // 2
-						# Total number of spatial orbitals
-					total_spatial_orbitals = mo_coeffs_rhf[0].shape[1]
-						# Number of virtual orbitals
-					num_virtual_orbitals = total_spatial_orbitals - num_occupied_orbitals
+							# Generate random unitary matrix for virtual orbitals
+						rand_matrix = np.random.rand(num_virtual_orbitals, num_virtual_orbitals)
+						Q, R = np.linalg.qr(rand_matrix)  # QR decomposition to get unitary matrix
 
-						# Generate random unitary matrix for virtual orbitals
-					rand_matrix = np.random.rand(num_virtual_orbitals, num_virtual_orbitals)
-					Q, R = np.linalg.qr(rand_matrix)  # QR decomposition to get unitary matrix
+							# Rotate virtual orbitals for alpha and beta spins
+						mo_coeffs = [np.copy(mo_coeffs_rhf[0]), np.copy(mo_coeffs_rhf[1])]  # Deep copy to avoid modifying original
+						for spin in [0, 1]:
+							# Extract occupied and virtual parts
+							C_occ = mo_coeffs_rhf[spin][:, :num_occupied_orbitals]
+							C_virt = mo_coeffs_rhf[spin][:, num_occupied_orbitals:]
 
-						# Rotate virtual orbitals for alpha and beta spins
-					mo_coeffs = [np.copy(mo_coeffs_rhf[0]), np.copy(mo_coeffs_rhf[1])]  # Deep copy to avoid modifying original
-					for spin in [0, 1]:
-						# Extract occupied and virtual parts
-						C_occ = mo_coeffs_rhf[spin][:, :num_occupied_orbitals]
-						C_virt = mo_coeffs_rhf[spin][:, num_occupied_orbitals:]
+							# Rotate virtual orbitals
+							C_virt_rot = C_virt @ Q
 
-						# Rotate virtual orbitals
-						C_virt_rot = C_virt @ Q
+							# Combine back
+							mo_coeffs[spin] = np.hstack((C_occ, C_virt_rot))
+						
+							# Note: The occupied-occupied and occupied-virtual blocks of the Fock matrix remain unchanged, only the virtual-virtual block is rotated.
 
-						# Combine back
-						mo_coeffs[spin] = np.hstack((C_occ, C_virt_rot))
-					
-						# Note: The occupied-occupied and occupied-virtual blocks of the Fock matrix remain unchanged, only the virtual-virtual block is rotated.
+						mo_coeffs = np.array(mo_coeffs)
+						Fmo_rot = None # Fock matrix in the MO basis will be constructed later based on the initial orbitals
+						Fao = Fao_rhf  # Use the same Fock matrix for both spins as starting point
+						init_orbs = "RHF"
 
-					mo_coeffs = np.array(mo_coeffs)
-					Fmo_rot = None # Fock matrix in the MO basis will be constructed later based on the initial orbitals
-					Fao = Fao_rhf  # Use the same Fock matrix for both spins as starting point
-					init_orbs = "RHF"
+						# Run OVOS
+						ovos_obj = OVOS(mol=mol, scf=rhf, Fao=Fao, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs, mo_coeff=mo_coeffs, start_guess=start_guess)
+							# Pass, type: ignore
+						ovos_obj.eri_4fold_ao = eri_4fold_ao  # Pass the 4-fold AO integrals to avoid recomputation
+						ovos_obj.S = S  # Pass the overlap matrix
+						ovos_obj.hcore_ao = hcore_ao  # Pass the core Hamiltonian in AO basis
 
-					# Run OVOS
-					ovos_obj = OVOS(mol=mol, scf=rhf, Fao=Fao, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs, mo_coeff=mo_coeffs, start_guess=start_guess)
-						# Pass, type: ignore
-					ovos_obj.eri_4fold_ao = eri_4fold_ao  # Pass the 4-fold AO integrals to avoid recomputation
-					ovos_obj.S = S  # Pass the overlap matrix
-					ovos_obj.hcore_ao = hcore_ao  # Pass the core Hamiltonian in AO basis
+						# Run OVOS with the current random unitary rotated orbitals
+						lst_E_corr_attempt, lst_iter_counts_attempt, mo_coeffs_attempt, Fmo_rot_attempts, lst_stop_reason_attempts = ovos_obj.run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
 
-					# Run OVOS with the current random unitary rotated orbitals
-					lst_E_corr_attempt, lst_iter_counts_attempt, mo_coeffs_attempt, Fmo_rot_attempts, lst_stop_reason_attempts = ovos_obj.run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
+						# --- Evaluate this attempt ---
+						E_this = lst_E_corr_attempt[-1]
+							# Print the result of this attempt
+						raw_print(f"    [{num_opt_virtual_orbs_current}/{max_opt_virtual_orbs}] MP2: {E_this} @ {len(lst_E_corr_attempt)} iterations")
+						
+						# Discard this attempt if it did not converge (or falsely converged...)
+							# False converged if the last five are not converged points
+						# if lst_stop_reason_attempts[-5:].count("Convergence") < 5 and len(lst_stop_reason_attempts) > 5:
+						# 	print(f"Attempt {attempt} did not show stable convergence in the last 5 iterations. Discarding this attempt.")
+						# 	best_result_count = 0  # Reset count for this new best result
+						# 	continue
 
-					# --- Evaluate this attempt ---
-					E_this = lst_E_corr_attempt[-1]
-						# Print the result of this attempt
-					raw_print(f"    [{num_opt_virtual_orbs_current}/{max_opt_virtual_orbs}] MP2: {E_this} @ {len(lst_E_corr_attempt)} iterations")
-					
-					# Discard this attempt if it did not converge (or falsely converged...)
-						# False converged if the last five are not converged points
-					# if lst_stop_reason_attempts[-5:].count("Convergence") < 5 and len(lst_stop_reason_attempts) > 5:
-					# 	print(f"Attempt {attempt} did not show stable convergence in the last 5 iterations. Discarding this attempt.")
-					# 	best_result_count = 0  # Reset count for this new best result
-					# 	continue
+						# Update best result
+						if best_E_corr is None or E_this < best_E_corr:
+							best_E_corr = E_this
+							best_lst_E_corr = lst_E_corr_attempt
+							best_lst_iter_counts = lst_iter_counts_attempt
+							best_mo_coeffs = mo_coeffs_attempt
+							best_Fmo_rot = Fmo_rot_attempts
+							best_lst_stop_reason = lst_stop_reason_attempts
+							best_result_count = 0  # Reset count for this new best result
+							raw_print(f"    New best result found: {best_E_corr} Hartree with {num_opt_virtual_orbs_current} optimized virtual orbitals at attempt {attempt}.")
 
-					# Update best result
-					if best_E_corr is None or E_this < best_E_corr:
-						best_E_corr = E_this
-						best_lst_E_corr = lst_E_corr_attempt
-						best_lst_iter_counts = lst_iter_counts_attempt
-						best_mo_coeffs = mo_coeffs_attempt
-						best_Fmo_rot = Fmo_rot_attempts
-						best_lst_stop_reason = lst_stop_reason_attempts
-						best_result_count = 0  # Reset count for this new best result
-						raw_print(f"    New best result found: {best_E_corr} Hartree with {num_opt_virtual_orbs_current} optimized virtual orbitals at attempt {attempt}.")
+						# Check if we got the same best result again, which could indicate a local minimum
+						if 1 < attempt <= 125:  # Only start checking after the first attempt
+							if best_E_corr is not None and abs(E_this - best_E_corr) < 1e-4:
+								best_result_count += 1
+						# After 125 attempts, we can loosen the criterion for being the same best result
+						if attempt > 125:  # Only start checking after the first attempt
+							if abs(E_this - best_E_corr) < 1e-3:
+								best_result_count += 1
+						# After 250 attempts, we can loosen the criterion even more
+						elif attempt > 250:
+							if abs(E_this - best_E_corr) < 1e-2:
+								best_result_count += 1
+						# After 500 attempts, we can loosen the criterion even more
+						elif attempt > 500:
+							if abs(E_this - best_E_corr) < 1e-1:
+								best_result_count += 1
 
-					# Check if we got the same best result again, which could indicate a local minimum
-					if 1 < attempt <= 125:  # Only start checking after the first attempt
-						if best_E_corr is not None and abs(E_this - best_E_corr) < 1e-4:
-							best_result_count += 1
-					# After 125 attempts, we can loosen the criterion for being the same best result
-					if attempt > 125:  # Only start checking after the first attempt
-						if abs(E_this - best_E_corr) < 1e-3:
-							best_result_count += 1
-					# After 250 attempts, we can loosen the criterion even more
-					elif attempt > 250:
-						if abs(E_this - best_E_corr) < 1e-2:
-							best_result_count += 1
-					# After 500 attempts, we can loosen the criterion even more
-					elif attempt > 500:
-						if abs(E_this - best_E_corr) < 1e-1:
-							best_result_count += 1
-
-					if best_result_count > 250 and attempt > 5:  # If we got the same best result more than 25 times, we can stop trying more random initializations
-						raw_print(f"Got the same best correlation energy {best_E_corr} for {best_result_count-1} attempts (with further loosened criterion), which could indicate a local minimum. Stopping further attempts.")
-						break
+						if best_result_count > 250 and attempt > 5:  # If we got the same best result more than 25 times, we can stop trying more random initializations
+							raw_print(f"Got the same best correlation energy {best_E_corr} for {best_result_count-1} attempts (with further loosened criterion), which could indicate a local minimum. Stopping further attempts.")
+							break
+				except BreakOuterLoop:
+					pass
 
 				# Use the best result from all attempts
 				lst_E_corr = best_lst_E_corr
@@ -1882,7 +1879,7 @@ class Tee:
         for s in self.streams:
             s.flush()
 
-if True: # Done with OVOS runs. Comment out this line to run more or move on to the next part of the code.
+if False: # Done with OVOS runs. Comment out this line to run more or move on to the next part of the code.
 	# Save original terminal settings
 	old_settings = termios.tcgetattr(sys.stdin)
 	try:
@@ -1900,7 +1897,7 @@ if True: # Done with OVOS runs. Comment out this line to run more or move on to 
 
 				mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
 				
-				for start_guess in ["RHF", "prev", "random"]: # "RHF", "prev", "random"
+				for start_guess in ["random"]: # "RHF", "prev", "random" | Yet: "random"
 					with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
 						sys.stdout = Tee(sys.__stdout__, f)
 						try:
@@ -1919,10 +1916,39 @@ This is normal and expected behavior for Newton's method without line search or 
 Negative eigenvalues in Hessian can also be level-shifted to stabilize convergence, but this can slow down progress.
 """		
 
-# assert False, "Done with OVOS runs. Comment out this line to run more or move on to the next part of the code."
+# I want to create a plot which shows 
+
+
+
+# OOMP2 implementation based on PySCF's MP2, which is based on the original OOMP2 paper by Lee and Head-Gordon (https://pubs.acs.org/doi/10.1021/acs.jpca.5b07881) and the recent developments in PySCF (https://pubs.aip.org/aip/jcp/article/153/2/024109/1061482/Recent-developments-in-the-PySCF-program-package)
+# OOMP2: Orbital-Optimized MP2, where the orbitals are optimized to minimize the MP2 energy.
+
+# https://pubs.aip.org/aip/jcp/article/153/2/024109/1061482/Recent-developments-in-the-PySCF-program-package
+class OOMP2(object):
+    def kernel(self, h1, h2, norb, nelec, cio=None, ecore=0, **kwargs):
+        # Kernel takes the set of integrals from the current set of orbitals
+        fakemol = pyscf.M(verbose=0)
+        fakemol.nelectron = sum(nelec)
+        fake_hf = fakemol.RHF()
+        fake_hf._eri = h2
+        fake_hf.get_hcore = lambda *args: h1
+        fake_hf.get_ovlp = lambda *args: np.eye(norb)
+        
+        # Build an SCF object fake_hf without SCF iterations to perform MP2
+        fake_hf.mo_coeff = np.eye(norb)
+        fake_hf.mo_occ = np.zeros(norb)
+        fake_hf.mo_occ[:fakemol.nelectron//2] = 2
+        self.mp2 = fake_hf.MP2().run()
+        return self.mp2.e_tot + ecore, self.mp2.t2
+    
+    def make_rdm12(self, t2, norb, nelec):
+        dm1 = self.mp2.make_rdm1(t2)
+        dm2 = self.mp2.make_rdm2(t2)
+        return dm1, dm2
+
 
 # Save miscellaneous data about the molecule and basis set
-if False: # Done...
+if True: # Done...
 	for basis_set in ["6-31G"]:
 		for molecule in ["H2O"]: # Do: "CO", "H2O", "HF", "NH3"
 			raw_print("#### Miscellaneous data about the molecule and basis set ####")
@@ -1969,7 +1995,15 @@ if False: # Done...
 			ccsd = pyscf.cc.CCSD(rhf).run()
 			raw_print()
 
-			# OOMP2
+			####OOMP2 (Full space)####
+			# Put in the active space all orbitals of the system
+			mc = pyscf.mcscf.CASSCF(mf, mol.nao, mol. nelectron)
+			mc.fcisolver = OOMP2()
+			# Internal rotation inside the active space needs to be enabled
+			mc.internal_rotation = True
+			#mc.kernel()
+			ooMP2_e_tot, ooMP2_e_cas, ooMP2_ci, ooMP2_mo_coeff, ooMP2_mo_energy = mc.kernel()
+			raw_print()
 
 				# Run FCI/CASCI
 			cisolver = pyscf.fci.FCI(mol, my_custom_mos)
@@ -1992,7 +2026,8 @@ if False: # Done...
 				"CCSD_e_corr": ccsd.e_corr,
 				"CCSD(T)_e_corr": ccsd.e_tot + ccsd.ccsd_t() - rhf.e_tot,
 				"FCI_e_corr": cisolver_e_tot - rhf.e_tot,
-				"CASSCF_e_corr": None # casscf.e_tot - rhf.e_tot
+				"OOMP2_e_corr": ooMP2_e_tot - rhf.e_tot,
+				"CASSCF_e_corr": None
 			}
 
 			with open(f"branch/data/{molecule}/{basis_set}/molecule_data.json", "w") as f:

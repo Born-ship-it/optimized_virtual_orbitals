@@ -4,13 +4,28 @@
 \chapter{Results}
 \label{ch:results}
 
+In this chapter, the results of the OVOS implementation are presented. The chapter is structured as follows:
+\begin{itemize}
+    \item \textbf{Section 6.1} validates the implementation by comparing full-space MP2 correlation energies against PySCF and literature values.
+    \item \textbf{Section 6.2} presents the main result: the fraction of MP2 correlation energy recovered as a function of the active virtual orbital count.
+    \item \textbf{Section 6.3} analyses the convergence behaviour of the OVOS algorithm.
+    \item \textbf{Section 6.4} compares different initialisation strategies and their impact on final energies and convergence.
+    \item \textbf{Section 6.5} investigates how the choice of basis set affects energy recovery.
+    \item \textbf{Section 6.6} provides a direct comparison with the results published by Adamowicz and Bartlett in their original OVOS paper.
+    \item \textbf{Section 6.7} assesses the computational cost and scaling of the OVOS algorithm.
+    \item \textbf{Section 6.8} examines the T1 amplitudes in the converged OVOS orbitals to test for Brueckner-like properties.
+    \item \textbf{Section 6.9} estimates the practical benefits of using OVOS orbitals as a reference state for quantum computing applications, including overlap with FCI states and resource estimates for VQE.
+\end{itemize}
+
+
 % ---------------------------------------------------------------
 % WRITING TIPS – RESULTS
 % ---------------------------------------------------------------
 % Goal: Present your data clearly and objectively.
 %       DESCRIBE the data – do not interpret or explain yet
 %       (that belongs in Discussion, which here is folded into
-%       Results or a combined Results & Discussion chapter).
+%       Results or a combined Results & Discussion chapter), 
+%       there is no separate Discussion chapter in this thesis.
 %       At MSc level, integrating discussion into results is fine.
 %
 % Suggested sections and content:

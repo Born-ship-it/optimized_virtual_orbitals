@@ -82,12 +82,12 @@
 \contentsline {section}{\numberline {6.1}Validation of the Implementation}{11}{section.6.1}%
 \contentsline {section}{\numberline {6.2}Energy Recovery as a Function of Active Virtual Orbital Count}{11}{section.6.2}%
 \contentsline {section}{\numberline {6.3}Convergence Behaviour}{11}{section.6.3}%
-\contentsline {section}{\numberline {6.4}Effect of Initialisation Strategy}{11}{section.6.4}%
-\contentsline {section}{\numberline {6.5}Basis Set Dependence}{11}{section.6.5}%
-\contentsline {section}{\numberline {6.6}Comparison with Adamowicz and Bartlett (1987)}{11}{section.6.6}%
-\contentsline {section}{\numberline {6.7}Computational Cost}{11}{section.6.7}%
-\contentsline {section}{\numberline {6.8}T1 Amplitudes and the Brueckner Orbital Connection}{11}{section.6.8}%
-\contentsline {section}{\numberline {6.9}OVOS Orbitals as a VQE Reference State: Resource Estimates}{11}{section.6.9}%
+\contentsline {section}{\numberline {6.4}Effect of Initialisation Strategy}{12}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Basis Set Dependence}{12}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Comparison with Adamowicz and Bartlett (1987)}{12}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Computational Cost}{12}{section.6.7}%
+\contentsline {section}{\numberline {6.8}T1 Amplitudes and the Brueckner Orbital Connection}{12}{section.6.8}%
+\contentsline {section}{\numberline {6.9}OVOS Orbitals as a VQE Reference State: Resource Estimates}{12}{section.6.9}%
 \contentsline {chapter}{\numberline {7}Conclusion}{13}{chapter.7}%
 \contentsline {section}{\numberline {7.1}Summary of Findings}{13}{section.7.1}%
 \contentsline {section}{\numberline {7.2}Critical Assessment}{13}{section.7.2}%

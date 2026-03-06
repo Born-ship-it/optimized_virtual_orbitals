@@ -21,8 +21,5 @@ branch/
 *.tmp
 *.toml
 
-
-
-
 # Large PDF files
 Thesis/articles/*.pdf
