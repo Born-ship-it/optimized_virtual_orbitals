@@ -969,18 +969,20 @@ class OVOS:
 			n_neg_eigval_block = np.sum(eigvals_block < 0)
 			det_H_block = np.linalg.det(H)
 			cond_H_block = np.linalg.cond(H) if H.size > 0 else np.inf
-			raw_print(f"    Block-diag Hessian cond.: {cond_H_block:.6e}, det.: {det_H_block:.6e}, Neg. Eigval: {n_neg_eigval_block}/{len(eigvals_block)}")
+			if not self.use_random_unitary_init:
+				raw_print(f"    Block-diag Hessian cond.: {cond_H_block:.6e}, det.: {det_H_block:.6e}, Neg. Eigval: {n_neg_eigval_block}/{len(eigvals_block)}")
 
 				# Sanity checks for block-diagonal H
-			if cond_H_block > 1e12:
-				raw_print("        WARNING: Block-diagonal Hessian is ill-conditioned!")
-			if det_H_block == 0.0:
-				raw_print("        WARNING: Block-diagonal Hessian is singular (zero determinant)!")
-			if np.any(eigvals_block < 0.0):
-				raw_print("        WARNING: Block-diagonal Hessian has negative eigenvalues!")
+			if not self.use_random_unitary_init:
+				if cond_H_block > 1e12:
+					raw_print("        WARNING: Block-diagonal Hessian is ill-conditioned!")
+				if det_H_block == 0.0:
+					raw_print("        WARNING: Block-diagonal Hessian is singular (zero determinant)!")
+				if np.any(eigvals_block < 0.0):
+					raw_print("        WARNING: Block-diagonal Hessian has negative eigenvalues!")
 
 				# Correct if singular or ill-conditioned
-			if cond_H_block > 1e12 or det_H_block < 0.0:
+			if cond_H_block > 1e12 or det_H_block == 0.0:
 				raw_print("                 Applying Tikhonov regularization to block-diagonal Hessian.")
 				# Find which shift to apply: we can use a small fraction of the largest absolute eigenvalue as a regularization parameter
 				# if self.block_diag_shift == None:
@@ -1644,8 +1646,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 						# Check if a key was pressed (with a very short timeout)
 					if is_key_pressed(0.01):   # 10 ms timeout
 						key = get_key()
-						raw_print(f"DEBUG: got {repr(key)}", flush=True)   # remove after testing
-						if key == 's':          # Skip key
+						if key == 'p':          # Skip key
 							raw_print("\n[Skipping to next attempt...]")
 							break                # exit inner loop
 						if key == '\x03':  # Ctrl-C to quit
@@ -1743,7 +1744,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 						if abs(E_this - best_E_corr) < 1e-1:
 							best_result_count += 1
 
-					if best_result_count > 25 and attempt > 5:  # If we got the same best result more than 25 times, we can stop trying more random initializations
+					if best_result_count > 250 and attempt > 5:  # If we got the same best result more than 25 times, we can stop trying more random initializations
 						raw_print(f"Got the same best correlation energy {best_E_corr} for {best_result_count-1} attempts (with further loosened criterion), which could indicate a local minimum. Stopping further attempts.")
 						break
 
@@ -1888,7 +1889,7 @@ if True: # Done with OVOS runs. Comment out this line to run more or move on to 
 		# Put terminal in raw mode (so we get keys instantly)
 		tty.setraw(sys.stdin.fileno())
 		
-		for basis_set in ["6-31G", "cc-pVDZ"]: 				#   	"6-31G" | Yet: "cc-pVDZ", ... 
+		for basis_set in ["cc-pVDZ"]: 		#   	"6-31G" | Yet: "cc-pVDZ", ... 
 			for molecule in ["H2O"]: 				#       "H2O", "CO", "HF", "NH3"
 													#        (16)  (22)  (12)  (20)
 				raw_print("")
@@ -1899,7 +1900,7 @@ if True: # Done with OVOS runs. Comment out this line to run more or move on to 
 
 				mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
 				
-				for start_guess in ["prev", "random"]: # "RHF", "prev", "random"
+				for start_guess in ["RHF", "prev", "random"]: # "RHF", "prev", "random"
 					with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
 						sys.stdout = Tee(sys.__stdout__, f)
 						try:

@@ -23,3 +23,6 @@ branch/
 
 
 
+
+# Large PDF files
+Thesis/articles/*.pdf

@@ -1,0 +1,271 @@
+%============================================================
+%  computational_details.tex  –  Chapter 5
+%============================================================
+\chapter{Computational Details}
+\label{ch:computational}
+
+% ---------------------------------------------------------------
+% WRITING TIPS – COMPUTATIONAL DETAILS
+% ---------------------------------------------------------------
+% Goal: Give complete, reproducible information about every calculation.
+%       Anyone reading this chapter should be able to reproduce your data.
+%       This is often the easiest chapter to write – be factual and precise.
+%
+% Suggested sections and content:
+%
+%  5.1  Software and Libraries
+%       - PySCF version (cite \cite{Sun2018, Sun2020}).
+%       - NumPy, SciPy versions.
+%       - Python version.
+%       - Your own OVOS implementation: reference the Git repository
+%         or the code listing in Appendix C.
+%       - Note the single-threaded execution setting and why:
+%         OPENBLAS_NUM_THREADS=1, OMP_NUM_THREADS=1.
+%
+%  5.2  Hardware
+%       - CPU model, RAM, OS.
+%       - If run on a cluster, state cluster name, queue system, cores used.
+%       - Relevant for interpreting timing data.
+%
+%  5.3  Molecular Geometries
+%       - Provide a table with all molecules:
+%         molecule | geometry (bond lengths/angles) | source of geometry |
+%                    spin | charge | symmetry
+%       - Molecules used: H₂, LiH, H₂O, CH₂, BH₃, N₂, CO, HF, NH₃.
+%       - Cite the source for each geometry (experimental, optimised, etc.).
+%       - State the unit system: Ångström or Bohr.
+%
+%  5.4  Basis Sets
+%       - List all basis sets used: STO-3G, 6-31G, cc-pVDZ, cc-pVTZ, etc.
+%       - Briefly describe each (contraction scheme, angular momentum,
+%         diffuse functions, etc.).
+%       - Provide a table: molecule | basis | N_basis | N_virt | N_occ.
+%       - Cite basis set references (Dunning, Pople, etc.) and Basis Set
+%         Exchange \cite{Pritchard2019}.
+%
+%  5.5  Reference SCF Calculations
+%       - State that UHF (unrestricted Hartree-Fock) is the SCF reference.
+%       - Convergence threshold for SCF.
+%       - DIIS acceleration (if used).
+%       - Symmetry: disabled (False) to avoid symmetry-broken orbitals.
+%       - Provide a reference table: molecule | basis | E_HF | E_MP2(full)
+%         (these are your benchmark values that OVOS results are compared to).
+%
+%  5.6  OVOS Calculation Settings
+%       - Convergence threshold: |ΔE| < 10⁻⁸ Hartree.
+%       - Maximum iterations: state value.
+%       - Virtual orbital range tested: 2, 4, …, N_virt (in spin-orbital count).
+%       - Increment step: 2 (one spatial orbital pair at a time).
+%       - Level-shift threshold (if used).
+%       - Initialisation strategy used for each dataset.
+%
+%  5.7  Data Storage and Reproducibility
+%       - JSON output format: [(n_virt, E_corr, n_iter), …].
+%       - Seed for random initialisation runs (for reproducibility).
+%       - Note: all data stored in branch/data/{molecule}/{basis}/.
+%
+% Tips:
+%   - Use \texttt{} for all software names, version strings, and
+%     file paths.
+%   - Include a table that maps your calculation labels (e.g., "prev",
+%     "random", "RHF_init") to the strategy used.
+%   - If any calculation failed to converge, note it here (not hidden
+%     in the Results chapter).
+%   - State clearly what counts as "full" MP2 (the reference energy).
+% ---------------------------------------------------------------
+
+\section{Software and Libraries}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 5.1]
+%   "All calculations in this thesis were performed using PySCF version X.Y
+%    \cite{Sun2018, Sun2020}, an open-source quantum chemistry package in
+%    Python, supplemented by NumPy and SciPy for linear algebra operations.
+%    The OVOS method itself was implemented as a standalone Python class;
+%    source code is provided in Appendix~\ref{app:code}."
+%
+% [WHAT TO COVER]
+%   - PySCF version (check \texttt{pyscf.__version__}).
+%   - NumPy, SciPy versions (check at runtime).
+%   - Python version (3.x).
+%   - Reference to OVOS implementation: \texttt{ovos.py} / \texttt{ovos\_start\_over.py}.
+%   - Single-threaded settings for reproducibility:
+%     \texttt{OPENBLAS\_NUM\_THREADS=1}, \texttt{OMP\_NUM\_THREADS=1}.
+%   - Operating system and Python distribution used.
+%
+% [TABLE] Software stack:
+%   Columns: Package | Version | Purpose | Citation
+%   Caption: "Software packages used in this work."
+%
+% [LEAD-IN TO §5.2]
+%   "The hardware environment on which all calculations were run
+%    is described in the following section."
+% ---------------------------------------------------------------
+
+\section{Hardware}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 5.2]
+%   "Provide the CPU model, RAM, and operating system used for all
+%    calculations. This information allows the reader to interpret
+%    the timing data reported in Section~\ref{sec:cost}."
+%
+% [WHAT TO COVER]
+%   - CPU: model name, number of cores (even if only 1 thread used).
+%   - RAM: total available.
+%   - OS: Windows/Linux/macOS.
+%   - If cluster was used: name, queue system, number of cores requested.
+%   - Note: single-threaded execution means results are reproducible
+%     regardless of core count.
+%
+% [LEAD-IN TO §5.3]
+%   "The molecular test set and the geometries used for all calculations
+%    are specified in the following section."
+% ---------------------------------------------------------------
+
+\section{Molecular Geometries}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 5.3]
+%   "Nine molecules spanning a range of electronic structures
+%    (closed-shell, open-shell, single-bond, triple-bond) were used
+%    as the test set. All geometries were kept fixed
+%    (no geometry optimisation); the coordinates used are listed in
+%    Table~\ref{tab:geometries}."
+%
+% [TABLE – already in file. ENHANCE CAPTION AND FOOTNOTES]
+%   - Add footnote column or footnotes explaining source of each geometry.
+%   - Use experimental bond lengths from NIST or the literature.
+%   - State the coordinate unit: \AA ngstr\"om.
+%   - For CH\textsubscript{2}: state whether triplet or singlet;
+%     provide angle explicitly.
+%   - Reference: Szabo \& Ostlund, PySCF tutorials, or original papers.
+%
+% [LEAD-IN TO §5.4]
+%   "The basis sets applied to these geometries are described in
+%    the following section, along with the resulting orbital space dimensions."
+% ---------------------------------------------------------------
+
+\begin{table}[H]
+\centering
+\caption{Molecular geometries and electronic structure parameters used in this work.}
+\label{tab:geometries}
+\begin{tabular}{lllcc}
+\toprule
+Molecule & Geometry (Å) & Multiplicity & Charge & Symmetry \\
+\midrule
+\ce{H2}  & $r(\mathrm{H-H}) = 0.74144$ & 1 & 0 & $D_{\infty h}$ \\
+LiH      & $r(\mathrm{Li-H}) = 1.595$  & 1 & 0 & $C_{\infty v}$ \\
+\ce{H2O} & $r = 0.957$, $\angle = 104.5°$ & 1 & 0 & $C_{2v}$ \\
+\ce{CH2} & planar, see text             & 3 & 0 & $C_{2v}$ \\
+\ce{BH3} & $r(\mathrm{B-H}) = 1.19$, planar & 1 & 0 & $D_{3h}$ \\
+\ce{N2}  & $r(\mathrm{N-N}) = 1.10$    & 1 & 0 & $D_{\infty h}$ \\
+CO       & $r(\mathrm{C-O}) = 1.128$   & 1 & 0 & $C_{\infty v}$ \\
+HF       & $r(\mathrm{H-F}) = 0.917$   & 1 & 0 & $C_{\infty v}$ \\
+\ce{NH3} & $r(\mathrm{N-H}) = 1.012$   & 1 & 0 & $C_{3v}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Basis Sets}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 5.4]
+%   "The choice of basis set determines the size of the virtual orbital
+%    space and hence the difficulty and accuracy of the OVOS calculation.
+%    This section describes the basis sets employed and provides the
+%    resulting orbital space dimensions for each molecule."
+%
+% [WHAT TO COVER]
+%   - 6-31G: double-zeta split-valence; Pople family; cite.
+%   - cc-pVDZ, cc-pVTZ, cc-pVQZ: Dunning correlation-consistent;
+%     \cite{Dunning1989}; describe (triple zeta adds diffuse/polarisation).
+%   - Basis Set Exchange \cite{Pritchard2019}: where basis sets were obtained.
+%
+% [TABLE] Orbital space dimensions per molecule/basis:
+%   Columns: Molecule | Basis | $N_{\rm basis}$ | $N_{\rm occ}^\alpha$ |
+%            $N_{\rm occ}^\beta$ | $N_{\rm virt}^{\rm spin}$ | $N_{\rm spin}$
+%   Caption: "Orbital space dimensions for all molecule/basis combinations.
+%   $N_{\rm spin} = 2 N_{\rm basis}$ is the total number of spin-orbitals."
+%
+% [LEAD-IN TO §5.5]
+%   "With molecular geometries and basis sets fixed, the SCF reference
+%    calculations from which OVOS begins are summarised in the following section."
+% ---------------------------------------------------------------
+
+\section{Reference SCF Calculations}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 5.5]
+%   "All calculations use an unrestricted Hartree-Fock (UHF) reference
+%    obtained from PySCF with default convergence settings. This section
+%    records the reference HF and full-space MP2 energies that serve
+%    as benchmarks throughout the results."
+%
+% [WHAT TO COVER]
+%   - SCF convergence threshold: state value (e.g., $10^{-9}$ Hartree).
+%   - DIIS: used or not? (PySCF default: yes).
+%   - Symmetry: \texttt{mol.symmetry = False} to avoid symmetry-broken orbitals.
+%   - Spin state: explicit $2S+1$ for each molecule.
+%
+% [TABLE] Reference energies:
+%   Columns: Molecule | Basis | $E_{\rm HF}$ / Hartree |
+%            $E_{\rm corr}^{\rm MP2}$ / Hartree | $E_{\rm total}^{\rm MP2}$
+%   Caption: "Reference UHF and full-space MP2 energies for the test set.
+%   These are the values against which OVOS energy recovery is measured."
+%   TIP: use \texttt{pyscf.mp.MP2} to cross-check your own MP2 values.
+%
+% [LEAD-IN TO §5.6]
+%   "The specific settings used for the OVOS optimisation on top of
+%    these references are given in the following section."
+% ---------------------------------------------------------------
+
+\section{OVOS Calculation Settings}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 5.6]
+%   "This section specifies all hyperparameters of the OVOS calculation,
+%    ensuring reproducibility. Values given here correspond to the data
+%    stored in \texttt{branch/data/} and presented in Chapter~\ref{ch:results}."
+%
+% [WHAT TO COVER]
+%   - Convergence threshold: $|\Delta E_{\rm corr}| < 10^{-8}$~Hartree.
+%   - Maximum iterations: state (e.g., 500).
+%   - Active virtual orbital range: $N' = 2, 4, \ldots, N_{\rm virt}$
+%     (increment = 2 spin-orbitals = 1 spatial orbital pair).
+%   - Level-shift threshold for negative Hessian eigenvalues: state value.
+%   - Initialisation strategy label used for each dataset
+%     (\texttt{RHF\_init}, \texttt{prev}, \texttt{random}).
+%
+% [TABLE] Calculation settings summary:
+%   Columns: Parameter | Value | Notes
+%   Rows: Convergence threshold | Max iterations |
+%         Orbital increment | Level-shift threshold | Init strategy
+%   Caption: "OVOS calculation settings used throughout this work."
+%
+% [TABLE] Dataset labels:
+%   Columns: File label | Initialisation strategy | Description
+%   Rows: RHF\_init | UHF/RHF canonical | Default start
+%         prev      | Warm-start        | Reuse previous N' solution
+%         random    | Random unitary    | 500-sample global search
+%   Caption: "Meaning of dataset labels used in the \texttt{branch/data/} directory."
+%
+% [LEAD-IN TO §5.7]
+%   "Finally, the file format and directory structure used to store
+%    all results are described in the following section."
+% ---------------------------------------------------------------
+
+\section{Data Storage and Reproducibility}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 5.7]
+%   "All computed results are stored as JSON files in a structured
+%    directory tree under \texttt{branch/data/}. This section describes
+%    the file format, naming convention, random seeds, and the
+%    repository location to ensure full reproducibility."
+%
+% [WHAT TO COVER]
+%   - JSON format: list of \texttt{[N'_{\rm virt}, E_{\rm corr}, n_{\rm iter}]}.
+%   - Directory structure: \texttt{branch/data/\{molecule\}/\{basis\}/\{label\}.json}.
+%   - Random seed for \texttt{random} initialisation runs:
+%     state the value (e.g., \texttt{np.random.seed(42)}) for reproducibility.
+%   - Note which calculations are available for each molecule/basis.
+%   - Git repository: mention if/where the code is version-controlled.
+%
+% [LEAD-IN TO CH.6]
+%   "With all computational details established, the results of the
+%    OVOS calculations are presented and discussed in the following chapter."
+% ---------------------------------------------------------------
