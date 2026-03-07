@@ -43,6 +43,9 @@ def raw_print(*args, **kwargs):
     kwargs.setdefault('flush', True)
     print(*args, **kwargs)
 
+# For memory profiling (optional)
+import tracemalloc
+
 # Options:
 np.set_printoptions(precision=4, suppress=False, linewidth=200)
 
@@ -967,6 +970,8 @@ class OVOS:
         #    header='Block‑diagonal Hessian (rows/cols: inactive×active rotations)')
 
 		# Correct determinant and condition number for block-diagonal approximation
+			# Singularity: any single eigenvalue is ~0
+			# Ill-conditioning: ratio of largest to smallest eigenvalue is large
 		if True: # Set to True to always apply block-diagonal approximation
 			eigvals_block = np.linalg.eigvalsh(H)
 			n_neg_eigval_block = np.sum(eigvals_block < 0)
@@ -984,31 +989,61 @@ class OVOS:
 				if np.any(eigvals_block < 0.0):
 					raw_print("        WARNING: Block-diagonal Hessian has negative eigenvalues!")
 
+			if np.any(eigvals_block < 0.0):
+				if not self.use_random_unitary_init:
+					raw_print("                 Applying level-shift to block-diagonal Hessian to address negative eigenvalues.")
+				# Level-shift negative eigenvalues to zero to ensure positive semi-definite Hessian for stable Newton-Raphson updates
+				eigvals_block_clipped = np.where(eigvals_block < 0.0, 1e-6, eigvals_block)  # Shift negative eigenvalues to a small positive value
+				H = (H @ np.diag(eigvals_block_clipped / eigvals_block))  # Scale H to have the clipped eigenvalues, preserving eigenvectors
+				det_H_block = np.linalg.det(H)
+				cond_H_block = np.linalg.cond(H) if H.size > 0 else np.inf
+				if not self.use_random_unitary_init:
+					raw_print(f"                     Block-diag Hessian cond.: {cond_H_block:.6e}, det.: {det_H_block:.6e}")
+
 				# Correct if singular or ill-conditioned
-			if cond_H_block > 1e12 or det_H_block == 0.0:
+					# Singularity: any single eigenvalue is ~0
+					# Ill-conditioning: ratio of largest to smallest eigenvalue is large
+			eigvals_block = np.linalg.eigvalsh(H)
+			min_eig_block = np.min(eigvals_block)
+			if cond_H_block > 1e12 or min_eig_block < 1e-2: #
 				if not self.use_random_unitary_init:
 					raw_print("                 Applying Tikhonov regularization to block-diagonal Hessian.")
 				# Find which shift to apply: we can use a small fraction of the largest absolute eigenvalue as a regularization parameter
-				# if self.block_diag_shift == None:
 				shift_e = 0
 					# Regularize until the Hessian is no longer singular or ill-conditioned, or until we have tried a reasonable number of shifts
-				while cond_H_block > 1e12 or det_H_block == 0.0:
+				while cond_H_block > 1e12 or min_eig_block < 1e-2: # det_H_block == 0.0:
 						# This fraction can be found by...
 					shift_e += 1
-					shift = 1e-6 * 10**shift_e  # Start with a small shift
+					if self.shift_e_nr is None:
+						shift = 10**(-12) * 10**shift_e  # Start with a small shift
+					else:
+						shift = 10**(self.shift_e_nr) * 10**shift_e  # Start with a small shift based on the previous shift applied
 					reg_lambda = shift * np.max(np.abs(H))  # Regularization parameter, can be tuned
 					H += reg_lambda * np.eye(H.shape[0])
+						# Recompute determinant, condition number, and minimum eigenvalue after regularization
+					eigvals_block = np.linalg.eigvalsh(H)
+					min_eig_block = np.min(eigvals_block)
 					det_H_block = np.linalg.det(H)
 					cond_H_block = np.linalg.cond(H)
-				# 	self.block_diag_shift = shift
-				# else:
-				# 	while det_H_block < 1e-100 or cond_H_block > 1e12:
-				# 		self.block_diag_shift *= 10
-				# 		H += self.block_diag_shift * np.max(np.abs(H)) * np.eye(H.shape[0])
-				# 		det_H_block = np.linalg.det(H)
-				# 		cond_H_block = np.linalg.cond(H)
+
+						# I should break out out of the loop if det_H_block is infinite or NaN, which indicates that the regularization is not working and we are likely applying too large of a shift, which can lead to divergence in the orbital optimization.
+					if np.isnan(det_H_block) or np.isinf(det_H_block):
+						if not self.use_random_unitary_init:
+							raw_print("                     WARNING: Regularization failed to produce a finite determinant! Stopping regularization.")
+							# Set an arg to break futher out
+						self.regularization_failed = True
+						break
+					        
+					# if shift_e > 12:  # Safety: don't shift more than 1e6 * max_diag
+					# 	if not self.use_random_unitary_init:
+					# 		raw_print("                     WARNING: Max regularization shift reached!")
+					# 	break
+
+					# Get the 1e-"number" shift that was applied for diagnostics
+					self.shift_e_nr = (int(str(shift).lower().split('e')[1])-2) if 'e' in str(shift).lower() else None
+
 				if not self.use_random_unitary_init:
-					raw_print(f"                 Block-diag Hessian cond.: {cond_H_block:.6e}, det.: {det_H_block:.6e}")
+					raw_print(f"                     Block-diag Hessian cond.: {cond_H_block:.6e}, det.: {det_H_block:.6e}")
 
 					
 
@@ -1230,9 +1265,14 @@ class OVOS:
 		keep_track = 0
 		keep_track_max = 25
 
-		self.block_diag_shift = None  # Initialize block diagonal shift for regularization if needed
+		self.shift_e_nr = None  # To keep track of the exponent of the last shift applied to the Hessian for diagnostics
 
 		while iter_count < max_iter:
+			# Print memory usage
+				# If tracemalloc is available, print current memory usage in MB at each iteration to monitor for leaks or excessive usage
+			if tracemalloc.is_tracing():
+				current, peak = tracemalloc.get_traced_memory()
+				raw_print(f"Current memory: {current / 1024 / 1024:.1f} MB | Peak memory: {peak / 1024 / 1024:.1f} MB")
 
 			# Allow user to skip to next iteration by pressing 's' key (with a short timeout to avoid blocking)
 				# Check if a key was pressed (with a very short timeout)
@@ -1247,6 +1287,12 @@ class OVOS:
 					raw_print("\n[Exiting OVOS...]")
 					sys.exit(0)
 
+			# If reguælarization failed, break out of the loop to prevent divergence
+			if hasattr(self, 'regularization_failed') and self.regularization_failed:
+				raw_print("Regularization failed to produce a stable Hessian. Stopping OVOS to prevent divergence.")
+				break
+
+			# Increment iteration count
 			iter_count += 1
 			self.iteration = iter_count
 
@@ -1355,6 +1401,8 @@ class OVOS:
 				if not self.use_random_unitary_init:
 					raw_print(f"Reached upper limit of iterations ({max_iter}) without convergence. Stopping OVOS.")
 				break
+
+			
 
 		# Which direction did we go?
 		if converged and not self.use_random_unitary_init:
@@ -1889,21 +1937,21 @@ if False: # Done with OVOS runs. Comment out this line to run more or move on to
 		for basis_set in ["cc-pVDZ"]: 		#   	"6-31G" | Yet: "cc-pVDZ", ... 
 			for molecule in ["H2O"]: 				#       "H2O", "CO", "HF", "NH3"
 													#        (16)  (22)  (12)  (20)
-				raw_print("")
-				raw_print("==========================================================")
-				raw_print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
-				raw_print("==========================================================")
-				raw_print("")
+				sys.stdout = Tee(sys.__stdout__, f)
+				try:
+					raw_print("")
+					raw_print("==========================================================")
+					raw_print("Running OVOS for molecule: ", molecule, " with basis set: ", basis_set)
+					raw_print("==========================================================")
+					raw_print("")
 
-				mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
-				
-				for start_guess in ["random"]: # "RHF", "prev", "random" | Yet: "random"
-					with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
-						sys.stdout = Tee(sys.__stdout__, f)
-						try:
+					mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
+					
+					for start_guess in ["random"]: # "RHF", "prev", "random" | Yet: "random"
+						with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
 							get_OVOS_data(num_opt_virtual_orbs_current=0, retry_count=0, start_guess=start_guess, select_atom=molecule, select_basis=basis_set)
-						finally:
-							sys.stdout = sys.__stdout__
+				finally:
+					sys.stdout = sys.__stdout__
 	finally:
 		# Restore terminal settings no matter what
 		termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
@@ -1915,9 +1963,6 @@ This is normal and expected behavior for Newton's method without line search or 
 
 Negative eigenvalues in Hessian can also be level-shifted to stabilize convergence, but this can slow down progress.
 """		
-
-# I want to create a plot which shows 
-
 
 
 # OOMP2 implementation based on PySCF's MP2, which is based on the original OOMP2 paper by Lee and Head-Gordon (https://pubs.acs.org/doi/10.1021/acs.jpca.5b07881) and the recent developments in PySCF (https://pubs.aip.org/aip/jcp/article/153/2/024109/1061482/Recent-developments-in-the-PySCF-program-package)
@@ -1946,10 +1991,438 @@ class OOMP2(object):
         dm2 = self.mp2.make_rdm2(t2)
         return dm1, dm2
 
+# I want to create a plot which shows Li_2 dissociation 
+# curve for MP2 using restricted and unrestricted
+# orbitals and for OOMP2 with a cc-pVDZ basis.
+
+# Setup molecule and basis with distance dependent geometry
+	# Run RHF, UHF, MP2, and OOMP2 for each geometry
+	# Plot the results
+if False: # Done with OVOS runs. Comment out this line to run more or move on to the next part of the code.
+	# Start tracing
+	tracemalloc.start()
+
+	# Windows only - get total RAM
+	total_memory_bytes = os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')
+	total_memory_gb = total_memory_bytes / (1024**3)
+	print(f"Total memory: {total_memory_gb:.2f} GB")
+		# For total_memory_gb round down to nearest integer and leave 1 GB free to avoid crashing the system
+	total_memory_gb = int(total_memory_gb) - 1
+	print(f"Total memory for Python process: {total_memory_gb} GB")
+	set_OVOS_memory_mb = 100
+	print(f"Memory peak for OVOS runs: {set_OVOS_memory_mb} MB (MAX)") # Found 65 MB peak for Li2 cc-pVDZ with 50% optimized virtual orbitals, so 100 MB is a safe upper bound for all runs.
+		# Ratio of memory used by Python process to total memory
+	memory_ratio = set_OVOS_memory_mb / (total_memory_gb * 1024)  # Convert total memory to MB for ratio calculation
+	memory_ratio = min(memory_ratio, 1.0)  # Cap the ratio at 1.0 (100%) to avoid misleading output if set_OVOS_memory_mb exceeds total memory
+	print(f"Estimated memory usage ratio: {memory_ratio:.4f} (100 MB / {total_memory_gb * 1024:.0f} MB)")
+		# This set OVOS memory is for 1 core CPU
+		# If we were to parallelize OVOS, we would need to multiply set_OVOS_memory_mb by the number of cores used to get the total memory usage for OVOS runs.
+			# Check if we can do a set amount of cores in parallel without exceeding total memory
+	num_cores = os.cpu_count()
+	print(f"Number of CPU cores available: {num_cores}")
+	max_parallel_cores = int(total_memory_gb * 1024 / set_OVOS_memory_mb)  # Maximum number of cores we could use in parallel without exceeding total memory
+	print(f"Maximum number of cores that could be used in parallel for OVOS runs without exceeding total memory: {max_parallel_cores}")
+	if max_parallel_cores < num_cores:
+		print(f"Warning: Using all {num_cores} cores in parallel for OVOS runs could exceed total memory. Consider using up to {max_parallel_cores} cores for parallel OVOS runs to stay within memory limits.")
+		# If maximum number of cores is more than 10 set it to 10 to be safe, as we are not sure about the memory usage of other parts of the code and to avoid overwhelming the system
+	max_parallel_cores = min(max_parallel_cores, 10)
+	
+
+	# Save original terminal settings
+	old_settings = termios.tcgetattr(sys.stdin)
+
+
+	molecule = "Li2"
+	basis_set = "cc-pVDZ"
+	start_guess = "RHF"
+
+	try:
+		with open(f"branch/data/{molecule}/{basis_set}/dissociation_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
+			sys.stdout = Tee(sys.__stdout__, f)
+			try:
+				# Define Li2 geometries (in Angstrom)
+				distances = np.linspace(2.5, 6, 10)  # From 1.0 to 5.0 Angstrom with 10 points
+				geometries = [f"Li .0 .0 .0; Li .0 .0 {d}" for d in distances]
+
+				# Store results
+				results = []
+
+				for geom in geometries:
+					# Allow user to skip to next iteration by pressing 's' key (with a short timeout to avoid blocking)
+						# Check if a key was pressed (with a very short timeout)
+					if is_key_pressed(0.01):   # 10 ms timeout
+						key = get_key()
+						if key == '\x03':  # Ctrl-C to quit
+							raw_print("\n[Exiting OVOS...]")
+							sys.exit(0)
+
+					# Molecule
+					mol = pyscf.M(
+						atom=geom, 
+						basis="cc-pVDZ",
+						unit="angstrom", 
+						charge=0, 
+						spin=0,
+						symmetry=False
+						)
+					
+					raw_print("")
+					raw_print("==========================================================")
+					raw_print("\nRunning calculations for geometry: ", geom)
+					raw_print("")
+
+					# RHF
+					rhf = mol.RHF().run()
+					rhf_e_tot = rhf.e_tot
+					raw_print("RHF total energy: ", rhf_e_tot)
+
+					# MP2
+					MP2_e_corr = rhf.MP2().run().e_corr
+					raw_print("MP2 correlation energy: ", MP2_e_corr)
+					
+
+					# OOMP2
+						# Put in the active space all orbitals of the system
+					mc = pyscf.mcscf.CASSCF(rhf, mol.nao, mol.nelectron)
+					mc.fcisolver = OOMP2()
+						# Internal rotation inside the active space needs to be enabled
+					mc.internal_rotation = True
+						# Run OOMP2
+					ooMP2_e_tot, ooMP2_e_cas, ooMP2_ci, ooMP2_mo_coeff, ooMP2_mo_energy = mc.kernel()
+					ooMP2_e_corr = ooMP2_e_tot - rhf.e_tot
+					raw_print("OOMP2 correlation energy: ", ooMP2_e_corr)
+					raw_print("")
+
+					# OVOS @ 50% of full space optimized virtual orbitals
+					try:
+							# Miscellaneous data about the molecule and basis set
+								# Number of electrons
+						num_electrons = mol.nelec[0] + mol.nelec[1]
+								# Full space size in molecular orbitals
+						full_space_size = int(rhf.mo_coeff.shape[1])
+							
+							# List of MP2 correlation energies for different numbers of optimized virtual orbitals
+						lst_E_corr_virt_orbs = [[],[],[],[],[],[]]  # [[E_corr_list], [num_opt_virtual_orbs_list], [iterations_till_convergence_list], [Unr. SCF check list], [mo_coeffs_final], [lst_stop_reason]]
+						lst_MP2_virt_orbs = []  # [(num_opt_virtual_orbs, E_corr, iterations_till_convergence), ...]
+
+							# List of error messages for failed runs
+						lst_error_messages = []
+							# List of message for priting later
+						lst_message = []
+
+							# Set maximum number of optimized virtual orbitals to test
+								# Denoted in molecular orbitals (not spin orbitals)
+						max_opt_virtual_orbs = full_space_size*2 - num_electrons
+								# Set statrting number of optimized virtual orbitals and increment
+						num_opt_virtual_orbs_current = 0.5 * max_opt_virtual_orbs  # Start with number of occupied orbitals
+								# Ensure num_opt_virtual_orbs_current is an even integer for closed-shell molecules
+						num_opt_virtual_orbs_current = int(round(num_opt_virtual_orbs_current / 2) * 2)
+
+							# Run OVOS
+								# The if state will prevent re-getting RHF orbitals if using previous or random init
+						mo_coeffs = np.array([rhf.mo_coeff, rhf.mo_coeff]) 		# Start with RHF orbitals for both alpha and beta spins
+						Fmo_rot = None 											# Fock matrix in the MO basis will be constructed later based on the initial orbitals
+						Fao_get = rhf.get_fock() 								# Get Fock matrix in AO basis for later use in orbital optimization
+						Fao = np.array([Fao_get, Fao_get]) 						# Use the same Fock matrix for both spins as starting point
+						init_orbs = "RHF"
+
+								# Run OVOS with RHF orbitals as starting guess
+						lst_E_corr, lst_iter_counts, mo_coeffs, Fmo_rot, lst_stop_reason = OVOS(mol=mol, scf=rhf, Fao=Fao, num_opt_virtual_orbs=num_opt_virtual_orbs_current, init_orbs=init_orbs, mo_coeff=mo_coeffs).run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
+
+								# Check alpha/beta are the same for a tolerance - Done after orbital optimization
+						diff_alpha_beta = np.max(np.abs(mo_coeffs[0] - mo_coeffs[1]))
+						if diff_alpha_beta > 1e-4:
+							raw_print("Warning: OVOS with ", num_opt_virtual_orbs_current, " optimized vorbs resulted in different alpha and beta orbitals (max diff: ", diff_alpha_beta, ").")
+								# Store message
+							lst_message.append(f"OVOS w. {num_opt_virtual_orbs_current} optimized vorbs resulted in different alpha and beta orbitals (max diff: {diff_alpha_beta}). Here largest alpha {np.max(mo_coeffs[0])} and beta {np.max(mo_coeffs[1])} orbital coeffs.")
+								# Append True-False flag to lst_E_corr_virt_orbs
+							lst_E_corr_virt_orbs[3].append("True")
+						else:
+							lst_E_corr_virt_orbs[3].append("False")
+
+								# Store OVOS results
+						lst_MP2_virt_orbs.append((num_opt_virtual_orbs_current, lst_E_corr[-1], lst_iter_counts[-1], lst_stop_reason[-1]))
+						lst_E_corr_virt_orbs[0].append(lst_E_corr)
+						lst_E_corr_virt_orbs[1].append(num_opt_virtual_orbs_current)
+						lst_E_corr_virt_orbs[2].append(lst_iter_counts)
+						lst_E_corr_virt_orbs[4].append(mo_coeffs.tolist())
+						lst_E_corr_virt_orbs[5].append(lst_stop_reason)
+
+
+					# Catch errors during OVOS
+					except AssertionError as e:
+						raw_print(f"Error during OVOS with {num_opt_virtual_orbs_current} optimized virtual orbitals: {e}")
+						raw_print("Rerunning with the same number of virtual orbitals.")
+
+						# Add error message to list
+							# Get results if available
+						lst_error_messages.append((num_opt_virtual_orbs_current, str(e), lst_iter_counts[-1] if lst_iter_counts is not None else 0))
+						continue
+								
+
+					# Print summary of the run
+					raw_print("Number of electrons: ", num_electrons)
+					raw_print("Full space size in molecular orbitals: ", full_space_size)
+					raw_print("Maximum number of optimized virtual orbitals tested: ", max_opt_virtual_orbs)
+					raw_print("Total OVOS runs completed: ", len(lst_MP2_virt_orbs))
+					raw_print("")
+
+					# Print the final MP2 correlation energy after all OVOS and amount of iterations till convergence
+					for num_opt_virtual_orbs_current, E_corr, iter_, lst_stop_reason in lst_MP2_virt_orbs:
+						raw_print("MP2 correlation energy, for ", num_opt_virtual_orbs_current, f" optimized virtual orbitals: ", '%.5E' % Decimal(E_corr),f" ({(E_corr/MP2.e_corr)*100:.4}%)"+" @ ", iter_, " iterations till convergence (",lst_stop_reason,")")
+					raw_print("MP2 correlation energy, for full space: ", '%.5E' % Decimal(MP2.e_corr), "| Difference:", '%.5E' % Decimal(MP2.e_corr - lst_MP2_virt_orbs[-1][1]))
+					raw_print("")
+
+					# Print if the check of alpha and beta orbitals were the same
+					for msg in lst_message:
+						raw_print(msg)
+					raw_print("")
+
+					# Print what methods were used
+					raw_print("Previously optimized virtual orbitals were used as starting guess for each OVOS run.")
+					raw_print("")
+
+					# Print error messages summary
+					if len(lst_error_messages) > 0:
+						raw_print("#### Error messages summary ####")
+						for num_opt_virtual_orbs_current, error_msg, iter_ in lst_error_messages:
+							raw_print("  OVOS w. ", num_opt_virtual_orbs_current, " optimized vorbs failed at iteration ", iter_ ," w. error: ", error_msg)
+						raw_print("")
+
+					# Store results
+						# Store geometry, RHF total energy, MP2 correlation energy, and OOMP correlation energy
+					results.append((geom, rhf.e_tot, MP2_e_corr, ooMP2_e_corr, lst_E_corr[-1], lst_E_corr_virt_orbs))
+
+					# Save data to JSON files
+					import json
+
+					str_name = "dissociation_RHF_init"
+
+					str_atom = molecule
+					str_basis = basis_set
+
+					raw_print("Saving data to branch/data/"+str_atom+"/"+str_basis+"/...")
+
+					# Save MP2 correlation energy convergence data
+					with open("branch/data/"+str_atom+"/"+str_basis+"/"+str_name+".json", "w") as f:
+						json.dump(results, f, indent=2)
+
+					raw_print("Data saved to branch/data/"+str_atom+"/"+str_basis+"/"+str_name+".json")
+			finally:
+				sys.stdout = sys.__stdout__
+	finally:
+		# Restore terminal settings no matter what
+		termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+
+	# Get snapshot
+	current, peak = tracemalloc.get_traced_memory()
+	raw_print(f"Peak memory: {peak / 1024 / 1024:.1f} MB")
+	tracemalloc.stop()
+
+
+	# The parallelized version of the above code...
+from multiprocessing import Pool
+import functools
+
+def compute_geometry(geom, distances, mol_setup_params, ovos_params, worker_id=None):
+	"""
+	Worker function: compute OVOS for a single geometry.
+	Runs in a separate process.
+	"""
+
+	# Reconstruct molecule from geometry string
+	mol = pyscf.M(
+		atom=geom,
+		basis=mol_setup_params['basis'],
+		unit="angstrom",
+		charge=0,
+		spin=0,
+		symmetry=False
+	)
+	
+	# RHF
+	rhf = mol.RHF().run()
+	rhf_e_tot = rhf.e_tot
+	
+	# MP2
+	MP2_e_corr = rhf.MP2().run().e_corr
+	
+	# OOMP2
+	mc = pyscf.mcscf.CASSCF(rhf, mol.nao, mol.nelectron)
+	mc.fcisolver = OOMP2()
+	mc.internal_rotation = True
+	ooMP2_e_tot, ooMP2_e_cas, ooMP2_ci, ooMP2_mo_coeff, ooMP2_mo_energy = mc.kernel()
+	ooMP2_e_corr = ooMP2_e_tot - rhf.e_tot
+	
+	# OVOS @ 50% of full space
+	num_electrons = mol.nelec[0] + mol.nelec[1]
+	full_space_size = int(rhf.mo_coeff.shape[1])
+	max_opt_virtual_orbs = full_space_size * 2 - num_electrons
+	num_opt_virtual_orbs_current = int(round(0.5 * max_opt_virtual_orbs / 2) * 2)
+		# Setup initial guess for OVOS
+	mo_coeffs = np.array([rhf.mo_coeff, rhf.mo_coeff])
+	Fmo_rot = None
+	Fao_get = rhf.get_fock()
+	Fao = np.array([Fao_get, Fao_get])
+	
+	import time
+		# Index of geometry being processed (for debugging)
+			# Get index from last number in str geom, which is in the format "Li .0 .0 .0: Li .0 .0 {distance}"
+	geom_dist = float(geom.split()[-1])
+	geom_idx = np.where(np.isclose(distances, geom_dist))[0][0] + 1
+	time.sleep(5*geom_idx)  # Simulate some delay to allow print statements from different processes to interleave less
+
+	# Print progress
+	raw_print("")
+	raw_print("==========================================================")
+	raw_print(f"Processing geometry: {geom} with worker ID: {worker_id}")
+	raw_print(f"RHF total energy: {rhf_e_tot}")
+	raw_print(f"MP2 correlation energy: {MP2_e_corr}")
+	raw_print(f"OOMP2 correlation energy: {ooMP2_e_corr}")
+	raw_print(f"Running OVOS with {num_opt_virtual_orbs_current} optimized virtual orbitals...")
+
+	geom_idx_inv = len(distances) - geom_idx + 1
+	time.sleep(5*geom_idx_inv)  # Simulate some delay to allow print statements from different processes to interleave less
+
+	# # Suppress output from worker processes to avoid cluttering the terminal
+	# from io import StringIO
+	# old_stdout = sys.stdout
+	# sys.stdout = StringIO()
+
+	try:
+		lst_E_corr, lst_iter_counts, mo_coeffs, Fmo_rot, lst_stop_reason = OVOS(
+			mol=mol,
+			scf=rhf,
+			Fao=Fao,
+			num_opt_virtual_orbs=num_opt_virtual_orbs_current,
+			init_orbs="RHF",
+			mo_coeff=mo_coeffs
+		).run_ovos(mo_coeffs=mo_coeffs, Fmo_rot=Fmo_rot)
+		
+		return {
+			'geom': geom,
+			'rhf_e_tot': rhf_e_tot,
+			'MP2_e_corr': MP2_e_corr,
+			'ooMP2_e_corr': ooMP2_e_corr,
+			'OVOS_e_corr': lst_E_corr[-1],
+			'success': True,
+			'error': None
+		}
+
+	except Exception as e:
+		return {
+			'geom': geom,
+			'rhf_e_tot': None,
+			'MP2_e_corr': None,
+			'ooMP2_e_corr': None,
+			'OVOS_e_corr': None,
+			'success': False,
+			'error': str(e)
+		}
+
+	# finally:
+	# 	sys.stdout = old_stdout  # Restore original stdout so we can print results from the main process
+
+
+# In your main dissociation curve code, replace the sequential loop:
+if False:  # Parallelized dissociation curve
+	tracemalloc.start()
+	
+	# Windows only - get total RAM
+	total_memory_bytes = os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')
+	total_memory_gb = total_memory_bytes / (1024**3)
+	print(f"Total memory: {total_memory_gb:.2f} GB")
+		# For total_memory_gb round down to nearest integer and leave 1 GB free to avoid crashing the system
+	total_memory_gb = int(total_memory_gb) - 1
+	print(f"Total memory for Python process: {total_memory_gb} GB")
+	set_OVOS_memory_mb = 100
+	print(f"Memory peak for OVOS runs: {set_OVOS_memory_mb} MB (MAX)") # Found 65 MB peak for Li2 cc-pVDZ with 50% optimized virtual orbitals, so 100 MB is a safe upper bound for all runs.
+		# Ratio of memory used by Python process to total memory
+	memory_ratio = set_OVOS_memory_mb / (total_memory_gb * 1024)  # Convert total memory to MB for ratio calculation
+	memory_ratio = min(memory_ratio, 1.0)  # Cap the ratio at 1.0 (100%) to avoid misleading output if set_OVOS_memory_mb exceeds total memory
+	print(f"Estimated memory usage ratio: {memory_ratio:.4f} (100 MB / {total_memory_gb * 1024:.0f} MB)")
+		# This set OVOS memory is for 1 core CPU
+		# If we were to parallelize OVOS, we would need to multiply set_OVOS_memory_mb by the number of cores used to get the total memory usage for OVOS runs.
+			# Check if we can do a set amount of cores in parallel without exceeding total memory
+	num_cores = os.cpu_count()
+	print(f"Number of CPU cores available: {num_cores}")
+	max_parallel_cores = int(total_memory_gb * 1024 / set_OVOS_memory_mb)  # Maximum number of cores we could use in parallel without exceeding total memory
+	print(f"Maximum number of cores that could be used in parallel for OVOS runs without exceeding total memory: {max_parallel_cores}")
+	if max_parallel_cores < num_cores:
+		print(f"Warning: Using all {num_cores} cores in parallel for OVOS runs could exceed total memory. Consider using up to {max_parallel_cores} cores for parallel OVOS runs to stay within memory limits.")
+		# If maximum number of cores is more than 10 set it to 10 to be safe, as we are not sure about the memory usage of other parts of the code and to avoid overwhelming the system
+	max_parallel_cores = min(max_parallel_cores, 10)
+	
+	# Define Li2 geometries (in Angstrom)
+	distances = np.linspace(2.5, 6, 10)
+	geometries = [f"Li .0 .0 .0; Li .0 .0 {d}" for d in distances]
+	
+	# Setup parameters for worker function
+	mol_setup_params = {
+		'basis': "cc-pVDZ"
+	}
+	
+	ovos_params = {}  # Add any other params needed
+	
+	# Create a partial function for the worker (bind parameters)	
+	worker_fn = functools.partial(
+		compute_geometry,
+		distances=distances,
+		mol_setup_params=mol_setup_params,
+		ovos_params=ovos_params,
+		worker_id=None  # This will be set by the Pool.map to the index of the geometry
+	)
+	
+	# Run in parallel
+	print(f"Running {len(geometries)} geometries with {max_parallel_cores} processes...")
+			# Use multiprocessing Pool to run worker_fn on each geometry in parallel
+	with Pool(processes=max_parallel_cores) as pool:
+		results = pool.map(worker_fn, geometries)
+	
+	# Collect results
+	results_list = []
+	for result in results:
+		if result['success']:
+			results_list.append((
+				result['geom'],
+				result['rhf_e_tot'],
+				result['MP2_e_corr'],
+				result['ooMP2_e_corr'],
+				result['OVOS_e_corr'],
+				None  # placeholder for lst_E_corr_virt_orbs
+			))
+			print(f"✓ {result['geom']}: OVOS converged")
+		else:
+			print(f"✗ {result['geom']}: Error - {result['error']}")
+	
+	# Save results to JSON
+	import json
+	with open(f"branch/data/Li2/cc-pVDZ/dissociation_Li2_cc-pVDZ_RHF_parallel.json", "w") as f:
+		json.dump(results_list, f, indent=2)
+	
+	print(f"Data saved. Processed {len(results_list)}/{len(geometries)} geometries successfully.")
+	
+	current, peak = tracemalloc.get_traced_memory()
+	print(f"Peak memory: {peak / 1024 / 1024:.1f} MB")
+	tracemalloc.stop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Save miscellaneous data about the molecule and basis set
-if True: # Done...
-	for basis_set in ["6-31G"]:
+if False: # Done...
+	for basis_set in ["cc-pVDZ"]: # Do: "6-31G", "cc-pVDZ", ...
 		for molecule in ["H2O"]: # Do: "CO", "H2O", "HF", "NH3"
 			raw_print("#### Miscellaneous data about the molecule and basis set ####")
 			raw_print("Molecule: ", molecule)
@@ -1992,12 +2465,12 @@ if True: # Done...
 			raw_print()
 
 				# Run CCSD(T)
-			ccsd = pyscf.cc.CCSD(rhf).run()
-			raw_print()
+			# ccsd = pyscf.cc.CCSD(rhf).run()
+			# raw_print()
 
 			####OOMP2 (Full space)####
 			# Put in the active space all orbitals of the system
-			mc = pyscf.mcscf.CASSCF(mf, mol.nao, mol. nelectron)
+			mc = pyscf.mcscf.CASSCF(rhf, mol.nao, mol.nelectron)
 			mc.fcisolver = OOMP2()
 			# Internal rotation inside the active space needs to be enabled
 			mc.internal_rotation = True
@@ -2006,14 +2479,14 @@ if True: # Done...
 			raw_print()
 
 				# Run FCI/CASCI
-			cisolver = pyscf.fci.FCI(mol, my_custom_mos)
-			cisolver_e_tot = cisolver.kernel()[0]
-			raw_print('E(FCI) = %.12f' % cisolver_e_tot, "E_corr = %.12f" % (cisolver_e_tot - rhf.e_tot))
+			# cisolver = pyscf.fci.FCI(mol, my_custom_mos)
+			# cisolver_e_tot = cisolver.kernel()[0]
+			# raw_print('E(FCI) = %.12f' % cisolver_e_tot, "E_corr = %.12f" % (cisolver_e_tot - rhf.e_tot))
 
-			casci = rhf.CASCI(full_space_size, num_electrons)
-			casci.kernel(my_custom_mos)
-			raw_print('E(CASCI) = %.12f' % casci.e_tot, "E_corr = %.12f" % (casci.e_tot - rhf.e_tot))
-			raw_print()
+			# casci = rhf.CASCI(full_space_size, num_electrons)
+			# casci.kernel(my_custom_mos)
+			# raw_print('E(CASCI) = %.12f' % casci.e_tot, "E_corr = %.12f" % (casci.e_tot - rhf.e_tot))
+			# raw_print()
 
 			# Save data to JSON file
 			import json
@@ -2023,9 +2496,9 @@ if True: # Done...
 				"full_space_size": full_space_size,
 				"active_space_size": active_space_size,
 				"MP2_e_corr": MP2_e_corr,
-				"CCSD_e_corr": ccsd.e_corr,
-				"CCSD(T)_e_corr": ccsd.e_tot + ccsd.ccsd_t() - rhf.e_tot,
-				"FCI_e_corr": cisolver_e_tot - rhf.e_tot,
+				"CCSD_e_corr": None, # ccsd.e_corr,
+				"CCSD(T)_e_corr": None, # ccsd.e_tot + ccsd.ccsd_t() - rhf.e_tot,
+				"FCI_e_corr": None, # cisolver_e_tot - rhf.e_tot,
 				"OOMP2_e_corr": ooMP2_e_tot - rhf.e_tot,
 				"CASSCF_e_corr": None
 			}
