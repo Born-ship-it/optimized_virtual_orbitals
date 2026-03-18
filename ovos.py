@@ -1027,6 +1027,15 @@ class OVOS:
 				H_symm_diff = np.max(np.abs(H - H.T))
 				raw_print("        WARNING: Hessian H is not symmetric! Max symm diff: ", H_symm_diff)
 
+		if False: # Apply Block-Diagonal Approximation to Hessian Inverse
+			len_inac = len(self.inactive_indices)
+			len_ac   = len(self.active_inocc_indices)
+			H_block_diag = np.zeros_like(H)
+			for i in range(len_inac):
+				start = i * len_ac
+				end   = (i + 1) * len_ac
+				H_block_diag[start:end, start:end] = H[start:end, start:end]
+			H = H_block_diag
 
 		if self.iteration > 5:
 			# Global damping parameter for regularization in Newton-Raphson step
@@ -1533,7 +1542,7 @@ class OVOS:
 					keep_track += 1
 					if keep_track >= keep_track_max + 1:  # Require 25 consecutive iterations below threshold to confirm convergence
 						if not self.use_random_unitary_init:
-							raw_print(f"OVOS converged with stable correlation energy for {keep_track_max} consecutive iterations.")
+							raw_print(f"OVOS converged with stable correlation energy for {keep_track} consecutive iterations.")
 
 						# Now that we found a sure convergence, we can remove the last 25 points where the energy was still changing but below the threshold, and keep only the final converged point
 						lst_E_corr = lst_E_corr[:-keep_track_max]
@@ -1941,7 +1950,7 @@ def get_OVOS_data(num_opt_virtual_orbs_current, retry_count, start_guess, select
 							if abs(E_this - best_E_corr) < 1e-1:
 								best_result_count += 1
 
-						if best_result_count > 250 and attempt > 5:  # If we got the same best result more than 25 times, we can stop trying more random initializations
+						if best_result_count > 25 and attempt > 5:  # If we got the same best result more than 25 times, we can stop trying more random initializations
 							raw_print(f"Got the same best correlation energy {best_E_corr} for {best_result_count-1} attempts (with further loosened criterion), which could indicate a local minimum. Stopping further attempts.")
 							break
 				except BreakOuterLoop:
@@ -2081,18 +2090,18 @@ class Tee:
         for s in self.streams:
             s.flush()
 
-if True: # Done with OVOS runs. Comment out this line to run more or move on to the next part of the code.
+if False: # Done with OVOS runs. Comment out this line to run more or move on to the next part of the code.
 	# Save original terminal settings
 	old_settings = termios.tcgetattr(sys.stdin)
 	try:
 		# Put terminal in raw mode (so we get keys instantly)
 		tty.setraw(sys.stdin.fileno())
 		
-		for basis_set in ["cc-pVDZ"]: 		#   	"6-31G" | Yet: "cc-pVDZ", ... 
-			for molecule in ["H2O"]: 				#       "H2O", "CO", "HF", "NH3"
+		for basis_set in ["6-31G"]: 				#   	"6-31G" | Yet: "cc-pVDZ", ... 
+			for molecule in ["H2O", "CO", "HF", "NH3"]: 				#       "H2O", "CO", "HF", "NH3"
 													#        (16)  (22)  (12)  (20)
 					
-				for start_guess in ["prev"]: # "RHF", "prev", "random" | Yet: "random"
+				for start_guess in ["random"]: # "RHF", "prev", "random" | Yet: "random"
 						# Create a log file for this molecule and basis set
 					with open(f"branch/data/{molecule}/{basis_set}/OVOS_{molecule}_{basis_set}_"+start_guess+"_output.txt", "w") as f:
 						sys.stdout = Tee(sys.__stdout__, f)
@@ -2693,93 +2702,124 @@ if False: # Done with dissociation curve.
 
 
 
-	# Save miscellaneous data about the molecule and basis set
-	if False: # Done...
-		for basis_set in ["cc-pVDZ"]: # Do: "6-31G", "cc-pVDZ", ...
-			for molecule in ["H2O"]: # Do: "CO", "H2O", "HF", "NH3"
-				raw_print("#### Miscellaneous data about the molecule and basis set ####")
-				raw_print("Molecule: ", molecule)
-				raw_print("Basis set: ", basis_set)
-				raw_print()
+# Save miscellaneous data about the molecule and basis set
+if True: # Done...
+	class OOMP2(object):
+		"""
+		Restricted OOMP2 solver.
+		Used as fcisolver in pyscf.mcscf.CASSCF(rhf, ...).
+		
+		CASSCF passes h1, h2 already in the MO basis.
+		We build a fake RHF object and run RMP2 on it.
+		This always stays restricted — cannot break spin symmetry.
+		"""
+		def kernel(self, h1, h2, norb, nelec, ci0=None, ecore=0, **kwargs):
+			if isinstance(nelec, (int, np.integer)):
+				na = nelec // 2
+				nb = nelec // 2
+				
+			else:
+				na, nb = int(nelec[0]), int(nelec[1])
+			
+			n_elec = na + nb
 
-				mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
-				active_space_size = full_space_size - num_electrons//2 + 1
+			fakemol = pyscf.gto.M(verbose=0)
+			fakemol.nelectron = n_elec
 
-				raw_print()
-				raw_print("Number of electrons: ", num_electrons)
-				raw_print("Full space size in molecular orbitals: ", full_space_size)
-				raw_print()
+			fake_hf = pyscf.scf.RHF(fakemol)
+			fake_hf._eri = h2
+			fake_hf.get_hcore = lambda *args: h1
+			fake_hf.get_ovlp = lambda *args: np.eye(norb)
 
-				# Check which starting should be used for the FCI/CASCI reference calculation
-					# Costum full-space random MO for FCI/CASCI reference
-						# From .json file corresponding to the atom and basis set, which was generated during the OVOS runs
-				import json
-				with open(f"branch/data/{molecule}/{basis_set}/lst_MP2_different_virt_orbs_random.json", "r") as f:
-					data = json.load(f)
-						# Get the full-space random MO coeffs from the last OVOS run with random unitary initialization
-					rand_mo = np.array(data[4][-1])[0]
-					rand_E_corr = data[0][-1][-1]
-					# Costum full-space RHF MO for FCI/CASCI reference
-						# From .json file corresponding to the atom and basis set, which was generated during the OVOS runs
-				with open(f"branch/data/{molecule}/{basis_set}/lst_MP2_different_virt_orbs_RHF_init.json", "r") as f:
-					data = json.load(f)
-						# Get the full-space RHF MO coeffs from the last OVOS run with RHF initialization
-					RHF_mo = np.array(data[4][-1])[0]
-					RHF_E_corr = data[0][-1][-1]
-						
-					# Decide which one to use based on which has the lower MP2 correlation energy (lower is better for correlation energy)
-				if rand_E_corr < RHF_E_corr:
-					my_custom_mos = rand_mo
-				else:
-					my_custom_mos = RHF_mo
+			fake_hf.mo_coeff = np.eye(norb)
+			fake_hf.mo_occ = np.zeros(norb)
+			fake_hf.mo_occ[:n_elec // 2] = 2
 
-					# Get RHF MP2 correlation energy for full space reference
-				MP2_e_corr = rhf.MP2().run().e_corr
-				raw_print()
+			self.mp2 = pyscf.mp.MP2(fake_hf)
+			self.mp2.verbose = 0
 
-					# Run CCSD(T)
-				# ccsd = pyscf.cc.CCSD(rhf).run()
-				# raw_print()
+			e_corr, t2 = self.mp2.kernel()
+			e_tot = self.mp2.e_tot + ecore
+			return e_tot, t2
 
-				####OOMP2 (Full space)####
-				# Put in the active space all orbitals of the system
-				mc = pyscf.mcscf.CASSCF(rhf, mol.nao, mol.nelectron)
-				mc.fcisolver = OOMP2()
-				# Internal rotation inside the active space needs to be enabled
-				mc.internal_rotation = True
-				#mc.kernel()
-				ooMP2_e_tot, ooMP2_e_cas, ooMP2_ci, ooMP2_mo_coeff, ooMP2_mo_energy = mc.kernel()
-				raw_print()
+		def make_rdm12(self, t2, norb, nelec):
+			dm1 = self.mp2.make_rdm1(t2)
+			dm2 = self.mp2.make_rdm2(t2)
+			if isinstance(dm2, (tuple, list)):
+				dm2 = sum(dm2)
+			return dm1, dm2
 
-					# Run FCI/CASCI
-				# cisolver = pyscf.fci.FCI(mol, my_custom_mos)
-				# cisolver_e_tot = cisolver.kernel()[0]
-				# raw_print('E(FCI) = %.12f' % cisolver_e_tot, "E_corr = %.12f" % (cisolver_e_tot - rhf.e_tot))
+	for basis_set in ["6-31G", "cc-pVDZ"]: # Do: "6-31G", "cc-pVDZ", ...
+		for molecule in ["H2O","HF", "CO", "NH3"]: # Do: "CO", "H2O", "HF", "NH3"
+			raw_print("#### Miscellaneous data about the molecule and basis set ####")
+			raw_print("Molecule: ", molecule)
+			raw_print("Basis set: ", basis_set)
+			raw_print()
 
-				# casci = rhf.CASCI(full_space_size, num_electrons)
-				# casci.kernel(my_custom_mos)
-				# raw_print('E(CASCI) = %.12f' % casci.e_tot, "E_corr = %.12f" % (casci.e_tot - rhf.e_tot))
-				# raw_print()
+			mol, rhf, num_electrons, full_space_size, MP2 = setup_OVOS(molecule, basis_set)
+			active_space_size = full_space_size - num_electrons//2 + 1
 
-				# Save data to JSON file
-				import json
+			raw_print()
+			raw_print("Number of electrons: ", num_electrons)
+			raw_print("Full space size in molecular orbitals: ", full_space_size)
+			raw_print()
 
-				data = {
-					"num_electrons": num_electrons,
-					"full_space_size": full_space_size,
-					"active_space_size": active_space_size,
-					"MP2_e_corr": MP2_e_corr,
-					"CCSD_e_corr": None, # ccsd.e_corr,
-					"CCSD(T)_e_corr": None, # ccsd.e_tot + ccsd.ccsd_t() - rhf.e_tot,
-					"FCI_e_corr": None, # cisolver_e_tot - rhf.e_tot,
-					"OOMP2_e_corr": ooMP2_e_tot - rhf.e_tot,
-					"CASSCF_e_corr": None
-				}
+			# Check which starting should be used for the FCI/CASCI reference calculation
+				# Costum full-space random MO for FCI/CASCI reference
+					# From .json file corresponding to the atom and basis set, which was generated during the OVOS runs
+			import json
+			with open(f"branch/data/{molecule}/{basis_set}/lst_MP2_different_virt_orbs_RHF_init.json", "r") as f:
+				data = json.load(f)
+					# Get the full-space RHF MO coeffs from the last OVOS run with RHF initialization
+				RHF_mo = np.array(data[4][-1])[0]
+				RHF_E_corr = data[0][-1][-1]
+					
+			my_custom_mos = RHF_mo
 
-				with open(f"branch/data/{molecule}/{basis_set}/molecule_data.json", "w") as f:
-					json.dump(data, f, indent=2)
-				raw_print(f"Miscellaneous data saved to branch/data/{molecule}/{basis_set}/molecule_data.json")
-				raw_print()
+				# Get RHF MP2 correlation energy for full space reference
+			MP2_e_corr = rhf.MP2().run().e_corr
+			raw_print()
+
+			####OOMP2 (Full space)####
+			# Put in the active space all orbitals of the system
+			mc = pyscf.mcscf.CASSCF(rhf, mol.nao, mol.nelectron)
+			mc.fcisolver = OOMP2()
+			# Internal rotation inside the active space needs to be enabled
+			mc.internal_rotation = True
+			#mc.kernel()
+			ooMP2_e_tot, ooMP2_e_cas, ooMP2_ci, ooMP2_mo_coeff, ooMP2_mo_energy = mc.kernel()
+			raw_print()
+
+				# Run FCI
+			if basis_set == "6-31G" and molecule in ["HF", "H2O"]:  # FCI is only feasible for the smaller basis set and smaller molecules
+				try:
+					# FCI is very expensive for larger basis sets, so we only run it for the
+					cisolver = pyscf.fci.FCI(mol, my_custom_mos)
+					cisolver_e_tot = cisolver.kernel()[0]
+					raw_print('E(FCI) = %.12f' % cisolver_e_tot, "E_corr = %.12f" % (cisolver_e_tot - rhf.e_tot))
+				except Exception as e:
+					cisolver_e_tot = None
+					raw_print("FCI calculation failed: ", str(e))
+			else:
+				cisolver_e_tot = None
+				raw_print("FCI calculation skipped for larger basis set due to computational cost.")
+
+			# Save data to JSON file
+			import json
+
+			data = {
+				"num_electrons": num_electrons,
+				"full_space_size": full_space_size,
+				"active_space_size": active_space_size,
+				"MP2_e_corr": MP2_e_corr,
+				"FCI_e_corr": cisolver_e_tot - rhf.e_tot if cisolver_e_tot is not None else None,
+				"OOMP2_e_corr": ooMP2_e_tot - rhf.e_tot
+			}
+
+			with open(f"branch/data/{molecule}/{basis_set}/molecule_data.json", "w") as f:
+				json.dump(data, f, indent=2)
+			raw_print(f"Miscellaneous data saved to branch/data/{molecule}/{basis_set}/molecule_data.json")
+			raw_print()
 
 
 """
