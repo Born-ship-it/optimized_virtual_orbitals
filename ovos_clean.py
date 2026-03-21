@@ -550,6 +550,7 @@ class OVOS:
             stop_reasons : list of str
         """
         converged = False
+        start_counting = False
         iter_count = 0
         keep_track = 0
 
@@ -616,15 +617,23 @@ class OVOS:
                 if self.verbose and dgrad is not None:
                     flag = "(energy increased!)" if self.dE > 0 else ""
                     self._print(f"            ΔE = {self.dE:.2e}  ‖grad‖ = {grad_norm:.2e}  {flag}")
-
+                
                 if (dE < self.conv_energy and grad_norm < self.conv_grad) or dE < 1e-12:
                     stop_reasons.append("Convergence")
+                    start_counting = True
+                elif dE > 1e-12:
+                    stop_reasons.append("Non‑converged")
+                    start_counting = False
+                    keep_track = 0
+
+                if start_counting: # (dE < self.conv_energy and grad_norm < self.conv_grad) or dE < 1e-12:
                     keep_track += 1
-                    if keep_track >= self.keep_track_max or dE == 0.0:
+                    print(f"Keep track: {keep_track}/{self.keep_track_max}")
+                    if keep_track >= self.keep_track_max:
                         if self.verbose:
                             self._print(f"OVOS converged after {iter_count} iterations")
                         # Trim the extra tracked steps
-                        trim = keep_track
+                        trim = self.keep_track_max
                         energy_hist = energy_hist[:-trim]
                         iter_hist = iter_hist[:-trim]
                         mo_hist = mo_hist[:-trim]
@@ -633,7 +642,6 @@ class OVOS:
                         converged = True
                         break
                 else:
-                    stop_reasons.append("Non‑converged")
                     keep_track = 0
 
             D_ab = self._compute_density(t_abij)
@@ -669,6 +677,11 @@ class OVOS:
                 self._print("OVOS lowered the correlation energy.")
             else:
                 self._print("WARNING: OVOS increased the correlation energy.")
+            # Unrestricted or restricted final orbitals
+            if np.allclose(mo_coeffs[0], mo_coeffs[1], atol=1e-6):
+                self._print("Final orbitals are effectively restricted.")
+            else:
+                self._print("Final orbitals are unrestricted.")
             self._print(f"Total iterations: {iter_count}")
 
         # Select best result (lowest energy)

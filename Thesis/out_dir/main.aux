@@ -173,81 +173,93 @@
 \newlabel{ch:results}{{6}{11}{Results}{chapter.6}{}}
 \newlabel{ch:results@cref}{{[chapter][6][]6}{[1][11][]11}{}{}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {6.1}Validation of the Implementation}{11}{section.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}Energy Recovery as a Function of Active Virtual Orbital Count}{11}{section.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.3}Convergence Behaviour}{11}{section.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.4}Effect of Initialisation Strategy}{12}{section.6.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.5}Basis Set Dependence}{12}{section.6.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.6}Comparison with Adamowicz and Bartlett (1987)}{12}{section.6.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.7}Computational Cost}{12}{section.6.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.8}T1 Amplitudes and the Brueckner Orbital Connection}{12}{section.6.8}\protected@file@percent }
-\newlabel{sec:results_brueckner}{{6.8}{12}{T1 Amplitudes and the Brueckner Orbital Connection}{section.6.8}{}}
-\newlabel{sec:results_brueckner@cref}{{[section][8][6]6.8}{[1][12][]12}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.9}OVOS Orbitals as a VQE Reference State: Resource Estimates}{12}{section.6.9}\protected@file@percent }
-\newlabel{sec:results_vqe}{{6.9}{12}{OVOS Orbitals as a VQE Reference State: Resource Estimates}{section.6.9}{}}
-\newlabel{sec:results_vqe@cref}{{[section][9][6]6.9}{[1][12][]12}{}{}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {7}Conclusion}{13}{chapter.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Validation of the OVOS implementation against PySCF \lstinline [language=Python]|mp.MP2|. Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the 6--31G basis for this validation.}}{12}{table.caption.9}\protected@file@percent }
+\newlabel{tab:validation}{{6.1}{12}{Validation of the OVOS implementation against PySCF \code {mp.MP2}. Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the 6--31G basis for this validation}{table.caption.9}{}}
+\newlabel{tab:validation@cref}{{[table][1][6]6.1}{[1][11][]12}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Energy Recovery as a Function of Active Virtual Orbital Count}{12}{section.6.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces Convergence of the MP2 correlation energy for HF in the 6--31G basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm  act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}}{13}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:HF_6-31G_ovos}{{6.1}{13}{Convergence of the MP2 correlation energy for HF in the 6--31G basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated}{figure.caption.11}{}}
+\newlabel{fig:HF_6-31G_ovos@cref}{{[figure][1][6]6.1}{[1][12][]13}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6.2}{\ignorespaces Summary of OVOS results for HF in the 6--31G basis at each $N'_{\rm  act.unocc}$.}}{14}{table.caption.10}\protected@file@percent }
+\newlabel{tab:HF_6-31G_results}{{6.2}{14}{Summary of OVOS results for HF in the 6--31G basis at each $N'_{\rm act.unocc}$}{table.caption.10}{}}
+\newlabel{tab:HF_6-31G_results@cref}{{[table][2][6]6.2}{[1][12][]14}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}Convergence Behaviour}{14}{section.6.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.2}{\ignorespaces Convergence behavior of the MP2 correlation energy for HF in the 6--31G basis with $N'_{\rm  act.unocc} = 3$ active virtual spin-orbitals. The dashed line marks the convergence threshold of $10^{-8}$~Hartree.}}{14}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:HF_6-31G_convergence}{{6.2}{14}{Convergence behavior of the MP2 correlation energy for HF in the 6--31G basis with $N'_{\rm act.unocc} = 3$ active virtual spin-orbitals. The dashed line marks the convergence threshold of $10^{-8}$~Hartree}{figure.caption.12}{}}
+\newlabel{fig:HF_6-31G_convergence@cref}{{[figure][2][6]6.2}{[1][14][]14}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.4}Effect of Initialization Strategy}{15}{section.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.5}Basis Set Dependence}{15}{section.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.6}Comparison with Adamowicz and Bartlett (1987)}{15}{section.6.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.7}Computational Cost}{15}{section.6.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.8}T1 Amplitudes and the Brueckner Orbital Connection}{15}{section.6.8}\protected@file@percent }
+\newlabel{sec:results_brueckner}{{6.8}{15}{T1 Amplitudes and the Brueckner Orbital Connection}{section.6.8}{}}
+\newlabel{sec:results_brueckner@cref}{{[section][8][6]6.8}{[1][15][]15}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.9}OVOS Orbitals as a VQE Reference State: Resource Estimates}{15}{section.6.9}\protected@file@percent }
+\newlabel{sec:results_vqe}{{6.9}{15}{OVOS Orbitals as a VQE Reference State: Resource Estimates}{section.6.9}{}}
+\newlabel{sec:results_vqe@cref}{{[section][9][6]6.9}{[1][15][]15}{}{}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}Conclusion}{17}{chapter.7}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:conclusion}{{7}{13}{Conclusion}{chapter.7}{}}
-\newlabel{ch:conclusion@cref}{{[chapter][7][]7}{[1][13][]13}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.1}Summary of Findings}{13}{section.7.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7.2}Critical Assessment}{13}{section.7.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7.3}Implications for Quantum Computing}{13}{section.7.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {8}Outlook}{15}{chapter.8}\protected@file@percent }
+\newlabel{ch:conclusion}{{7}{17}{Conclusion}{chapter.7}{}}
+\newlabel{ch:conclusion@cref}{{[chapter][7][]7}{[1][17][]17}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.1}Summary of Findings}{17}{section.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7.2}Critical Assessment}{17}{section.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7.3}Implications for Quantum Computing}{17}{section.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}Outlook}{19}{chapter.8}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:outlook}{{8}{15}{Outlook}{chapter.8}{}}
-\newlabel{ch:outlook@cref}{{[chapter][8][]8}{[1][15][]15}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {8.1}Algorithmic Improvements}{15}{section.8.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8.2}Method Extensions}{15}{section.8.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8.3}Quantum Computing Applications}{15}{section.8.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.1}OVOS Orbitals as a VQE Reference State}{15}{subsection.8.3.1}\protected@file@percent }
-\newlabel{sec:outlook_vqe}{{8.3.1}{15}{OVOS Orbitals as a VQE Reference State}{subsection.8.3.1}{}}
-\newlabel{sec:outlook_vqe@cref}{{[subsection][1][8,3]8.3.1}{[1][15][]15}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.2}Brueckner Orbitals and Circuit Depth on NISQ Devices}{15}{subsection.8.3.2}\protected@file@percent }
-\newlabel{sec:outlook_brueckner_nisq}{{8.3.2}{15}{Brueckner Orbitals and Circuit Depth on NISQ Devices}{subsection.8.3.2}{}}
-\newlabel{sec:outlook_brueckner_nisq@cref}{{[subsection][2][8,3]8.3.2}{[1][15][]15}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.3}Qubit Count Reduction and Fault-Tolerant Perspectives}{15}{subsection.8.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8.4}Larger Molecular Systems}{15}{section.8.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8.5}Benchmarking and Validation}{15}{section.8.5}\protected@file@percent }
+\newlabel{ch:outlook}{{8}{19}{Outlook}{chapter.8}{}}
+\newlabel{ch:outlook@cref}{{[chapter][8][]8}{[1][19][]19}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.1}Algorithmic Improvements}{19}{section.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.2}Method Extensions}{19}{section.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.3}Quantum Computing Applications}{19}{section.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.1}OVOS Orbitals as a VQE Reference State}{19}{subsection.8.3.1}\protected@file@percent }
+\newlabel{sec:outlook_vqe}{{8.3.1}{19}{OVOS Orbitals as a VQE Reference State}{subsection.8.3.1}{}}
+\newlabel{sec:outlook_vqe@cref}{{[subsection][1][8,3]8.3.1}{[1][19][]19}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.2}Brueckner Orbitals and Circuit Depth on NISQ Devices}{19}{subsection.8.3.2}\protected@file@percent }
+\newlabel{sec:outlook_brueckner_nisq}{{8.3.2}{19}{Brueckner Orbitals and Circuit Depth on NISQ Devices}{subsection.8.3.2}{}}
+\newlabel{sec:outlook_brueckner_nisq@cref}{{[subsection][2][8,3]8.3.2}{[1][19][]19}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.3}Qubit Count Reduction and Fault-Tolerant Perspectives}{19}{subsection.8.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.4}Larger Molecular Systems}{19}{section.8.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.5}Benchmarking and Validation}{19}{section.8.5}\protected@file@percent }
 \bibstyle{unsrtnat}
 \bibdata{bibliography}
-\@writefile{toc}{\contentsline {chapter}{Bibliography}{17}{section.8.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}Mathematical Derivations}{19}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Bibliography}{21}{section.8.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Mathematical Derivations}{23}{appendix.A}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{app:derivations}{{A}{19}{Mathematical Derivations}{appendix.A}{}}
-\newlabel{app:derivations@cref}{{[chapter][1][]A}{[1][19][]19}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {A.1}Spin-Orbital MP2 Energy from the Hylleraas Functional}{19}{section.A.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.2}Derivation of the Orbital Rotation Gradient}{19}{section.A.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.3}Derivation of the Orbital Rotation Hessian}{19}{section.A.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.4}Matrix Exponential for the Rotation Matrix}{19}{section.A.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.5}Notation Conventions for Two-Electron Integrals}{19}{section.A.5}\protected@file@percent }
-\newlabel{sec:integral_notation}{{A.5}{19}{Notation Conventions for Two-Electron Integrals}{section.A.5}{}}
-\newlabel{sec:integral_notation@cref}{{[section][5][1]A.5}{[1][19][]19}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces Summary of two-electron integral notation used in this thesis.}}{19}{table.caption.10}\protected@file@percent }
-\newlabel{tab:notation}{{A.1}{19}{Summary of two-electron integral notation used in this thesis}{table.caption.10}{}}
-\newlabel{tab:notation@cref}{{[table][1][1]A.1}{[1][19][]19}{}{}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {B}Additional Data and Figures}{21}{appendix.B}\protected@file@percent }
+\newlabel{app:derivations}{{A}{23}{Mathematical Derivations}{appendix.A}{}}
+\newlabel{app:derivations@cref}{{[chapter][1][]A}{[1][23][]23}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.1}Spin-Orbital MP2 Energy from the Hylleraas Functional}{23}{section.A.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.2}Derivation of the Orbital Rotation Gradient}{23}{section.A.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.3}Derivation of the Orbital Rotation Hessian}{23}{section.A.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.4}Matrix Exponential for the Rotation Matrix}{23}{section.A.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.5}Notation Conventions for Two-Electron Integrals}{23}{section.A.5}\protected@file@percent }
+\newlabel{sec:integral_notation}{{A.5}{23}{Notation Conventions for Two-Electron Integrals}{section.A.5}{}}
+\newlabel{sec:integral_notation@cref}{{[section][5][1]A.5}{[1][23][]23}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces Summary of two-electron integral notation used in this thesis.}}{23}{table.caption.14}\protected@file@percent }
+\newlabel{tab:notation}{{A.1}{23}{Summary of two-electron integral notation used in this thesis}{table.caption.14}{}}
+\newlabel{tab:notation@cref}{{[table][1][1]A.1}{[1][23][]23}{}{}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {B}Additional Data and Figures}{25}{appendix.B}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{app:data}{{B}{21}{Additional Data and Figures}{appendix.B}{}}
-\newlabel{app:data@cref}{{[chapter][2][]B}{[1][21][]21}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{21}{section.B.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{21}{section.B.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{21}{section.B.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B.4}Hessian Eigenvalue Analysis}{21}{section.B.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{23}{appendix.C}\protected@file@percent }
+\newlabel{app:data}{{B}{25}{Additional Data and Figures}{appendix.B}{}}
+\newlabel{app:data@cref}{{[chapter][2][]B}{[1][25][]25}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{25}{section.B.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{25}{section.B.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{25}{section.B.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.4}Hessian Eigenvalue Analysis}{25}{section.B.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{27}{appendix.C}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{app:code}{{C}{23}{Implementation Details and Source Code}{appendix.C}{}}
-\newlabel{app:code@cref}{{[chapter][3][]C}{[1][23][]23}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {C.1}Repository and Version Information}{23}{section.C.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{23}{section.C.2}\protected@file@percent }
-\newlabel{lst:eri_conv}{{C.1}{23}{Spatial-to-spin ERI conversion (\texttt {spatial\_2\_spin\_eri\_optimized})}{lstlisting.C.1}{}}
-\newlabel{lst:eri_conv@cref}{{[lstlisting][1][3]C.1}{[1][23][]23}{}{}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {C.1}{\ignorespaces Spatial-to-spin ERI conversion (\texttt  {spatial\_2\_spin\_eri\_optimized}).}}{23}{lstlisting.C.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{23}{section.C.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{23}{section.C.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C.5}Profiling Results}{23}{section.C.5}\protected@file@percent }
-\gdef \@abspage@last{41}
+\newlabel{app:code}{{C}{27}{Implementation Details and Source Code}{appendix.C}{}}
+\newlabel{app:code@cref}{{[chapter][3][]C}{[1][27][]27}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C.1}Repository and Version Information}{27}{section.C.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{27}{section.C.2}\protected@file@percent }
+\newlabel{lst:eri_conv}{{C.1}{27}{Spatial-to-spin ERI conversion (\texttt {spatial\_2\_spin\_eri\_optimized})}{lstlisting.C.1}{}}
+\newlabel{lst:eri_conv@cref}{{[lstlisting][1][3]C.1}{[1][27][]27}{}{}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {C.1}{\ignorespaces Spatial-to-spin ERI conversion (\texttt  {spatial\_2\_spin\_eri\_optimized}).}}{27}{lstlisting.C.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{27}{section.C.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{27}{section.C.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.5}Profiling Results}{27}{section.C.5}\protected@file@percent }
+\gdef \@abspage@last{45}

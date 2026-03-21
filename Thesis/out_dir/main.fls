@@ -479,6 +479,9 @@ OUTPUT out_dir/main.lof
 INPUT out_dir/main.lot
 INPUT out_dir/main.lot
 INPUT out_dir/main.lot
+INPUT c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+INPUT c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+INPUT c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 OUTPUT out_dir/main.lot
 INPUT ./chapters/introduction.tex
 INPUT ./chapters/introduction.tex
@@ -533,6 +536,16 @@ INPUT ./chapters/results.tex
 INPUT ./chapters/results.tex
 INPUT ./chapters/results.tex
 INPUT chapters/results.tex
+INPUT ./figures/HF/ovos_conv_vs_vorb_HF_6-31G_RHF.png
+INPUT ./figures/HF/ovos_conv_vs_vorb_HF_6-31G_RHF.png
+INPUT ./figures/HF/ovos_conv_vs_vorb_HF_6-31G_RHF.png
+INPUT ./figures/HF/ovos_conv_vs_vorb_HF_6-31G_RHF.png
+INPUT ./figures/HF/ovos_conv_vs_vorb_HF_6-31G_RHF.png
+INPUT ./figures/Placeholder.png
+INPUT ./figures/Placeholder.png
+INPUT ./figures/Placeholder.png
+INPUT ./figures/Placeholder.png
+INPUT ./figures/Placeholder.png
 INPUT ./chapters/conclusion.tex
 INPUT ./chapters/conclusion.tex
 INPUT ./chapters/conclusion.tex
@@ -562,9 +575,6 @@ INPUT ./appendices/appendix_c.tex
 INPUT ./appendices/appendix_c.tex
 INPUT ./appendices/appendix_c.tex
 INPUT appendices/appendix_c.tex
-INPUT c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
-INPUT c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
-INPUT c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 INPUT c:/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
 INPUT c:/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
 INPUT c:/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd

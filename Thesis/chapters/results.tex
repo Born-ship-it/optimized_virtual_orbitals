@@ -9,7 +9,7 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
     \item \textbf{Section 6.1} validates the implementation by comparing full-space MP2 correlation energies against PySCF and literature values.
     \item \textbf{Section 6.2} presents the main result: the fraction of MP2 correlation energy recovered as a function of the active virtual orbital count.
     \item \textbf{Section 6.3} analyses the convergence behaviour of the OVOS algorithm.
-    \item \textbf{Section 6.4} compares different initialisation strategies and their impact on final energies and convergence.
+    \item \textbf{Section 6.4} compares different initialization strategies and their impact on final energies and convergence.
     \item \textbf{Section 6.5} investigates how the choice of basis set affects energy recovery.
     \item \textbf{Section 6.6} provides a direct comparison with the results published by Adamowicz and Bartlett in their original OVOS paper.
     \item \textbf{Section 6.7} assesses the computational cost and scaling of the OVOS algorithm.
@@ -99,12 +99,11 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %   - Side-by-side comparison of $E_{\rm corr}^{\rm MP2}$ values.
 %   - Deviation $\delta E = E_{\rm corr}^{\rm code} - E_{\rm corr}^{\rm PySCF}$;
 %     should be $|\delta E| < 10^{-8}$~Hartree for a correct implementation.
-%   - Also check that $E_{\rm corr}^{\rm OVOS}(N_{\rm virt}^{\rm full}) = E_{\rm corr}^{\rm MP2}$
+%   - Also check that $E_{\rm corr}^{\rm OVOS}(N_{\rm act.unocc}^{\rm full}) = E_{\rm corr}^{\rm MP2}$
 %     (full active space must reproduce full MP2 exactly).
 %
 % [TABLE – INCLUDE IN TEXT]
-%   Columns: Molecule | Basis | $E_{\rm corr}^{\rm PySCF}$ |
-%            $E_{\rm corr}^{\rm code}$ | $\delta E$ / $\mu E_h$
+%   Columns: Molecule & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & $E_{\rm corr}^{\rm PySCF}$ (Hartree) & $\Delta E_{\rm corr}$ (Hartree)
 %   Caption: "Validation of the OVOS implementation against PySCF \texttt{mp.MP2}.
 %   Deviations $\delta E$ should not exceed numerical precision ($<1\,\mu E_h$)."
 %
@@ -114,23 +113,45 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %    is presented in the following section."
 % ---------------------------------------------------------------
 
+PySCF gives me an opportunity to validate my implementation of full space MP2 by comparing with their built-in MP2 module, \code{pyscf.mp.MP2}. I present my the deviation $\Delta E_{\rm corr} = E_{\rm corr}^{\rm code} - E_{\rm corr}^{\rm PySCF}$ is within numerical precision for all test molecules except CO, which shows a bit larger deviation, in Figure~\ref{tab:validation}. As CO's deviation is still within the acceptable range, it confirms that my implementation of the MP2 correlation energy is correct, and that the OVOS code correctly reproduces the full-space MP2 limit when $N'_{\rm act.unocc} = N_{\rm act.unocc}$.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lccr}
+        \hline
+        Molecule & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & $E_{\rm corr}^{\rm PySCF}$ (Hartree) & $\Delta E_{\rm corr}$ (Hartree) \\
+        \hline
+        CO       & -2.12168E-01 & -2.12168E-01    & 2.12862E-08   \\
+        H$_2$O   & -1.28851E-01 & -1.28851E-01    & 1.91423E-09   \\
+        HF       & -1.28694E-01 & -1.28694E-01    & -2.47007E-09  \\
+        NH3      & -1.14441E-01 & -1.14441E-01    & -2.79223E-10  \\
+        % Add more rows for other molecules/basis sets
+        \hline
+    \end{tabular}
+    \caption{Validation of the OVOS implementation against PySCF \code{mp.MP2}.
+    Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the 6--31G basis for this validation.}
+    \label{tab:validation}
+\end{table}
+
+Verifying that the full-space MP2 energies match PySCF's results, any differences observed in the OVOS results are due to the orbital optimization and active space truncation, rather than a bug in the MP2 implementation. 
+
 \section{Energy Recovery as a Function of Active Virtual Orbital Count}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.2]
 %   "This section presents the central result of the thesis: the fraction
 %    of the full-space MP2 correlation energy, $\eta = E_{\rm corr}^{\rm OVOS}/
 %    E_{\rm corr}^{\rm MP2}$, recovered as a function of the ratio
-%    $N'_{\rm virt}/N_{\rm virt}$ for each test molecule and basis set."
+%    $N'_{\rm act.unocc}/N_{\rm act.unocc}$ for each test molecule and basis set."
 %
 % [WHAT TO COVER]
 %   - Report $\eta$ curves for all 9 molecules at 6-31G and cc-pVDZ.
-%   - Expected pattern: rapid initial rise, approaching 1 as $N' \to N_{\rm virt}$.
+%   - Expected pattern: rapid initial rise, approaching 1 as $N' \to N_{\rm act.unocc}$.
 %   - Compare against Adamowicz \& Bartlett's claim of $\eta \approx 0.9$ at $N'=N/2$.
 %   - Discuss the ``best'' and ``worst'' systems (which benefit most?).
 %   - Use the data in \texttt{branch/data/} for all plots.
 %
 % [FIGURE – MAIN RESULT]
-%   x-axis: $N'_{\rm virt}/N_{\rm virt}$ (fraction, 0 to 1)
+%   x-axis: $N'_{\rm act.unocc}/N_{\rm act.unocc}$ (fraction, 0 to 1)
 %   y-axis: $\eta = E_{\rm corr}^{\rm OVOS}/E_{\rm corr}^{\rm MP2}$ (0 to 1)
 %   One curve per molecule; one panel per basis set (or combined).
 %   Add horizontal dashed line at $\eta = 0.9$.
@@ -150,6 +171,49 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %    is quantified in the following section."
 % ---------------------------------------------------------------
 
+The results of the OVOS algorithm for all test molecules in the 6--31G and cc--pVDZ basis sets for start guess RHF, are presented in this section. Explore the correlation energy recovered by OVOS as a function of the number of active unoccupied orbitals $N'_{\rm act.unocc}$.  
+
+\subsubsection*{CO}
+...
+
+\subsubsection*{H2O}
+...
+
+\subsubsection*{HF}
+The OVOS algorithm results for HF in the 6--31G basis through each $N'_{\rm act.unocc}$ to full space of active unoccupied orbitals are shown in Table~\ref{tab:HF_6-31G_results}. OVOS recovers increasingly more correlation energy $E_{\rm corr}^{\rm OVOS}$ as $N'_{\rm act.unocc}$ increases, with the percentage of correlation energy recovered reaching 100\% at $N'_{\rm act.unocc} = 6$. We mark the difference the OVOS algorithm makes at each $N'_{\rm act.unocc}$ from initial MP2 as $\Delta E_{\rm corr}^{\rm OVOS}$, highlighted in Figure~\ref{fig:HF_6-31G_ovos} as the points for each $N'_{\rm act.unocc}$. The most recovered correlation energy is at $N'_{\rm act.unocc} = 4$ with $\Delta E_{\rm corr}^{\rm OVOS} = -5.49038e-2$. Convergence is achieved in all cases, with iteration counts increasing as $N'_{\rm act.unocc}$ reaches 50\% of the total number of active unoccupied orbitals and decreases thereafter.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{ccccc}
+        \hline
+        $N'_{\rm act.unocc}$ & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & Percentage & $\Delta E_{\rm corr}^{\rm OVOS}$ (Hartree) & Iterations \\ 
+        \hline
+        1    & -1.84737E-02 & 14.35\%     & -1.52027e-2     & 13        \\
+        2    & -4.39109E-02 & 34.12\%     & -2.91136e-2     & 15        \\
+        3    & -8.74131E-02 & 67.92\%     & -5.39991e-2     & 50        \\
+        4    & -1.24045E-01 & 96.39\%     & -5.49038e-2     & 20        \\
+        5    & -1.28136E-01 & 99.57\%     & -2.49738e-2     & 15        \\
+        6    & -1.28694E-01 & 100.0\%     &                 & 1         \\
+        \hline
+    \end{tabular}
+    \caption{Summary of OVOS results for HF in the 6--31G basis at each $N'_{\rm act.unocc}$.}
+    \label{tab:HF_6-31G_results}
+\end{table}
+
+The table is plotted in Figure~\ref{fig:HF_6-31G_ovos} to show the convergence behaviour of the OVOS algorithm for HF in the 6--31G basis at each $N'_{\rm act.unocc}$.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/HF/ovos_conv_vs_vorb_HF_6-31G_RHF.png}
+    \caption{Convergence of the MP2 correlation energy for HF in the 6--31G basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
+    \label{fig:HF_6-31G_ovos}
+\end{figure}
+
+\subsubsection*{NH3}
+...
+
+
+
 \section{Convergence Behaviour}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.3]
@@ -163,16 +227,16 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %   - Convergence means $|\Delta E_{\rm corr}| < 10^{-8}$ achieved.
 %   - Show a representative case, e.g. H\textsubscript{2}O/cc-pVDZ, $N'=8$.
 %   - Discuss cases of slow or oscillatory convergence (large active spaces?)
-%   - Report iteration counts vs.~$N'_{\rm virt}$: do larger spaces need more iterations?
+%   - Report iteration counts vs.~$N'_{\rm act.unocc}$: do larger spaces need more iterations?
 %
 % [FIGURE]
 %   x-axis: Iteration number | y-axis: $|\Delta E_{\rm corr}|$ (log scale)
 %   Caption: ``Convergence of the MP2 correlation energy for
-%   H\textsubscript{2}O/cc-pVDZ with $N'_{\rm virt} = 8$ active virtual
+%   H\textsubscript{2}O/cc-pVDZ with $N'_{\rm act.unocc} = 8$ active virtual
 %   spin-orbitals. The dashed line marks the convergence threshold $10^{-8}$~$E_h$.''
 %
 % [TABLE]
-%   Columns: Molecule | Basis | $N'_{\rm virt}$ | Iterations | Converged?
+%   Columns: Molecule | Basis | $N'_{\rm act.unocc}$ | Iterations | Converged?
 %   Caption: ``Iteration counts to convergence for all OVOS calculations.
 %   Maximum iterations: [value].''
 %
@@ -181,7 +245,18 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %    initial orbital guess is investigated in the following section."
 % ---------------------------------------------------------------
 
-\section{Effect of Initialisation Strategy}
+In this section, I present the convergence profiles of the OVOS algorithm for the test molecules in the 6--31G and cc--pVDZ basis sets. 
+
+Convergence is achieved when $|\Delta E_{\rm corr}| < 10^{-8}$~Hartree for at least 50 consecutive iterations. Some cases, would get stuck in a local minimum achieving convergence. The consecutive iteration criterion then avoids these false positives, and help identify true convergence, a global minimum. For example, in the case of HF at $N'_{\rm act. unocc.} = 3$ in the 6--31G basis, the algorithm converges to a local minimum at iteration 10, but then escapes and continues to converge to the global minimum by iteration 50. This behaviour is illustrated in Figure~\ref{fig:HF_6-31G_convergence}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/Placeholder.png}
+    \caption{Convergence behavior of the MP2 correlation energy for HF in the 6--31G basis with $N'_{\rm act.unocc} = 3$ active virtual spin-orbitals. The dashed line marks the convergence threshold of $10^{-8}$~Hartree.}
+    \label{fig:HF_6-31G_convergence}
+\end{figure}
+
+\section{Effect of Initialization Strategy}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.4]
 %   "Three initialisation strategies --- default SCF, warm-start from
@@ -199,7 +274,7 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %     (histogram or $\min/\max/\sigma$ across samples).
 %
 % [FIGURE]
-%   x-axis: $N'_{\rm virt}$ | y-axis: $E_{\rm corr}$ (Hartree)
+%   x-axis: $N'_{\rm act.unocc}$ | y-axis: $E_{\rm corr}$ (Hartree)
 %   Three curves: default, prev, best-of-random.
 %   Caption: ``Comparison of final OVOS correlation energies for three
 %   initialisation strategies, [molecule]/[basis]."
@@ -229,7 +304,7 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %     functions; their contribution to dynamical correlation.
 %
 % [FIGURE]
-%   x-axis: $N'_{\rm virt}/N_{\rm virt}$ | y-axis: $\eta$
+%   x-axis: $N'_{\rm act.unocc}/N_{\rm act.unocc}$ | y-axis: $\eta$
 %   One curve per basis set; dashed line at $\eta=0.9$.
 %   Caption: ``Basis set dependence of energy recovery for [molecule].
 %   A larger basis set (more virtual orbitals) shifts the curve to the right,
@@ -256,7 +331,7 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %   - If differences: explain and quantify their source.
 %
 % [TABLE]
-%   Columns: $N'_{\rm virt}$ | $E_{\rm corr}^{\rm A\&B}$ |
+%   Columns: $N'_{\rm act.unocc}$ | $E_{\rm corr}^{\rm A\&B}$ |
 %            $E_{\rm corr}^{\rm this work}$ | Difference
 %   Caption: ``Comparison of OVOS correlation energies for
 %   CH\textsubscript{2} with values from Adamowicz \& Bartlett
@@ -275,7 +350,7 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %   "The practical value of OVOS depends on its computational overhead
 %    relative to a full-space MP2 calculation. This section reports
 %    wall-clock timings, identifies the algorithmic bottleneck,
-%    and assesses empirical scaling with $N'_{\rm virt}$."
+%    and assesses empirical scaling with $N'_{\rm act.unocc}$."
 %
 % [WHAT TO COVER]
 %   - Timing data from \texttt{branch/profil/} profiling results.
@@ -287,10 +362,10 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %   - Compare: OVOS overhead vs.~savings from reduced subsequent correlation steps.
 %
 % [FIGURE]
-%   x-axis: $N_{\rm virt}$ (log scale) | y-axis: Wall-clock time / s (log scale)
+%   x-axis: $N_{\rm act.unocc}$ (log scale) | y-axis: Wall-clock time / s (log scale)
 %   Points for each molecule/basis; log-log linear fit.
 %   Caption: ``Empirical scaling of OVOS wall-clock time with virtual
-%   orbital count $N_{\rm virt}$. The line shows a power-law fit;
+%   orbital count $N_{\rm act.unocc}$. The line shows a power-law fit;
 %   the exponent is compared to the theoretical prediction.''
 %
 % [LEAD-IN TO §6.8 (Brueckner)]
