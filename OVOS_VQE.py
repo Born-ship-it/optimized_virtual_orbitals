@@ -139,7 +139,7 @@ def run_ucc_and_get_stats(wf, str_, orbital_optimization):
 
 
 
-def VQE_OVOS(basis, num_opt_virtual_orbs, include_active_kappa):
+def VQE_OVOS(atom, basis, num_opt_virtual_orbs, include_active_kappa):
     molecule = str(atom.split()[0])  # Get the first element symbol for naming
     if molecule == "H":
         molecule = "HF"
@@ -194,6 +194,7 @@ def VQE_OVOS(basis, num_opt_virtual_orbs, include_active_kappa):
 
                 # Set up OVOS
             num_opt_virtual_orbs = int(num_opt_virtual_orbs * (num_orbitals - num_electrons//2))  # Convert fraction to actual number of orbitals
+            print(f"Optimizing {num_opt_virtual_orbs} active virtual orbitals (out of {num_orbitals - num_electrons//2} total virtual orbitals).")
             ovos = OVOS(
                 mol=mol,
                 scf=mf,
@@ -223,13 +224,13 @@ def VQE_OVOS(basis, num_opt_virtual_orbs, include_active_kappa):
                 # Initialize for UPS wave function with OVOS-optimized orbitals
             WF_ovos = UnrestrictedWaveFunctionUPS(
                 mol.nelectron,
-                ((8,6), num_electrons//2+num_opt_virtual_orbs),                   # CAS(2,2) for H2O in 6-31G
+                ((mol.nelectron//2 + 1,mol.nelectron//2 - 1), num_electrons//2+num_opt_virtual_orbs),                   # CAS(2,2) for H2O in 6-31G
                 E_corr_mo,  # Use OVOS-optimized orbitals
                 h_core,
                 g_eri,
                 "utups",
                 {"n_layers":1},
-                include_active_kappa=False,
+                include_active_kappa=include_active_kappa,
             )
                 # To ensure reproducibility, set random seed for SlowQuant optimizations
             np.random.seed(42)
@@ -261,8 +262,8 @@ def VQE_OVOS(basis, num_opt_virtual_orbs, include_active_kappa):
             #     # Initualize for UPS wave function with UHF orbitals
             WF_uhf = UnrestrictedWaveFunctionUPS(
                 mol.nelectron, # 10, 
-                ((8,6), num_electrons//2+num_opt_virtual_orbs),                   # CAS(2,2) for H2O in 6-31G
-                mf_uhf.mo_coeff,  # Use OVOS-optimized orbitals
+                ((mol.nelectron//2 + 1,mol.nelectron//2 - 1), num_electrons//2+num_opt_virtual_orbs),                   # CAS(2,2) for H2O in 6-31G
+                mf_uhf.mo_coeff,  
                 h_core,
                 g_eri,
                 "utups",
@@ -301,44 +302,54 @@ def VQE_OVOS(basis, num_opt_virtual_orbs, include_active_kappa):
 # Define the molecule
     # HF, CO, NH3, H2O
 atom_1 = "H 0 0 0; F 0 0 0.917" # HF bond length 0.917 Angstrom
-atom_4 = "C 0 0 0; O 0 0 1.128" # CO bond length 1.128 Angstrom
 atom_2 = "N 0 0 0; H 0 0 1.012; H 0 0.935 -0.262; H 0 -0.935 -0.262" # NH3 equilibrium geometry	
 atom_3 = "O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692;"  # H2O equilibrium geometry
-basis = "6-31G"
+atom_4 = "C 0 0 0; O 0 0 1.128" # CO bond length 1.128 Angstrom
+
+basis = "6-31G" # 6-31G, cc-pVDZ
 
     # Whether to include active kappa parameters in the UCC optimization (True/False)
 include_active_kappa = True
 
-for atom in [atom_1]: 
+for atom in [atom_2]: # atom_3, atom_4
     for basis in [basis]:
-        for num_opt_virtual_orbs in [0.25,0.5,0.75]:
+        for num_opt_virtual_orbs in [0.75]: # 0.25,0.5,0.75
             for include_active_kappa in [include_active_kappa]:
                 print(f"\nRunning VQE with OVOS optimization for {atom} in basis {basis} with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and include_active_kappa = {include_active_kappa}...")
-                VQE_OVOS(basis, num_opt_virtual_orbs, include_active_kappa)
+                VQE_OVOS(atom, basis, num_opt_virtual_orbs, include_active_kappa)
 
 # Table for presenting results:
 #       I use 
 # Step 1: Run with include_active_kappa = False
 # | Results Summary for 6-31G with VQE Optimization (include_active_kappa = False) |
 # | Molecule | Basis Set | # Electrons | # Orbitals | OVOS Num. of Act. Unocc. | OVOS Corr. Energy  | OVOS Opt. Energy @ Iterations | UHF Optimized Energy @ Iterations | UHF Opt. Energy Diff  |  Same or diff. Theta? |
-# |          |           |             |            |      25%, 50%, 75%       |     (Hartree)      |           (Hartree)           |             (Hartree)             |       (Hartree)       |                       |
+# |          |           |             |            |      25%, 50%, 75%       |     [Hartree]      |           [Hartree]           |             [Hartree]             |       [Hartree]       |                       |
 # |----------|-----------|-------------|------------|--------------------------|--------------------|-------------------------------|-----------------------------------|-----------------------|-----------------------|
-# | H2O      | 6-31G     | 10          | 7          | 2 (4)  [RHF]             | -76.026963         | -84.896027  @ 40              | -84.904256  @ 38                  | -0.008229             | Same                  |
-# | H2O      | 6-31G     | 10          | 9          | 4 (8)  [UHF]             | -76.101365         | -84.858729  @ 43              | -84.891800  @ 39                  | -0.033071             | Same                  |
-# | H2O      | 6-31G     | 10          | 11         | 6 (12) [UHF]             | -76.111242         | -84.840472  @ 27              | -84.861685  @ 25                  | -0.021213             | Same                  |
+# | H2O      | 6-31G     | 10          | 7          | 2 (4)  [RHF]             | -76.026963 (33.4%) | -84.896027  @ 40              | -84.904256  @ 38                  | -0.008229             | Same                  |
+# | H2O      | 6-31G     | 10          | 9          | 4 (8)  [UHF]             | -76.101365 (91.1%) | -84.858729  @ 43              | -84.891800  @ 39                  | -0.033071             | Same                  |
+# | H2O      | 6-31G     | 10          | 11         | 6 (12) [UHF]             | -76.111242 (98.8%) | -84.840472  @ 27              | -84.861685  @ 25                  | -0.021213             | Same                  |
+# | H2O      | cc-pVDZ   | 10          | 8          | 4 (8)  [RHF]             | -76.142620 (56.8%) | -84.892488  @ 80              | -84.958209  @ 84                  | -0.065721             | Same                  |
 # |..........|...........|.............|............|..........................|....................|...............................|...................................|.......................|.......................|
-# | HF       | 6-31G     | 10          | 6          | 1 (2)  [RHF]             | -100.00188         | -104.825261 @ 27              | -104.829580 @ 25                  | -0.004319             | Same                  |
-# | HF       | 6-31G     | 10          | 8          | 3 (6)  [UHF]             | -100.07082         | -104.802017 @ 46              | -104.805675 @ 34                  | -0.003658             | Same                  |
-# | HF       | 6-31G     | 10          | 11         | 4 (8)  [UHF]             | -100.10745         | -104.775620 @ 43              | -104.789234 @ 18                  | -0.013614             | Same                  |
+# | HF       | 6-31G     | 10          | 6          | 1 (2)  [RHF]             | -100.00188 (14.4%) | -104.825261 @ 27              | -104.829580 @ 25                  | -0.004319             | Same                  |
+# | HF       | 6-31G     | 10          | 8          | 3 (6)  [UHF]             | -100.07082 (67.9%) | -104.802017 @ 46              | -104.805675 @ 34                  | -0.003658             | Same                  |
+# | HF       | 6-31G     | 10          | 11         | 4 (8)  [UHF]             | -100.10745 (96.3%) | -104.775620 @ 43              | -104.789234 @ 18                  | -0.013614             | Same                  |
+# | HF       | cc-pVDZ   | 10          | 8          | 3 (6)  [RHF]             | -100.10733 (33.6%) | -104.840054 @ 116             | -104.845022 @ 74                  | -0.004968             | Same                  |
 # |..........|...........|.............|............|..........................|....................|...............................|...................................|.......................|.......................|
-# | CO       | 6-31G     | 14          | 9          | 2 (4)  [UHF]             | -112.742906        | -134.989406 @ 125             | -134.988008 @ 142                 | +0.001398             | Same                  | 
-# | CO       | 6-31G     | 14          | 12         | 5 (10) [UHF]             | -112.842877        | -134.981360 @ 66              | -134.967924 @ 72                  | +0.013436             | Same                  |                 
-# | CO       | 6-31G     | 14          | 15         | 8 (16) [UHF]             | -112.873902        | ...                           | ...                               | ...                   | Same                  |
+# | CO       | 6-31G     | 14          | 9          | 2 (4)  [UHF]             | -112.742906 (35.7%)| -134.989406 @ 125             | -134.988008 @ 142                 | +0.001398             | Same                  | 
+# | CO       | 6-31G     | 14          | 12         | 5 (10) [UHF]             | -112.842877 (82.8%)| -134.981360 @ 66              | -134.967924 @ 72                  | +0.013436             | Same                  |                 
+# | CO       | 6-31G     | 14          | 15         | 8 (16) [UHF]             | -112.873902 (97.4%)| ...                           | ...                               | ...                   | Same                  |
 # |..........|...........|.............|............|..........................|....................|...............................|...................................|.......................|.......................|
-# | NH3      | 6-31G     | 10          | 7          | 2 (4)  [RHF]             | -56.173502         | -68.156893  @ 47              | -68.159458  @ 37                  | -0.002565             | Same                  |
-# | NH3      | 6-31G     | 10          | 10         | 5 (10) [UHF]             | -56.244012         | -68.127669  @ 41              | -68.143925  @ 38                  | -0.016256             | Same                  |
-# | NH3      | 6-31G     | 10          | 12         | 7 (14) [UHF]             | -56.255257         | -68.075272  @ 39              | -68.136328  @ 37                  | -0.061056             | Same                  |
+# | NH3      | 6-31G     | 10          | 7          | 2 (4)  [RHF]             | -56.173502 (26.4%) | -68.156893  @ 47              | -68.159458  @ 37                  | -0.002565             | Same                  |
+# | NH3      | 6-31G     | 10          | 10         | 5 (10) [UHF]             | -56.244012 (88.0%) | -68.127669  @ 41              | -68.143925  @ 38                  | -0.016256             | Same                  |
+# | NH3      | 6-31G     | 10          | 12         | 7 (14) [UHF]             | -56.255257 (97.9%) | -68.075272  @ 39              | -68.136328  @ 37                  | -0.061056             | Same                  |
+# | NH3      | cc-pVDZ   | 10          | 11         | 6 (12) [RHF]             | -56.276992 (59.4%) | -68.166951  @ 66              | -68.187273  @ 56                  | -0.020322             | Same                  |
 # |----------|-----------|-------------|------------|--------------------------|--------------------|-------------------------------|-----------------------------------|-----------------------|-----------------------|
+#
+# Run each configuration with a few times with different random seeds to get an idea of the variability in the results (e.g. due to optimization getting stuck in local minima).
+# Get mean and standard deviation of the energies and iterations for each configuration.
+# 
+# Plot: Energy vs. iteration for each configuration to visualize convergence behavior. (OVOS vs. UHF initializations, different numbers of active virtual orbitals, etc.)
+#    Compare initial energies (OVOS vs. UHF) to see how much OVOS improves the starting point for VQE optimization. 
 #
 #
 # Step 2: Run with include_active_kappa = True
