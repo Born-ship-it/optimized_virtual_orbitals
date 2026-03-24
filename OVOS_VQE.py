@@ -10,7 +10,7 @@ from slowquant.unitary_coupled_cluster.unrestricted_ups_wavefunction import Unre
     # Pyscf imports
 from pyscf import gto, scf
     # OVOS imports
-from ovos_clean import OVOS
+from ovos import OVOS
 
 
 # # Qiskit
@@ -369,3 +369,37 @@ for atom in [atom_2]: # atom_3, atom_4
 #
 #
 #
+
+
+# # SlowQuant
+#     # Initialize for UPS wave function with OVOS-optimized orbitals
+# WF_ovos = UnrestrictedWaveFunctionUPS(
+#     mol.nelectron,  # e.g. 10 electrons
+#     ((6,4), num_electrons//2+num_opt_virtual_orbs),                   
+#     E_corr_mo,          # Use OVOS-optimized orbitals
+#     h_core,
+#     g_eri,
+#     "utups",
+#     {"n_layers":1},
+#     include_active_kappa=False,
+# )
+#     # Initialize thetas randomly for reproducibility
+# np.random.seed(42)
+# thetas = (2*np.pi*np.random.random(len(WF_ovos.thetas)) - np.pi).tolist()   
+# WF_ovos.thetas = thetas
+# WF_ovos.run_wf_optimization_1step("BFGS", orbital_optimization=True, tol=1e-6, maxiter=5000)
+
+#     # Initualize for UPS wave function with UHF orbitals
+# WF_uhf = UnrestrictedWaveFunctionUPS(
+#     mol.nelectron,  # e.g. 10 electrons
+#     ((6,4), num_electrons//2+num_opt_virtual_orbs),                  
+#     mf_uhf.mo_coeff,  # Use UHF orbitals
+#     h_core,
+#     g_eri,
+#     "utups",
+#     {"n_layers":1},
+#     include_active_kappa=False,
+# )
+#     # Use same random seed and initial thetas for fair comparison
+# WF_uhf.thetas = thetas
+# WF_uhf.run_wf_optimization_1step("BFGS", orbital_optimization=True, tol=1e-6, maxiter=5000)
