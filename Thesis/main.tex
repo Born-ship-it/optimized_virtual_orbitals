@@ -1,0 +1,62 @@
+%============================================================
+%  Master's Thesis – University of Copenhagen (KU)
+%  Topic: Optimized Virtual Orbital Space (OVOS)
+%  Author: Tobias
+%============================================================
+\documentclass[12pt, a4paper, twoside, openright]{report}
+
+% ---- Preamble (packages, macros, settings) ----------------
+\input{preamble}
+
+%============================================================
+\begin{document}
+
+% ---- Front matter -----------------------------------------
+\pagenumbering{roman}
+
+\input{frontpage}
+
+\cleardoublepage
+\input{chapters/abstract}
+
+\cleardoublepage
+\input{chapters/acknowledgements}
+
+\cleardoublepage
+\input{chapters/acronyms}
+
+\cleardoublepage
+\tableofcontents
+
+\cleardoublepage
+\listoffigures
+
+\cleardoublepage
+\listoftables
+
+% ---- Main matter ------------------------------------------
+\cleardoublepage
+\pagenumbering{arabic}
+
+\input{chapters/introduction}
+\input{chapters/background}
+\input{chapters/theory}
+\input{chapters/method}
+\input{chapters/computational_details}
+\input{chapters/results}
+\input{chapters/conclusion}
+\input{chapters/outlook}
+
+% ---- Bibliography -----------------------------------------
+\cleardoublepage
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{unsrtnat}
+\bibliography{bibliography}
+
+% ---- Appendices -------------------------------------------
+\appendix
+\input{appendices/appendix_a}
+\input{appendices/appendix_b}
+\input{appendices/appendix_c}
+
+\end{document}

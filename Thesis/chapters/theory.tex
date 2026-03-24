@@ -1,0 +1,407 @@
+%============================================================
+%  theory.tex  –  Chapter 3
+%============================================================
+\chapter{Theory}
+\label{ch:theory}
+
+% ---------------------------------------------------------------
+% WRITING TIPS – THEORY
+% ---------------------------------------------------------------
+% Goal: Present the OVOS theory rigorously and self-consistently.
+%       All derivations should be traceable from the Adamowicz &
+%       Bartlett (1987) paper, but written in your own notation.
+%
+% Suggested sections and content:
+%
+%  3.1  The Hylleraas Functional and J₂
+%       - Define J₂ as the second-order Hylleraas functional.
+%         Show that minimising ⟨Ψ⁽⁰⁾ + Ψ⁽¹⁾|H - E⁰|Ψ⁽⁰⁾ + Ψ⁽¹⁾⟩
+%         is equivalent to maximising the MP2 correlation energy.
+%       - Stationary conditions → MP1 amplitudes.
+%       - Write out J₂ explicitly in terms of integrals and amplitudes.
+%
+%  3.2  Orbital Rotation Parameterisation
+%       - Define the orbital rotation matrix R (antisymmetric,
+%         active-inactive block only).
+%       - Unitary transformation U = exp(R), expanded to second order.
+%       - Active orbital transformation:
+%         φ'_a = φ_a + Σ_e R_{ea}φ_e − ½Σ_{b,e}R_{ea}R_{eb}φ_b + …
+%       - Why only active-inactive rotations? (Active-active and
+%         inactive-inactive rotations are redundant for J₂.)
+%
+%  3.3  Gradient of J₂ with Respect to Orbital Rotations
+%       - Derive G_{ea} = ∂J₂/∂R_{ae} from first principles.
+%         \[ G_{ea} = 2\sum_{i>j}\sum_b t_{ij}^{ab}\langle ij\|eb\rangle
+%                   + 2\sum_b D_{ab} f_{be} \]
+%       - Define D_{ab} (MP2 virtual-virtual density matrix).
+%       - Discuss the physical meaning: gradient zero at optimal rotation.
+%
+%  3.4  Hessian of J₂ with Respect to Orbital Rotations
+%       - Derive H_{ea,fb} = ∂²J₂/∂R_{ae}∂R_{bf}.
+%         (Write out all four terms from the paper.)
+%       - Block structure: Hessian is block-diagonal in the inactive
+%         orbital index – key for efficient inversion.
+%       - Discuss positive-definiteness: when can H have negative
+%         eigenvalues? (Saddle points, near-degenerate orbitals.)
+%
+%  3.5  Newton-Raphson Orbital Optimisation
+%       - Newton step: ΔR = −H⁻¹ G (first-order NR).
+%       - Connection to augmented Hessian / level-shift techniques.
+%       - Convergence criterion and convergence rate (quadratic near minimum).
+%       - Levelshift strategy to handle negative Hessian eigenvalues.
+%
+%  3.6  Generating the Unitary Matrix U
+%       - Matrix exponential via eigendecomposition of R²:
+%         d² = X† R² X  →  U = X cosh(d) X† + RX sinh(d)d⁻¹X†
+%       - Why this is more numerically stable than direct truncation.
+%
+%  3.7  Orbital Canonicalisation
+%       - After rotation, the Fock matrix in the active space may not be
+%         diagonal. Diagonalise the active-active Fock block to obtain
+%         canonical orbitals.
+%       - Why canonical orbitals simplify the amplitude equations.
+%
+%  3.8  Energy Recovery and the OVOS Error
+%       - Define the energy recovery fraction:
+%         η = E_corr(OVOS) / E_corr(full MP2).
+%       - Discuss the theoretical upper bound (η ≤ 1 for optimised space).
+%       - Mention the additive correction scheme that recovers ~100%:
+%         E_corr(OVOS+corr) = E_corr(OVOS) + ΔE (from inactive space).
+%
+% Tips:
+%   - Number every equation that is referenced elsewhere in the thesis.
+%   - For long derivations, move intermediate steps to Appendix A.
+%   - Draw a diagram of the orbital spaces (occupied / active virt /
+%     inactive virt) to make the index partitioning concrete.
+%   - Explicitly state the sign and notation convention for integrals
+%     (this was an open question in your code – resolve it here!).
+% ---------------------------------------------------------------
+
+\section{The Second-Order Hylleraas Functional}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.1]
+%   "The second-order Hylleraas functional $J_2$ is the variational
+%    quantity that the OVOS method seeks to minimise with respect to
+%    orbital rotations. This section derives $J_2$ from the
+%    second-order Rayleigh-Schr\"odinger perturbation expression and
+%    establishes its connection to the MP2 correlation energy."
+%
+% [WHAT TO COVER]
+%   - Start from the Hylleraas variational principle:
+%     $J_2[\Psi^{(1)}] = \langle\Psi^{(1)}|H_0 - E^{(0)}|\Psi^{(1)}\rangle
+%                       + 2\langle\Psi^{(0)}|V|\Psi^{(1)}\rangle$
+%     Minimising over $\Psi^{(1)}$ recovers the MP2 energy.
+%   - Insert the doubly-excited ansatz for $\Psi^{(1)}$:
+%     $\Psi^{(1)} = \sum_{i>j,a>b} t_{ij}^{ab} |\Phi_{ij}^{ab}\rangle$.
+%   - Expand $J_2$ and show it equals $E_{\mathrm{corr}}^{(2)}$ at its stationary point.
+%   - Write the expanded form from Adamowicz \& Bartlett Eq.~(1):
+%     include Fock matrix elements $f_{ac}$, $\delta_{bd}$, etc.
+%   - STATE intended notation here: all integrals $\langle ab\|ij\rangle$
+%     are antisymmetrised physicists' notation. (Cross-ref \S~\ref{ch:background}.)
+%   - Note that $J_2$ operates only over the ACTIVE virtual space.
+%     This is what makes OVOS a TRUNCATED optimisation.
+%
+% [LEAD-IN TO §3.2]
+%   "In order to minimise $J_2$ with respect to orbital choice, we
+%    parameterise the unitary rotation of the active virtual space,
+%    as described in the following section."
+% ---------------------------------------------------------------
+
+\section{Orbital Rotation Parameterisation}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.2]
+%   "Orbital rotations are parameterised via an antisymmetric matrix
+%    $\mathbf{R}$, whose matrix exponential $\mathbf{U} = e^{\mathbf{R}}$
+%    is unitary. Expanding $\mathbf{U}$ to second order in $\mathbf{R}$
+%    yields tractable expressions for how $J_2$ changes as the active
+%    virtual orbitals mix with the inactive virtuals."
+%
+% [SUBSECTION COVERAGE]
+%   §Active and Inactive Subspaces:
+%   - Only active_virt ↔ inactive_virt block of $\mathbf{R}$ is non-zero:
+%     $R_{ae}$, $a \in$ act.virt, $e \in$ inact.virt. ALL other blocks are zero
+%     (active-active rotations change nothing for $J_2$).
+%     Justify: active-active rotations are a redundancy in $J_2$.
+%   - Matrix dimension: $N'_{\rm virt} \times (N_{\rm virt} - N'_{\rm virt})$.
+%   §Unitary Transformation:
+%   - $\mathbf{U} = e^{\mathbf{R}}$; $\mathbf{R}$ is antisymmetric ($R_{ea} = -R_{ae}$).
+%   - Second-order expansion of a rotated active orbital (write out explicitly):
+%     $\phi'_a = \phi_a + \sum_e R_{ea}\phi_e
+%               - \tfrac{1}{2}\sum_{b,e} R_{ea}R_{eb}\phi_b + \ldots$
+%   - State that higher-order terms are handled exactly by the matrix exponential
+%     in Step (vii) of the algorithm.
+%   - FIGURE: show the $\mathbf{R}$ matrix sparsity structure (active rows,
+%     inactive columns shaded; all other blocks zero).
+%
+% [LEAD-IN TO §3.3]
+%   "With the orbital rotation parameterised, the gradient of $J_2$
+%    with respect to the rotation parameters is derived in the following section."
+% ---------------------------------------------------------------
+\subsection{Active and Inactive Virtual Subspaces}
+\subsection{Unitary Transformation via Matrix Exponential}
+
+\section{Gradient of \texorpdfstring{$J_2$}{J2} with Respect to Orbital Rotations}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.3]
+%   "The gradient of the Hylleraas functional with respect to the orbital
+%    rotation parameters provides the descent direction for the OVOS
+%    optimisation. This section derives the closed-form gradient expression
+%    and introduces the MP2 virtual-virtual density matrix $D_{ab}$."
+%
+% [SUBSECTION COVERAGE]
+%   §MP2 Virtual-Virtual Density Matrix:
+%   - Define $D_{ab} = \sum_{i>j}\sum_c t_{ij}^{ac} t_{ij}^{bc}$.
+%   - Physical meaning: measures how strongly active virtual $a$ and $b$
+%     appear together in the MP1 wavefunction.
+%   - Matrix is symmetric: $D_{ab} = D_{ba}$.
+%   - This is needed in BOTH gradient AND Hessian — compute once, reuse.
+%   §Gradient Expression:
+%   - Full gradient formula (Adamowicz \& Bartlett Eq.~(7)):
+%     $G_{ea} = 2\sum_{i>j}\sum_b t_{ij}^{ab}\langle ij\|eb\rangle
+%              + 2\sum_b D_{ab} f_{be}$
+%   - Motivate each term: first = direct contribution of active-inactive
+%     mixing to $J_2$; second = contribution via the density matrix.
+%   - At convergence $G_{ea} = 0$ for all $a, e$ → stationarity condition.
+%   - Note dimension: $G$ is $(N_{\rm virt}-N') \times N'$ matrix.
+%   - Discuss the NOTATION of $\langle ij\|eb\rangle$: confirm physical
+%     antisymmetrised, and state index order unambiguously.
+%
+% [LEAD-IN TO §3.4]
+%   "The gradient alone is insufficient for fast convergence;
+%    the second derivative (Hessian) is required to form the
+%    Newton-Raphson step derived in Section~\ref{sec:hessian}."
+% ---------------------------------------------------------------
+\subsection{MP2 Virtual-Virtual Density Matrix}
+\subsection{Gradient Expression}
+
+\section{Hessian of \texorpdfstring{$J_2$}{J2} with Respect to Orbital Rotations}
+\label{sec:hessian}
+\label{sec:hessian}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.4]
+%   "The Hessian matrix $\mathbf{H}$ of $J_2$ with respect to the orbital
+%    rotation parameters enables Newton-Raphson convergence and provides
+%    information about the curvature of the energy landscape. This section
+%    derives $H_{ea,fb}$ and exploits its block structure for efficient
+%    inversion."
+%
+% [SUBSECTION COVERAGE]
+%   §Hessian Expression (all four terms from Adamowicz \& Bartlett):
+%     $H_{ea,fb} = 2\sum_{i>j} t_{ij}^{ab}\langle ij\|ef\rangle
+%               - \delta_{ef}\sum_{i>j}\sum_c [t_{ij}^{ac}\langle ij\|bc\rangle
+%                                             + t_{ij}^{bc}\langle ij\|ca\rangle]
+%               + D_{ab}(f_{aa} - f_{bb})\delta_{ef}
+%               + D_{ab} f_{ef}(1-\delta_{ef})$
+%   - Write out EACH term and explain its physical origin.
+%   - State index ordering of $\langle ij\|ef\rangle$ unambiguously.
+%   §Block Structure:
+%   - $H_{ea,fb}$ depends on inactive orbital pair $(e,f)$.
+%   - For $e = f$: diagonal block $H_{ea,fa}$ — square matrix of size $N'\times N'$.
+%   - The Hessian is block-diagonal in the inactive orbital index $e$
+%     when $e \neq f$ contributes off-diagonal terms that are typically small.
+%   - The block structure means only $N_{\rm inact}$ blocks of size $N'^2$
+%     need to be inverted separately — cite Adamowicz \& Bartlett step (vi).
+%   §Negative Eigenvalues and Level-Shift:
+%   - $\mathbf{H}$ may be indefinite near saddle points or with small virtual gaps.
+%   - Level shift: replace $\mathbf{H}$ with $\mathbf{H} + \lambda\mathbf{I}$
+%     such that all eigenvalues are positive.
+%   - Discuss the choice of $\lambda$ (empirical or dynamic threshold).
+%   - Reference: augmented Hessian / trust-region Newton methods in general.
+%
+% [LEAD-IN TO §3.5]
+%   "With both gradient and Hessian derived, the Newton-Raphson orbital
+%    update step is assembled in the following section."
+% ---------------------------------------------------------------
+\subsection{Block Structure of the Hessian}
+\subsection{Negative Eigenvalues and Level-Shift Stabilisation}
+
+\section{Newton-Raphson Orbital Optimisation}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.5]
+%   "The Newton-Raphson (NR) method uses the gradient and Hessian of
+%    $J_2$ to compute an orbital rotation update $\Delta\mathbf{R}$ that
+%    drives the energy toward a stationary point quadratically.
+%    This section describes the NR step, its convergence properties,
+%    and the level-shift strategy used for numerical stability."
+%
+% [WHAT TO COVER]
+%   - NR equation: $\mathbf{H}\,\Delta\mathbf{R} = -\mathbf{G}$
+%     (equivalently $\Delta R = -H^{-1}G$).
+%   - Convergence rate: quadratic near the optimum.
+%   - Flat energy landscapes: may require many iterations or damping.
+%   - Connection to Purvis-Bartlett RLE method (step vi of the algorithm):
+%     the block-diagonal Hessian inversion is equivalent to solving
+%     a reduced linear equation in each inactive-orbital block.
+%   - Level-shift application: if any diagonal block has negative
+%     eigenvalue, shift to ensure $H + \lambda I$ is positive-definite.
+%   - State the convergence criterion used: $|J_2^{(n)}-J_2^{(n-1)}| < 10^{-8}$.
+%
+% [LEAD-IN TO §3.6]
+%   "Given the rotation step $\Delta\mathbf{R}$, the unitary matrix
+%    $\mathbf{U} = e^{\mathbf{R}}$ must be computed efficiently via
+%    matrix diagonalisation, as described in Section~\ref{sec:unitary}."
+% ---------------------------------------------------------------
+
+\section{Generating the Unitary Rotation Matrix}
+\label{sec:unitary}
+\label{sec:unitary}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.6]
+%   "Computing the matrix exponential $\mathbf{U} = e^{\mathbf{R}}$
+%    directly is numerically expensive and potentially unstable.
+%    This section describes the eigendecomposition-based approach
+%    of Adamowicz \& Bartlett that yields $\mathbf{U}$ exactly and
+%    efficiently from the rotation matrix $\mathbf{R}$."
+%
+% [WHAT TO COVER]
+%   - Define $\mathbf{d}^2 = \mathbf{X}^\dagger\mathbf{R}^2\mathbf{X}$
+%     where $\mathbf{X}$ diagonalises $\mathbf{R}^2$.
+%     $\mathbf{d}$ = diagonal matrix of positive square roots of eigenvalues.
+%   - Then:
+%     $\mathbf{U} = \mathbf{X}\cosh(\mathbf{d})\mathbf{X}^\dagger
+%                + \mathbf{R}\mathbf{X}\sinh(\mathbf{d})\mathbf{d}^{-1}\mathbf{X}^\dagger$
+%   - Verify unitarity: $\mathbf{U}^\dagger\mathbf{U} = \mathbf{I}$.
+%   - Why this is better than truncated Taylor series:
+%     exact to all orders; avoids convergence issues for large $|R_{ae}|$.
+%   - Edge case: $\mathbf{d} \approx 0$ for small rotations —
+%     $\sinh(d)/d \to 1$ smoothly; use L'H\^opital or Taylor expansion near 0.
+%
+% [LEAD-IN TO §3.7]
+%   "After applying $\mathbf{U}$ to the orbital coefficients, the
+%    active Fock block is generally non-diagonal. Re-canonicalisation
+%    is described in the following section."
+% ---------------------------------------------------------------
+
+\section{Orbital Canonicalisation}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.7]
+%   "After a unitary rotation, the active virtual Fock block
+%    $F_{ab}^{\rm active}$ is no longer diagonal. Diagonalising it
+%    yields new canonical active orbitals with well-defined orbital
+%    energies, which simplifies the amplitude denominators in the
+%    next MP2 iteration."
+%
+% [WHAT TO COVER]
+%   - After applying $\mathbf{U}$: $\mathbf{C}_{\rm new} = \mathbf{C}_{\rm old}\mathbf{U}$.
+%   - Compute the active Fock block in the rotated basis:
+%     $F^{\rm act}_{ab} = \mathbf{C}^\dagger_{\rm act}\, F^{\rm AO}\, \mathbf{C}_{\rm act}$.
+%   - Diagonalise $F^{\rm act}$ to get canonical active MO coefficients.
+%   - Update orbital energies $\varepsilon_a$ from the eigenvalues.
+%   - INACTIVE virtuals and OCCUPIED orbitals are NOT rotated
+%     (only the active block changes at each OVOS iteration).
+%   - This step corresponds to step (viii) of the Adamowicz \& Bartlett algorithm.
+%
+% [LEAD-IN TO §3.8]
+%   "With canonical orbitals re-established, the MP2 energy for the
+%    new active space can be evaluated and the energy recovery
+%    fraction defined, as presented in the following section."
+% ---------------------------------------------------------------
+
+\section{Energy Recovery and the OVOS Error Metric}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.8]
+%   "A central performance metric for OVOS is the fraction of the
+%    full-space MP2 correlation energy recovered by the truncated
+%    active virtual orbital set. This section defines the energy
+%    recovery fraction $\eta$ and discusses an additive correction
+%    scheme that approaches 100\% recovery."
+%
+% [WHAT TO COVER]
+%   - Energy recovery fraction:
+%     $\eta = E_{\rm corr}^{\rm OVOS}(N') / E_{\rm corr}^{\rm MP2}(N_{\rm virt})$
+%     where $N'$ is the active virtual count and $N_{\rm virt}$ is the full count.
+%     By construction $0 < \eta \leq 1$.
+%   - Expected behaviour: $\eta$ rises steeply from 0, approaching 1
+%     as $N' \to N_{\rm virt}$. Adamowicz \& Bartlett report $\eta \approx 0.9$
+%     at $N' = N_{\rm virt}/2$ for small molecules.
+%   - Additive correction scheme for ~100\% recovery:
+%     $E_{\rm corr}^{\rm OVOS+corr} = E_{\rm corr}^{\rm OVOS}
+%       + E_{\rm corr}^{\rm inact}$ where the inactive contribution
+%     is computed perturbatively from the complement space.
+%   - The error $\Delta E = E_{\rm corr}^{\rm MP2} - E_{\rm corr}^{\rm OVOS}\geq 0$
+%     monotonically decreases with $N'$.
+%
+% [FOOTNOTE/BOX] Clarify: OVOS optimises $J_2$ over the active space;
+%   the recovery $\eta$ is NOT the same as optimising the TOTAL MP2 energy.
+%
+% [LEAD-IN TO §3.9]
+%   "The stationarity condition $\partial J_2/\partial R_{ae} = 0$
+%    satisfied by the converged OVOS orbitals has a deep theoretical
+%    significance: it establishes a formal connection to the concept
+%    of Brueckner orbitals, as explored in the following section."
+% ---------------------------------------------------------------
+
+% ---------------------------------------------------------------
+% WRITING TIPS – OVOS AS APPROXIMATE BRUECKNER ORBITALS (Theory)
+% ---------------------------------------------------------------
+% This section makes the formal connection between OVOS and Brueckner
+% orbitals. Key arguments:
+%
+%  Stationarity conditions
+%    - At convergence of OVOS, ∂J₂/∂R_{ae} = G_{ae} = 0 for all a,e.
+%    - This is exactly the condition that the MP2 energy is stationary
+%      wrt orbital rotations between active and inactive virtual spaces.
+%    - Full orbital-optimised MP2 (OO-MP2) \cite{Lee2018} achieves this
+%      for ALL orbital rotations (occ-virt as well). OVOS restricts
+%      to active_virt – inactive_virt rotations.
+%    - At the OO-MP2 level, stationarity ⟺ T1 = 0 ⟺ Brueckner orbitals.
+%    - OVOS achieves the same stationarity within the truncated space,
+%      so OVOS MOs are the Brueckner orbitals of the active virtual space.
+%
+%  Formal proof sketch (can go in Appendix A)
+%    - Show G_{ae} = 0 is equivalent to the MP1 T1 residual = 0
+%      when restricted to active-inactive rotations.
+%    - Cite Helgaker et al. Chapter 4 \cite{Helgaker2000} for
+%      the Brueckner orbital derivation in full CC theory.
+%
+%  Consequences
+%    - OVOS MOs have smaller T1 amplitudes than canonical HF MOs → the
+%      T1 diagnostic will be reduced.
+%    - In a subsequent CC calculation on the OVOS orbital basis, single
+%      excitations into the inactive virtual space are suppressed.
+%    - For VQE UCCSD, the ansatz |Φ_OVOS⟩ + UCCSD has better starting
+%      overlap with FCI than |Φ_HF⟩ + UCCSD.
+% ---------------------------------------------------------------
+\section{OVOS Orbitals as Approximate Brueckner Orbitals}
+\label{sec:ovos_brueckner}
+\subsection{Orbital Stationarity and the Brueckner Condition}
+\subsection{Relationship to Orbital-Optimised MP2}
+\subsection{Expected Reduction of T1 Amplitudes}
+
+% ---------------------------------------------------------------
+% WRITING TIPS – OVOS AS VQE TRIAL STATE (Theory)
+% ---------------------------------------------------------------
+% This section lays the theoretical case for using OVOS MOs in VQE.
+%
+%  Key quantity: the reference-state overlap
+%    - Define the overlap F = |⟨Φ_ref|Ψ_FCI⟩|² (fidelity).
+%    - For HF reference: F_HF = |⟨Φ_HF|Ψ_FCI⟩|².
+%    - Claim: F_OVOS ≥ F_HF because OVOS orbitals minimise the
+%      MP2 energy, i.e. maximise the second-order contribution to
+%      the correlation energy captured by a single determinant.
+%
+%  VQE cost function and parameter count
+%    - UCCSD circuit depth scales as O(N² M²) where N = n_occ,
+%      M = n_virt. Reducing M via OVOS directly reduces circuit depth.
+%    - With better reference overlap, fewer UCCSD parameters are needed
+%      to reach a target accuracy.
+%    - Formal connection: for an exact Brueckner reference (T1 = 0),
+%      the UCCSD ansatz reduces to UCCD — halving the single-excitation
+%      parameters and their corresponding circuit layers.
+%
+%  Qubit count
+%    - State the qubit saving formula: ΔN_qubits = 2(N_virt − N'_virt).
+%    - Provide a concrete example (e.g. H₂O/cc-pVDZ).
+%
+% Tips:
+%   - Be careful to state that this is a theoretical motivation;
+%     actual VQE calculations on quantum hardware are left to Outlook.
+%   - Cite \cite{Peruzzo2014, Cao2019, deGracia2024} for VQE background.
+%   - Cite \cite{Lee2018} and \cite{Handy1989} for the Brueckner / OO-MP2
+%     connection.
+% ---------------------------------------------------------------
+\section{OVOS Molecular Orbitals as a Trial State for VQE}
+\label{sec:ovos_vqe}
+\subsection{Reference-State Overlap with the FCI Ground State}
+\subsection{Reduction of T1 Amplitudes and Circuit Depth}
+\subsection{Qubit Resource Savings}

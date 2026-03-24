@@ -1,0 +1,77 @@
+%============================================================
+%  appendix_a.tex  –  Mathematical Derivations
+%============================================================
+\chapter{Mathematical Derivations}
+\label{app:derivations}
+
+% ---------------------------------------------------------------
+% WRITING TIPS – APPENDIX A
+% ---------------------------------------------------------------
+% Purpose: House the longer algebraic derivations that would
+%           interrupt the flow of the Theory chapter if placed there.
+%
+% Suggested content:
+%
+%  A.1  Derivation of the MP2 Correlation Energy in Spin-Orbital Form
+%       - Start from the Hylleraas functional in second quantisation.
+%       - Evaluate the matrix element ⟨Φ₀|H|Φ_{ij}^{ab}⟩.
+%       - Arrive at the standard:
+%         E_corr = ¼ Σ_{ijab} |⟨ij‖ab⟩|² / (ε_i+ε_j−ε_a−ε_b)
+%       - Show equivalence to the amplitude form used in the code.
+%
+%  A.2  Derivation of the Gradient G_{ea}
+%       - Differentiate J₂ w.r.t. R_{ae} using the chain rule.
+%       - Keep track of all terms from both the amplitude and
+%         the two-electron integral dependence.
+%       - Show that at convergence G = 0 is the optimality condition.
+%
+%  A.3  Derivation of the Hessian H_{ea,fb}
+%       - Second derivative of J₂.
+%       - Careful treatment of the Kronecker-δ terms.
+%       - Verify consistency with the Adamowicz & Bartlett expressions.
+%
+%  A.4  Matrix Exponential via Eigendecomposition
+%       - Prove U = exp(R) given the block-antisymmetric structure of R.
+%       - Derive the formula U = X cosh(d)X† + RX sinh(d)d⁻¹X†.
+%       - Verify U†U = I.
+%
+%  A.5  Antisymmetrised Two-Electron Integrals
+%       - Define ⟨pq‖rs⟩ = (pr|qs) − (ps|qr) (physicists' = antisym).
+%       - Show how this relates to the chemists' notation (pq|rs).
+%       - Tabulate the notation used in each formula in the thesis
+%         to remove all ambiguity (this fixes the open question in
+%         your code comments!).
+%
+% Tips:
+%   - Use the align environment for multi-line derivations.
+%   - Number every intermediate equation that you want to refer to.
+%   - Remind the reader at the start of each section what is being
+%     derived and where the result is used in the main text.
+% ---------------------------------------------------------------
+
+\section{Spin-Orbital MP2 Energy from the Hylleraas Functional}
+
+\section{Derivation of the Orbital Rotation Gradient}
+
+\section{Derivation of the Orbital Rotation Hessian}
+
+\section{Matrix Exponential for the Rotation Matrix}
+
+\section{Notation Conventions for Two-Electron Integrals}
+\label{sec:integral_notation}
+
+% Disambiguation table
+\begin{table}[H]
+\centering
+\caption{Summary of two-electron integral notation used in this thesis.}
+\label{tab:notation}
+\begin{tabular}{lll}
+\toprule
+Notation & Definition & Used where \\
+\midrule
+$(pq|rs)$  & $\int\!\int\phi_p^*(1)\phi_q(1)r_{12}^{-1}\phi_r^*(2)\phi_s(2)\,d1\,d2$ & PySCF output \\
+$\langle pr|qs\rangle$ & same as $(pq|rs)$ & Physicists' (non-antisym.) \\
+$\langle pq\|rs\rangle$ & $(pr|qs)-(ps|qr)$ & Antisymmetrised; used in all formulas \\
+\bottomrule
+\end{tabular}
+\end{table}

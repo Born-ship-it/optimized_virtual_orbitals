@@ -1,0 +1,14 @@
+\babel@toc {english}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Convergence of the MP2 correlation energy for HF in the 6--31G basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}}{13}{figure.caption.11}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Convergence behavior of the MP2 correlation energy for HF in the 6--31G basis with $N'_{\rm act.unocc} = 3$ active virtual spin-orbitals. The dashed line marks the convergence threshold of $10^{-8}$~Hartree.}}{14}{figure.caption.12}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

@@ -1,0 +1,85 @@
+Initial specific numbers of optimized virtual orbitals to test (before rounding):  [ 2.052  3.078  5.652  9.    11.826 18.   ]
+Specific numbers of optimized virtual orbitals to test:  [2, 4, 6, 8, 12, 18]
+
+#### OVOS with  2  out of  18  optimized virtual orbitals (Retry count:  0 ) ####
+Using random unitary rotated UHF virtual orbitals as starting guess.
+
+---- Attempt  1  of  1000  ----
+[2/18] MP2: -0.010175769860306232 @ 30 iterations
+
+---- Attempt  2  of  1000  ----
+[2/18] MP2: -0.007315544494782767 @ 22 iterations
+
+---- Attempt  3  of  1000  ----
+[2/18] MP2: -0.007315544495507819 @ 22 iterations
+
+---- Attempt  4  of  1000  ----
+[2/18] MP2: -0.007315544495326344 @ 23 iterations
+
+---- Attempt  5  of  1000  ----
+[2/18] MP2: -0.007315544495514783 @ 26 iterations
+
+---- Attempt  6  of  1000  ----
+[2/18] MP2: -0.007315544495096029 @ 27 iterations
+
+---- Attempt  7  of  1000  ----
+[2/18] MP2: -0.010175769860367617 @ 31 iterations
+
+---- Attempt  8  of  1000  ----
+[2/18] MP2: -0.010175769859629594 @ 27 iterations
+
+---- Attempt  9  of  1000  ----
+[2/18] MP2: -0.010175769859814629 @ 32 iterations
+
+---- Attempt  10  of  1000  ----
+[2/18] MP2: -0.010175769859865498 @ 29 iterations
+
+---- Attempt  11  of  1000  ----
+[2/18] MP2: -0.010175769859960134 @ 29 iterations
+
+---- Attempt  12  of  1000  ----
+[2/18] MP2: -0.010175769860585378 @ 29 iterations
+
+---- Attempt  13  of  1000  ----
+[2/18] MP2: -0.010175769859768383 @ 32 iterations
+
+---- Attempt  14  of  1000  ----
+[2/18] MP2: -0.007315544494953336 @ 28 iterations
+
+---- Attempt  15  of  1000  ----
+[2/18] MP2: -0.010175769860395232 @ 29 iterations
+
+---- Attempt  16  of  1000  ----
+[2/18] MP2: -0.010175769860498509 @ 28 iterations
+
+---- Attempt  17  of  1000  ----
+[2/18] MP2: -0.010175769860527872 @ 27 iterations
+
+---- Attempt  18  of  1000  ----
+[2/18] MP2: -0.010175769859952596 @ 26 iterations
+
+---- Attempt  19  of  1000  ----
+[2/18] MP2: -0.010175769860398323 @ 30 iterations
+
+---- Attempt  20  of  1000  ----
+[2/18] MP2: -0.010175769859721887 @ 29 iterations
+
+---- Attempt  21  of  1000  ----
+[2/18] MP2: -0.010175769859054124 @ 27 iterations
+
+---- Attempt  22  of  1000  ----
+[2/18] MP2: -0.010175769860572842 @ 29 iterations
+
+---- Attempt  23  of  1000  ----
+[2/18] MP2: -0.010175769860188954 @ 32 iterations
+
+---- Attempt  24  of  1000  ----
+[2/18] MP2: -0.010175769860468123 @ 31 iterations
+
+---- Attempt  25  of  1000  ----
+[2/18] MP2: -0.007315544494705994 @ 30 iterations
+
+---- Attempt  26  of  1000  ----
+[2/18] MP2: -0.010175769860435531 @ 26 iterations
+
+---- Attempt  27  of  1000  ----
