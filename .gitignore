@@ -24,16 +24,3 @@ branch/
 # Large PDF files
 Thesis/articles/*.pdf
 
-branch/
-local/
-trash/
-backup/
-Thesis/
-present/
-__pycache__/
-*.pyc
-covo.py
-OVOS_VQE.py
-ovos_working.py
-test_urest_ups.py
-

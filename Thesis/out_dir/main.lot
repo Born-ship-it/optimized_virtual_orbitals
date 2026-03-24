@@ -1,0 +1,16 @@
+\babel@toc {english}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Molecular geometries and electronic structure parameters used in this work.}}{9}{table.caption.8}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {6.1}{\ignorespaces Validation of the OVOS implementation against PySCF \lstinline [language=Python]|mp.MP2|. Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the 6--31G basis for this validation.}}{12}{table.caption.9}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces Summary of OVOS results for HF in the 6--31G basis at each $N'_{\rm act.unocc}$.}}{14}{table.caption.10}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {A.1}{\ignorespaces Summary of two-electron integral notation used in this thesis.}}{23}{table.caption.14}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }

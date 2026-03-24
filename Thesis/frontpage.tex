@@ -1,0 +1,88 @@
+%============================================================
+%  frontpage.tex  –  KU-style title page
+%============================================================
+\begin{titlepage}
+\newgeometry{top=20mm, bottom=20mm, left=25mm, right=25mm}
+
+% ------- KU top bar ----------------------------------------
+\noindent
+\colorbox{KURed}{%
+  \parbox{\dimexpr\textwidth+2\fboxsep\relax}{%
+    \vspace{4mm}
+    \centering
+    \includegraphics[height=18mm]{./figures/KU-logo.png}%   % <-- add KU logo file
+    \vspace{4mm}
+  }%
+}
+
+\vspace*{15mm}
+
+% ------- Department / Faculty ------------------------------
+\begin{center}
+  {\large\scshape University of Copenhagen}\\[2pt]
+  {\large Faculty of Science}\\[2pt]
+  {\large Department of Chemistry}
+\end{center}
+
+\vfill
+
+% ------- Thesis title --------------------------------------
+\begin{center}
+  \noindent\rule{\textwidth}{1.5pt}
+  \vspace{4mm}
+
+  {\Huge\bfseries\color{KURed}
+    Optimized Virtual Orbital Space\\[6pt]
+    for Quantum Computing
+  }
+
+  \vspace{4mm}
+  \noindent\rule{\textwidth}{1.5pt}
+
+  \vspace{8mm}
+  {\large\itshape Master's Thesis in Chemistry / Quantum Chemistry}
+\end{center}
+
+\vfill
+
+% ------- Author & supervisors ------------------------------
+\begin{minipage}[t]{0.48\textwidth}
+  \textbf{Author}\\[2pt]
+  Tobias \textit{$\langle$Surname$\rangle$}\\
+  \href{mailto:xxx@ku.dk}{xxx@ku.dk}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+  \raggedleft
+  \textbf{Supervisor}\\[2pt]
+  $\langle$Supervisor Name$\rangle$\\
+  Department of Chemistry, UCPH\\[6pt]
+  \textbf{Co-supervisor (if any)}\\[2pt]
+  $\langle$Co-supervisor Name$\rangle$
+\end{minipage}
+
+\vspace{12mm}
+
+% ------- Date & location -----------------------------------
+\begin{center}
+  Copenhagen, \today
+\end{center}
+
+\vspace{8mm}
+
+% ------- KU bottom bar -------------------------------------
+\noindent
+\colorbox{KURed}{%
+  \parbox{\dimexpr\textwidth+2\fboxsep\relax}{%
+    \vspace{3mm}
+    \centering
+    {\color{white}\small
+      University of Copenhagen \textbullet\
+      Universitetsparken 5, 2100 Copenhagen Ø
+    }
+    \vspace{3mm}
+  }%
+}
+
+\restoregeometry
+\end{titlepage}

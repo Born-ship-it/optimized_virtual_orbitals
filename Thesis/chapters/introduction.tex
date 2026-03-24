@@ -1,0 +1,192 @@
+%============================================================
+%  introduction.tex  –  Chapter 1
+%============================================================
+\chapter{Introduction}
+\label{ch:introduction}
+
+% ---------------------------------------------------------------
+% WRITING TIPS – INTRODUCTION
+% ---------------------------------------------------------------
+% Goal: Draw the reader in, establish context, and state clearly
+%       what the thesis contributes.
+%
+% Suggested structure (funnel approach – broad to narrow):
+%
+%  1. Opening hook / big-picture motivation
+%     - The computational cost of ab initio methods scales steeply with
+%       system size; the virtual orbital space is the main bottleneck for
+%       post-HF correlated methods (MP2, CCSD(T), CI).
+%     - Mention the "curse of dimensionality" in quantum chemistry.
+%     - Link to quantum computing: near-term quantum devices have limited
+%       qubit counts → reducing orbital space is directly relevant for
+%       quantum computational chemistry (VQE, QPE).
+%
+%  2. Historical / literature context
+%     - Mention natural orbitals (Löwdin, 1955) as the original idea to
+%       truncate virtual space.
+%     - Lead to the OVOS method of Adamowicz & Bartlett (1987)
+%       \cite{Adamowicz1987} as a systematic orbital-optimization approach.
+%     - Brief mention of other truncation schemes (frozen natural orbitals,
+%       pair-natural orbitals, etc.) to show the landscape.
+%
+%  3. Objective and scope of THIS thesis
+%     - "The goal of this thesis is to implement, test, and analyse the
+%       OVOS method within an unrestricted Hartree-Fock (UHF) framework
+%       using PySCF, and to assess its potential for reducing the
+%       qubit requirements of quantum computing simulations."
+%     - State explicitly what molecules/basis sets are studied.
+%     - State what is NOT covered (e.g., excited states, periodic systems).
+%
+%  4. Thesis outline  (brief paragraph or bulleted list)
+%     - "Chapter 2 reviews background theory…  Chapter 3 derives…  etc."
+%     - This is mandatory in most UCPH MSc theses.
+%
+% Tips:
+%   - Cite liberally in the introduction – show you know the field.
+%   - Write this chapter SECOND-TO-LAST (only the abstract is later).
+%   - Keep it to 4–8 pages.
+%   - End with a clear, inspiring statement of what the reader will gain.
+% ---------------------------------------------------------------
+
+\section{Motivation}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 1.1]
+%   Open with the grand challenge: exact quantum chemistry is exponentially
+%   expensive. Set the stage immediately with a striking statement:
+%   "The exact solution of the electronic Schr\"odinger equation for a
+%    molecule with $N$ electrons scales as $\mathcal{O}(N!)$ in the
+%    size of the configurational space — rapidly rendering brute-force
+%    approaches infeasible for any but the smallest systems."
+%
+% [WHAT TO COVER]
+%   - The exponential wall in quantum chemistry; FCI cost.
+%   - Why correlated methods (MP2, CCSD, CCSD(T)) are needed:
+%     chemical accuracy $\approx 1$~kcal/mol requires correlation.
+%   - Post-HF scaling bottleneck: the VIRTUAL ORBITAL SPACE.
+%     MP2 $\mathcal{O}(N^5)$; CCSD $\mathcal{O}(N^6)$;
+%     CCSD(T) $\mathcal{O}(N^7)$ — all dominated by virtual orbital count.
+%   - The quantum computing angle: qubit count $\propto 2N_{\rm orb}$;
+%     NISQ devices have $<100$ high-quality qubits in 2024.
+%   - Cite liberally: \cite{Helgaker2000, SzaboOstlund1989, Cao2019}.
+%
+% [LEAD-IN TO §1.2]
+%   "These scaling challenges motivate a closer examination of the
+%    virtual orbital space itself, which is the bottleneck for all
+%    post-HF methods and is the subject of the following section."
+% ---------------------------------------------------------------
+
+\section{The Virtual Orbital Space Problem}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 1.2]
+%   "The virtual orbital space — the set of unoccupied molecular orbitals
+%    that describe excited configurations in post-HF methods — grows
+%    rapidly with basis set size and dominates the computational cost of
+%    correlated calculations. This section surveys strategies for
+%    reducing or optimising the virtual space, motivating the OVOS approach."
+%
+% [WHAT TO COVER]
+%   - Standard virtual orbital set: canonical HF virtuals.
+%     Problem: not ordered by contribution to correlation energy.
+%   - Natural orbitals (L\"owdin 1955 \cite{Lowdin1955}):
+%     diagonalise 1-RDM → ordered by occupation number.
+%     But require a correlated calculation first — circular dependency.
+%   - Frozen natural orbitals (FNO): compute MP2 NO from cheap calculation,
+%     truncate by occupation threshold. Widely used in practice.
+%   - Pair natural orbitals (PNO): local pair-specific truncation
+%     (DLPNO-CCSD(T) can handle hundreds of atoms).
+%   - OVOS \cite{Adamowicz1987}: the METHOD of this thesis.
+%     Systematically optimise a subset of $N' < N_{\rm virt}$ virtual orbitals
+%     to maximise the second-order correlation energy.
+%     No pre-existing correlated density needed.
+%
+% [LEAD-IN TO §1.3]
+%   "Beyond classical computing, the problem of a large virtual orbital
+%    space has direct implications for quantum algorithms, where qubit
+%    counts are the primary constraint. The following section describes
+%    this quantum computing context."
+% ---------------------------------------------------------------
+
+\section{Quantum Computing Context}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 1.3]
+%   "Quantum computing offers the prospect of efficient simulation of
+%    quantum systems via algorithms such as the Variational Quantum
+%    Eigensolver (VQE) and Quantum Phase Estimation (QPE). However,
+%    current NISQ devices are severely qubit-limited, making the
+%    connection between orbital-space reduction and quantum resource
+%    requirements directly relevant to this thesis."
+%
+% [WHAT TO COVER]
+%   - Qubit mapping: Jordan-Wigner or Bravyi-Kitaev\cite{Seeley2012};
+%     $Q = 2N_{\rm orb}$ qubits for $N_{\rm orb}$ spatial orbitals.
+%   - VQE \cite{Peruzzo2014}: variational state preparation + classical optimiser.
+%     UCCSD ansatz: single and double excitations from reference state.
+%     Circuit depth $\propto N_{\rm occ}^2 N_{\rm virt}^2$.
+%   - NISQ constraints: typical current hardware 50–127 qubits,
+%     shallow circuits only (few hundred two-qubit gates).
+%   - OVOS connection:
+%     Reducing $N_{\rm virt} \to N'_{\rm virt}$ reduces $Q$ by $2(N_{\rm virt}-N')$
+%     and circuit depth proportionally.
+%   - Brueckner connection: OVOS MOs approximate Brueckner orbitals →
+%     T1 amplitudes suppressed → UCCSD reduces towards UCCD (shallower).
+%   - Cite \cite{Cao2019, deGracia2024, Seeley2012}.
+%
+% [LEAD-IN TO §1.4]
+%   "From this landscape of motivation, the concrete research
+%    objectives of this thesis are stated in the following section."
+% ---------------------------------------------------------------
+
+\section{Objectives}
+% ---------------------------------------------------------------
+% WRITING TIPS – OBJECTIVES
+% ---------------------------------------------------------------
+% State 3–5 explicit, measurable objectives. Suggested:
+%
+%  1. Implement and validate the OVOS algorithm of Adamowicz & Bartlett
+%     \cite{Adamowicz1987} in a UHF framework using PySCF, for a
+%     representative set of molecules and basis sets.
+%
+%  2. Characterise the energy recovery fraction η as a function of
+%     the active virtual orbital count for all test systems.
+%
+%  3. [NEW – Brueckner]
+%     Investigate whether OVOS-optimised MOs satisfy the Brueckner
+%     orbital condition at the MP2 level (vanishing T1 amplitudes),
+%     and assess the theoretical connection between OVOS and
+%     orbital-optimised MP2 \cite{Lee2018}.
+%
+%  4. [NEW – VQE]
+%     Quantify the potential benefit of OVOS MOs as a reference trial
+%     state for VQE-type quantum computing algorithms: assess the
+%     expected improvement in reference-state overlap with the FCI
+%     ground state and the corresponding reduction in qubit count
+%     and circuit depth.
+%
+%  5. Critically compare initialisation strategies (default UHF,
+%     warm-start, random unitary) and assess computational cost scaling.
+%
+%  This thesis builds directly on the COVO PREP project \cite{Clausen2025}
+%  and extends it to a full implementation and systematic benchmark.
+% ---------------------------------------------------------------
+
+\section{Thesis Outline}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 1.5]
+%   Give a brief, one- or two-sentence description of each chapter.
+%   Use a paragraph or a brief itemised list. This helps readers navigate.
+%   Do NOT simply list section titles — explain what each chapter DOES.
+%
+% [SUGGESTED PARAGRAPH STRUCTURE]
+%   "Chapter~\ref{ch:background} reviews the theoretical background...
+%    Chapter~\ref{ch:theory} derives the OVOS working equations...
+%    Chapter~\ref{ch:method} describes the algorithmic implementation...
+%    Chapter~\ref{ch:computational} provides the computational details...
+%    Chapter~\ref{ch:results} presents and discusses the results...
+%    Chapter~\ref{ch:conclusion} summarises the findings...
+%    Chapter~\ref{ch:outlook} outlines directions for future work."
+%
+% [LEAD-IN CLOSING SENTENCE FOR ENTIRE INTRODUCTION]
+%   "All source code and data used in this thesis are available at
+%    [repository URL]. Chapter~\ref{ch:background} begins with the
+%    theoretical foundations needed to understand the OVOS method."
+% ---------------------------------------------------------------

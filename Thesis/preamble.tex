@@ -1,0 +1,145 @@
+%============================================================
+%  preamble.tex  –  packages, settings, custom commands
+%============================================================
+
+% ---- Encoding & language ----------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% ---- Fonts ------------------------------------------------
+\usepackage{lmodern}          % Better Computer Modern
+\usepackage{microtype}        % Microtypographic improvements
+
+% ---- Page geometry ----------------------------------------
+\usepackage[
+  a4paper,
+  top=25mm, bottom=30mm,
+  inner=30mm, outer=25mm,
+  headheight=15pt
+]{geometry}
+
+% ---- Headers & footers ------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\leftmark}
+\fancyhead[RO]{\small\rightmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ---- Mathematics ------------------------------------------
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}        % Extends amsmath
+\usepackage{bm}               % Bold math \bm{}
+\usepackage{physics}          % Dirac notation \bra{}, \ket{}, \braket{}
+\usepackage{siunitx}          % SI units
+
+% ---- Code snippets ----------------------------------------
+\newcommand{\code}[1]{\lstinline[language=Python]|#1|}
+
+% ---- Chemistry --------------------------------------------
+\usepackage[version=4]{mhchem}  % Chemical formulae \ce{H2O}
+\usepackage{chemfig}             % Structural formulae (optional)
+
+% ---- Graphics & colors ------------------------------------
+\usepackage{graphicx}
+\usepackage[dvipsnames, svgnames, table]{xcolor}
+
+% KU brand colour  (Pantone 485 C ≈ #901A1E)
+\definecolor{KURed}{HTML}{901A1E}
+\definecolor{KUDarkBlue}{HTML}{003366}
+
+\graphicspath{{figures/}}
+
+% ---- Figures & tables -------------------------------------
+\usepackage{booktabs}         % Professional tables
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+
+% ---- Bibliography -----------------------------------------
+\usepackage[numbers, sort&compress]{natbib}
+
+% ---- Hyperlinks -------------------------------------------
+\usepackage[
+  colorlinks = true,
+  linkcolor  = KURed,
+  citecolor  = KURed,
+  urlcolor   = KUDarkBlue
+]{hyperref}
+% PDF metadata set via \hypersetup to avoid keyval comma-parsing issues
+\hypersetup{
+  pdfauthor  = {Tobias},
+  pdftitle   = {Optimized Virtual Orbital Space for Quantum Computing},
+  pdfsubject = {Master Thesis -- University of Copenhagen}
+}
+\usepackage{cleveref}         % \cref{} – auto-labels (load after hyperref)
+
+% ---- Code listings ----------------------------------------
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\lstdefinestyle{python}{
+  language     = Python,
+  basicstyle   = \ttfamily\small,
+  keywordstyle = \color{KURed}\bfseries,
+  commentstyle = \color{gray}\itshape,
+  stringstyle  = \color{teal},
+  numberstyle  = \tiny\color{gray},
+  numbers      = left,
+  frame        = single,
+  breaklines   = true,
+  showstringspaces = false,
+}
+
+% ---- Acronyms --------------------------------------------
+\usepackage{acronym}          % \ac{}, \acro{}, \acrodef{}
+
+% ---- Miscellaneous ----------------------------------------
+\usepackage{enumitem}         % Control list spacing
+\usepackage{csquotes}         % Context-sensitive quotation marks
+\usepackage{lipsum}           % Dummy text (remove in final version)
+\usepackage{appendix}
+\usepackage{emptypage}        % suppress headers on blank pages
+\usepackage{afterpage}
+
+% ---- Custom theorem environments --------------------------
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+
+% ---- Custom commands: quantum chemistry shortcuts ---------
+\newcommand{\Hhat}{\hat{H}}
+\newcommand{\Etot}{E_{\mathrm{tot}}}
+\newcommand{\Ecorr}{E_{\mathrm{corr}}}
+\newcommand{\EHF}{E_{\mathrm{HF}}}
+\newcommand{\EMP}[1]{E^{(\mathrm{MP#1})}}
+\newcommand{\Jtwo}{J_2}
+\newcommand{\ovos}{\textsc{ovos}}
+\newcommand{\pyscf}{\textsc{PySCF}}
+\newcommand{\uhf}{\textsc{UHF}}
+\newcommand{\rhf}{\textsc{RHF}}
+\newcommand{\MPn}[1]{\textsc{MP#1}}  % use \MPn{2} for MP2 etc.; \mp is reserved (∓)
+\newcommand{\ccsd}{\textsc{CCSD}}
+
+% Two-electron integral in physicist's notation
+\newcommand{\braketij}[2]{\langle #1 \| #2 \rangle}   % antisymmetrised
+\newcommand{\tamp}[4]{t_{#1 #2}^{#3 #4}}               % MP1 amplitude
+
+% ---- Chapter/section styling ------------------------------
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{KURed}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{KURed!80!black}}
+  {\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries}
+  {\thesubsection}{1em}{}

@@ -1,0 +1,435 @@
+%============================================================
+%  results.tex  –  Chapter 6
+%============================================================
+\chapter{Results}
+\label{ch:results}
+
+In this chapter, the results of the OVOS implementation are presented. The chapter is structured as follows:
+\begin{itemize}
+    \item \textbf{Section 6.1} validates the implementation by comparing full-space MP2 correlation energies against PySCF and literature values.
+    \item \textbf{Section 6.2} presents the main result: the fraction of MP2 correlation energy recovered as a function of the active virtual orbital count.
+    \item \textbf{Section 6.3} analyses the convergence behaviour of the OVOS algorithm.
+    \item \textbf{Section 6.4} compares different initialization strategies and their impact on final energies and convergence.
+    \item \textbf{Section 6.5} investigates how the choice of basis set affects energy recovery.
+    \item \textbf{Section 6.6} provides a direct comparison with the results published by Adamowicz and Bartlett in their original OVOS paper.
+    \item \textbf{Section 6.7} assesses the computational cost and scaling of the OVOS algorithm.
+    \item \textbf{Section 6.8} examines the T1 amplitudes in the converged OVOS orbitals to test for Brueckner-like properties.
+    \item \textbf{Section 6.9} estimates the practical benefits of using OVOS orbitals as a reference state for quantum computing applications, including overlap with FCI states and resource estimates for VQE.
+\end{itemize}
+
+
+% ---------------------------------------------------------------
+% WRITING TIPS – RESULTS
+% ---------------------------------------------------------------
+% Goal: Present your data clearly and objectively.
+%       DESCRIBE the data – do not interpret or explain yet
+%       (that belongs in Discussion, which here is folded into
+%       Results or a combined Results & Discussion chapter), 
+%       there is no separate Discussion chapter in this thesis.
+%       At MSc level, integrating discussion into results is fine.
+%
+% Suggested sections and content:
+%
+%  6.1  Validation Against Reference Values
+%       - Compare your full-space MP2 energies with PySCF's built-in
+%         MP2 and with the values quoted in Adamowicz & Bartlett Table I.
+%       - This validates your implementation before presenting OVOS data.
+%       - A table: molecule | basis | E_corr(PySCF MP2) |
+%         E_corr(your code) | deviation?
+%
+%  6.2  Energy Recovery as a Function of Active Virtual Orbital Count
+%       - This is your main result.
+%       - For each molecule and at least two basis sets:
+%         plot η = E_corr(OVOS) / E_corr(full) vs. N_virt/N_virt^max.
+%       - Expected: S-shaped curve rising steeply, reaching ~90% at 50%.
+%       - Use the data in branch/data/ to generate these plots.
+%       - Consider a composite figure (one panel per molecule).
+%       - Reference Adamowicz & Bartlett's numbers for CH₂ if available.
+%
+%  6.3  Convergence Behaviour
+%       - Show convergence of E_corr vs. iteration number for a
+%         representative case (e.g., H₂O/cc-pVDZ, N=8 virtual orbs).
+%       - Highlight oscillations if present and explain briefly.
+%       - Provide iteration count tables: molecule | basis | N_virt |
+%         iterations to convergence.
+%
+%  6.4  Effect of Initialisation Strategy
+%       - Compare "RHF", "prev", and "random" initialisation for the
+%         same molecule/basis set.
+%       - Table or plot showing final E_corr and iterations for each.
+%       - Does random sampling find a better minimum? For which cases?
+%
+%  6.5  Basis Set Dependence
+%       - Compare energy recovery curves across basis sets for one molecule
+%         (e.g., CH₂: 6-31G, cc-pVDZ, cc-pVTZ).
+%       - Does a larger basis set require more virtual orbitals to
+%         achieve the same recovery fraction?
+%
+%  6.6  Comparison with Adamowicz & Bartlett (1987)
+%       - Direct comparison for CH₂ (their published test case).
+%       - Discuss any differences: UHF vs. RHF reference, basis set.
+%
+%  6.7  Computational Cost
+%       - Wall-clock time vs. N_virt (from profiling data in branch/profil/).
+%       - Identify the bottleneck step (Hessian assembly, integral transform).
+%       - Scaling analysis: compare empirical scaling to theoretical O(N⁶).
+%
+% Tips:
+%   - Every plot needs: axis labels (with units!), legend, clear caption.
+%   - Every table needs: caption above, footnotes for symbols/abbreviations.
+%   - Show error bars only if you have statistical data (random sampling).
+%   - Use consistent colour scheme across all figures.
+%   - Refer to EVERY figure and table in the text before it appears.
+%   - Do not bury the lead – the energy recovery plot is the centrepiece.
+%
+% Plotting: use the data from branch/data/ with Python/Matplotlib.
+%   Place exported .pdf or .pgf figures in figures/.
+% ---------------------------------------------------------------
+
+\section{Validation of the Implementation}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 6.1]
+%   "Before presenting OVOS results, the correctness of the implementation
+%    is established by comparing the full-space MP2 correlation energies
+%    produced by the custom code against PySCF's built-in \texttt{pyscf.mp.MP2}
+%    module and, where available, the benchmark values tabulated by
+%    Adamowicz \& Bartlett \cite{Adamowicz1987}."
+%
+% [WHAT TO COVER]
+%   - Side-by-side comparison of $E_{\rm corr}^{\rm MP2}$ values.
+%   - Deviation $\delta E = E_{\rm corr}^{\rm code} - E_{\rm corr}^{\rm PySCF}$;
+%     should be $|\delta E| < 10^{-8}$~Hartree for a correct implementation.
+%   - Also check that $E_{\rm corr}^{\rm OVOS}(N_{\rm act.unocc}^{\rm full}) = E_{\rm corr}^{\rm MP2}$
+%     (full active space must reproduce full MP2 exactly).
+%
+% [TABLE – INCLUDE IN TEXT]
+%   Columns: Molecule & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & $E_{\rm corr}^{\rm PySCF}$ (Hartree) & $\Delta E_{\rm corr}$ (Hartree)
+%   Caption: "Validation of the OVOS implementation against PySCF \texttt{mp.MP2}.
+%   Deviations $\delta E$ should not exceed numerical precision ($<1\,\mu E_h$)."
+%
+% [LEAD-IN TO §6.2]
+%   "Having verified the implementation, the central OVOS result ---
+%    energy recovery as a function of active virtual orbital count ---
+%    is presented in the following section."
+% ---------------------------------------------------------------
+
+PySCF gives me an opportunity to validate my implementation of full space MP2 by comparing with their built-in MP2 module, \code{pyscf.mp.MP2}. I present my the deviation $\Delta E_{\rm corr} = E_{\rm corr}^{\rm code} - E_{\rm corr}^{\rm PySCF}$ is within numerical precision for all test molecules except CO, which shows a bit larger deviation, in Figure~\ref{tab:validation}. As CO's deviation is still within the acceptable range, it confirms that my implementation of the MP2 correlation energy is correct, and that the OVOS code correctly reproduces the full-space MP2 limit when $N'_{\rm act.unocc} = N_{\rm act.unocc}$.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lccr}
+        \hline
+        Molecule & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & $E_{\rm corr}^{\rm PySCF}$ (Hartree) & $\Delta E_{\rm corr}$ (Hartree) \\
+        \hline
+        CO       & -2.12168E-01 & -2.12168E-01    & 2.12862E-08   \\
+        H$_2$O   & -1.28851E-01 & -1.28851E-01    & 1.91423E-09   \\
+        HF       & -1.28694E-01 & -1.28694E-01    & -2.47007E-09  \\
+        NH3      & -1.14441E-01 & -1.14441E-01    & -2.79223E-10  \\
+        % Add more rows for other molecules/basis sets
+        \hline
+    \end{tabular}
+    \caption{Validation of the OVOS implementation against PySCF \code{mp.MP2}.
+    Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the 6--31G basis for this validation.}
+    \label{tab:validation}
+\end{table}
+
+Verifying that the full-space MP2 energies match PySCF's results, any differences observed in the OVOS results are due to the orbital optimization and active space truncation, rather than a bug in the MP2 implementation. 
+
+\section{Energy Recovery as a Function of Active Virtual Orbital Count}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 6.2]
+%   "This section presents the central result of the thesis: the fraction
+%    of the full-space MP2 correlation energy, $\eta = E_{\rm corr}^{\rm OVOS}/
+%    E_{\rm corr}^{\rm MP2}$, recovered as a function of the ratio
+%    $N'_{\rm act.unocc}/N_{\rm act.unocc}$ for each test molecule and basis set."
+%
+% [WHAT TO COVER]
+%   - Report $\eta$ curves for all 9 molecules at 6-31G and cc-pVDZ.
+%   - Expected pattern: rapid initial rise, approaching 1 as $N' \to N_{\rm act.unocc}$.
+%   - Compare against Adamowicz \& Bartlett's claim of $\eta \approx 0.9$ at $N'=N/2$.
+%   - Discuss the ``best'' and ``worst'' systems (which benefit most?).
+%   - Use the data in \texttt{branch/data/} for all plots.
+%
+% [FIGURE – MAIN RESULT]
+%   x-axis: $N'_{\rm act.unocc}/N_{\rm act.unocc}$ (fraction, 0 to 1)
+%   y-axis: $\eta = E_{\rm corr}^{\rm OVOS}/E_{\rm corr}^{\rm MP2}$ (0 to 1)
+%   One curve per molecule; one panel per basis set (or combined).
+%   Add horizontal dashed line at $\eta = 0.9$.
+%   Caption: ``Energy recovery fraction $\eta$ as a function of the
+%   active virtual orbital fraction for all test molecules in the
+%   [basis] basis. The dashed line marks 90\% recovery.''
+%   Export as \texttt{figures/fig\_eta\_recovery.pdf}.
+%
+% [FIGURE – COMPOSITE PANEL (optional)]
+%   $3 \times 3$ subplot grid, one molecule per panel, coloured by basis set.
+%   Caption: ``Energy recovery curves for all nine test molecules.
+%   Each panel shows three basis sets: 6-31G (blue), cc-pVDZ (orange),
+%   cc-pVTZ (green).'' Export as \texttt{figures/fig\_eta\_all.pdf}.
+%
+% [LEAD-IN TO §6.3]
+%   "The rate of convergence of each OVOS run to its final energy
+%    is quantified in the following section."
+% ---------------------------------------------------------------
+
+The results of the OVOS algorithm for all test molecules in the 6--31G and cc--pVDZ basis sets for start guess RHF, are presented in this section. Explore the correlation energy recovered by OVOS as a function of the number of active unoccupied orbitals $N'_{\rm act.unocc}$.  
+
+\subsubsection*{CO}
+...
+
+\subsubsection*{H2O}
+...
+
+\subsubsection*{HF}
+The OVOS algorithm results for HF in the 6--31G basis through each $N'_{\rm act.unocc}$ to full space of active unoccupied orbitals are shown in Table~\ref{tab:HF_6-31G_results}. OVOS recovers increasingly more correlation energy $E_{\rm corr}^{\rm OVOS}$ as $N'_{\rm act.unocc}$ increases, with the percentage of correlation energy recovered reaching 100\% at $N'_{\rm act.unocc} = 6$. We mark the difference the OVOS algorithm makes at each $N'_{\rm act.unocc}$ from initial MP2 as $\Delta E_{\rm corr}^{\rm OVOS}$, highlighted in Figure~\ref{fig:HF_6-31G_ovos} as the points for each $N'_{\rm act.unocc}$. The most recovered correlation energy is at $N'_{\rm act.unocc} = 4$ with $\Delta E_{\rm corr}^{\rm OVOS} = -5.49038e-2$. Convergence is achieved in all cases, with iteration counts increasing as $N'_{\rm act.unocc}$ reaches 50\% of the total number of active unoccupied orbitals and decreases thereafter.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{ccccc}
+        \hline
+        $N'_{\rm act.unocc}$ & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & Percentage & $\Delta E_{\rm corr}^{\rm OVOS}$ (Hartree) & Iterations \\ 
+        \hline
+        1    & -1.84737E-02 & 14.35\%     & -1.52027e-2     & 13        \\
+        2    & -4.39109E-02 & 34.12\%     & -2.91136e-2     & 15        \\
+        3    & -8.74131E-02 & 67.92\%     & -5.39991e-2     & 50        \\
+        4    & -1.24045E-01 & 96.39\%     & -5.49038e-2     & 20        \\
+        5    & -1.28136E-01 & 99.57\%     & -2.49738e-2     & 15        \\
+        6    & -1.28694E-01 & 100.0\%     &                 & 1         \\
+        \hline
+    \end{tabular}
+    \caption{Summary of OVOS results for HF in the 6--31G basis at each $N'_{\rm act.unocc}$.}
+    \label{tab:HF_6-31G_results}
+\end{table}
+
+The table is plotted in Figure~\ref{fig:HF_6-31G_ovos} to show the convergence behaviour of the OVOS algorithm for HF in the 6--31G basis at each $N'_{\rm act.unocc}$.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/HF/ovos_conv_vs_vorb_HF_6-31G_RHF.png}
+    \caption{Convergence of the MP2 correlation energy for HF in the 6--31G basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
+    \label{fig:HF_6-31G_ovos}
+\end{figure}
+
+\subsubsection*{NH3}
+...
+
+
+
+\section{Convergence Behaviour}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 6.3]
+%   "The OVOS convergence behaviour --- the evolution of the MP2
+%    correlation energy per iteration --- reveals the numerical stability
+%    and efficiency of the Newton-Raphson orbital optimisation.
+%    This section presents representative convergence profiles and
+%    summarises iteration counts across the test set."
+%
+% [WHAT TO COVER]
+%   - Convergence means $|\Delta E_{\rm corr}| < 10^{-8}$ achieved.
+%   - Show a representative case, e.g. H\textsubscript{2}O/cc-pVDZ, $N'=8$.
+%   - Discuss cases of slow or oscillatory convergence (large active spaces?)
+%   - Report iteration counts vs.~$N'_{\rm act.unocc}$: do larger spaces need more iterations?
+%
+% [FIGURE]
+%   x-axis: Iteration number | y-axis: $|\Delta E_{\rm corr}|$ (log scale)
+%   Caption: ``Convergence of the MP2 correlation energy for
+%   H\textsubscript{2}O/cc-pVDZ with $N'_{\rm act.unocc} = 8$ active virtual
+%   spin-orbitals. The dashed line marks the convergence threshold $10^{-8}$~$E_h$.''
+%
+% [TABLE]
+%   Columns: Molecule | Basis | $N'_{\rm act.unocc}$ | Iterations | Converged?
+%   Caption: ``Iteration counts to convergence for all OVOS calculations.
+%   Maximum iterations: [value].''
+%
+% [LEAD-IN TO §6.4]
+%   "The degree to which convergence and final energy depend on the
+%    initial orbital guess is investigated in the following section."
+% ---------------------------------------------------------------
+
+In this section, I present the convergence profiles of the OVOS algorithm for the test molecules in the 6--31G and cc--pVDZ basis sets. 
+
+Convergence is achieved when $|\Delta E_{\rm corr}| < 10^{-8}$~Hartree for at least 50 consecutive iterations. Some cases, would get stuck in a local minimum achieving convergence. The consecutive iteration criterion then avoids these false positives, and help identify true convergence, a global minimum. For example, in the case of HF at $N'_{\rm act. unocc.} = 3$ in the 6--31G basis, the algorithm converges to a local minimum at iteration 10, but then escapes and continues to converge to the global minimum by iteration 50. This behaviour is illustrated in Figure~\ref{fig:HF_6-31G_convergence}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/Placeholder.png}
+    \caption{Convergence behavior of the MP2 correlation energy for HF in the 6--31G basis with $N'_{\rm act.unocc} = 3$ active virtual spin-orbitals. The dashed line marks the convergence threshold of $10^{-8}$~Hartree.}
+    \label{fig:HF_6-31G_convergence}
+\end{figure}
+
+\section{Effect of Initialization Strategy}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 6.4]
+%   "Three initialisation strategies --- default SCF, warm-start from
+%    a previous N' run, and random unitary sampling --- can all lead
+%    to different local minima in the orbital rotation landscape.
+%    This section compares their final MP2 energies and iteration counts
+%    for representative molecules."
+%
+% [WHAT TO COVER]
+%   - Compare \texttt{RHF\_init}, \texttt{prev}, \texttt{random} for
+%     CH\textsubscript{2}/6-31G and H\textsubscript{2}O/cc-pVDZ.
+%   - Key question: does random sampling find a lower energy?
+%     If yes: evidence of multiple local minima in the OVOS landscape.
+%   - Report the spread in $E_{\rm corr}$ across 500 random initialisations
+%     (histogram or $\min/\max/\sigma$ across samples).
+%
+% [FIGURE]
+%   x-axis: $N'_{\rm act.unocc}$ | y-axis: $E_{\rm corr}$ (Hartree)
+%   Three curves: default, prev, best-of-random.
+%   Caption: ``Comparison of final OVOS correlation energies for three
+%   initialisation strategies, [molecule]/[basis]."
+%
+% [TABLE]
+%   Columns: Molecule | Basis | $N'$ | Init | $E_{\rm corr}$ | Iterations
+%   Caption: ``OVOS results for three initialisation strategies."
+%
+% [LEAD-IN TO §6.5]
+%   "The sensitivity of energy recovery to the choice of basis set
+%    is examined in the following section."
+% ---------------------------------------------------------------
+
+\section{Basis Set Dependence}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 6.5]
+%   "The dimension of the virtual orbital space grows rapidly with
+%    basis set size, affecting both the absolute correlation energy
+%    and the fraction captured by a fixed $N'$. This section
+%    investigates how the $\eta$-vs-$N'$ curve changes across basis sets."
+%
+% [WHAT TO COVER]
+%   - Compare 6-31G, cc-pVDZ, cc-pVTZ for one or two molecules (e.g. CH\textsubscript{2}, N\textsubscript{2}).
+%   - Key question: does a larger basis set require proportionally more
+%     active virtuals to achieve the same $\eta$?
+%   - Discuss physical interpretation: larger basis has more diffuse
+%     functions; their contribution to dynamical correlation.
+%
+% [FIGURE]
+%   x-axis: $N'_{\rm act.unocc}/N_{\rm act.unocc}$ | y-axis: $\eta$
+%   One curve per basis set; dashed line at $\eta=0.9$.
+%   Caption: ``Basis set dependence of energy recovery for [molecule].
+%   A larger basis set (more virtual orbitals) shifts the curve to the right,
+%   requiring a larger fraction of active virtuals for the same $\eta$.''
+%
+% [LEAD-IN TO §6.6]
+%   "A direct numerical comparison with the results published by
+%    Adamowicz \& Bartlett is made in the following section."
+% ---------------------------------------------------------------
+
+\section{Comparison with Adamowicz and Bartlett (1987)}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 6.6]
+%   "The benchmark test case of Adamowicz \& Bartlett \cite{Adamowicz1987}
+%    is the CH\textsubscript{2} molecule (triplet ground state). This section
+%    compares the OVOS energy recovery curves obtained in this work with
+%    those reported in Table I of the original paper."
+%
+% [WHAT TO COVER]
+%   - Direct comparison of $E_{\rm corr}(N')$ for CH\textsubscript{2}.
+%   - Discuss differences: UHF vs.~RHF reference, basis set version, geometry.
+%   - Consider showing a small table with side-by-side values.
+%   - If agreement is within expected accuracy: confirms correctness.
+%   - If differences: explain and quantify their source.
+%
+% [TABLE]
+%   Columns: $N'_{\rm act.unocc}$ | $E_{\rm corr}^{\rm A\&B}$ |
+%            $E_{\rm corr}^{\rm this work}$ | Difference
+%   Caption: ``Comparison of OVOS correlation energies for
+%   CH\textsubscript{2} with values from Adamowicz \& Bartlett
+%   \cite{Adamowicz1987}. Differences may arise from basis set
+%   and reference wavefunction choices.''
+%
+% [LEAD-IN TO §6.7]
+%   "The computational efficiency of the OVOS algorithm, and how
+%    it scales with system and basis set size, is assessed in
+%    the following section."
+% ---------------------------------------------------------------
+
+\section{Computational Cost}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 6.7]
+%   "The practical value of OVOS depends on its computational overhead
+%    relative to a full-space MP2 calculation. This section reports
+%    wall-clock timings, identifies the algorithmic bottleneck,
+%    and assesses empirical scaling with $N'_{\rm act.unocc}$."
+%
+% [WHAT TO COVER]
+%   - Timing data from \texttt{branch/profil/} profiling results.
+%   - Identify bottleneck: is it integral transformation, Hessian assembly,
+%     or matrix inversion? (profil/ .txt files reveal this.)
+%   - Theoretical scaling: Hessian assembly $\mathcal{O}(N'^2 N_{\rm inact}^2 N_{\rm occ}^2)$;
+%     integral transform $\mathcal{O}(N_{\rm basis}^4)$.
+%   - Plot empirical scaling: log-log fit to extract exponent.
+%   - Compare: OVOS overhead vs.~savings from reduced subsequent correlation steps.
+%
+% [FIGURE]
+%   x-axis: $N_{\rm act.unocc}$ (log scale) | y-axis: Wall-clock time / s (log scale)
+%   Points for each molecule/basis; log-log linear fit.
+%   Caption: ``Empirical scaling of OVOS wall-clock time with virtual
+%   orbital count $N_{\rm act.unocc}$. The line shows a power-law fit;
+%   the exponent is compared to the theoretical prediction.''
+%
+% [LEAD-IN TO §6.8 (Brueckner)]
+%   "Having established the energy performance and cost of OVOS,
+%    the following section examines whether the converged orbitals
+%    exhibit the Brueckner property (reduced T1 amplitudes) predicted
+%    by theory."
+% ---------------------------------------------------------------
+
+% ---------------------------------------------------------------
+% NEW RESULT SECTION: T1 Amplitudes and the Brueckner Connection
+% ---------------------------------------------------------------
+% Goal: Provide numerical evidence that OVOS MOs satisfy the
+%       Brueckner condition (T1 → 0) better than canonical HF MOs.
+%
+% Suggested analysis:
+%   - For each (molecule, N_virt) after OVOS convergence, compute
+%     the MP1 single amplitudes t_i^a (occupied → active virtual)
+%     in the OVOS orbital basis and compare to the HF basis.
+%   - Plot ||T1||_F (Frobenius norm of T1 amplitude tensor) vs.
+%     N_virt/N_virt^max for HF and OVOS bases.
+%   - Expected: ||T1||^OVOS < ||T1||^HF, approaching zero as
+%     N'_virt → N_virt (recovering full-space OO-MP2 limit).
+%   - Tabulate the T1 diagnostic (||T1||_F / sqrt(n_occ * n_virt))
+%     for at least two molecules (e.g. H₂O and N₂).
+%   - Cite \cite{Lee2018} for the OO-MP2/Brueckner connection.
+%
+% Note: If T1 amplitudes are not directly stored in your current
+%       implementation, this analysis can be done in a post-processing
+%       step using the converged MO coefficients and PySCF MP2.
+% ---------------------------------------------------------------
+\section{T1 Amplitudes and the Brueckner Orbital Connection}
+\label{sec:results_brueckner}
+
+% ---------------------------------------------------------------
+% NEW RESULT SECTION: OVOS Orbitals as a VQE Reference State
+% ---------------------------------------------------------------
+% Goal: Quantify the practical benefit of OVOS MOs for quantum
+%       computing by computing the reference-state overlap and
+%       estimating qubit/circuit savings.
+%
+% Suggested analysis:
+%   (a) Reference-state overlap
+%       - For small molecules (H₂, LiH, H₂O in minimal/small basis),
+%         compute the FCI ground state using PySCF fci.FCI().
+%       - Compute the overlap F = |⟨Φ_ref|Ψ_FCI⟩|² for:
+%           * |Φ_HF⟩ (standard HF reference)
+%           * |Φ_OVOS⟩ (OVOS-optimised reference, varying N'_virt)
+%       - Plot F_OVOS vs N'_virt/N_virt^max and compare to F_HF.
+%       - Table: molecule | basis | N'_virt | F_HF | F_OVOS | ΔF
+%
+%   (b) Resource estimate
+%       - Qubit count: Q = 2(N_occ + N'_virt) for JW encoding.
+%       - UCCSD parameter count: N_occ * N'_virt (singles) +
+%         N_occ^2 * N'_virt^2 / 4 (doubles).
+%       - Tabulate Q and n_params for HF vs OVOS at η = 90% for
+%         each test molecule.
+%
+% Notes:
+%   - This section is primarily theoretical/numerical estimation;
+%     actual VQE circuit runs are outside the scope of this thesis
+%     (discussed in Outlook §8.3).
+%   - Cite \cite{Peruzzo2014, Cao2019, deGracia2024, Seeley2012}
+%     for VQE and qubit encoding background.
+% ---------------------------------------------------------------
+\section{OVOS Orbitals as a VQE Reference State: Resource Estimates}
+\label{sec:results_vqe}
