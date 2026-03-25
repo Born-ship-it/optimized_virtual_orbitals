@@ -2625,7 +2625,7 @@ if False: # Done with dissociation curve.
 		max_parallel_cores = min(max_parallel_cores, 10)
 		
 		# Define Li2 geometries (in Angstrom)
-		distances = np.arange(2.5, 6.1, 0.1)  
+		distances = np.arange(2.5, 6.1, 0.1)  # Total points: 36
 		geometries = [f"Li .0 .0 .0; Li .0 .0 {d:.1f}" for d in distances]
 		
 		# Setup parameters for worker function

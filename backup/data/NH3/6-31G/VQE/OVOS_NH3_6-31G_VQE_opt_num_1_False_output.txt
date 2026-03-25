@@ -1,0 +1,19 @@
+
+Running OVOS with VQE optimization for N 0 0 0; H 0 0 1.012; H 0 0.935 -0.262; H 0 -0.935 -0.262 in basis 6-31G with 100% active virtual orbitals and include_active_kappa = False...
+Number of electrons: 10, Number of orbitals: 15
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 10 active virtual orbitals (out of 10 total virtual orbitals).
+
+#### Active and inactive spaces ####
+Total number of spin-orbitals:    30
+Active occupied spin-orbitals:    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Active unoccupied spin-orbitals:  [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+Inactive unoccupied spin-orbs:    []
+
+
+#### OVOS Iteration 1 ####
+    [20/20]: MP2 energy = -0.114440620687
+
+Optimization finished. Final MP2 energy = -56.25771290448701 Hartree. (ΔE_corr = -0.11444062068733483 Hartree)
+OVOS optimized orbitals are restricted (RHF-like).
+
