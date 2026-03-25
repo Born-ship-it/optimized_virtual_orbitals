@@ -392,6 +392,8 @@ These results indicate that the choice of basis set has a significant impact on 
 Larger basis sets have more virtual orbitals, which can capture more correlation energy, ...
 
 
+
+
 \section{Comparison with Adamowicz and Bartlett (1987)}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.6]
@@ -439,8 +441,12 @@ Adamowicz \& Bartlett's 1987 paper presents OVOS results for the CH\textsubscrip
     \end{tabular}
     \caption{Comparison of OVOS correlation energies for CH\textsubscript{2} with values from Adamowicz \& Bartlett \cite{Adamowicz1987}. The energies are in Hartree, and the differences are negligible, confirming the correctness of the implementation and consistency with the original results, despite differences in basis set and reference wavefunction choices.}
     \label{tab:comparison_AB}
+\end{table}
 
 Looking past not being able to replicate the exact setup of Adamowicz \& Bartlett, the results show a behaviour that is consistent with their findings, with the energy recovery curve showing a rapid increase in correlation energy recovered as $N'_{\rm act.unocc}$ increases, with the increase in basis set size leading to a higher correlation energy recovery at the same $N'_{\rm act.unocc}$, as expected from the previous section. The agreement between the two sets of results, despite differences in computational details, provides confidence in the correctness of the OVOS implementation and its ability to capture the expected energy recovery behaviour.
+
+
+
 
 \section{Computational Cost}
 % ---------------------------------------------------------------
@@ -473,8 +479,34 @@ Looking past not being able to replicate the exact setup of Adamowicz \& Bartlet
 %    by theory."
 % ---------------------------------------------------------------
 
+Practically speaking, the computational cost of the OVOS algorithm is an important consideration for its applicability to larger systems. In this section, I report ...
+
+It is worth mentioning that it is relatively inexpensive to compute the MP2 correlation energy for bigger basis sets, in software packages like PySCF... I highlight here PySCF MP2 for the test molecule H\textsubscript{2}O in the cc-pVTZ basis, takes ... seconds, while the OVOS algorithm takes ... seconds at $25\%$, $N'_{\rm act.unocc} = ...$ (Recovers ...\%) and at $50\%$, $N'_{\rm act.unocc} = ....$ (Recovers ...\%). For which the OVOS algorthm is ... times more  expensive than the MP2 calculation at $25\%$ and ... times more expensive at $50\%$.
+
+Profilling the OVOS code for a test molecule in a few active unoccupied orbitals for two different basis sets reveals that the bottleneck steps in the OVOS algorithm are the ..., which scales as ..., and the ..., which scales as ..., see Table~\ref{tab:profiling}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lcc}
+        \hline
+        Step & Time (s) & Scaling \\
+        \hline
+        Integral transformation & ... & $\mathcal{O}(N_{\rm basis}^4)$ \\
+        Hessian assembly & ... & $\mathcal{O}(N'^2 N_{\rm inact}^2 N_{\rm occ}^2)$ \\
+        Matrix inversion & ... & $\mathcal{O}(N'^3)$ \\
+        Other steps & ... & ... \\
+        \hline
+    \end{tabular}
+    \caption{Profiling of OVOS algorithm steps for [molecule]/[basis] with $N'_{\rm act.unocc} = ...$. The integral transformation and Hessian assembly are identified as the bottlenecks, with their respective theoretical scalings.}
+    \label{tab:profiling}
+\end{table}
+
+
+
+\section{T1 Amplitudes and the Brueckner Orbital Connection}
+\label{sec:results_brueckner}
 % ---------------------------------------------------------------
-% NEW RESULT SECTION: T1 Amplitudes and the Brueckner Connection
+% T1 Amplitudes and the Brueckner Connection
 % ---------------------------------------------------------------
 % Goal: Provide numerical evidence that OVOS MOs satisfy the
 %       Brueckner condition (T1 → 0) better than canonical HF MOs.
@@ -490,20 +522,38 @@ Looking past not being able to replicate the exact setup of Adamowicz \& Bartlet
 %   - Tabulate the T1 diagnostic (||T1||_F / sqrt(n_occ * n_virt))
 %     for at least two molecules (e.g. H₂O and N₂).
 %   - Cite \cite{Lee2018} for the OO-MP2/Brueckner connection.
+% THIS!!!! : https://arxiv.org/pdf/1807.06185
 %
 % Note: If T1 amplitudes are not directly stored in your current
 %       implementation, this analysis can be done in a post-processing
 %       step using the converged MO coefficients and PySCF MP2.
+% THIS!!! : https://link.springer.com/content/pdf/10.1007/bf00549693.pdf
+% EH... : https://fy.chalmers.se/~f3ail/Publications/LowdinFinal.pdf
 % ---------------------------------------------------------------
-\section{T1 Amplitudes and the Brueckner Orbital Connection}
-\label{sec:results_brueckner}
 
+In this section, we investigate the connection between the OVOS-optimised orbitals and Brueckner orbitals, by the maximum-overlap criterion and Brillouinn-Brueckner condition. Brueckner orbitals are defined as the orbitals for which the single excitation amplitudes (T1) vanish, i.e. the excited determinants with one electron promoted from an occupied to a virtual orbital do not contribute to the wavefunction. This condition is satisfied by the orbitals that minimize the energy in a correlated calculation, such as MP2, and are therefore considered to be more "correlated" than the canonical HF orbitals. 
+
+Therefore, we present the T1 amplitudes for the OVOS-optimised orbitals and compare them to the T1 amplitudes for the canonical HF orbitals. We compute the Frobenius norm of the T1 amplitude tensor, $||T1||_F$, for both sets of orbitals as a function of the number of active virtual orbitals $N'_{\rm act.unocc}$, and plot the results in Figure~\ref{fig:T1_comparison}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/Placeholder.png}
+    \caption{Comparison of the Frobenius norm of the T1 amplitude tensor, $||T1||_F$, for OVOS-optimised orbitals and canonical HF orbitals as a function of the number of active virtual orbitals $N'_{\rm act.unocc}$ for [molecule]/[basis].}
+    \label{fig:T1_comparison} 
+\end{figure}
+
+It results in the T1 amplitudes for the OVOS-optimised orbitals being significantly smaller than those for the canonical HF orbitals, and approaching zero as $N'_{\rm act.unocc}$ increases, consistent with the Brueckner condition. This provides numerical evidence that the OVOS-optimised orbitals are indeed closer to Brueckner orbitals than the canonical HF orbitals, and therefore can be expected to capture more correlation energy in subsequent calculations.
+
+
+\section{OVOS Orbitals as a VQE Reference State: Resource Estimates}
+\label{sec:results_vqe}
 % ---------------------------------------------------------------
-% NEW RESULT SECTION: OVOS Orbitals as a VQE Reference State
+% OVOS Orbitals as a VQE Reference State
 % ---------------------------------------------------------------
 % Goal: Quantify the practical benefit of OVOS MOs for quantum
-%       computing by computing the reference-state overlap and
-%       estimating qubit/circuit savings.
+%       computing by computing the reference-state overlap, 
+%       computing energy VQE optimization ... 
+%       and estimating qubit/circuit savings.
 %
 % Suggested analysis:
 %   (a) Reference-state overlap
@@ -515,7 +565,14 @@ Looking past not being able to replicate the exact setup of Adamowicz \& Bartlet
 %       - Plot F_OVOS vs N'_virt/N_virt^max and compare to F_HF.
 %       - Table: molecule | basis | N'_virt | F_HF | F_OVOS | ΔF
 %
-%   (b) Resource estimate
+%   (b) VQE wavefunction optimizaton
+%       - does the energy landscape become easier 
+%       to navigate with OVOS orbitals?
+%       - In less iterations? 
+%       - With less energy fluctuations?
+%       - Better energy convergence?
+%
+%   (c) Resource estimate
 %       - Qubit count: Q = 2(N_occ + N'_virt) for JW encoding.
 %       - UCCSD parameter count: N_occ * N'_virt (singles) +
 %         N_occ^2 * N'_virt^2 / 4 (doubles).
@@ -529,5 +586,13 @@ Looking past not being able to replicate the exact setup of Adamowicz \& Bartlet
 %   - Cite \cite{Peruzzo2014, Cao2019, deGracia2024, Seeley2012}
 %     for VQE and qubit encoding background.
 % ---------------------------------------------------------------
-\section{OVOS Orbitals as a VQE Reference State: Resource Estimates}
-\label{sec:results_vqe}
+
+Need to still compute the overlap in wavefunction ...
+
+
+VQE... 
+
+
+
+
+

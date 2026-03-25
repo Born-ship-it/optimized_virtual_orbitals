@@ -1,8 +1,26 @@
-\begin{thebibliography}{0}
+\begin{thebibliography}{3}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Adamowicz and Bartlett(1987)]{Adamowicz1987}
+L.~Adamowicz and R.~J. Bartlett.
+\newblock Optimized virtual orbital space for high-level correlated calculations.
+\newblock \emph{J. Chem. Phys.}, 86\penalty0 (11):\penalty0 6314--6324, 1987.
+\newblock \doi{10.1063/1.452468}.
+
+\bibitem[Sun et~al.(2018)Sun, Berkelbach, Blunt, Booth, Guo, Li, Liu, McClain, Sayfutyarova, Sharma, Wouters, and Chan]{Sun2018}
+Qiming Sun, Timothy~C. Berkelbach, Nick~S. Blunt, George~H. Booth, Sheng Guo, Zhendong Li, Junzi Liu, James~D. McClain, Elvira~R. Sayfutyarova, Sandeep Sharma, Sebastian Wouters, and Garnet Kin-Lic Chan.
+\newblock {PySCF}: the {P}ython-based simulations of chemistry framework.
+\newblock \emph{Wiley Interdiscip. Rev. Comput. Mol. Sci.}, 8:\penalty0 e1340, 2018.
+\newblock \doi{10.1002/wcms.1340}.
+
+\bibitem[Sun et~al.(2020)Sun, Zhang, Banerjee, Bao, Barbry, Blunt, Bogdanov, Booth, Chen, Cui, Eriksen, Gao, Guo, Hermann, Hermes, Koh, Koval, Lehtola, Li, Liu, Mardirossian, McClain, Motta, Mussard, Pham, Pulkin, Purwanto, Robinson, Ronca, Sayfutyarova, Scheurer, Schurkus, Smith, Sun, Sun, Upadhyay, Wagner, Wang, White, Whitfield, Williamson, Wouters, Yang, Yu, Zhu, Berkelbach, Sharma, Sokolov, and Chan]{Sun2020}
+Qiming Sun, Xing Zhang, Samragni Banerjee, Peng Bao, Marc Barbry, Nick~S. Blunt, Nikolay~A. Bogdanov, George~H. Booth, Jia Chen, Zhi-Hao Cui, Janus~Juul Eriksen, Yang Gao, Sheng Guo, Jan Hermann, Matthew~R. Hermes, Kevin Koh, Peter Koval, Susi Lehtola, Zhendong Li, Junzi Liu, Narbe Mardirossian, James~D. McClain, Mario Motta, Bastien Mussard, Hong-Zhou Pham, Artem Pulkin, Wirawan Purwanto, Paul~J. Robinson, Enrico Ronca, Elvira~R. Sayfutyarova, Maximilian Scheurer, Henry~F. Schurkus, James E.~T. Smith, Chong Sun, Shi-Ning Sun, Shiv Upadhyay, Lucas~K. Wagner, Xiao Wang, Alec White, James~Daniel Whitfield, Mark~J. Williamson, Sebastian Wouters, Jun Yang, Jason~M. Yu, Tianyu Zhu, Timothy~C. Berkelbach, Sandeep Sharma, Alexander~Yu. Sokolov, and Garnet Kin-Lic Chan.
+\newblock Recent developments in the {PySCF} program package.
+\newblock \emph{J. Chem. Phys.}, 153:\penalty0 024109, 2020.
+\newblock \doi{10.1063/5.0006074}.
 
 \end{thebibliography}

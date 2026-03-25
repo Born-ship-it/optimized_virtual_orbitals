@@ -74,6 +74,9 @@
 %   - State clearly what counts as "full" MP2 (the reference energy).
 % ---------------------------------------------------------------
 
+In this chapter, we provide a comprehensive account of the computational details underlying all calculations presented in this thesis. This includes the software and libraries used, the hardware enviroment, the molecular geometries and basis sets employed, the settings for the reference SCF calculations, the specific hyperparameters of the OVOS optimisation, and the data storage format. The goal is to ensure that all results are fully reproducible by any reader with access to similar computational resources.
+
+
 \section{Software and Libraries}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 5.1]
@@ -101,6 +104,30 @@
 %    is described in the following section."
 % ---------------------------------------------------------------
 
+In this section we detail the software enviroment used for all calculations in this thesis. The primary quantum chemistry calculations were performed using PySCF version X.Y cite..., and SlowQuant version A.B.C cite ... . Numerical operations were carried out using NumPy version M.N.O and SciPy version P.Q.R, a complete list of which is provided in Table~\ref{tab:software}.
+
+\begin{table}[H]
+    \centering
+    \caption{Software packages used in this work.}
+    \label{tab:software}
+    \begin{tabular}{llll}
+        \toprule
+        Package & Version & Purpose & Citation \\
+        \midrule
+        PySCF & X.Y & Quantum chemistry calculations & ... \\
+        SlowQuant & A.B.C & Alternative quantum chemistry package & ... \\
+        NumPy & M.N.O & Numerical operations & ... \\
+        SciPy & P.Q.R & Scientific computing & ... \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+
+The OVOS method was implemented as a standalone Python class, with source code provided in Appendix~\ref{app:code}. All calculations were executed in a single-threaded mode to ensure reproducibility, with the environment variables \texttt{OPENBLAS\_NUM\_THREADS} and \texttt{OMP\_NUM\_THREADS} set to 1. The operating system used was Windows in Microsoft Visual Studio Code's WSL ubuntu virtual machine, as PySCF needs a Unix-like environment, and the Python distribution was standard Python.
+
+The hardware environment on which all calculations were run is described in the following section.
+
 \section{Hardware}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 5.2]
@@ -120,6 +147,8 @@
 %   "The molecular test set and the geometries used for all calculations
 %    are specified in the following section."
 % ---------------------------------------------------------------
+
+The hardware environment used for all calculations in this thesis consisted of a CPU model 13th Gen Intel(R) Core(TM) i7--13620H with 10 cores and 16 GB of RAM. The operating system was Windows 11 Home (A MSI KATANA 15 B13V laptop). All calculations were executed in a single-threaded mode, ensuring that the results are reproducible regardless of the number of cores available. 
 
 \section{Molecular Geometries}
 % ---------------------------------------------------------------
@@ -143,6 +172,8 @@
 %    the following section, along with the resulting orbital space dimensions."
 % ---------------------------------------------------------------
 
+The thesis focuses on a test set of nine molecules that represent a variety of electronic structures, all abundantly used in quantum chemistry benchmarks, and found in nature. These include diatomic molecules (CO, HF), small polyatomic molecules (H\textsuperscript{2}O, NH\textsuperscript{3}), and a simple open-shell molecule (LiH). All geometries were kept fixed throughout the calculations, with no geometry optimisation performed. The specific coordinates used for each molecule are listed in Table~\ref{tab:geometries}, along with their spin multiplicity, charge, and point group symmetry. The bond lengths and angles were taken from experimental values reported in the literature, ensuring that the test set is representative of real molecular systems. The coordinate unit used is Ångström.
+
 \begin{table}[H]
 \centering
 \caption{Molecular geometries and electronic structure parameters used in this work.}
@@ -151,18 +182,16 @@
 \toprule
 Molecule & Geometry (Å) & Multiplicity & Charge & Symmetry \\
 \midrule
-\ce{H2}  & $r(\mathrm{H-H}) = 0.74144$ & 1 & 0 & $D_{\infty h}$ \\
 LiH      & $r(\mathrm{Li-H}) = 1.595$  & 1 & 0 & $C_{\infty v}$ \\
 \ce{H2O} & $r = 0.957$, $\angle = 104.5°$ & 1 & 0 & $C_{2v}$ \\
-\ce{CH2} & planar, see text             & 3 & 0 & $C_{2v}$ \\
-\ce{BH3} & $r(\mathrm{B-H}) = 1.19$, planar & 1 & 0 & $D_{3h}$ \\
-\ce{N2}  & $r(\mathrm{N-N}) = 1.10$    & 1 & 0 & $D_{\infty h}$ \\
 CO       & $r(\mathrm{C-O}) = 1.128$   & 1 & 0 & $C_{\infty v}$ \\
 HF       & $r(\mathrm{H-F}) = 0.917$   & 1 & 0 & $C_{\infty v}$ \\
 \ce{NH3} & $r(\mathrm{N-H}) = 1.012$   & 1 & 0 & $C_{3v}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+The basis-set-specific orbital space dimensions for each molecule are given in the following section, along with a description of the basis sets employed.
 
 \section{Basis Sets}
 % ---------------------------------------------------------------
@@ -188,6 +217,8 @@ HF       & $r(\mathrm{H-F}) = 0.917$   & 1 & 0 & $C_{\infty v}$ \\
 %   "With molecular geometries and basis sets fixed, the SCF reference
 %    calculations from which OVOS begins are summarised in the following section."
 % ---------------------------------------------------------------
+
+
 
 \section{Reference SCF Calculations}
 % ---------------------------------------------------------------
