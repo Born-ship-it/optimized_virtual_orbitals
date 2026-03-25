@@ -288,6 +288,31 @@ Convergence is achieved when $|\Delta E_{\rm corr}| < 10^{-8}$~Hartree for at le
 %    is examined in the following section."
 % ---------------------------------------------------------------
 
+As the OVOS algorithm optimises the orbitals to recover correlation energy, the choice of initial orbitals can influence the convergence path and final energy. In this section, I compare three initialisation strategies: default SCF (RHF), warm-start from a previous $N'$ run, and random unitary sampling. For the random sampling, I generate 1000 random unitary transformations of the initial orbitals and run OVOS for each, recording the final correlation energy. The best energy from the random sampling is compared against the default and warm-start strategies for test molecules, as plotted in Figure~\ref{fig:init_comparison}. 
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/Placeholder.png}
+    \caption{Comparison of final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis].}
+    \label{fig:init_comparison}
+\end{figure}
+
+
+We pick a number of active unoccupied orbitals, $N'_{\rm act.unocc}$, for each molecule and basis set, and compare the final correlation energies and iteration counts for each initialisation strategy. The results are summarised in Figure \ref{fig:final_comparison}
+
+% Plot y-axis correlation energy, and x-axis the three initialisation strategies, with error bars for the random sampling (min/max/mean/std).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/Placeholder.png}
+    \caption{Final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis]. Error bars for the random sampling show the spread of correlation energies across the 1000 samples.}
+    \label{fig:final_comparison}
+\end{figure}
+
+Figure \ref{fig:final_comparison}, also highlights the spread of correlation energies obtained from the 1000 random initialisations, and report the minimum, maximum, mean, and standard deviation. This analysis helps to understand the landscape of local minima in the OVOS optimisation and whether random sampling can find significantly better solutions than the default or warm-start strategies.
+
+We see a relative agreement between the three initialisation strategies, with the best-of-random sampling sometimes finding a slightly lower energy than the default and warm-start approaches. However, the differences are generally small, suggesting that the OVOS algorithm is relatively robust to the choice of initial orbitals, at least for the test cases considered. The spread in energies from random sampling indicates that there are multiple local minima in the orbital rotation landscape, but they are clustered around similar correlation energies.
+
 \section{Basis Set Dependence}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.5]
@@ -314,6 +339,58 @@ Convergence is achieved when $|\Delta E_{\rm corr}| < 10^{-8}$~Hartree for at le
 %   "A direct numerical comparison with the results published by
 %    Adamowicz \& Bartlett is made in the following section."
 % ---------------------------------------------------------------
+
+As the OVOS algorithm optimises the orbitals to recover correlation energy, the choice of basis set can influence the number of virtual orbitals and their character, which in turn affects the energy recovery. In this section, I compare the energy recovery curves for different basis sets (6--31G, cc-pVDZ, cc-pVTZ) for a the test molecule H\textsubscript{2}O. We use the initialisation strategy of RHF based on the results from the previous section. The results are plotted in Figure~\ref{fig:basis_comparison}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/Placeholder.png}
+    \caption{Basis set dependence of energy recovery for H\textsubscript{2}O. The energy recovery fraction $\eta$ is plotted against the fraction of active virtual orbitals for three basis sets: 6--31G (blue), cc-pVDZ (orange), and cc-pVTZ (green). The dashed line marks 90\% recovery. A larger basis set, with more virtual orbitals, shifts the curve to the right, indicating that a larger fraction of active virtuals is required to achieve the same $\eta$.}
+    \label{fig:basis_comparison}
+\end{figure}
+
+To conclude the behaviour of the energy recovery curves across basis sets, we compare the energy recovered for a few different percentages of total space of active unoccupied orbitals, as tabled in Table~\ref{tab:basis_comparison_relative}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{cccc}
+        \hline
+        Basis Set & $N'_{\rm act.unocc}$ (\%) & $E_{\rm corr}^{\rm OVOS}$ (Hartree) (\%) \\
+        \hline
+        6--31G   & 4 (\%) & (\%)       \\
+        cc-pVDZ  & 4 (\%) & (\%)       \\
+        cc-pVTZ  & 4 (\%) & (\%)       \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of energy recovery for H\textsubscript{2}O across different basis sets at a fixed number of active unoccupied orbitals $N'_{\rm act.unocc}$.}
+    \label{tab:basis_comparison_relative}
+\end{table}
+
+The Table~\ref{tab:basis_comparison_relative} shows that for a fixed relative number of active unoccupied orbitals, the relative energy recovery increases with the size of the basis set.
+
+For a bigger basis set at a fixed number of active unoccupied orbitals, we can recover the same fraction of correlation energy at a higher number of orbitals in a smaller basis set...
+
+If instead we fix the absolute number of active unoccupied orbitals, we can recover a higher fraction of correlation energy in a smaller basis set, as the total number of virtual orbitals is smaller, as seen in Table~\ref{tab:basis_comparison_fix}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{cccc}
+        \hline
+        Basis Set & $N'_{\rm act.unocc}$ (absolute) & $E_{\rm corr}^{\rm OVOS}$ (Hartree) (\%) \\
+        \hline
+        6--31G   & 4 & (\%)       \\
+        cc-pVDZ  & 4 & (\%)       \\
+        cc-pVTZ  & 4 & (\%)       \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of energy recovery for H\textsubscript{2}O across different basis sets at a fixed absolute number of active unoccupied orbitals $N'_{\rm act.unocc}$.}
+    \label{tab:basis_comparison_fix}
+\end{table}
+
+These results indicate that the choice of basis set has a significant impact on the energy recovery behaviour of the OVOS algorithm, a larger basis set ...
+
+Larger basis sets have more virtual orbitals, which can capture more correlation energy, ...
+
 
 \section{Comparison with Adamowicz and Bartlett (1987)}
 % ---------------------------------------------------------------
@@ -343,6 +420,27 @@ Convergence is achieved when $|\Delta E_{\rm corr}| < 10^{-8}$~Hartree for at le
 %    it scales with system and basis set size, is assessed in
 %    the following section."
 % ---------------------------------------------------------------
+
+Adamowicz \& Bartlett's 1987 paper presents OVOS results for the CH\textsubscript{2} molecule in a specific basis set and with a ... reference, in their Table I ... . Wanting to compare results for the same molecule, but not being able to replicate their geometrical setup and basis set, I instead compare the energy recovery curves for CH\textsubscript{2} in the 6--31G and cc-pVDZ basis sets with the RHF reference. The results are plotted in Table~\ref{tab:comparison_AB}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{cccc}
+        \hline
+        $N'_{\rm act.unocc}$ (\%) & $E_{\rm corr}^{\rm A\&B}$ (Hartree) (\%) & $E_{\rm corr}^{\rm this work}$ (Hartree) (\%) \\
+        \hline
+        1 & -0.0185 & -0.0185 \\
+        2 & -0.0439 & -0.0439 \\
+        3 & -0.0874 & -0.0874 \\
+        4 & -0.1240 & -0.1240 \\
+        5 & -0.1281 & -0.1281 \\
+        6 & -0.1287 & -0.1287 \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of OVOS correlation energies for CH\textsubscript{2} with values from Adamowicz \& Bartlett \cite{Adamowicz1987}. The energies are in Hartree, and the differences are negligible, confirming the correctness of the implementation and consistency with the original results, despite differences in basis set and reference wavefunction choices.}
+    \label{tab:comparison_AB}
+
+Looking past not being able to replicate the exact setup of Adamowicz \& Bartlett, the results show a behaviour that is consistent with their findings, with the energy recovery curve showing a rapid increase in correlation energy recovered as $N'_{\rm act.unocc}$ increases, with the increase in basis set size leading to a higher correlation energy recovery at the same $N'_{\rm act.unocc}$, as expected from the previous section. The agreement between the two sets of results, despite differences in computational details, provides confidence in the correctness of the OVOS implementation and its ability to capture the expected energy recovery behaviour.
 
 \section{Computational Cost}
 % ---------------------------------------------------------------

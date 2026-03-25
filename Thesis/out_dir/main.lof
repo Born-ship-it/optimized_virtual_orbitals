@@ -7,8 +7,6 @@
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {6.1}{\ignorespaces Convergence of the MP2 correlation energy for HF in the 6--31G basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}}{13}{figure.caption.11}%
 \contentsline {figure}{\numberline {6.2}{\ignorespaces Convergence behavior of the MP2 correlation energy for HF in the 6--31G basis with $N'_{\rm act.unocc} = 3$ active virtual spin-orbitals. The dashed line marks the convergence threshold of $10^{-8}$~Hartree.}}{14}{figure.caption.12}%
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Comparison of final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis].}}{15}{figure.caption.13}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces Final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis]. Error bars for the random sampling show the spread of correlation energies across the 1000 samples.}}{16}{figure.caption.14}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Basis set dependence of energy recovery for H\textsubscript {2}O. The energy recovery fraction $\eta $ is plotted against the fraction of active virtual orbitals for three basis sets: 6--31G (blue), cc-pVDZ (orange), and cc-pVTZ (green). The dashed line marks 90\% recovery. A larger basis set, with more virtual orbitals, shifts the curve to the right, indicating that a larger fraction of active virtuals is required to achieve the same $\eta $.}}{17}{figure.caption.15}%

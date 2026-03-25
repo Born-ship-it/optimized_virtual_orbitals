@@ -8,9 +8,5 @@
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {6.1}{\ignorespaces Validation of the OVOS implementation against PySCF \lstinline [language=Python]|mp.MP2|. Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the 6--31G basis for this validation.}}{12}{table.caption.9}%
 \contentsline {table}{\numberline {6.2}{\ignorespaces Summary of OVOS results for HF in the 6--31G basis at each $N'_{\rm act.unocc}$.}}{14}{table.caption.10}%
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\contentsline {table}{\numberline {A.1}{\ignorespaces Summary of two-electron integral notation used in this thesis.}}{23}{table.caption.14}%
-\addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {table}{\numberline {6.3}{\ignorespaces Comparison of energy recovery for H\textsubscript {2}O across different basis sets at a fixed number of active unoccupied orbitals $N'_{\rm act.unocc}$.}}{16}{table.caption.16}%
+\contentsline {table}{\numberline {6.4}{\ignorespaces Comparison of energy recovery for H\textsubscript {2}O across different basis sets at a fixed absolute number of active unoccupied orbitals $N'_{\rm act.unocc}$.}}{17}{table.caption.17}%
