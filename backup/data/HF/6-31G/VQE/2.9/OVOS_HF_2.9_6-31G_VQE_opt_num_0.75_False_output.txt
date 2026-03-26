@@ -1,0 +1,2632 @@
+Number of electrons: 10, Number of orbitals: 11
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 4 active virtual orbitals (out of 6 total virtual orbitals).
+
+#### Active and inactive spaces ####
+Total number of spin-orbitals:    22
+Active occupied spin-orbitals:    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Active unoccupied spin-orbitals:  [10, 11, 12, 13, 14, 15, 16, 17]
+Inactive unoccupied spin-orbs:    [18, 19, 20, 21]
+
+
+#### OVOS Iteration 1 ####
+    [8/12]: MP2 energy = -0.194534475958
+
+#### OVOS Iteration 2 ####
+    [8/12]: MP2 energy = -0.126315426081
+
+#### OVOS Iteration 3 ####
+    [8/12]: MP2 energy = -0.215221255044
+            ΔE = -8.89e-02  ‖grad‖ = 1.27e-01  
+
+#### OVOS Iteration 4 ####
+    [8/12]: MP2 energy = -0.161668368003
+            ΔE = 5.36e-02  ‖grad‖ = 2.41e-01  (energy increased!)
+
+#### OVOS Iteration 5 ####
+    [8/12]: MP2 energy = -0.197715973293
+            ΔE = -3.60e-02  ‖grad‖ = 2.39e-01  
+
+#### OVOS Iteration 6 ####
+    [8/12]: MP2 energy = -0.160482303005
+            ΔE = 3.72e-02  ‖grad‖ = 8.17e-02  (energy increased!)
+
+#### OVOS Iteration 7 ####
+    [8/12]: MP2 energy = -0.180997971351
+            ΔE = -2.05e-02  ‖grad‖ = 9.16e-02  
+
+#### OVOS Iteration 8 ####
+    [8/12]: MP2 energy = -0.204970311994
+            ΔE = -2.40e-02  ‖grad‖ = 1.08e-01  
+
+#### OVOS Iteration 9 ####
+    [8/12]: MP2 energy = -0.233463362291
+            ΔE = -2.85e-02  ‖grad‖ = 9.80e-02  
+
+#### OVOS Iteration 10 ####
+    [8/12]: MP2 energy = -0.233043210000
+            ΔE = 4.20e-04  ‖grad‖ = 1.54e-01  (energy increased!)
+
+#### OVOS Iteration 11 ####
+    [8/12]: MP2 energy = -0.235390885063
+            ΔE = -2.35e-03  ‖grad‖ = 9.23e-02  
+
+#### OVOS Iteration 12 ####
+    [8/12]: MP2 energy = -0.239975231586
+            ΔE = -4.58e-03  ‖grad‖ = 8.34e-02  
+
+#### OVOS Iteration 13 ####
+    [8/12]: MP2 energy = -0.232461657241
+            ΔE = 7.51e-03  ‖grad‖ = 1.05e-01  (energy increased!)
+
+#### OVOS Iteration 14 ####
+    [8/12]: MP2 energy = -0.239257136117
+            ΔE = -6.80e-03  ‖grad‖ = 9.00e-02  
+
+#### OVOS Iteration 15 ####
+    [8/12]: MP2 energy = -0.227635253509
+            ΔE = 1.16e-02  ‖grad‖ = 1.22e-01  (energy increased!)
+
+#### OVOS Iteration 16 ####
+    [8/12]: MP2 energy = -0.242909246869
+            ΔE = -1.53e-02  ‖grad‖ = 1.84e-02  
+
+#### OVOS Iteration 17 ####
+    [8/12]: MP2 energy = -0.242830727778
+            ΔE = 7.85e-05  ‖grad‖ = 2.38e-02  (energy increased!)
+
+#### OVOS Iteration 18 ####
+    [8/12]: MP2 energy = -0.241739093472
+            ΔE = 1.09e-03  ‖grad‖ = 4.71e-02  (energy increased!)
+
+#### OVOS Iteration 19 ####
+    [8/12]: MP2 energy = -0.234636509577
+            ΔE = 7.10e-03  ‖grad‖ = 1.43e-01  (energy increased!)
+
+#### OVOS Iteration 20 ####
+    [8/12]: MP2 energy = -0.236005539868
+            ΔE = -1.37e-03  ‖grad‖ = 9.08e-02  
+
+#### OVOS Iteration 21 ####
+    [8/12]: MP2 energy = -0.239609688271
+            ΔE = -3.60e-03  ‖grad‖ = 8.94e-02  
+
+#### OVOS Iteration 22 ####
+    [8/12]: MP2 energy = -0.229790192988
+            ΔE = 9.82e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 23 ####
+    [8/12]: MP2 energy = -0.239491101623
+            ΔE = -9.70e-03  ‖grad‖ = 8.61e-02  
+
+#### OVOS Iteration 24 ####
+    [8/12]: MP2 energy = -0.228508407551
+            ΔE = 1.10e-02  ‖grad‖ = 1.22e-01  (energy increased!)
+
+#### OVOS Iteration 25 ####
+    [8/12]: MP2 energy = -0.243043223405
+            ΔE = -1.45e-02  ‖grad‖ = 1.54e-02  
+
+#### OVOS Iteration 26 ####
+    [8/12]: MP2 energy = -0.242970753030
+            ΔE = 7.25e-05  ‖grad‖ = 1.96e-02  (energy increased!)
+
+#### OVOS Iteration 27 ####
+    [8/12]: MP2 energy = -0.242001478506
+            ΔE = 9.69e-04  ‖grad‖ = 4.35e-02  (energy increased!)
+
+#### OVOS Iteration 28 ####
+    [8/12]: MP2 energy = -0.231357824219
+            ΔE = 1.06e-02  ‖grad‖ = 1.31e-01  (energy increased!)
+
+#### OVOS Iteration 29 ####
+    [8/12]: MP2 energy = -0.241165281977
+            ΔE = -9.81e-03  ‖grad‖ = 5.64e-02  
+
+#### OVOS Iteration 30 ####
+    [8/12]: MP2 energy = -0.239426832694
+            ΔE = 1.74e-03  ‖grad‖ = 7.74e-02  (energy increased!)
+
+#### OVOS Iteration 31 ####
+    [8/12]: MP2 energy = -0.235340791666
+            ΔE = 4.09e-03  ‖grad‖ = 1.10e-01  (energy increased!)
+
+#### OVOS Iteration 32 ####
+    [8/12]: MP2 energy = -0.240559285933
+            ΔE = -5.22e-03  ‖grad‖ = 6.38e-02  
+
+#### OVOS Iteration 33 ####
+    [8/12]: MP2 energy = -0.237832325001
+            ΔE = 2.73e-03  ‖grad‖ = 1.00e-01  (energy increased!)
+
+#### OVOS Iteration 34 ####
+    [8/12]: MP2 energy = -0.239529146214
+            ΔE = -1.70e-03  ‖grad‖ = 7.34e-02  
+
+#### OVOS Iteration 35 ####
+    [8/12]: MP2 energy = -0.237235427465
+            ΔE = 2.29e-03  ‖grad‖ = 1.08e-01  (energy increased!)
+
+#### OVOS Iteration 36 ####
+    [8/12]: MP2 energy = -0.238549168126
+            ΔE = -1.31e-03  ‖grad‖ = 8.07e-02  
+
+#### OVOS Iteration 37 ####
+    [8/12]: MP2 energy = -0.236906015703
+            ΔE = 1.64e-03  ‖grad‖ = 1.12e-01  (energy increased!)
+
+#### OVOS Iteration 38 ####
+    [8/12]: MP2 energy = -0.238086952893
+            ΔE = -1.18e-03  ‖grad‖ = 8.37e-02  
+
+#### OVOS Iteration 39 ####
+    [8/12]: MP2 energy = -0.236843180633
+            ΔE = 1.24e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 40 ####
+    [8/12]: MP2 energy = -0.237968682166
+            ΔE = -1.13e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 41 ####
+    [8/12]: MP2 energy = -0.236853279173
+            ΔE = 1.12e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 42 ####
+    [8/12]: MP2 energy = -0.237954095211
+            ΔE = -1.10e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 43 ####
+    [8/12]: MP2 energy = -0.236869080952
+            ΔE = 1.09e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 44 ####
+    [8/12]: MP2 energy = -0.237958353606
+            ΔE = -1.09e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 45 ####
+    [8/12]: MP2 energy = -0.236880066000
+            ΔE = 1.08e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 46 ####
+    [8/12]: MP2 energy = -0.237963581452
+            ΔE = -1.08e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 47 ####
+    [8/12]: MP2 energy = -0.236887060391
+            ΔE = 1.08e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 48 ####
+    [8/12]: MP2 energy = -0.237967421161
+            ΔE = -1.08e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 49 ####
+    [8/12]: MP2 energy = -0.236891737999
+            ΔE = 1.08e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 50 ####
+    [8/12]: MP2 energy = -0.237970137939
+            ΔE = -1.08e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 51 ####
+    [8/12]: MP2 energy = -0.236895157515
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 52 ####
+    [8/12]: MP2 energy = -0.237972158906
+            ΔE = -1.08e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 53 ####
+    [8/12]: MP2 energy = -0.236897873862
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 54 ####
+    [8/12]: MP2 energy = -0.237973753719
+            ΔE = -1.08e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 55 ####
+    [8/12]: MP2 energy = -0.236900162473
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 56 ####
+    [8/12]: MP2 energy = -0.237975068302
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 57 ####
+    [8/12]: MP2 energy = -0.236902160055
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 58 ####
+    [8/12]: MP2 energy = -0.237976180194
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 59 ####
+    [8/12]: MP2 energy = -0.236903937287
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 60 ####
+    [8/12]: MP2 energy = -0.237977132690
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 61 ####
+    [8/12]: MP2 energy = -0.236905533816
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 62 ####
+    [8/12]: MP2 energy = -0.237977952409
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 63 ####
+    [8/12]: MP2 energy = -0.236906974610
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 64 ####
+    [8/12]: MP2 energy = -0.237978657747
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 65 ####
+    [8/12]: MP2 energy = -0.236908277477
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 66 ####
+    [8/12]: MP2 energy = -0.237979262833
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 67 ####
+    [8/12]: MP2 energy = -0.236909456511
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 68 ####
+    [8/12]: MP2 energy = -0.237979779372
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 69 ####
+    [8/12]: MP2 energy = -0.236910523673
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 70 ####
+    [8/12]: MP2 energy = -0.237980217506
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 71 ####
+    [8/12]: MP2 energy = -0.236911489516
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 72 ####
+    [8/12]: MP2 energy = -0.237980586226
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 73 ####
+    [8/12]: MP2 energy = -0.236912363539
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 74 ####
+    [8/12]: MP2 energy = -0.237980893591
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 75 ####
+    [8/12]: MP2 energy = -0.236913154365
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 76 ####
+    [8/12]: MP2 energy = -0.237981146846
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 77 ####
+    [8/12]: MP2 energy = -0.236913869849
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 78 ####
+    [8/12]: MP2 energy = -0.237981352513
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 79 ####
+    [8/12]: MP2 energy = -0.236914517142
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 80 ####
+    [8/12]: MP2 energy = -0.237981516449
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 81 ####
+    [8/12]: MP2 energy = -0.236915102757
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 82 ####
+    [8/12]: MP2 energy = -0.237981643910
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 83 ####
+    [8/12]: MP2 energy = -0.236915632612
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 84 ####
+    [8/12]: MP2 energy = -0.237981739597
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 85 ####
+    [8/12]: MP2 energy = -0.236916112080
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 86 ####
+    [8/12]: MP2 energy = -0.237981807709
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 87 ####
+    [8/12]: MP2 energy = -0.236916546033
+            ΔE = 1.07e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 88 ####
+    [8/12]: MP2 energy = -0.237981851987
+            ΔE = -1.07e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 89 ####
+    [8/12]: MP2 energy = -0.236916938885
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 90 ####
+    [8/12]: MP2 energy = -0.237981875755
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 91 ####
+    [8/12]: MP2 energy = -0.236917294625
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 92 ####
+    [8/12]: MP2 energy = -0.237981881962
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 93 ####
+    [8/12]: MP2 energy = -0.236917616862
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 94 ####
+    [8/12]: MP2 energy = -0.237981873218
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 95 ####
+    [8/12]: MP2 energy = -0.236917908856
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 96 ####
+    [8/12]: MP2 energy = -0.237981851830
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 97 ####
+    [8/12]: MP2 energy = -0.236918173548
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 98 ####
+    [8/12]: MP2 energy = -0.237981819829
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 99 ####
+    [8/12]: MP2 energy = -0.236918413592
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 100 ####
+    [8/12]: MP2 energy = -0.237981779002
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 101 ####
+    [8/12]: MP2 energy = -0.236918631382
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 102 ####
+    [8/12]: MP2 energy = -0.237981730918
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 103 ####
+    [8/12]: MP2 energy = -0.236918829077
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 104 ####
+    [8/12]: MP2 energy = -0.237981676949
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 105 ####
+    [8/12]: MP2 energy = -0.236919008622
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 106 ####
+    [8/12]: MP2 energy = -0.237981618294
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 107 ####
+    [8/12]: MP2 energy = -0.236919171770
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 108 ####
+    [8/12]: MP2 energy = -0.237981555997
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 109 ####
+    [8/12]: MP2 energy = -0.236919320102
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 110 ####
+    [8/12]: MP2 energy = -0.237981490963
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 111 ####
+    [8/12]: MP2 energy = -0.236919455041
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 112 ####
+    [8/12]: MP2 energy = -0.237981423976
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 113 ####
+    [8/12]: MP2 energy = -0.236919577871
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 114 ####
+    [8/12]: MP2 energy = -0.237981355713
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 115 ####
+    [8/12]: MP2 energy = -0.236919689747
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 116 ####
+    [8/12]: MP2 energy = -0.237981286753
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 117 ####
+    [8/12]: MP2 energy = -0.236919791711
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 118 ####
+    [8/12]: MP2 energy = -0.237981217592
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 119 ####
+    [8/12]: MP2 energy = -0.236919884702
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 120 ####
+    [8/12]: MP2 energy = -0.237981148652
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 121 ####
+    [8/12]: MP2 energy = -0.236919969567
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 122 ####
+    [8/12]: MP2 energy = -0.237981080289
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 123 ####
+    [8/12]: MP2 energy = -0.236920047070
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 124 ####
+    [8/12]: MP2 energy = -0.237981012801
+            ΔE = -1.06e-03  ‖grad‖ = 8.44e-02  
+
+#### OVOS Iteration 125 ####
+    [8/12]: MP2 energy = -0.236920117898
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 126 ####
+    [8/12]: MP2 energy = -0.237980946436
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 127 ####
+    [8/12]: MP2 energy = -0.236920182672
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 128 ####
+    [8/12]: MP2 energy = -0.237980881397
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 129 ####
+    [8/12]: MP2 energy = -0.236920241953
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 130 ####
+    [8/12]: MP2 energy = -0.237980817850
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 131 ####
+    [8/12]: MP2 energy = -0.236920296246
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 132 ####
+    [8/12]: MP2 energy = -0.237980755925
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 133 ####
+    [8/12]: MP2 energy = -0.236920346008
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 134 ####
+    [8/12]: MP2 energy = -0.237980695726
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 135 ####
+    [8/12]: MP2 energy = -0.236920391651
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 136 ####
+    [8/12]: MP2 energy = -0.237980637328
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 137 ####
+    [8/12]: MP2 energy = -0.236920433548
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 138 ####
+    [8/12]: MP2 energy = -0.237980580787
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 139 ####
+    [8/12]: MP2 energy = -0.236920472035
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 140 ####
+    [8/12]: MP2 energy = -0.237980526138
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 141 ####
+    [8/12]: MP2 energy = -0.236920507417
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 142 ####
+    [8/12]: MP2 energy = -0.237980473401
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 143 ####
+    [8/12]: MP2 energy = -0.236920539969
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 144 ####
+    [8/12]: MP2 energy = -0.237980422582
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 145 ####
+    [8/12]: MP2 energy = -0.236920569941
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 146 ####
+    [8/12]: MP2 energy = -0.237980373675
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 147 ####
+    [8/12]: MP2 energy = -0.236920597558
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 148 ####
+    [8/12]: MP2 energy = -0.237980326664
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 149 ####
+    [8/12]: MP2 energy = -0.236920623025
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 150 ####
+    [8/12]: MP2 energy = -0.237980281524
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 151 ####
+    [8/12]: MP2 energy = -0.236920646526
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 152 ####
+    [8/12]: MP2 energy = -0.237980238225
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 153 ####
+    [8/12]: MP2 energy = -0.236920668231
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 154 ####
+    [8/12]: MP2 energy = -0.237980196731
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 155 ####
+    [8/12]: MP2 energy = -0.236920688291
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 156 ####
+    [8/12]: MP2 energy = -0.237980156999
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 157 ####
+    [8/12]: MP2 energy = -0.236920706845
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 158 ####
+    [8/12]: MP2 energy = -0.237980118985
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 159 ####
+    [8/12]: MP2 energy = -0.236920724019
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 160 ####
+    [8/12]: MP2 energy = -0.237980082640
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 161 ####
+    [8/12]: MP2 energy = -0.236920739926
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 162 ####
+    [8/12]: MP2 energy = -0.237980047916
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 163 ####
+    [8/12]: MP2 energy = -0.236920754672
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 164 ####
+    [8/12]: MP2 energy = -0.237980014760
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 165 ####
+    [8/12]: MP2 energy = -0.236920768350
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 166 ####
+    [8/12]: MP2 energy = -0.237979983120
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 167 ####
+    [8/12]: MP2 energy = -0.236920781046
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 168 ####
+    [8/12]: MP2 energy = -0.237979952942
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 169 ####
+    [8/12]: MP2 energy = -0.236920792840
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 170 ####
+    [8/12]: MP2 energy = -0.237979924175
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 171 ####
+    [8/12]: MP2 energy = -0.236920803802
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 172 ####
+    [8/12]: MP2 energy = -0.237979896764
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 173 ####
+    [8/12]: MP2 energy = -0.236920813999
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 174 ####
+    [8/12]: MP2 energy = -0.237979870657
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 175 ####
+    [8/12]: MP2 energy = -0.236920823489
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 176 ####
+    [8/12]: MP2 energy = -0.237979845802
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 177 ####
+    [8/12]: MP2 energy = -0.236920832327
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 178 ####
+    [8/12]: MP2 energy = -0.237979822149
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 179 ####
+    [8/12]: MP2 energy = -0.236920840563
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 180 ####
+    [8/12]: MP2 energy = -0.237979799646
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 181 ####
+    [8/12]: MP2 energy = -0.236920848243
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 182 ####
+    [8/12]: MP2 energy = -0.237979778246
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 183 ####
+    [8/12]: MP2 energy = -0.236920855408
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 184 ####
+    [8/12]: MP2 energy = -0.237979757900
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 185 ####
+    [8/12]: MP2 energy = -0.236920862097
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 186 ####
+    [8/12]: MP2 energy = -0.237979738562
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 187 ####
+    [8/12]: MP2 energy = -0.236920868345
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 188 ####
+    [8/12]: MP2 energy = -0.237979720188
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 189 ####
+    [8/12]: MP2 energy = -0.236920874183
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 190 ####
+    [8/12]: MP2 energy = -0.237979702733
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 191 ####
+    [8/12]: MP2 energy = -0.236920879643
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 192 ####
+    [8/12]: MP2 energy = -0.237979686156
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 193 ####
+    [8/12]: MP2 energy = -0.236920884750
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 194 ####
+    [8/12]: MP2 energy = -0.237979670416
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 195 ####
+    [8/12]: MP2 energy = -0.236920889530
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 196 ####
+    [8/12]: MP2 energy = -0.237979655473
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 197 ####
+    [8/12]: MP2 energy = -0.236920894006
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 198 ####
+    [8/12]: MP2 energy = -0.237979641292
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 199 ####
+    [8/12]: MP2 energy = -0.236920898200
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 200 ####
+    [8/12]: MP2 energy = -0.237979627834
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 201 ####
+    [8/12]: MP2 energy = -0.236920902130
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 202 ####
+    [8/12]: MP2 energy = -0.237979615066
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 203 ####
+    [8/12]: MP2 energy = -0.236920905815
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 204 ####
+    [8/12]: MP2 energy = -0.237979602954
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 205 ####
+    [8/12]: MP2 energy = -0.236920909271
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 206 ####
+    [8/12]: MP2 energy = -0.237979591466
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 207 ####
+    [8/12]: MP2 energy = -0.236920912515
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 208 ####
+    [8/12]: MP2 energy = -0.237979580572
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 209 ####
+    [8/12]: MP2 energy = -0.236920915559
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 210 ####
+    [8/12]: MP2 energy = -0.237979570242
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 211 ####
+    [8/12]: MP2 energy = -0.236920918419
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 212 ####
+    [8/12]: MP2 energy = -0.237979560448
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 213 ####
+    [8/12]: MP2 energy = -0.236920921105
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 214 ####
+    [8/12]: MP2 energy = -0.237979551164
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 215 ####
+    [8/12]: MP2 energy = -0.236920923629
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 216 ####
+    [8/12]: MP2 energy = -0.237979542365
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 217 ####
+    [8/12]: MP2 energy = -0.236920926001
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 218 ####
+    [8/12]: MP2 energy = -0.237979534025
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 219 ####
+    [8/12]: MP2 energy = -0.236920928232
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 220 ####
+    [8/12]: MP2 energy = -0.237979526122
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 221 ####
+    [8/12]: MP2 energy = -0.236920930330
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 222 ####
+    [8/12]: MP2 energy = -0.237979518633
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 223 ####
+    [8/12]: MP2 energy = -0.236920932305
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 224 ####
+    [8/12]: MP2 energy = -0.237979511538
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 225 ####
+    [8/12]: MP2 energy = -0.236920934162
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 226 ####
+    [8/12]: MP2 energy = -0.237979504816
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 227 ####
+    [8/12]: MP2 energy = -0.236920935911
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 228 ####
+    [8/12]: MP2 energy = -0.237979498448
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 229 ####
+    [8/12]: MP2 energy = -0.236920937558
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 230 ####
+    [8/12]: MP2 energy = -0.237979492416
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 231 ####
+    [8/12]: MP2 energy = -0.236920939109
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 232 ####
+    [8/12]: MP2 energy = -0.237979486702
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 233 ####
+    [8/12]: MP2 energy = -0.236920940570
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 234 ####
+    [8/12]: MP2 energy = -0.237979481291
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 235 ####
+    [8/12]: MP2 energy = -0.236920941946
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 236 ####
+    [8/12]: MP2 energy = -0.237979476167
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 237 ####
+    [8/12]: MP2 energy = -0.236920943243
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 238 ####
+    [8/12]: MP2 energy = -0.237979471314
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 239 ####
+    [8/12]: MP2 energy = -0.236920944466
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 240 ####
+    [8/12]: MP2 energy = -0.237979466718
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 241 ####
+    [8/12]: MP2 energy = -0.236920945618
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 242 ####
+    [8/12]: MP2 energy = -0.237979462367
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 243 ####
+    [8/12]: MP2 energy = -0.236920946705
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 244 ####
+    [8/12]: MP2 energy = -0.237979458247
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 245 ####
+    [8/12]: MP2 energy = -0.236920947730
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 246 ####
+    [8/12]: MP2 energy = -0.237979454346
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 247 ####
+    [8/12]: MP2 energy = -0.236920948697
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 248 ####
+    [8/12]: MP2 energy = -0.237979450653
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 249 ####
+    [8/12]: MP2 energy = -0.236920949609
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 250 ####
+    [8/12]: MP2 energy = -0.237979447157
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 251 ####
+    [8/12]: MP2 energy = -0.236920950469
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 252 ####
+    [8/12]: MP2 energy = -0.237979443847
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 253 ####
+    [8/12]: MP2 energy = -0.236920951281
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 254 ####
+    [8/12]: MP2 energy = -0.237979440714
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 255 ####
+    [8/12]: MP2 energy = -0.236920952047
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 256 ####
+    [8/12]: MP2 energy = -0.237979437748
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 257 ####
+    [8/12]: MP2 energy = -0.236920952770
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 258 ####
+    [8/12]: MP2 energy = -0.237979434941
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 259 ####
+    [8/12]: MP2 energy = -0.236920953453
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 260 ####
+    [8/12]: MP2 energy = -0.237979432283
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 261 ####
+    [8/12]: MP2 energy = -0.236920954098
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 262 ####
+    [8/12]: MP2 energy = -0.237979429768
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 263 ####
+    [8/12]: MP2 energy = -0.236920954706
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 264 ####
+    [8/12]: MP2 energy = -0.237979427388
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 265 ####
+    [8/12]: MP2 energy = -0.236920955281
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 266 ####
+    [8/12]: MP2 energy = -0.237979425135
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 267 ####
+    [8/12]: MP2 energy = -0.236920955823
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 268 ####
+    [8/12]: MP2 energy = -0.237979423002
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 269 ####
+    [8/12]: MP2 energy = -0.236920956336
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 270 ####
+    [8/12]: MP2 energy = -0.237979420984
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 271 ####
+    [8/12]: MP2 energy = -0.236920956820
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 272 ####
+    [8/12]: MP2 energy = -0.237979419074
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 273 ####
+    [8/12]: MP2 energy = -0.236920957277
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 274 ####
+    [8/12]: MP2 energy = -0.237979417267
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 275 ####
+    [8/12]: MP2 energy = -0.236920957709
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 276 ####
+    [8/12]: MP2 energy = -0.237979415557
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 277 ####
+    [8/12]: MP2 energy = -0.236920958117
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 278 ####
+    [8/12]: MP2 energy = -0.237979413938
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 279 ####
+    [8/12]: MP2 energy = -0.236920958503
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 280 ####
+    [8/12]: MP2 energy = -0.237979412406
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 281 ####
+    [8/12]: MP2 energy = -0.236920958867
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 282 ####
+    [8/12]: MP2 energy = -0.237979410957
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 283 ####
+    [8/12]: MP2 energy = -0.236920959211
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 284 ####
+    [8/12]: MP2 energy = -0.237979409585
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 285 ####
+    [8/12]: MP2 energy = -0.236920959537
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 286 ####
+    [8/12]: MP2 energy = -0.237979408287
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 287 ####
+    [8/12]: MP2 energy = -0.236920959844
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 288 ####
+    [8/12]: MP2 energy = -0.237979407059
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 289 ####
+    [8/12]: MP2 energy = -0.236920960135
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 290 ####
+    [8/12]: MP2 energy = -0.237979405897
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 291 ####
+    [8/12]: MP2 energy = -0.236920960409
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 292 ####
+    [8/12]: MP2 energy = -0.237979404797
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 293 ####
+    [8/12]: MP2 energy = -0.236920960669
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 294 ####
+    [8/12]: MP2 energy = -0.237979403757
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 295 ####
+    [8/12]: MP2 energy = -0.236920960914
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 296 ####
+    [8/12]: MP2 energy = -0.237979402772
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 297 ####
+    [8/12]: MP2 energy = -0.236920961146
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 298 ####
+    [8/12]: MP2 energy = -0.237979401841
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 299 ####
+    [8/12]: MP2 energy = -0.236920961366
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 300 ####
+    [8/12]: MP2 energy = -0.237979400960
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 301 ####
+    [8/12]: MP2 energy = -0.236920961573
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 302 ####
+    [8/12]: MP2 energy = -0.237979400126
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 303 ####
+    [8/12]: MP2 energy = -0.236920961769
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 304 ####
+    [8/12]: MP2 energy = -0.237979399337
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 305 ####
+    [8/12]: MP2 energy = -0.236920961954
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 306 ####
+    [8/12]: MP2 energy = -0.237979398590
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 307 ####
+    [8/12]: MP2 energy = -0.236920962129
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 308 ####
+    [8/12]: MP2 energy = -0.237979397884
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 309 ####
+    [8/12]: MP2 energy = -0.236920962295
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 310 ####
+    [8/12]: MP2 energy = -0.237979397215
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 311 ####
+    [8/12]: MP2 energy = -0.236920962451
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 312 ####
+    [8/12]: MP2 energy = -0.237979396583
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 313 ####
+    [8/12]: MP2 energy = -0.236920962599
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 314 ####
+    [8/12]: MP2 energy = -0.237979395985
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 315 ####
+    [8/12]: MP2 energy = -0.236920962739
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 316 ####
+    [8/12]: MP2 energy = -0.237979395419
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 317 ####
+    [8/12]: MP2 energy = -0.236920962872
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 318 ####
+    [8/12]: MP2 energy = -0.237979394883
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 319 ####
+    [8/12]: MP2 energy = -0.236920962997
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 320 ####
+    [8/12]: MP2 energy = -0.237979394377
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 321 ####
+    [8/12]: MP2 energy = -0.236920963115
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 322 ####
+    [8/12]: MP2 energy = -0.237979393897
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 323 ####
+    [8/12]: MP2 energy = -0.236920963227
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 324 ####
+    [8/12]: MP2 energy = -0.237979393444
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 325 ####
+    [8/12]: MP2 energy = -0.236920963333
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 326 ####
+    [8/12]: MP2 energy = -0.237979393015
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 327 ####
+    [8/12]: MP2 energy = -0.236920963433
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 328 ####
+    [8/12]: MP2 energy = -0.237979392609
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 329 ####
+    [8/12]: MP2 energy = -0.236920963528
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 330 ####
+    [8/12]: MP2 energy = -0.237979392225
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 331 ####
+    [8/12]: MP2 energy = -0.236920963618
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 332 ####
+    [8/12]: MP2 energy = -0.237979391862
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 333 ####
+    [8/12]: MP2 energy = -0.236920963702
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 334 ####
+    [8/12]: MP2 energy = -0.237979391518
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 335 ####
+    [8/12]: MP2 energy = -0.236920963782
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 336 ####
+    [8/12]: MP2 energy = -0.237979391193
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 337 ####
+    [8/12]: MP2 energy = -0.236920963858
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 338 ####
+    [8/12]: MP2 energy = -0.237979390885
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 339 ####
+    [8/12]: MP2 energy = -0.236920963930
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 340 ####
+    [8/12]: MP2 energy = -0.237979390594
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 341 ####
+    [8/12]: MP2 energy = -0.236920963997
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 342 ####
+    [8/12]: MP2 energy = -0.237979390319
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 343 ####
+    [8/12]: MP2 energy = -0.236920964061
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 344 ####
+    [8/12]: MP2 energy = -0.237979390058
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 345 ####
+    [8/12]: MP2 energy = -0.236920964122
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 346 ####
+    [8/12]: MP2 energy = -0.237979389812
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 347 ####
+    [8/12]: MP2 energy = -0.236920964179
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 348 ####
+    [8/12]: MP2 energy = -0.237979389578
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 349 ####
+    [8/12]: MP2 energy = -0.236920964234
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 350 ####
+    [8/12]: MP2 energy = -0.237979389358
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 351 ####
+    [8/12]: MP2 energy = -0.236920964285
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 352 ####
+    [8/12]: MP2 energy = -0.237979389149
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 353 ####
+    [8/12]: MP2 energy = -0.236920964333
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 354 ####
+    [8/12]: MP2 energy = -0.237979388952
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 355 ####
+    [8/12]: MP2 energy = -0.236920964379
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 356 ####
+    [8/12]: MP2 energy = -0.237979388765
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 357 ####
+    [8/12]: MP2 energy = -0.236920964423
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 358 ####
+    [8/12]: MP2 energy = -0.237979388588
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 359 ####
+    [8/12]: MP2 energy = -0.236920964464
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 360 ####
+    [8/12]: MP2 energy = -0.237979388421
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 361 ####
+    [8/12]: MP2 energy = -0.236920964503
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 362 ####
+    [8/12]: MP2 energy = -0.237979388263
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 363 ####
+    [8/12]: MP2 energy = -0.236920964539
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 364 ####
+    [8/12]: MP2 energy = -0.237979388113
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 365 ####
+    [8/12]: MP2 energy = -0.236920964574
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 366 ####
+    [8/12]: MP2 energy = -0.237979387972
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 367 ####
+    [8/12]: MP2 energy = -0.236920964607
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 368 ####
+    [8/12]: MP2 energy = -0.237979387838
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 369 ####
+    [8/12]: MP2 energy = -0.236920964638
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 370 ####
+    [8/12]: MP2 energy = -0.237979387711
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 371 ####
+    [8/12]: MP2 energy = -0.236920964667
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 372 ####
+    [8/12]: MP2 energy = -0.237979387592
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 373 ####
+    [8/12]: MP2 energy = -0.236920964695
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 374 ####
+    [8/12]: MP2 energy = -0.237979387478
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 375 ####
+    [8/12]: MP2 energy = -0.236920964721
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 376 ####
+    [8/12]: MP2 energy = -0.237979387371
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 377 ####
+    [8/12]: MP2 energy = -0.236920964746
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 378 ####
+    [8/12]: MP2 energy = -0.237979387270
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 379 ####
+    [8/12]: MP2 energy = -0.236920964770
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 380 ####
+    [8/12]: MP2 energy = -0.237979387174
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 381 ####
+    [8/12]: MP2 energy = -0.236920964792
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 382 ####
+    [8/12]: MP2 energy = -0.237979387083
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 383 ####
+    [8/12]: MP2 energy = -0.236920964813
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 384 ####
+    [8/12]: MP2 energy = -0.237979386997
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 385 ####
+    [8/12]: MP2 energy = -0.236920964833
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 386 ####
+    [8/12]: MP2 energy = -0.237979386916
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 387 ####
+    [8/12]: MP2 energy = -0.236920964852
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 388 ####
+    [8/12]: MP2 energy = -0.237979386839
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 389 ####
+    [8/12]: MP2 energy = -0.236920964870
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 390 ####
+    [8/12]: MP2 energy = -0.237979386766
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 391 ####
+    [8/12]: MP2 energy = -0.236920964887
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 392 ####
+    [8/12]: MP2 energy = -0.237979386697
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 393 ####
+    [8/12]: MP2 energy = -0.236920964903
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 394 ####
+    [8/12]: MP2 energy = -0.237979386632
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 395 ####
+    [8/12]: MP2 energy = -0.236920964918
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 396 ####
+    [8/12]: MP2 energy = -0.237979386571
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 397 ####
+    [8/12]: MP2 energy = -0.236920964932
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 398 ####
+    [8/12]: MP2 energy = -0.237979386512
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 399 ####
+    [8/12]: MP2 energy = -0.236920964945
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 400 ####
+    [8/12]: MP2 energy = -0.237979386457
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 401 ####
+    [8/12]: MP2 energy = -0.236920964958
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 402 ####
+    [8/12]: MP2 energy = -0.237979386405
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 403 ####
+    [8/12]: MP2 energy = -0.236920964970
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 404 ####
+    [8/12]: MP2 energy = -0.237979386356
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 405 ####
+    [8/12]: MP2 energy = -0.236920964982
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 406 ####
+    [8/12]: MP2 energy = -0.237979386309
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 407 ####
+    [8/12]: MP2 energy = -0.236920964993
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 408 ####
+    [8/12]: MP2 energy = -0.237979386265
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 409 ####
+    [8/12]: MP2 energy = -0.236920965003
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 410 ####
+    [8/12]: MP2 energy = -0.237979386223
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 411 ####
+    [8/12]: MP2 energy = -0.236920965012
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 412 ####
+    [8/12]: MP2 energy = -0.237979386184
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 413 ####
+    [8/12]: MP2 energy = -0.236920965022
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 414 ####
+    [8/12]: MP2 energy = -0.237979386146
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 415 ####
+    [8/12]: MP2 energy = -0.236920965030
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 416 ####
+    [8/12]: MP2 energy = -0.237979386111
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 417 ####
+    [8/12]: MP2 energy = -0.236920965038
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 418 ####
+    [8/12]: MP2 energy = -0.237979386078
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 419 ####
+    [8/12]: MP2 energy = -0.236920965046
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 420 ####
+    [8/12]: MP2 energy = -0.237979386046
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 421 ####
+    [8/12]: MP2 energy = -0.236920965054
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 422 ####
+    [8/12]: MP2 energy = -0.237979386016
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 423 ####
+    [8/12]: MP2 energy = -0.236920965060
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 424 ####
+    [8/12]: MP2 energy = -0.237979385988
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 425 ####
+    [8/12]: MP2 energy = -0.236920965067
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 426 ####
+    [8/12]: MP2 energy = -0.237979385961
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 427 ####
+    [8/12]: MP2 energy = -0.236920965073
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 428 ####
+    [8/12]: MP2 energy = -0.237979385936
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 429 ####
+    [8/12]: MP2 energy = -0.236920965079
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 430 ####
+    [8/12]: MP2 energy = -0.237979385912
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 431 ####
+    [8/12]: MP2 energy = -0.236920965085
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 432 ####
+    [8/12]: MP2 energy = -0.237979385889
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 433 ####
+    [8/12]: MP2 energy = -0.236920965090
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 434 ####
+    [8/12]: MP2 energy = -0.237979385868
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 435 ####
+    [8/12]: MP2 energy = -0.236920965095
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 436 ####
+    [8/12]: MP2 energy = -0.237979385847
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 437 ####
+    [8/12]: MP2 energy = -0.236920965100
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 438 ####
+    [8/12]: MP2 energy = -0.237979385828
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 439 ####
+    [8/12]: MP2 energy = -0.236920965104
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 440 ####
+    [8/12]: MP2 energy = -0.237979385810
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 441 ####
+    [8/12]: MP2 energy = -0.236920965108
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 442 ####
+    [8/12]: MP2 energy = -0.237979385793
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 443 ####
+    [8/12]: MP2 energy = -0.236920965112
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 444 ####
+    [8/12]: MP2 energy = -0.237979385777
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 445 ####
+    [8/12]: MP2 energy = -0.236920965116
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 446 ####
+    [8/12]: MP2 energy = -0.237979385761
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 447 ####
+    [8/12]: MP2 energy = -0.236920965120
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 448 ####
+    [8/12]: MP2 energy = -0.237979385747
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 449 ####
+    [8/12]: MP2 energy = -0.236920965123
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 450 ####
+    [8/12]: MP2 energy = -0.237979385733
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 451 ####
+    [8/12]: MP2 energy = -0.236920965126
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 452 ####
+    [8/12]: MP2 energy = -0.237979385720
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 453 ####
+    [8/12]: MP2 energy = -0.236920965129
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 454 ####
+    [8/12]: MP2 energy = -0.237979385707
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 455 ####
+    [8/12]: MP2 energy = -0.236920965132
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 456 ####
+    [8/12]: MP2 energy = -0.237979385696
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 457 ####
+    [8/12]: MP2 energy = -0.236920965135
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 458 ####
+    [8/12]: MP2 energy = -0.237979385685
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 459 ####
+    [8/12]: MP2 energy = -0.236920965137
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 460 ####
+    [8/12]: MP2 energy = -0.237979385674
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 461 ####
+    [8/12]: MP2 energy = -0.236920965140
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 462 ####
+    [8/12]: MP2 energy = -0.237979385665
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 463 ####
+    [8/12]: MP2 energy = -0.236920965142
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 464 ####
+    [8/12]: MP2 energy = -0.237979385655
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 465 ####
+    [8/12]: MP2 energy = -0.236920965144
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 466 ####
+    [8/12]: MP2 energy = -0.237979385646
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 467 ####
+    [8/12]: MP2 energy = -0.236920965146
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 468 ####
+    [8/12]: MP2 energy = -0.237979385638
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 469 ####
+    [8/12]: MP2 energy = -0.236920965148
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 470 ####
+    [8/12]: MP2 energy = -0.237979385630
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 471 ####
+    [8/12]: MP2 energy = -0.236920965150
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 472 ####
+    [8/12]: MP2 energy = -0.237979385623
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 473 ####
+    [8/12]: MP2 energy = -0.236920965152
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 474 ####
+    [8/12]: MP2 energy = -0.237979385616
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 475 ####
+    [8/12]: MP2 energy = -0.236920965153
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 476 ####
+    [8/12]: MP2 energy = -0.237979385609
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 477 ####
+    [8/12]: MP2 energy = -0.236920965155
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 478 ####
+    [8/12]: MP2 energy = -0.237979385603
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 479 ####
+    [8/12]: MP2 energy = -0.236920965156
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 480 ####
+    [8/12]: MP2 energy = -0.237979385597
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 481 ####
+    [8/12]: MP2 energy = -0.236920965158
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 482 ####
+    [8/12]: MP2 energy = -0.237979385591
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 483 ####
+    [8/12]: MP2 energy = -0.236920965159
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 484 ####
+    [8/12]: MP2 energy = -0.237979385586
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 485 ####
+    [8/12]: MP2 energy = -0.236920965160
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 486 ####
+    [8/12]: MP2 energy = -0.237979385581
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 487 ####
+    [8/12]: MP2 energy = -0.236920965161
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 488 ####
+    [8/12]: MP2 energy = -0.237979385576
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 489 ####
+    [8/12]: MP2 energy = -0.236920965162
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 490 ####
+    [8/12]: MP2 energy = -0.237979385571
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 491 ####
+    [8/12]: MP2 energy = -0.236920965164
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 492 ####
+    [8/12]: MP2 energy = -0.237979385567
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 493 ####
+    [8/12]: MP2 energy = -0.236920965165
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 494 ####
+    [8/12]: MP2 energy = -0.237979385563
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 495 ####
+    [8/12]: MP2 energy = -0.236920965165
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 496 ####
+    [8/12]: MP2 energy = -0.237979385559
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 497 ####
+    [8/12]: MP2 energy = -0.236920965166
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 498 ####
+    [8/12]: MP2 energy = -0.237979385555
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+
+#### OVOS Iteration 499 ####
+    [8/12]: MP2 energy = -0.236920965167
+            ΔE = 1.06e-03  ‖grad‖ = 1.13e-01  (energy increased!)
+
+#### OVOS Iteration 500 ####
+    [8/12]: MP2 energy = -0.237979385552
+            ΔE = -1.06e-03  ‖grad‖ = 8.45e-02  
+Reached maximum iterations (500)
+
+Optimization finished. Final MP2 energy = -99.87500111858441 Hartree. (ΔE_corr = -0.24304322340441087 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+hf_string: 111111111100000000
+hf_det 261888
+### Parameters information:
+### Number theta: 40
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree----------     1      |         2.67       |    -101.1129811409788175    |     N/A    ---------     2      |         2.81       |    -101.3210224250842799    |     N/A    
+--------     3      |         2.03       |    -101.3322667624121749    |     N/A    
+--------     4      |         1.94       |    -101.4054261764907210    |     N/A    
+--------     5      |         0.86       |    -101.4190155560758768    |     N/A    
+--------     6      |         0.92       |    -101.4429711181461471    |     N/A    
+--------     7      |         0.89       |    -101.4654815733776729    |     N/A    
+--------     8      |         0.96       |    -101.4689075491562562    |     N/A    
+--------     9      |         0.93       |    -101.4723210475206230    |     N/A    
+--------     10     |         7.09       |    -101.3100334541125704    |     N/A    
+--------     11     |         3.04       |    -101.3100388667204754    |     N/A    
+--------     12     |        10.83       |    -101.3604925425880623    |     N/A    
+--------     13     |         1.43       |    -101.4120088244555973    |     N/A    
+--------     14     |         2.32       |    -101.4525298107731288    |     N/A    
+--------     15     |         2.46       |    -101.4676104142501458    |     N/A    
+--------     16     |         1.01       |    -101.4704687276160371    |     N/A    
+--------     17     |         1.03       |    -101.4746533015125181    |     N/A    
+--------     18     |         1.02       |    -101.4759161098273239    |     N/A    
+--------     19     |         1.05       |    -101.4759958966559168    |     N/A    
+--------     20     |         1.04       |    -101.4760231810067665    |     N/A    
+--------     21     |         0.94       |    -101.4760550540580653    |     N/A    
+--------     22     |         0.95       |    -101.4760697386645916    |     N/A    
+--------     23     |         1.00       |    -101.4760741270327884    |     N/A    
+--------     24     |         1.16       |    -101.4760782553423866    |     N/A    
+--------     25     |         1.17       |    -101.4760847546906888    |     N/A    
+--------     26     --------     3      |         4.89       |    -101.4432405510785742    |     N/A    
+--------     4      |         1.69       |    -101.4887801612351126    |     N/A    
+--------     5      |         1.75       |    -101.4984978321451621    |     N/A    
+--------     6      |         1.60       |    -101.4997802043968846    |     N/A    
+--------     7      |         1.73       |    -101.5003958514882072    |     N/A    
+--------     8      |         1.72       |    -101.5009955070628962    |     N/A    
+--------     9      |         1.97       |    -101.5010928580943954    |     N/A    
+--------     10     |         1.67       |    -101.5010955438974065    |     N/A    
+--------     11     |         1.59       |    -101.5010955629315816    |     N/A    
+--------     12     |         1.73       |    -101.5010955633882332    |     N/A    
+--------     13     |         1.67       |    -101.5010955633960066    |     N/A    
+Optimization terminated successfully.
+         Current function value: -101.501096
+         Iterations: 13
+         Function evaluations: 16
+         Gradient evaluations: 16
+UHF energy = -101.501096 Hartree @ iterations 13.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 11, Active orbitals: 9 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 2 orbitals (indices [9, 10]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -99.628635 Hartree
+UMP2 energy (original): -99.812800 Hartree, correlation: -0.184165 Hartree
+UMP2 energy (natural orbitals): -99.889492 Hartree, correlation: -0.030644 Hartree
+Correlation energy difference: 0.153521 Hartree
+
+hf_string: 111111111100000000
+hf_det 261888
+### Parameters information:
+### Number theta: 40
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         3.31       |    -101.2118875789818304    |     N/A    
+--------     2      |         1.68       |    -101.2688268698215239    |     N/A    
+--------     3      |         1.63       |    -101.2914781182616792    |     N/A    
+--------     4      |         1.61       |    -101.3326587878359959    |     N/A    
+--------     5      |         3.10       |    -101.3545832003110263    |     N/A    
+--------     6      |         1.61       |    -101.3687397118442135    |     N/A    
+--------     7      |         1.56       |    -101.3940677792404159    |     N/A    
+--------     8      |         1.76       |    -101.4311210004954376    |     N/A    
+--------     9      |         1.68       |    -101.4515427755422792    |     N/A    
+--------     10     |         1.60       |    -101.4690671154429822    |     N/A    
+--------     11     |         1.63       |    -101.4725510859966562    |     N/A    
+--------     12     |         1.72       |    -101.4735246700191311    |     N/A    
+--------     13     |         1.73       |    -101.4736035776661254    |     N/A    
+--------     14     |         1.64       |    -101.4736456247637761    |     N/A    
+--------     15     |         1.74       |    -101.4736843882509021    |     N/A    
+--------     16     |         1.57       |    -101.4737238730232036    |     N/A    
+--------     17     |         8.71       |    -101.4754807159546033    |     N/A    
+--------     18     |         3.03       |    -101.4755295990956512    |     N/A    
+--------     19     |         2.90       |    -101.4759917101354745    |     N/A    
+--------     20     |         1.57       |    -101.4768136504458482    |     N/A    
+--------     21     |         1.70       |    -101.4780023029503866    |     N/A    
+--------     22     |         1.52       |    -101.4784835696194136    |     N/A    
+--------     23     |         1.50       |    -101.4785392153210353    |     N/A    
+--------     24     |         1.39       |    -101.4786265090261850    |     N/A    
+--------     25     |         1.57       |    -101.4787029602090911    |     N/A    
+--------     26     |         1.66       |    -101.4787392879191259    |     N/A    
+--------     27     |         1.58       |    -101.4787802950138911    |     N/A    
+--------     28     |         1.67       |    -101.4787909726392883    |     N/A    
+--------     29     |         1.81       |    -101.4787951203344960    |     N/A    
+--------     30     |         3.24       |    -101.4787989372704544    |     N/A    
+--------     31     |         2.05       |    -101.4788010289701674    |     N/A    
+--------     32     |         1.38       |    -101.4788018513364136    |     N/A    
+--------     33     |         1.72       |    -101.4788031055514210    |     N/A    
+--------     34     |         1.88       |    -101.4788052702200076    |     N/A    
+--------     35     |         2.61       |    -101.4788091663059362    |     N/A    
+--------     36     |         1.95       |    -101.4788157022057931    |     N/A    
+--------     37     |         1.72       |    -101.4788234477494484    |     N/A    
+--------     38     |         1.59       |    -101.4788315251100812    |     N/A    
+--------     39     |         2.43       |    -101.4788400150007419    |     N/A    
+--------     40     |         2.08       |    -101.4788418997513872    |     N/A    
+--------     41     |         1.47       |    -101.4788448140265871    |     N/A    
+--------     42     |         3.17       |    -101.4788471606613740    |     N/A    
+--------     43     |         2.60       |    -101.4788503258054959    |     N/A    
+--------     44     |        10.43       |    -101.4788633649954477    |     N/A    
+--------     45     |         1.82       |    -101.4788878698161767    |     N/A    
+--------     46     |         2.36       |    -101.4789311316445151    |     N/A    
+--------     47     |         1.77       |    -101.4790024936461919    |     N/A    
+--------     48     |         1.80       |    -101.4791206433783515    |     N/A    
+--------     49     |         1.95       |    -101.4792842424707260    |     N/A    
+--------     50     |         1.43       |    -101.4795681923073403    |     N/A    
+--------     51     |         1.44       |    -101.4800330263103092    |     N/A    
+--------     52     |         1.58       |    -101.4805708131107451    |     N/A    
+--------     53     |         1.51       |    -101.4807492269358704    |     N/A    
+--------     54     |         3.23       |    -101.4808291490624583    |     N/A    
+--------     55     |         1.62       |    -101.4808749329890105    |     N/A    
+--------     56     |         1.74       |    -101.4808852555881344    |     N/A    
+--------     57     |         1.59       |    -101.4809008352598880    |     N/A    
+--------     58     |         1.53       |    -101.4809287729782170    |     N/A    
+--------     59     |         1.53       |    -101.4809791976370548    |     N/A    
+--------     60     |         1.65       |    -101.4810664402576208    |     N/A    
+--------     61     |         1.99       |    -101.4811946430044998    |     N/A    
+--------     62     |         2.27       |    -101.4812751612191306    |     N/A    
+--------     63     |         3.56       |    -101.4813068024004394    |     N/A    
+--------     64     |         3.89       |    -101.4813266469384700    |     N/A    
+--------     65     |         2.69       |    -101.4813275642648733    |     N/A    
+--------     66     |         2.08       |    -101.4813276717439976    |     N/A    
+--------     67     |         2.62       |    -101.4813277377810579    |     N/A    
+--------     68     |         2.76       |    -101.4813278558262084    |     N/A    
+--------     69     |         1.76       |    -101.4813280756679461    |     N/A    
+--------     70     |         1.50       |    -101.4813284894670176    |     N/A    
+--------     71     |         1.86       |    -101.4813292665231756    |     N/A    
+--------     72     |         1.72       |    -101.4813307100471178    |     N/A    
+--------     73     |         1.82       |    -101.4813333467183156    |     N/A    
+--------     74     |         1.90       |    -101.4813380923083059    |     N/A    
+--------     75     |         1.92       |    -101.4813467649642291    |     N/A    
+--------     76     |         2.68       |    -101.4813632112332300    |     N/A    
+--------     77     |         5.56       |    -101.4813743797309940    |     N/A    
+--------     78     |         1.62       |    -101.4813871619278984    |     N/A    
+--------     79     |         2.42       |    -101.4814103398838512    |     N/A    
+--------     80     |         2.40       |    -101.4814486240443330    |     N/A    
+--------     81     |         1.59       |    -101.4814811275919908    |     N/A    
+--------     82     |         3.57       |    -101.4814888546342786    |     N/A    
+--------     83     |         1.78       |    -101.4814942753639002    |     N/A    
+--------     84     |         3.93       |    -101.4815030510747818    |     N/A    
+--------     85     |         1.74       |    -101.4815189675855862    |     N/A    
+--------     86     |         1.68       |    -101.4815459645890883    |     N/A    
+--------     87     |         1.41       |    -101.4815861869551128    |     N/A    
+--------     88     |         2.26       |    -101.4816369027453078    |     N/A    
+--------     89     |         3.24       |    -101.4816947316446090    |     N/A    
+--------     90     |         3.62       |    -101.4817325521502482    |     N/A    
+--------     91     |         1.45       |    -101.4817934148010181    |     N/A    
+--------     92     |         1.54       |    -101.4818858790630713    |     N/A    
+--------     93     |         1.53       |    -101.4819535310896157    |     N/A    
+--------     94     |         1.39       |    -101.4820226987227301    |     N/A    
+--------     95     |         1.38       |    -101.4820879243115712    |     N/A    
+--------     96     |         1.32       |    -101.4821375226279372    |     N/A    
+--------     97     |         1.41       |    -101.4821827428640404    |     N/A    
+--------     98     |         1.54       |    -101.4822217205612844    |     N/A    
+--------     99     |         2.19       |    -101.4822514921715992    |     N/A    
+--------    100     |         4.20       |    -101.4822872631217336    |     N/A    
+--------    101     |         3.04       |    -101.4823099538308071    |     N/A    
+--------    102     |         2.86       |    -101.4823318202214608    |     N/A    
+--------    103     |         2.60       |    -101.4823483307327194    |     N/A    
+--------    104     |         3.17       |    -101.4823561579357403    |     N/A    
+--------    105     |         4.15       |    -101.4823601510482973    |     N/A    
+--------    106     |         3.92       |    -101.4823618899007727    |     N/A    
+--------    107     |         3.09       |    -101.4823632638340882    |     N/A    
+--------    108     |         3.82       |    -101.4823643794435384    |     N/A    
+--------    109     |         4.40       |    -101.4823658176661780    |     N/A    
+--------    110     |         4.15       |    -101.4823667259991993    |     N/A    
+--------    111     |         4.59       |    -101.4823680731344666    |     N/A    
+--------    112     |         3.27       |    -101.4823702552084228    |     N/A    
+--------    113     |         2.95       |    -101.4823735371838183    |     N/A    
+--------    114     |         3.67       |    -101.4823774121592379    |     N/A    
+--------    115     |         4.24       |    -101.4823820015663927    |     N/A    
+--------    116     |         2.49       |    -101.4823884593947412    |     N/A    
+--------    117     |         2.26       |    -101.4823921112552085    |     N/A    
+--------    118     |         5.18       |    -101.4823927508280974    |     N/A    
+--------    119     |         2.19       |    -101.4823933251773553    |     N/A    
+--------    120     |         2.74       |    -101.4823935328994651    |     N/A    
+--------    121     |         1.64       |    -101.4823937318782043    |     N/A    
+--------    122     |         1.51       |    -101.4823940514098410    |     N/A    
+--------    123     |         1.53       |    -101.4823944191815599    |     N/A    
+--------    124     |         1.38       |    -101.4823946295166053    |     N/A    
+--------    125     |         3.33       |    -101.4823947274817328    |     N/A    
+--------    126     |         1.52       |    -101.4823948873610533    |     N/A    
+--------    127     |         1.37       |    -101.4823951376063462    |     N/A    
+--------    128     |         1.19       |    -101.4823954941655870    |     N/A    
+--------    129     |         2.39       |    -101.4823955991914772    |     N/A    
+--------    130     |         1.15       |    -101.4823957880705763    |     N/A    
+--------    131     |         1.17       |    -101.4823961284256058    |     N/A    
+--------    132     |         1.10       |    -101.4823967202006259    |     N/A    
+--------    133     |         1.01       |    -101.4823977041153853    |     N/A    
+--------    134     |         2.21       |    -101.4823985302899132    |     N/A    
+--------    135     |         1.06       |    -101.4823994665775189    |     N/A    
+--------    136     |         2.51       |    -101.4823999227125597    |     N/A    
+--------    137     |         1.11       |    -101.4824006076250527    |     N/A    
+--------    138     |         1.24       |    -101.4824015330580238    |     N/A    
+--------    139     |         2.25       |    -101.4824019699645561    |     N/A    
+--------    140     |         1.15       |    -101.4824025668004026    |     N/A    
+--------    141     |         1.17       |    -101.4824028338404673    |     N/A    
+--------    142     |         2.28       |    -101.4824029132840195    |     N/A    
+--------    143     |         1.13       |    -101.4824029580148874    |     N/A    
+--------    144     |         1.11       |    -101.4824029645666599    |     N/A    
+--------    145     |         1.07       |    -101.4824029690196596    |     N/A    
+--------    146     |         1.12       |    -101.4824029693575085    |     N/A    
+--------    147     |         1.07       |    -101.4824029697443564    |     N/A    
+--------    148     |         1.12       |    -101.4824029704478505    |     N/A    
+--------    149     |         1.09       |    -101.4824029717221521    |     N/A    
+--------    150     |         1.07       |    -101.4824029740004647    |     N/A    
+--------    151     |         1.07       |    -101.4824029780037904    |     N/A    
+--------    152     |         1.07       |    -101.4824029849344385    |     N/A    
+--------    153     |         1.11       |    -101.4824029969023513    |     N/A    
+--------    154     |         1.05       |    -101.4824030178183421    |     N/A    
+--------    155     |         1.05       |    -101.4824030545580484    |     N/A    
+--------    156     |         1.03       |    -101.4824031141586431    |     N/A    
+--------    157     |         1.13       |    -101.4824031938928073    |     N/A    
+--------    158     |         1.06       |    -101.4824033285204052    |     N/A    
+--------    159     |         1.17       |    -101.4824035673305929    |     N/A    
+--------    160     |         1.12       |    -101.4824039864396923    |     N/A    
+--------    161     |         1.17       |    -101.4824045254337648    |     N/A    
+--------    162     |         1.19       |    -101.4824052056147536    |     N/A    
+--------    163     |         1.10       |    -101.4824053826534680    |     N/A    
+--------    164     |         1.16       |    -101.4824056843435471    |     N/A    
+--------    165     |         1.19       |    -101.4824061804865778    |     N/A    
+--------    166     |         1.17       |    -101.4824069448809354    |     N/A    
+--------    167     |         2.23       |    -101.4824074790015942    |     N/A    
+--------    168     |         1.11       |    -101.4824083618414079    |     N/A    
+--------    169     |         1.04       |    -101.4824098309772751    |     N/A    
+--------    170     |         1.12       |    -101.4824116527739477    |     N/A    
+--------    171     |         1.11       |    -101.4824145018168906    |     N/A    
+--------    172     |         2.21       |    -101.4824163221741884    |     N/A    
+--------    173     |         1.13       |    -101.4824192229963415    |     N/A    
+--------    174     |         2.23       |    -101.4824206271595841    |     N/A    
+--------    175     |         1.21       |    -101.4824230922817634    |     N/A    
+--------    176     |         2.21       |    -101.4824240558356507    |     N/A    
+--------    177     |         1.17       |    -101.4824255072778385    |     N/A    
+--------    178     |         1.15       |    -101.4824275213156994    |     N/A    
+--------    179     |         1.04       |    -101.4824282459322546    |     N/A    
+--------    180     |         1.14       |    -101.4824292106656856    |     N/A    
+--------    181     |         1.13       |    -101.4824302263437517    |     N/A    
+--------    182     |         1.06       |    -101.4824311217727200    |     N/A    
+--------    183     |         1.11       |    -101.4824326302809681    |     N/A    
+--------    184     |         1.14       |    -101.4824350370681145    |     N/A    
+--------    185     |         1.13       |    -101.4824373821365526    |     N/A    
+--------    186     |         1.18       |    -101.4824395058713549    |     N/A    
+--------    187     |         1.21       |    -101.4824434723096971    |     N/A    
+--------    188     |         1.10       |    -101.4824500856757936    |     N/A    
+--------    189     |         1.09       |    -101.4824579940086409    |     N/A    
+--------    190     |         2.25       |    -101.4824617622313383    |     N/A    
+--------    191     |         1.10       |    -101.4824668221791342    |     N/A    
+--------    192     |         1.22       |    -101.4824731829210407    |     N/A    
+--------    193     |         2.13       |    -101.4824746104426225    |     N/A    
+--------    194     |         1.08       |    -101.4824773230064352    |     N/A    
+--------    195     |         3.36       |    -101.4824911898415820    |     N/A    
+--------    196     |         2.13       |    -101.4824965367476466    |     N/A    
+--------    197     |         1.06       |    -101.4825051869664350    |     N/A    
+--------    198     |         1.07       |    -101.4825122044083372    |     N/A    
+--------    199     |         1.05       |    -101.4825183220299607    |     N/A    
+--------    200     |         1.10       |    -101.4825237632157098    |     N/A    
+--------    201     |         1.07       |    -101.4825296982184710    |     N/A    
+--------    202     |         1.19       |    -101.4825335968932478    |     N/A    
+--------    203     |         1.05       |    -101.4825382285787043    |     N/A    
+--------    204     |         1.07       |    -101.4825407838234952    |     N/A    
+--------    205     |         1.16       |    -101.4825422974379308    |     N/A    
+--------    206     |         1.06       |    -101.4825438627890009    |     N/A    
+--------    207     |         2.63       |    -101.4825440476452059    |     N/A    
+--------    208     |         1.03       |    -101.4825441753597772    |     N/A    
+--------    209     |         1.15       |    -101.4825442323080296    |     N/A    
+--------    210     |         1.14       |    -101.4825443255370487    |     N/A    
+--------    211     |         1.05       |    -101.4825444547660140    |     N/A    
+--------    212     |         1.13       |    -101.4825445430243605    |     N/A    
+--------    213     |         1.07       |    -101.4825446852366611    |     N/A    
+--------    214     |         1.18       |    -101.4825449275292186    |     N/A    
+--------    215     |         1.05       |    -101.4825453568613653    |     N/A    
+--------    216     |         1.12       |    -101.4825461280584449    |     N/A    
+--------    217     |         1.10       |    -101.4825474944511399    |     N/A    
+--------    218     |         1.10       |    -101.4825497748847880    |     N/A    
+--------    219     |         1.15       |    -101.4825531393657201    |     N/A    
+--------    220     |         2.16       |    -101.4825548101788968    |     N/A    
+--------    221     |         1.17       |    -101.4825577398761141    |     N/A    
+--------    222     |         1.12       |    -101.4825623457305142    |     N/A    
+--------    223     |         1.09       |    -101.4825675447818298    |     N/A    
+--------    224     |         2.40       |    -101.4825706743824867    |     N/A    
+--------    225     |         1.28       |    -101.4825715198855960    |     N/A    
+--------    226     |         1.06       |    -101.4825729491374062    |     N/A    
+--------    227     |         1.14       |    -101.4825752646159884    |     N/A    
+--------    228     |         2.10       |    -101.4825766285537867    |     N/A    
+--------    229     |         1.18       |    -101.4825773998362735    |     N/A    
+--------    230     |         1.12       |    -101.4825784529187445    |     N/A    
+--------    231     |         1.17       |    -101.4825792767347252    |     N/A    
+--------    232     |         1.13       |    -101.4825799622332880    |     N/A    
+--------    233     |         1.09       |    -101.4825809224317226    |     N/A    
+--------    234     |         1.18       |    -101.4825822221575322    |     N/A    
+--------    235     |         2.32       |    -101.4825829901969456    |     N/A    
+--------    236     |         1.09       |    -101.4825840208658576    |     N/A    
+--------    237     |         1.14       |    -101.4825856488199634    |     N/A    
+--------    238     |         2.54       |    -101.4825866671893948    |     N/A    
+--------    239     |         2.33       |    -101.4825874349741071    |     N/A    
+--------    240     |         2.08       |    -101.4825879523220920    |     N/A    
+--------    241     |         1.26       |    -101.4825887047299631    |     N/A    
+--------    242     |         1.67       |    -101.4825892380640653    |     N/A    
+--------    243     |         1.76       |    -101.4825901488135003    |     N/A    
+--------    244     |         1.54       |    -101.4825913157659016    |     N/A    
+--------    245     |         2.71       |    -101.4825917731593563    |     N/A    
+--------    246     |         1.13       |    -101.4825923968617474    |     N/A    
+--------    247     |         1.03       |    -101.4825932153398185    |     N/A    
+--------    248     |         1.23       |    -101.4825939767739271    |     N/A    
+--------    249     |         2.51       |    -101.4825942000635166    |     N/A    
+--------    250     |         1.25       |    -101.4825945588947889    |     N/A    
+--------    251     |         1.20       |    -101.4825950839035329    |     N/A    
+--------    252     |         1.26       |    -101.4825955157692761    |     N/A    
+--------    253     |         1.29       |    -101.4825957114722712    |     N/A    
+--------    254     |         1.25       |    -101.4825960632378496    |     N/A    
+--------    255     |         1.02       |    -101.4825963469629642    |     N/A    
+--------    256     |         0.95       |    -101.4825964663141917    |     N/A    
+--------    257     |         0.95       |    -101.4825965638984258    |     N/A    
+--------    258     |         0.95       |    -101.4825966678201610    |     N/A    
+--------    259     |         0.96       |    -101.4825967545946952    |     N/A    
+--------    260     |         0.97       |    -101.4825968762186790    |     N/A    
+--------    261     |         0.96       |    -101.4825969238070371    |     N/A    
+--------    262     |         1.93       |    -101.4825969393601213    |     N/A    
+--------    263     |         0.95       |    -101.4825969443379279    |     N/A    
+--------    264     |         0.92       |    -101.4825969449736505    |     N/A    
+--------    265     |         0.88       |    -101.4825969450487975    |     N/A    
+--------    266     |         0.89       |    -101.4825969450594130    |     N/A    
+--------    267     |         0.91       |    -101.4825969450637615    |     N/A    
+--------    268     |         1.78       |    -101.4825969450987913    |     N/A    
+--------    269     |         0.88       |    -101.4825969451590595    |     N/A    
+--------    270     |         0.89       |    -101.4825969452678152    |     N/A    
+--------    271     |         0.86       |    -101.4825969454679750    |     N/A    
+--------    272     |         0.92       |    -101.4825969458377841    |     N/A    
+--------    273     |         0.89       |    -101.4825969465169635    |     N/A    
+--------    274     |         0.89       |    -101.4825969477470693    |     N/A    
+--------    275     |         0.86       |    -101.4825969499292881    |     N/A    
+--------    276     |         0.86       |    -101.4825969537107540    |     N/A    
+--------    277     |         0.88       |    -101.4825969601568261    |     N/A    
+--------    278     |         0.90       |    -101.4825969711792624    |     N/A    
+--------    279     |         0.88       |    -101.4825969903789513    |     N/A    
+--------    280     |         0.90       |    -101.4825970240168260    |     N/A    
+--------    281     |         0.90       |    -101.4825970784038134    |     N/A    
+--------    282     |         0.89       |    -101.4825971509830538    |     N/A    
+--------    283     |         0.90       |    -101.4825972605143818    |     N/A    
+--------    284     |         0.89       |    -101.4825974054214726    |     N/A    
+--------    285     |         0.87       |    -101.4825976091789812    |     N/A    
+--------    286     |         0.85       |    -101.4825977145136164    |     N/A    
+--------    287     |         0.92       |    -101.4825977303402738    |     N/A    
+--------    288     |         1.79       |    -101.4825978533241653    |     N/A    
+--------    289     |         1.78       |    -101.4825979181140383    |     N/A    
+--------    290     |         0.84       |    -101.4825980247829023    |     N/A    
+--------    291     |         0.86       |    -101.4825982014805987    |     N/A    
+--------    292     |         0.89       |    -101.4825984548477038    |     N/A    
+--------    293     |         0.89       |    -101.4825988272211532    |     N/A    
+--------    294     |         1.73       |    -101.4825990396725501    |     N/A    
+--------    295     |         0.85       |    -101.4825993773263235    |     N/A    
+--------    296     |         0.84       |    -101.4825998554747883    |     N/A    
+--------    297     |         0.89       |    -101.4826003192701478    |     N/A    
+--------    298     |         1.76       |    -101.4826005895135523    |     N/A    
+--------    299     |         0.87       |    -101.4826009425574682    |     N/A    
+--------    300     |         0.85       |    -101.4826012894088052    |     N/A    
+--------    301     |         0.86       |    -101.4826014496397022    |     N/A    
+--------    302     |         0.86       |    -101.4826017372220406    |     N/A    
+--------    303     |         0.86       |    -101.4826022322975518    |     N/A    
+--------    304     |         0.85       |    -101.4826028551082118    |     N/A    
+--------    305     |         0.85       |    -101.4826029909297205    |     N/A    
+--------    306     |         0.85       |    -101.4826030756450166    |     N/A    
+--------    307     |         0.85       |    -101.4826031464949665    |     N/A    
+--------    308     |         0.85       |    -101.4826032134254206    |     N/A    
+--------    309     |         0.88       |    -101.4826032404536988    |     N/A    
+--------    310     |         0.85       |    -101.4826032586354785    |     N/A    
+--------    311     |         0.85       |    -101.4826032628431562    |     N/A    
+--------    312     |         0.86       |    -101.4826032635352533    |     N/A    
+--------    313     |         0.88       |    -101.4826032636255064    |     N/A    
+--------    314     |         0.87       |    -101.4826032636340045    |     N/A    
+Optimization terminated successfully.
+         Current function value: -101.482603
+         Iterations: 314
+         Function evaluations: 359
+         Gradient evaluations: 359
+UHF natural orbital energy = -101.482603 Hartree @ iterations 314.
+
+Summary of results:
+Molecule: H 0 0 0; F 0 0 2.9000 with basis set 6-31G for a total of 10 electrons and 11 orbitals.
+OVOS correlation energy: -99.875001 Hartree (Active unocc. orbitals: 4)
+OVOS energy: -101.474976 Hartree  @ iterations 18 (Eval. func. 23, grad. 23
+UHF energy: -101.501096 Hartree  @ iterations 13 (Eval. func. 16, grad. 16
+UMP2 natural orbital energy: -101.482603 Hartree  @ iterations 314 (Eval. func. 359, grad. 359
+--    169     |         1.11       |    -101.4864489842132684    |     N/A    
+--------    170     |         1.09       |    -101.4864505916025905    |     N/A    
+--------    171     |         1.06       |    -101.4864528366802006    |     N/A    
+--------    172     |         1.10       |    -101.4864541280318235    |     N/A    
+--------    173     |         1.07       |    -101.4864544560871167    |     N/A    
+--------    174     |         1.12       |    -101.4864547591690638    |     N/A    
+--------    175     |         1.09       |    -101.4864548769958077    |     N/A    
+--------    176     |         1.17       |    -101.4864550879896399    |     N/A    
+--------    177     |         1.11       |    -101.4864554261358478    |     N/A    
+--------    178     |         1.12       |    -101.4864557319551608    |     N/A    
+--------    179     |         1.07       |    -101.4864558027619523    |     N/A    
+--------    180     |         1.18       |    -101.4864558165482151    |     N/A    
+--------    181     |         1.14       |    -101.4864558237857466    |     N/A    
+--------    182     |         1.16       |    -101.4864558323712629    |     N/A    
+--------    183     |         1.22       |    -101.4864558394376957    |     N/A    
+--------    184     |         1.17       |    -101.4864558408231829    |     N/A    
+--------    185     |         1.18       |    -101.4864558409890378    |     N/A    
+--------    186     |         1.11       |    -101.4864558409988149    |     N/A    
+Optimization terminated successfully.
+         Current function value: -101.486456
+         Iterations: 186
+         Function evaluations: 199
+         Gradient evaluations: 199
+UHF energy = -101.486456 Hartree @ iterations 186.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 11, Active orbitals: 9 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 2 orbitals (indices [9, 10]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -99.631961 Hartree
+UMP2 energy (original): -99.826497 Hartree, correlation: -0.194536 Hartree
+UMP2 energy (natural orbitals): -99.826492 Hartree, correlation: -0.194534 Hartree
+Correlation energy difference: 0.000002 Hartree
+
+hf_string: 111111111100000000
+hf_det 261888
+### Parameters information:
+### Number theta: 40
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         1.97       |    -101.0386275771414120    |     N/A    
+--------     2      |         0.95       |    -101.0969971195980293    |     N/A    
+--------     3      |         1.00       |    -101.1917244016575950    |     N/A    
+--------     4      |         0.96       |    -101.3213314472132822    |     N/A    
+--------     5      |         0.95       |    -101.4075141738543380    |     N/A    
+--------     6      |         0.95       |    -101.4369987762120644    |     N/A    
+--------     7      |         0.95       |    -101.4728234800198550    |     N/A    
+--------     8      |         0.95       |    -101.4756463316304007    |     N/A    
+--------     9      |         0.98       |    -101.4782108965509337    |     N/A    
+--------     10     |         0.94       |    -101.4788765526285488    |     N/A    
+--------     11     |         0.89       |    -101.4793542497400409    |     N/A    
+--------     12     |         0.93       |    -101.4800673668782167    |     N/A    
+--------     13     |         0.92       |    -101.4806685668645088    |     N/A    
+--------     14     |         0.90       |    -101.4808935539580830    |     N/A    
+--------     15     |         0.90       |    -101.4809579685718859    |     N/A    
+--------     16     |         0.90       |    -101.4810068388941175    |     N/A    
+--------     17     |         0.93       |    -101.4810924253904147    |     N/A    
+--------     18     |         0.87       |    -101.4812333111552505    |     N/A    
+--------     19     |         0.90       |    -101.4814142428345036    |     N/A    
+--------     20     |         0.90       |    -101.4815474947952652    |     N/A    
+--------     21     |         0.89       |    -101.4816866912254056    |     N/A    
+--------     22     |         0.87       |    -101.4817027255154471    |     N/A    
+--------     23     |         0.87       |    -101.4817079012250360    |     N/A    
+--------     24     |         0.90       |    -101.4817106232288637    |     N/A    
+--------     25     |         0.89       |    -101.4817133431081402    |     N/A    
+--------     26     |         0.89       |    -101.4817156048143829    |     N/A    
+--------     27     |         0.91       |    -101.4817196230164882    |     N/A    
+--------     28     |         0.90       |    -101.4817265586284236    |     N/A    
+--------     29     |         0.91       |    -101.4817369099968687    |     N/A    
+--------     30     |         0.91       |    -101.4817431325636363    |     N/A    
+--------     31     |         0.95       |    -101.4817444277609724    |     N/A    
+--------     32     |         0.89       |    -101.4817446573662920    |     N/A    
+--------     33     |         0.86       |    -101.4817447238514205    |     N/A    
+--------     34     |         0.90       |    -101.4817448006717200    |     N/A    
+--------     35     |         0.93       |    -101.4817449238593952    |     N/A    
+--------     36     |         0.92       |    -101.4817451327630380    |     N/A    
+--------     37     |         0.90       |    -101.4817454858187631    |     N/A    
+--------     38     |         0.88       |    -101.4817460206589885    |     N/A    
+--------     39     |         0.86       |    -101.4817464275661223    |     N/A    
+--------     40     |         0.86       |    -101.4817465609995111    |     N/A    
+--------     41     |         0.89       |    -101.4817465956365368    |     N/A    
+--------     42     |         0.90       |    -101.4817465979175068    |     N/A    
+--------     43     |         0.89       |    -101.4817466012486591    |     N/A    
+--------     44     |         0.88       |    -101.4817466071485370    |     N/A    
+--------     45     |         0.87       |    -101.4817466178109981    |     N/A    
+--------     46     |         0.90       |    -101.4817466367061911    |     N/A    
+--------     47     |         0.91       |    -101.4817466676067568    |     N/A    
+--------     48     |         0.86       |    -101.4817467036375547    |     N/A    
+--------     49     |         0.89       |    -101.4817467165028688    |     N/A    
+--------     50     |         0.89       |    -101.4817467243204021    |     N/A    
+--------     51     |         0.87       |    -101.4817467249312557    |     N/A    
+--------     52     |         0.87       |    -101.4817467250998675    |     N/A    
+--------     53     |         0.86       |    -101.4817467253929806    |     N/A    
+--------     54     |         0.87       |    -101.4817467259277066    |     N/A    
+--------     55     |         0.88       |    -101.4817467269207327    |     N/A    
+--------     56     |         0.87       |    -101.4817467287696786    |     N/A    
+--------     57     |         0.86       |    -101.4817467321879150    |     N/A    
+--------     58     |         0.86       |    -101.4817467384135057    |     N/A    
+--------     59     |         0.87       |    -101.4817467495057315    |     N/A    
+--------     60     |         0.90       |    -101.4817467687780663    |     N/A    
+--------     61     |         0.87       |    -101.4817468017076862    |     N/A    
+--------     62     |         0.86       |    -101.4817468584151356    |     N/A    
+--------     63     |         0.90       |    -101.4817469590583840    |     N/A    
+--------     64     |         0.91       |    -101.4817471411138001    |     N/A    
+--------     65     |         0.84       |    -101.4817474228692333    |     N/A    
+--------     66     |         0.82       |    -101.4817476278781925    |     N/A    
+--------     67     |         0.81       |    -101.4817480134113197    |     N/A    
+--------     68     |         0.80       |    -101.4817487457696643    |     N/A    
+--------     69     |         0.83       |    -101.4817500639158538    |     N/A    
+--------     70     |         1.25       |    -101.4817519201909306    |     N/A    
+--------     71     |         1.65       |    -101.4817525601482515    |     N/A    
+--------     72     |         0.81       |    -101.4817530260473006    |     N/A    
+--------     73     |         0.86       |    -101.4817536956438460    |     N/A    
+--------     74     |         0.86       |    -101.4817548863664172    |     N/A    
+--------     75     |         0.84       |    -101.4817571632210900    |     N/A    
+--------     76     |         1.63       |    -101.4817584872198637    |     N/A    
+--------     77     |         0.81       |    -101.4817604765653698    |     N/A    
+--------     78     |         0.81       |    -101.4817632109255072    |     N/A    
+--------     79     |         0.80       |    -101.4817656339270826    |     N/A    
+--------     80     |         0.81       |    -101.4817687110912203    |     N/A    
+--------     81     |         1.64       |    -101.4817710439368597    |     N/A    
+--------     82     |         0.82       |    -101.4817723688955340    |     N/A    
+--------     83     |         0.84       |    -101.4817746328663901    |     N/A    
+--------     84     |         0.85       |    -101.4817784408925263    |     N/A    
+--------     85     |         0.83       |    -101.4817835630272498    |     N/A    
+--------     86     |         0.83       |    -101.4817895311190057    |     N/A    
+--------     87     |         1.63       |    -101.4817925747245368    |     N/A    
+--------     88     |         0.81       |    -101.4817969440992158    |     N/A    
+--------     89     |         0.82       |    -101.4818040432793396    |     N/A    
+--------     90     |         1.59       |    -101.4818089271199995    |     N/A    
+--------     91     |         0.79       |    -101.4818162397406240    |     N/A    
+--------     92     |         1.57       |    -101.4818213630328785    |     N/A    
+--------     93     |         0.80       |    -101.4818289054924776    |     N/A    
+--------     94     |         0.83       |    -101.4818393678693269    |     N/A    
+--------     95     |         0.84       |    -101.4818425362495020    |     N/A    
+--------     96     |         2.45       |    -101.4818577209491366    |     N/A    
+--------     97     |         1.64       |    -101.4818647091900630    |     N/A    
+--------     98     |         0.78       |    -101.4818722282550567    |     N/A    
+--------     99     |         0.81       |    -101.4818817009246317    |     N/A    
+--------    100     |         0.81       |    -101.4818940934808893    |     N/A    
+--------    101     |         0.82       |    -101.4819147966265689    |     N/A    
+--------    102     |         0.87       |    -101.4819485560375085    |     N/A    
+--------    103     |         1.65       |    -101.4819641112607087    |     N/A    
+--------    104     |         0.83       |    -101.4819847554436194    |     N/A    
+--------    105     |         0.85       |    -101.4819883498159925    |     N/A    
+--------    106     |         0.86       |    -101.4819889570360374    |     N/A    
+--------    107     |         0.83       |    -101.4819893947649376    |     N/A    
+--------    108     |         0.81       |    -101.4819895634517763    |     N/A    
+--------    109     |         0.82       |    -101.4819897396753845    |     N/A    
+--------    110     |         0.85       |    -101.4819900354559934    |     N/A    
+--------    111     |         0.82       |    -101.4819904933466006    |     N/A    
+--------    112     |         0.81       |    -101.4819911293028554    |     N/A    
+--------    113     |         0.80       |    -101.4819922014899447    |     N/A    
+--------    114     |         0.82       |    -101.4819940964050033    |     N/A    
+--------    115     |         0.82       |    -101.4819974512917327    |     N/A    
+--------    116     |         0.80       |    -101.4820031720649638    |     N/A    
+--------    117     |         0.82       |    -101.4820120215762955    |     N/A    
+--------    118     |         1.67       |    -101.4820150010951068    |     N/A    
+--------    119     |         0.82       |    -101.4820205255494159    |     N/A    
+--------    120     |         0.82       |    -101.4820296970723774    |     N/A    
+--------    121     |         0.82       |    -101.4820427335369857    |     N/A    
+--------    122     |         1.63       |    -101.4820503472545852    |     N/A    
+--------    123     |         0.81       |    -101.4820549862931500    |     N/A    
+--------    124     |         0.78       |    -101.4820635109216624    |     N/A    
+--------    125     |         1.60       |    -101.4820683917426152    |     N/A    
+--------    126     |         0.81       |    -101.4820708568080931    |     N/A    
+--------    127     |         0.81       |    -101.4820747448443967    |     N/A    
+--------    128     |         0.79       |    -101.4820785329115438    |     N/A    
+--------    129     |         0.79       |    -101.4820800729337975    |     N/A    
+--------    130     |         0.80       |    -101.4820826297227256    |     N/A    
+--------    131     |         0.84       |    -101.4820868992588458    |     N/A    
+--------    132     |         0.80       |    -101.4820935085833469    |     N/A    
+--------    133     |         0.81       |    -101.4820988783811941    |     N/A    
+--------    134     |         2.01       |    -101.4821019728383931    |     N/A    
+--------    135     |         0.80       |    -101.4821042151454265    |     N/A    
+--------    136     |         0.83       |    -101.4821083019456438    |     N/A    
+--------    137     |         1.57       |    -101.4821113531136234    |     N/A    
+--------    138     |         0.79       |    -101.4821157725833132    |     N/A    
+--------    139     |         0.79       |    -101.4821202500654636    |     N/A    
+--------    140     |         0.81       |    -101.4821238399309919    |     N/A    
+--------    141     |         0.79       |    -101.4821272510255312    |     N/A    
+--------    142     |         0.80       |    -101.4821320772954607    |     N/A    
+--------    143     |         0.83       |    -101.4821350913532569    |     N/A    
+--------    144     |         0.81       |    -101.4821378542414436    |     N/A    
+--------    145     |         0.82       |    -101.4821425691098113    |     N/A    
+--------    146     |         0.79       |    -101.4821457763550256    |     N/A    
+--------    147     |         0.79       |    -101.4821508628660922    |     N/A    
+--------    148     |         0.79       |    -101.4821585182991726    |     N/A    
+--------    149     |         0.81       |    -101.4821654456129068    |     N/A    
+--------    150     |         0.80       |    -101.4821713760700561    |     N/A    
+--------    151     |         0.79       |    -101.4821788661153192    |     N/A    
+--------    152     |         0.79       |    -101.4821860134178593    |     N/A    
+--------    153     |         0.79       |    -101.4821964013810032    |     N/A    
+--------    154     |         0.79       |    -101.4822057525016703    |     N/A    
+--------    155     |         1.61       |    -101.4822121618947790    |     N/A    
+--------    156     |         0.84       |    -101.4822175556246577    |     N/A    
+--------    157     |         0.81       |    -101.4822232755854969    |     N/A    
+--------    158     |         0.81       |    -101.4822244591951232    |     N/A    
+--------    159     |         0.81       |    -101.4822266640715043    |     N/A    
+--------    160     |         0.80       |    -101.4822304247585407    |     N/A    
+--------    161     |         0.82       |    -101.4822323668814619    |     N/A    
+--------    162     |         0.79       |    -101.4822341352001729    |     N/A    
+--------    163     |         0.80       |    -101.4822351356453396    |     N/A    
+--------    164     |         0.80       |    -101.4822364472777281    |     N/A    
+--------    165     |         0.78       |    -101.4822371005028145    |     N/A    
+--------    166     |         0.79       |    -101.4822372154712014    |     N/A    
+--------    167     |         0.79       |    -101.4822373169464242    |     N/A    
+--------    168     |         0.79       |    -101.4822374025118705    |     N/A    
+--------    169     |         0.83       |    -101.4822374275608468    |     N/A    
+--------    170     |         0.81       |    -101.4822374342569447    |     N/A    
+--------    171     |         0.81       |    -101.4822374375344367    |     N/A    
+--------    172     |         1.24       |    -101.4822374398061413    |     N/A    
+--------    173     |         0.80       |    -101.4822374414239903    |     N/A    
+--------    174     |         0.80       |    -101.4822374429035676    |     N/A    
+--------    175     |         0.80       |    -101.4822374439496855    |     N/A    
+--------    176     |         0.80       |    -101.4822374444079855    |     N/A    
+--------    177     |         0.80       |    -101.4822374444972723    |     N/A    
+--------    178     |         0.81       |    -101.4822374445052731    |     N/A    
+Optimization terminated successfully.
+         Current function value: -101.482237
+         Iterations: 178
+         Function evaluations: 195
+         Gradient evaluations: 195
+UHF natural orbital energy = -101.482237 Hartree @ iterations 178.
+
+Summary of results:
+Molecule: H 0 0 0; F 0 0 2.9000 with basis set 6-31G for a total of 10 electrons and 11 orbitals.
+OVOS correlation energy: -99.875001 Hartree (Active unocc. orbitals: 4)
+OVOS energy: -101.476502 Hartree  @ iterations 196 (Eval. func. 231, grad. 231
+UHF energy: -101.486456 Hartree  @ iterations 186 (Eval. func. 199, grad. 199
+UMP2 natural orbital energy: -101.482237 Hartree  @ iterations 178 (Eval. func. 195, grad. 195

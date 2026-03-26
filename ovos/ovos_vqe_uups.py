@@ -14,6 +14,7 @@ from ovos import OVOS
     # Json
 import json
     # Other imports
+from multiprocessing import Pool
 import os
 
 
@@ -92,6 +93,7 @@ def run_ucc_and_get_stats(wf, str_, orbital_optimization, atol=1e-6):
 
     # --- Now parse the output exactly as before ---
     lines = output.splitlines()
+    
     stats = {
         'iterations': None,
         'function_evaluations': None,
@@ -124,31 +126,31 @@ def run_ucc_and_get_stats(wf, str_, orbital_optimization, atol=1e-6):
         if match:
             stats['gradient_evaluations'] = int(match.group(1))
 
-        # Find the iteration number and energy from the progress table
-            # As it looks like:
-#             --------Iteration # | Iteration time [s] | Electronic energy [Hartree]
-# --------     1      |        13.63       |    -104.9398385314308797    |     N/A    
-# --------     2      |         4.96       |    -105.0266208692542591    |     N/A    
-# --------     3      |         4.94       |    -105.1111607905682206    |     N/A    
-# --------     4      |         4.97       |    -105.1684778451402309    |     N/A    
-# --------     5      |         3.67       |    -105.1768966082391188    |     N/A    
-# --------     6      |         4.99       |    -105.1770801982351173    |     N/A    
-# --------     7      |         5.13       |    -105.1770821629680626    |     N/A    
-# --------     8      |         5.13       |    -105.1770821674887202    |     N/A    
-# --------     9      |         5.16       |    -105.1770821725482108    |     N/A    
-# --------     10     |         5.09       |    -105.1770821815187134    |     N/A    
+        # Start parsing the progress table for energy vs. iteration
+            # Find the iteration number and energy from the progress table
+                # As it looks like:
+            # --------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+            # --------     1      |        13.63       |    -104.9398385314308797    |     N/A    
+            # --------     2      |         4.96       |    -105.0266208692542591    |     N/A    
+            # --------     3      |         4.94       |    -105.1111607905682206    |     N/A    
+            # --------     4      |         4.97       |    -105.1684778451402309    |     N/A    
+            # --------     5      |         3.67       |    -105.1768966082391188    |     N/A    
+            # --------     6      |         4.99       |    -105.1770801982351173    |     N/A    
+            # --------     7      |         5.13       |    -105.1770821629680626    |     N/A    
+            # --------     8      |         5.13       |    -105.1770821674887202    |     N/A    
+            # --------     9      |         5.16       |    -105.1770821725482108    |     N/A    
+            # --------     10     |         5.09       |    -105.1770821815187134    |     N/A    
             # I want a list of energies till the final iteration, and the final iteration number, to be able to plot energy vs. iteration.
-        if '|' in line_stripped and 'Iteration #' not in line_stripped:
+        if '|' in line_stripped and 'Iteration #' not in line_stripped :
             parts = line_stripped.split('|')
             if len(parts) >= 3:
                 iteration_part = parts[0].strip().lstrip('-').strip()
                 energy_part = parts[2].strip()
                 try:
-                    iteration_num = int(iteration_part)
                     energy_val = float(energy_part)
                     if 'iter_energies' not in stats:
                         stats['iter_energies'] = []
-                    stats['iter_energies'].append((iteration_num, energy_val))
+                    stats['iter_energies'].append(energy_val)
                 except ValueError:
                     pass
 
@@ -234,7 +236,7 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                 mo_coeff=mo_coeffs,
                 init_orbs="RHF",
                 verbose=1,
-                max_iter=1000,
+                max_iter=100,
                 conv_energy=1e-8,
                 conv_grad=1e-4,
                 keep_track_max=50
@@ -252,6 +254,8 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
             print()
 
             # SlowQuant
+            print()
+            print("Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...")
                 # Initialize for UPS wave function with OVOS-optimized orbitals
             WF_ovos = UnrestrictedWaveFunctionUPS(
                 mol.nelectron,
@@ -292,16 +296,19 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                     "mo": E_corr_mo,
                     "iterations": iter_ovos_opt,
                     "final_energy": E_ovos_opt,
-                    "iter_energies": E_corr_hist,
+                    "iter_energies": E_ovos_hist,
                     "function_evaluations": eval_ovos_opt[0],
                     "gradient_evaluations": eval_ovos_opt[1],
                 }, f, indent=4, default=lambda x: x.tolist() if isinstance(x, np.ndarray) else x)
 
 
             # Compare with UHF reference
+            print()
+            print("Calculating UHF reference for comparison...")
                 # UHF reference for comparison
             mf_uhf = scf.UHF(mol)
             mf_uhf.verbose = 0
+            mf_uhf.frozen = list(range(num_electrons//2 + num_opt_virtual_orbs, num_orbitals))  # Freeze the same virtual orbitals as in OVOS optimization for a fair comparison
             mf_uhf.kernel()
 
             #     # Initualize for UPS wave function with UHF orbitals
@@ -346,14 +353,42 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
 
 
             # Compare with UMP2 natural orbital reference
+            print()
+            print("Calculating UMP2 natural orbitals for comparison...")
                 # UMP2 natural orbitals for comparison
             mf_ump2 = scf.UHF(mol).run()
             fs_orbs = mf_ump2.mo_coeff[0].shape[1]
             active_orbs = num_electrons//2 + num_opt_virtual_orbs
+            print(f"Total number of orbitals: {fs_orbs}, Active orbitals: {active_orbs} (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.")
             frozen_orbs = fs_orbs - active_orbs
             frozen_orbs_idx = list(range(active_orbs, fs_orbs))  # Freeze the highest-energy virtual orbitals
+            print(f"Freezing {frozen_orbs} orbitals (indices {frozen_orbs_idx}) for UMP2 natural orbital calculation.")
+
             ump2_obj = mp.UMP2(mf_ump2, frozen=frozen_orbs_idx).run()
             mp2_no_coeff = ump2_obj.make_fno()[1]
+            
+            # check if mp2_no_coeff are unrestricted or restricted
+            if np.isclose(mp2_no_coeff[0], mp2_no_coeff[1], atol=1e-12).all():
+                print("UMP2 natural orbitals are restricted (RHF-like).")
+            else:
+                print("UMP2 natural orbitals are unrestricted (UHF-like).")
+            
+            # Energy of UMP2 natural orbital reference
+            mf_ump2_no = scf.UHF(mol)
+            mf_ump2_no.kernel(mo_coeff=mp2_no_coeff)
+            ump2_no_obj = mp.UMP2(mf_ump2_no, frozen=frozen_orbs_idx).run()
+
+            # Fair comparison
+            uhf_energy = mf_ump2.e_tot          # No freezing
+            mp2_energy = ump2_obj.e_tot         # With frozen
+            mp2_no_energy = ump2_no_obj.e_tot   # With frozen
+            corr_diff = ump2_no_obj.e_corr - ump2_obj.e_corr
+                # Summary of reference energies
+            print(f"UHF energy: {uhf_energy:.6f} Hartree")
+            print(f"UMP2 energy (original): {mp2_energy:.6f} Hartree, correlation: {ump2_obj.e_corr:.6f} Hartree")
+            print(f"UMP2 energy (natural orbitals): {mp2_no_energy:.6f} Hartree, correlation: {ump2_no_obj.e_corr:.6f} Hartree")
+            print(f"Correlation energy difference: {corr_diff:.6f} Hartree")
+            print()
 
             #     # Initialize for UPS wave function with UMP2 natural orbitals
             WF_ump2_no = UnrestrictedWaveFunctionUPS(
@@ -388,6 +423,9 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                     "thetas": thetas,
                     "oo": oo,
                     "mo": mp2_no_coeff,
+                    "uhf_energy": uhf_energy,
+                    "ump2_energy": mp2_energy,
+                    "ump2_no_energy": mp2_no_energy,
                     "iterations": iter_ump2_no_opt,
                     "final_energy": E_ump2_no_opt,
                     "iter_energies": E_ump2_no_hist,
@@ -443,16 +481,46 @@ num_opt_virtual_orbs_lst = [0.75]
 oo_lst = [True, False]
 
 
+def run_single_seed(args):
+    """Wrapper function for multiprocessing - takes tuple of arguments"""
+    atom, basis, dist, num_opt_virtual_orbs, oo, seed = args
+    return VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed)
+
+
 # HF
-for dist in np.arange(0.5, 3.075, 0.075): # Total points: 34
-    for atom in [f"H 0 0 0; F 0 0 {dist:.4f}"]: 
+# for dist in [-0.05, -0.025, -0.0125, 0.0125, 0.025, 0.05]: # Total num points: 36
+#     # Set dist to 2 decimal places for consistent naming and to avoid floating point issues in file names
+#     dist = round(dist, 5)
+#     # Make the VQE folders for dist if they don't exist
+#     if not os.path.exists(f"backup/data/HF/6-31G/VQE/{dist}"):
+#         os.makedirs(f"backup/data/HF/6-31G/VQE/{dist}")
+#     for method in ["OVOS", "UHF", "UMP2"]:
+#         if not os.path.exists(f"backup/data/HF/6-31G/VQE/{method}/{dist}"):
+#             os.makedirs(f"backup/data/HF/6-31G/VQE/{method}/{dist}")
+
+for dist in [-0.025, -0.0125, 0.0125, 0.025, 0.05]: # Total num points: 36
+    if dist == 0.0: # Skip the 0.0 point to avoid issues with naming and because it's not physically meaningful for a diatomic molecule
+        continue
+    # Set dist to 2 decimal places for consistent naming and to avoid floating point issues in file names
+    dist = round(dist, 5)
+    for atom in [f"H 0 0 0; F 0 0 {dist:.5f}"]: 
         for basis in [basis_lst[0]]:
             for num_opt_virtual_orbs in [num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
                 for oo in [oo_lst[1]]: # True, False
                     print(f"\nRunning VQE with OVOS optimization for {atom} in basis {basis} with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
                             # To ensure reproducibility, set random seed for SlowQuant optimizations
-                    for seed in [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]:  # Run each configuration with different random seeds to assess variability
-                        VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed)
+                    # for seed in [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]:  # Run each configuration with different random seeds to assess variability
+                    #     VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed)
+
+                    # Prepare arguments for each seed
+                    seeds = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
+                    args_list = [(atom, basis, dist, num_opt_virtual_orbs, oo, seed) for seed in seeds]
+
+                    # Run in parallel with one process per core
+                    num_cores = len(seeds) if len(seeds) < 11 else int(len(seeds)/2)  # Use all available cores
+                    with Pool(processes=num_cores) as pool:
+                        pool.map(run_single_seed, args_list)
+                    # Everything seed wil run before moving a dist forward...
 # CO, NH3, H2O ...
 
 
