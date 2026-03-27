@@ -177,7 +177,7 @@ def run_ucc_and_get_stats(wf, str_, orbital_optimization, atol=1e-6):
 def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
     molecule = str(atom.split()[0])  # Get the first element symbol for naming
     if molecule == "H":
-        molecule = "HF"
+        molecule = "HF" # "HF"
     elif molecule == "C":
         molecule = "CO"
     elif molecule == "N":
@@ -185,7 +185,7 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
     elif molecule == "O":
         molecule = "H2O"
 
-    name_out = f"backup/data/{molecule}/{basis}/VQE/{dist}/OVOS_{molecule}_{dist}_{basis}_VQE_opt_num_{num_opt_virtual_orbs}_{oo}_output.txt"
+    name_out = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/OVOS_{molecule}_{dist}_{basis}_VQE_opt_num_{num_opt_virtual_orbs}_{oo}_output.txt"
     if not os.path.exists(os.path.dirname(name_out)):
         os.makedirs(os.path.dirname(name_out))
     with open(name_out, "w") as f:
@@ -236,7 +236,7 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                 mo_coeff=mo_coeffs,
                 init_orbs="RHF",
                 verbose=1,
-                max_iter=100,
+                max_iter=500,
                 conv_energy=1e-8,
                 conv_grad=1e-4,
                 keep_track_max=50
@@ -487,40 +487,247 @@ def run_single_seed(args):
     return VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed)
 
 
+# Verify:
+# def verify_pes_energy(atom_string, basis, dist, final_energy):
+#     """Verify VQE energy makes physical sense"""
+#     from pyscf import gto, scf
+    
+#     mol = gto.Mole()
+#     mol.atom = atom_string
+#     mol.verbose = 0
+#     mol.basis = basis
+#     mol.unit = 'Angstrom'
+#     mol.build()
+    
+#     # Get reference energies  
+#     mf_uhf = scf.UHF(mol)
+#     mf_uhf.kernel()
+    
+#     print(f"Distance: {dist}")
+#     print(f"  UHF energy:               {mf_uhf.e_tot:.6f} Hartree")
+#     print(f"  Your VQE energy:          {final_energy:.6f} Hartree")
+#     print(f"  VQE vs UHF difference:    {final_energy - mf_uhf.e_tot:.6f} Hartree")
+#     print()
+    
+#     # VQE should be lower (better) than HF but not lower than true ground state
+#     assert final_energy <= mf_uhf.e_tot + 1e-4, "VQE energy is HIGHER than HF - something is wrong!"
+
+# verify_pes_energy("H 0 0 0; F 0 0 -0.5", basis_lst[0], -0.5, -108.812036)  # HF equilibrium geometry energy from OVOS MP2
+
+
 # HF
-# for dist in [-0.05, -0.025, -0.0125, 0.0125, 0.025, 0.05]: # Total num points: 36
-#     # Set dist to 2 decimal places for consistent naming and to avoid floating point issues in file names
-#     dist = round(dist, 5)
-#     # Make the VQE folders for dist if they don't exist
-#     if not os.path.exists(f"backup/data/HF/6-31G/VQE/{dist}"):
-#         os.makedirs(f"backup/data/HF/6-31G/VQE/{dist}")
-#     for method in ["OVOS", "UHF", "UMP2"]:
-#         if not os.path.exists(f"backup/data/HF/6-31G/VQE/{method}/{dist}"):
-#             os.makedirs(f"backup/data/HF/6-31G/VQE/{method}/{dist}")
+    # Rounds of dist:
+        # ['0.7', '0.8', '0.9', '1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '2.0']
+        # ['0.725', '0.75', '0.775', '0.825', '0.85', '0.875', '0.925', '0.95', '0.975', '1.025', '1.05', '1.075', '1.125', '1.15', '1.175', '1.225', '1.25', '1.275', '1.325', '1.35', '1.375', '1.425', '1.45', '1.475', '1.525', '1.55', '1.575', '1.625', '1.65', '1.675', '1.725', '1.75', '1.775', '1.825', '1.85', '1.875', '1.925', '1.95', '1.975']
+        # Together:
+                # [0.7, 0.725, 0.75, 0.775, 0.8, 0.825, 0.85, 0.875, 0.9, 0.925, 0.95, 0.975, 1.0, 1.025, 1.05, 1.075, 1.1, 1.125, 1.15, 1.175, 1.2, 1.225, 1.25, 1.275, 1.3, 1.325, 1.35, 1.375, 1.4, 1.425, 1.45, 1.475, 1.5, 1.525, 1.55, 1.575, 1.6, 1.625, 1.65, 1.675, 1.7, 1.725, 1.75, 1.775, 1.8, 1.825, 1.85, 1.875, 1.9, 1.925, 1.95, 1.975, 2.0]
+            # With length 53, from 0.7 to 2.0 in steps of 0.025
+    # Intterupted at 1.375, missing 1.4 and onwards, so I will start from 1.375 to 2.0 in steps of 0.025 to fill in the rest of the data for HF
+HF_list_full = np.arange(1.4, 2.025, 0.025).round(5).tolist()
+    
+if False:
+    for dist in HF_list_full:
+        dist = round(dist, 5)
+        # Make the VQE folders for dist if they don't exist
+        if not os.path.exists(f"backup/data/HF/6-31G/VQE/dist/{dist}"):
+            os.makedirs(f"backup/data/HF/6-31G/VQE/dist/{dist}")
+        for method in ["OVOS", "UHF", "UMP2"]:
+            if not os.path.exists(f"backup/data/HF/6-31G/VQE/{method}/{dist}"):
+                os.makedirs(f"backup/data/HF/6-31G/VQE/{method}/{dist}")
 
-for dist in [-0.025, -0.0125, 0.0125, 0.025, 0.05]: # Total num points: 36
-    if dist == 0.0: # Skip the 0.0 point to avoid issues with naming and because it's not physically meaningful for a diatomic molecule
-        continue
-    # Set dist to 2 decimal places for consistent naming and to avoid floating point issues in file names
-    dist = round(dist, 5)
-    for atom in [f"H 0 0 0; F 0 0 {dist:.5f}"]: 
-        for basis in [basis_lst[0]]:
-            for num_opt_virtual_orbs in [num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
-                for oo in [oo_lst[1]]: # True, False
-                    print(f"\nRunning VQE with OVOS optimization for {atom} in basis {basis} with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
-                            # To ensure reproducibility, set random seed for SlowQuant optimizations
-                    # for seed in [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]:  # Run each configuration with different random seeds to assess variability
-                    #     VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed)
+    # Rounds of seeds:
+        # [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
+        # [9, 19, 29, 39, 49, 59, 69, 79, 89, 99, 109, 119, 129, 139, 149, 159, 169, 179, 189, 199]
 
-                    # Prepare arguments for each seed
-                    seeds = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
-                    args_list = [(atom, basis, dist, num_opt_virtual_orbs, oo, seed) for seed in seeds]
+if True:
+    for dist in HF_list_full:
+        dist = round(dist, 5)
+        for atom in [f"H 0 0 0; F 0 0 {dist:.5f}"]: 
+            for basis in [basis_lst[0]]:
+                for num_opt_virtual_orbs in [num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
+                    for oo in [oo_lst[1]]: # True, False
+                        print(f"\nRunning VQE with OVOS optimization for {atom} in basis {basis} with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
+                        # To ensure reproducibility, set random seed for SlowQuant optimizations
+                            # Prepare arguments for each seed
+                        seeds = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99, 109, 119, 129, 139, 149, 159, 169, 179, 189, 199]
+                        args_list = [(atom, basis, dist, num_opt_virtual_orbs, oo, seed) for seed in seeds]
 
-                    # Run in parallel with one process per core
-                    num_cores = len(seeds) if len(seeds) < 11 else int(len(seeds)/2)  # Use all available cores
-                    with Pool(processes=num_cores) as pool:
-                        pool.map(run_single_seed, args_list)
-                    # Everything seed wil run before moving a dist forward...
+                        # Run in parallel with one process per core
+                        num_cores = len(seeds) if len(seeds) < 11 else int(len(seeds)/2)  # Use all available cores
+                        with Pool(processes=num_cores) as pool:
+                            pool.map(run_single_seed, args_list)
+                        # Every seed wil run before moving a dist forward...
+
+                        
+
+# Run and get the UHF data for all atom dist variations to verify in plots
+if False:
+    for dist in HF_list_full:
+        dist = round(dist, 5)
+        for atom in [f"H 0 0 0; F 0 0 {dist}"]: 
+            for basis in [basis_lst[0]]:
+                for hf in ["UHF", "RHF"]:
+                    print(f"\nRunning UHF for {atom} in basis {basis} at dist {dist}...")
+                    # set up molecule
+                    mol = gto.Mole()
+                    mol.atom = atom     # f"H 0 0 0; F 0 0 {dist}"
+                    mol.basis = basis
+                    mol.unit = 'Angstrom'
+                    mol.spin = 0
+                    mol.charge = 0
+                    mol.symmetry = False
+                    mol.verbose = 0
+                    mol.build()
+                    
+                    # Get reference energies  
+                    if hf == "UHF":
+                        hf_energy = mol.UHF().run().e_tot
+                    else:
+                        hf_energy = mol.RHF().run().e_tot
+
+                    # Save HF reference energy for later comparison
+                    name_hf = f"backup/data/HF/6-31G/VQE/UHF/{dist}/{hf}_HF_{basis}_{dist}_reference_energy.txt"
+                    with open(name_hf, "w") as f:
+                        f.write(f"{hf_energy:.6f}\n")
+                    print(f"HF reference energy for {atom} at dist {dist} saved to {name_hf}.")
+
+# Run and get nuclear repulsion energies for all atom dist variations to verify plots
+if False:
+    for dist in HF_list_full:
+        dist = round(dist, 5)
+        for atom in [f"H 0 0 0; F 0 0 {dist}"]: 
+            for basis in [basis_lst[0]]:
+                print(f"\nCalculating nuclear repulsion energy for {atom} in basis {basis} at dist {dist}...")
+                # set up molecule
+                mol = gto.Mole()
+                mol.atom = atom     # f"H 0 0 0; F 0 0 {dist}"
+                mol.basis = basis
+                mol.unit = 'Angstrom'
+                mol.spin = 0
+                mol.charge = 0
+                mol.symmetry = False
+                mol.verbose = 0
+                mol.build()
+                
+                # Get nuclear repulsion energy  
+                nuc_rep_energy = mol.energy_nuc()
+
+                # Save nuclear repulsion energy for later comparison
+                name_nuc_rep = f"backup/data/HF/6-31G/VQE/UHF/{dist}/nuclear_repulsion_HF_{basis}_{dist}_energy.txt"
+                with open(name_nuc_rep, "w") as f:
+                    f.write(f"{nuc_rep_energy:.6f}\n")
+                print(f"Nuclear repulsion energy for {atom} at dist {dist} saved to {name_nuc_rep}.")
+
+
+
+
+
+
+# HH
+HH_dist = np.arange(0.5, 3.1, 0.1)  # Total num points: 26
+if False:
+    for dist in HH_dist: # Total num points: 36
+        # Set dist to 2 decimal places for consistent naming and to avoid floating point issues in file names
+        dist = round(dist, 3)
+        # Make the VQE folders for dist if they don't exist
+        if not os.path.exists(f"backup/data/HH/6-31G/VQE/dist/{dist}"):
+            os.makedirs(f"backup/data/HH/6-31G/VQE/dist/{dist}")
+        for method in ["OVOS", "UHF", "UMP2"]:
+            if not os.path.exists(f"backup/data/HH/6-31G/VQE/{method}/{dist}"):
+                os.makedirs(f"backup/data/HH/6-31G/VQE/{method}/{dist}")
+
+if False:
+    for dist in HH_dist:
+        dist = round(dist, 3)
+        for atom in [f"H 0 0 0; H 0 0 {dist:.5f}"]: 
+            for basis in [basis_lst[0]]:
+                for num_opt_virtual_orbs in [num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
+                    for oo in [oo_lst[1]]: # True, False
+                        print(f"\nRunning VQE with OVOS optimization for {atom} in basis {basis} with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
+                                # To ensure reproducibility, set random seed for SlowQuant optimizations
+                        # for seed in [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]:  # Run each configuration with different random seeds to assess variability
+                        #     VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed)
+
+                        # Prepare arguments for each seed
+                        seeds = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
+                        args_list = [(atom, basis, dist, num_opt_virtual_orbs, oo, seed) for seed in seeds]
+
+                        # Run in parallel with one process per core
+                        num_cores = len(seeds) if len(seeds) < 11 else int(len(seeds)/2)  # Use all available cores
+                        with Pool(processes=num_cores) as pool:
+                            pool.map(run_single_seed, args_list)
+                        # Everything seed wil run before moving a dist forward...
+
+                        
+
+# Run and get the UHF data for all atom dist variations to verify in plots
+if False:
+    for dist in HH_dist:
+        dist = round(dist, 3)
+        for atom in [f"H 0 0 0; H 0 0 {dist}"]: 
+            for basis in [basis_lst[0]]:
+                for hf in ["RHF", "UHF"]:
+                    print(f"\nRunning {hf} for {atom} in basis {basis} at dist {dist}...")
+                    # set up molecule
+                    mol = gto.Mole()
+                    mol.atom = atom     # f"H 0 0 0; H 0 0 {dist}"
+                    mol.basis = basis
+                    mol.unit = 'Angstrom'
+                    mol.spin = 0
+                    mol.charge = 0
+                    mol.symmetry = False
+                    mol.verbose = 0
+                    mol.build()
+                    
+                    # Get reference energies  
+                    if hf == "RHF":
+                        hf_energy = mol.RHF().run().e_tot
+                    else:
+                        hf_energy = mol.UHF().run().e_tot
+
+                    # Save HF reference energy for later comparison
+                    name_hf = f"backup/data/HH/6-31G/VQE/UHF/{dist}/{hf}_HH_{basis}_{dist}_reference_energy.txt"
+                    with open(name_hf, "w") as f:
+                        f.write(f"{hf_energy:.6f}\n")
+                    print(f"HF reference energy for {atom} at dist {dist} saved to {name_hf}.")
+
+# Run and get nuclear repulsion energies for all atom dist variations to verify plots
+if False:
+    for dist in HH_dist:
+        dist = round(dist, 3)
+        for atom in [f"H 0 0 0; H 0 0 {dist}"]: 
+            for basis in [basis_lst[0]]:
+                print(f"\nCalculating nuclear repulsion energy for {atom} in basis {basis} at dist {dist}...")
+                # set up molecule
+                mol = gto.Mole()
+                mol.atom = atom     # f"H 0 0 0; H 0 0 {dist}"
+                mol.basis = basis
+                mol.unit = 'Angstrom'
+                mol.spin = 0
+                mol.charge = 0
+                mol.symmetry = False
+                mol.verbose = 0
+                mol.build()
+                
+                # Get nuclear repulsion energy  
+                nuc_rep_energy = mol.energy_nuc()
+
+                # Save nuclear repulsion energy for later comparison
+                name_nuc_rep = f"backup/data/HH/6-31G/VQE/UHF/{dist}/nuclear_repulsion_HH_{basis}_{dist}_energy.txt"
+                with open(name_nuc_rep, "w") as f:
+                    f.write(f"{nuc_rep_energy:.6f}\n")
+                print(f"Nuclear repulsion energy for {atom} at dist {dist} saved to {name_nuc_rep}.")
+
+
+
+
+
+
+
+
+
+
+
 # CO, NH3, H2O ...
 
 

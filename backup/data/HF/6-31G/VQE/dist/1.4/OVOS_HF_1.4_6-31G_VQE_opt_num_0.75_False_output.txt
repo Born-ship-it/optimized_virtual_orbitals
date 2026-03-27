@@ -1,0 +1,1 @@
+Number of electrons: 10, Number of orbitals: 11

@@ -1,0 +1,1166 @@
+Number of electrons: 2, Number of orbitals: 4
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 2 active virtual orbitals (out of 3 total virtual orbitals).
+
+#### Active and inactive spaces ####
+Total number of spin-orbitals:    8
+Active occupied spin-orbitals:    [0, 1]
+Active unoccupied spin-orbitals:  [2, 3, 4, 5]
+Inactive unoccupied spin-orbs:    [6, 7]
+
+
+#### OVOS Iteration 1 ####
+    [4/6]: MP2 energy = -0.064317985370
+
+#### OVOS Iteration 2 ####
+    [4/6]: MP2 energy = -0.028066273941
+
+#### OVOS Iteration 3 ####
+    [4/6]: MP2 energy = -0.070002510439
+            ΔE = -4.19e-02  ‖grad‖ = 1.05e-02  
+
+#### OVOS Iteration 4 ####
+    [4/6]: MP2 energy = -0.068745927370
+            ΔE = 1.26e-03  ‖grad‖ = 2.88e-02  (energy increased!)
+
+#### OVOS Iteration 5 ####
+    [4/6]: MP2 energy = -0.062872727895
+            ΔE = 5.87e-03  ‖grad‖ = 7.02e-02  (energy increased!)
+
+#### OVOS Iteration 6 ####
+    [4/6]: MP2 energy = -0.022234360403
+            ΔE = 4.06e-02  ‖grad‖ = 3.78e-02  (energy increased!)
+
+#### OVOS Iteration 7 ####
+    [4/6]: MP2 energy = -0.034267372300
+            ΔE = -1.20e-02  ‖grad‖ = 5.29e-02  
+
+#### OVOS Iteration 8 ####
+    [4/6]: MP2 energy = -0.045574217717
+            ΔE = -1.13e-02  ‖grad‖ = 6.25e-02  
+
+#### OVOS Iteration 9 ####
+    [4/6]: MP2 energy = -0.059178787393
+            ΔE = -1.36e-02  ‖grad‖ = 6.09e-02  
+
+#### OVOS Iteration 10 ####
+    [4/6]: MP2 energy = -0.070149997407
+            ΔE = -1.10e-02  ‖grad‖ = 2.14e-03  
+
+#### OVOS Iteration 11 ####
+    [4/6]: MP2 energy = -0.070141974260
+            ΔE = 8.02e-06  ‖grad‖ = 3.16e-03  (energy increased!)
+
+#### OVOS Iteration 12 ####
+    [4/6]: MP2 energy = -0.070098958792
+            ΔE = 4.30e-05  ‖grad‖ = 6.37e-03  (energy increased!)
+
+#### OVOS Iteration 13 ####
+    [4/6]: MP2 energy = -0.069801557515
+            ΔE = 2.97e-04  ‖grad‖ = 1.51e-02  (energy increased!)
+
+#### OVOS Iteration 14 ####
+    [4/6]: MP2 energy = -0.068155549200
+            ΔE = 1.65e-03  ‖grad‖ = 3.83e-02  (energy increased!)
+
+#### OVOS Iteration 15 ####
+    [4/6]: MP2 energy = -0.068208089386
+            ΔE = -5.25e-05  ‖grad‖ = 3.33e-02  
+
+#### OVOS Iteration 16 ####
+    [4/6]: MP2 energy = -0.067951239135
+            ΔE = 2.57e-04  ‖grad‖ = 4.02e-02  (energy increased!)
+
+#### OVOS Iteration 17 ####
+    [4/6]: MP2 energy = -0.067988422385
+            ΔE = -3.72e-05  ‖grad‖ = 3.48e-02  
+
+#### OVOS Iteration 18 ####
+    [4/6]: MP2 energy = -0.067814734879
+            ΔE = 1.74e-04  ‖grad‖ = 4.14e-02  (energy increased!)
+
+#### OVOS Iteration 19 ####
+    [4/6]: MP2 energy = -0.067841071661
+            ΔE = -2.63e-05  ‖grad‖ = 3.58e-02  
+
+#### OVOS Iteration 20 ####
+    [4/6]: MP2 energy = -0.067731317507
+            ΔE = 1.10e-04  ‖grad‖ = 4.21e-02  (energy increased!)
+
+#### OVOS Iteration 21 ####
+    [4/6]: MP2 energy = -0.067750853014
+            ΔE = -1.95e-05  ‖grad‖ = 3.64e-02  
+
+#### OVOS Iteration 22 ####
+    [4/6]: MP2 energy = -0.067683288406
+            ΔE = 6.76e-05  ‖grad‖ = 4.25e-02  (energy increased!)
+
+#### OVOS Iteration 23 ####
+    [4/6]: MP2 energy = -0.067698860135
+            ΔE = -1.56e-05  ‖grad‖ = 3.67e-02  
+
+#### OVOS Iteration 24 ####
+    [4/6]: MP2 energy = -0.067656622582
+            ΔE = 4.22e-05  ‖grad‖ = 4.27e-02  (energy increased!)
+
+#### OVOS Iteration 25 ####
+    [4/6]: MP2 energy = -0.067669980617
+            ΔE = -1.34e-05  ‖grad‖ = 3.69e-02  
+
+#### OVOS Iteration 26 ####
+    [4/6]: MP2 energy = -0.067642124467
+            ΔE = 2.79e-05  ‖grad‖ = 4.29e-02  (energy increased!)
+
+#### OVOS Iteration 27 ####
+    [4/6]: MP2 energy = -0.067654275375
+            ΔE = -1.22e-05  ‖grad‖ = 3.70e-02  
+
+#### OVOS Iteration 28 ####
+    [4/6]: MP2 energy = -0.067634332998
+            ΔE = 1.99e-05  ‖grad‖ = 4.29e-02  (energy increased!)
+
+#### OVOS Iteration 29 ####
+    [4/6]: MP2 energy = -0.067645834201
+            ΔE = -1.15e-05  ‖grad‖ = 3.70e-02  
+
+#### OVOS Iteration 30 ####
+    [4/6]: MP2 energy = -0.067630172146
+            ΔE = 1.57e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 31 ####
+    [4/6]: MP2 energy = -0.067641326118
+            ΔE = -1.12e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 32 ####
+    [4/6]: MP2 energy = -0.067627957675
+            ΔE = 1.34e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 33 ####
+    [4/6]: MP2 energy = -0.067638926768
+            ΔE = -1.10e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 34 ####
+    [4/6]: MP2 energy = -0.067626781234
+            ΔE = 1.21e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 35 ####
+    [4/6]: MP2 energy = -0.067637652089
+            ΔE = -1.09e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 36 ####
+    [4/6]: MP2 energy = -0.067626156851
+            ΔE = 1.15e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 37 ####
+    [4/6]: MP2 energy = -0.067636975561
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 38 ####
+    [4/6]: MP2 energy = -0.067625825637
+            ΔE = 1.11e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 39 ####
+    [4/6]: MP2 energy = -0.067636616685
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 40 ####
+    [4/6]: MP2 energy = -0.067625649987
+            ΔE = 1.10e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 41 ####
+    [4/6]: MP2 energy = -0.067636426364
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 42 ####
+    [4/6]: MP2 energy = -0.067625556849
+            ΔE = 1.09e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 43 ####
+    [4/6]: MP2 energy = -0.067636325447
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 44 ####
+    [4/6]: MP2 energy = -0.067625507467
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 45 ####
+    [4/6]: MP2 energy = -0.067636271940
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 46 ####
+    [4/6]: MP2 energy = -0.067625481285
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 47 ####
+    [4/6]: MP2 energy = -0.067636243571
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 48 ####
+    [4/6]: MP2 energy = -0.067625467404
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 49 ####
+    [4/6]: MP2 energy = -0.067636228531
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 50 ####
+    [4/6]: MP2 energy = -0.067625460045
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 51 ####
+    [4/6]: MP2 energy = -0.067636220558
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 52 ####
+    [4/6]: MP2 energy = -0.067625456144
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 53 ####
+    [4/6]: MP2 energy = -0.067636216330
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 54 ####
+    [4/6]: MP2 energy = -0.067625454075
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 55 ####
+    [4/6]: MP2 energy = -0.067636214089
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 56 ####
+    [4/6]: MP2 energy = -0.067625452979
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 57 ####
+    [4/6]: MP2 energy = -0.067636212901
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 58 ####
+    [4/6]: MP2 energy = -0.067625452397
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 59 ####
+    [4/6]: MP2 energy = -0.067636212271
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 60 ####
+    [4/6]: MP2 energy = -0.067625452089
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 61 ####
+    [4/6]: MP2 energy = -0.067636211937
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 62 ####
+    [4/6]: MP2 energy = -0.067625451926
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 63 ####
+    [4/6]: MP2 energy = -0.067636211760
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 64 ####
+    [4/6]: MP2 energy = -0.067625451839
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 65 ####
+    [4/6]: MP2 energy = -0.067636211666
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 66 ####
+    [4/6]: MP2 energy = -0.067625451793
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 67 ####
+    [4/6]: MP2 energy = -0.067636211616
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 68 ####
+    [4/6]: MP2 energy = -0.067625451769
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 69 ####
+    [4/6]: MP2 energy = -0.067636211590
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 70 ####
+    [4/6]: MP2 energy = -0.067625451756
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 71 ####
+    [4/6]: MP2 energy = -0.067636211576
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 72 ####
+    [4/6]: MP2 energy = -0.067625451749
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 73 ####
+    [4/6]: MP2 energy = -0.067636211568
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 74 ####
+    [4/6]: MP2 energy = -0.067625451745
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 75 ####
+    [4/6]: MP2 energy = -0.067636211564
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 76 ####
+    [4/6]: MP2 energy = -0.067625451743
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 77 ####
+    [4/6]: MP2 energy = -0.067636211562
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 78 ####
+    [4/6]: MP2 energy = -0.067625451742
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 79 ####
+    [4/6]: MP2 energy = -0.067636211561
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 80 ####
+    [4/6]: MP2 energy = -0.067625451742
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 81 ####
+    [4/6]: MP2 energy = -0.067636211561
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 82 ####
+    [4/6]: MP2 energy = -0.067625451741
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 83 ####
+    [4/6]: MP2 energy = -0.067636211560
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 84 ####
+    [4/6]: MP2 energy = -0.067625451741
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 85 ####
+    [4/6]: MP2 energy = -0.067636211560
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 86 ####
+    [4/6]: MP2 energy = -0.067625451741
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 87 ####
+    [4/6]: MP2 energy = -0.067636211560
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 88 ####
+    [4/6]: MP2 energy = -0.067625451741
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 89 ####
+    [4/6]: MP2 energy = -0.067636211560
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 90 ####
+    [4/6]: MP2 energy = -0.067625451741
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 91 ####
+    [4/6]: MP2 energy = -0.067636211560
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 92 ####
+    [4/6]: MP2 energy = -0.067625451741
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 93 ####
+    [4/6]: MP2 energy = -0.067636211560
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 94 ####
+    [4/6]: MP2 energy = -0.067625451741
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 95 ####
+    [4/6]: MP2 energy = -0.067636211560
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 96 ####
+    [4/6]: MP2 energy = -0.067625451741
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 97 ####
+    [4/6]: MP2 energy = -0.067636211560
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 98 ####
+    [4/6]: MP2 energy = -0.067625451741
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+
+#### OVOS Iteration 99 ####
+    [4/6]: MP2 energy = -0.067636211560
+            ΔE = -1.08e-05  ‖grad‖ = 3.71e-02  
+
+#### OVOS Iteration 100 ####
+    [4/6]: MP2 energy = -0.067625451741
+            ΔE = 1.08e-05  ‖grad‖ = 4.30e-02  (energy increased!)
+Reached maximum iterations (100)
+
+Optimization finished. Final MP2 energy = -0.9270459403369107 Hartree. (ΔE_corr = -0.07014999740730896 Hartree)
+OVOS optimized orbitals are restricted (RHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]---------     1      |         0.42       |     -1.0606834203336433     |     N/A    
+--------     2      |         0.03       |     -1.0645454791114122     |     N/A    
+--------     3      |         0.02       |     -1.0666876539226653     |     N/A    
+--------     4      |         0.03       |     -1.0683361432859528     |     N/A    
+--------     5      |         0.02       |     -1.0688098907326768     |     N/A    
+--------     6      |         0.02       |     -1.0689848585242254     |     N/A    
+--------     7      |         0.02       |     -1.0691356075598648     |     N/A    
+--------     8      |         0.02       |     -1.0693317450899107     |     N/A    
+--------     9      |         0.02       |     -1.0696533045811736     |     N/A    
+--------     10     |         0.03       |     -1.0702224120381807     |     N/A    
+--------     11     |         0.03       |     -1.0708434821988932     |     N/A    
+--------     12     |         0.13       |     -1.0951960530180818     |     N/A    
+--------     13     |         0.04       |     -1.0958934106863512     |     N/A    
+--------     14     |         0.05       |     -1.1023189793227330     |     N/A    
+--------     15     |         0.03       |     -1.1143304881439633     |     N/A    
+--------     16     |         0.02       |     -1.1345370504453673     |     N/A    
+--------     17     |         0.03       |     -1.1604797475753152     |     N/A    
+--------     18     |         0.07       |     -1.1664797950095613     |     N/A    
+--------     19     |         0.03       |     -1.1768834922227092     |     N/A    
+--------     20     |         0.04       |     -1.1946703017931564     |     N/A    
+--------     21     |         0.03       |     -1.2094751831247463     |     N/A    
+--------     22     |         0.04       |     -1.2110723075898344     |     N/A    
+--------     23     |         0.03       |     -1.2113688360886861     |     N/A    
+--------     24     |         0.03       |     -1.2114545941951091     |     N/A    
+--------     25     |         0.04       |     -1.2114854113969109     |     N/A    
+--------     26     |         0.06       |     -1.2114918308806162     |     N/A    
+--------     27     |         0.03       |     -1.2114936222777362     |     N/A    
+--------     28     |         0.03       |     -1.2114948380097255     |     N/A    
+--------     29     |         0.05       |     -1.2114969799776036     |     N/A    
+--------     30     |         0.05       |     -1.2115008552787068     |     N/A    
+--------     31     |         0.02       |     -1.2115078872200895     |     N/A    
+--------     32     |         0.03       |     -1.2115204276800957     |     N/A    
+--------     33     |         0.03       |     -1.2115415647970134     |     N/A    
+--OVOS optimized energy = -1.21177 Hartree @ iterations 31.
+
+Calculating UHF reference for comparison...
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.05       |     -0.9453151000983631     |     N/A    
+--------     2      |         0.01       |     -1.0269084614969901     |     N/A    
+--------     3      |         0.02       |     -1.0395297385687203     |     N/A    
+--------     4      |         0.01       |     -1.0615991213716935     |     N/A    
+--------     5      |         0.03       |     -1.0910011272091338     |     N/A    
+--------     6      |         0.02       |     -1.1074128467849820     |     N/A    
+--------     7      |         0.01       |     -1.1313247546332152     |     N/A    
+--------     8      |         0.01       |     -1.1416084451392465     |     N/A    
+--------     9      |         0.02       |     -1.1583918847817589     |     N/A    
+--------     10     |         0.03       |     -1.1841313009858938     |     N/A    
+--------     11     |         0.08       |     -1.1939465230184834     |     N/A    
+--------     12     |         0.02       |     -1.1994194021645599     |     N/A    
+--------     13     |         0.01       |     -1.2041791579455656     |     N/A    
+--------     14     |         0.01       |     -1.2042670140140765     |     N/A    
+--------     15     |         0.02       |     -1.2044052853680045     |     N/A    
+--------     16     |         0.02       |     -1.2044730960121233     |     N/A    
+--------     17     |         0.03       |     -1.2044738688917846     |     N/A    
+--------     18     |         0.02       |     -1.2044740577869197     |     N/A    
+--------     19     |         0.02       |     -1.2044740585306684     |     N/A    
+--------     20     |         0.01       |     -1.2044740586960232     |     N/A    
+--------     21     |         0.02       |     -1.2044740590038088     |     N/A    
+--------     22     |         0.01       |     -1.2044740595876002     |     N/A    
+-----OVOS optimized energy = -1.21177 Hartree @ iterations 56.
+
+Calculating UHF reference for comparison...
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.06       |     -1.0631989690951666     |     N/A    
+--------     2      |         0.04       |     -1.0681037381550573     |     N/A    
+--------     3      |         0.12       |     -1.0685215986191074     |     N/A    
+--------     4      |         0.14       |     -1.0735905327212554     |     N/A    
+--------     5      |         0.03       |     -1.0804607548617016     |     N/A    
+--------     6      |         0.05       |     -1.0821122345524177     |     N/A    
+--------     7      |         0.06       |     -1.0847915802371650     |     N/A    
+--------     8      |         0.01       |     -1.0899492400013500     |     N/A    
+--------     9      |         0.03       |     -1.0995454144960037     |     N/A    
+--------     10     |         0.08       |     -1.1153600104058794     |     N/A    
+--------     11     |         0.02       |     -1.1365764997477781     |     N/A    
+--------     12     |         0.04       |     -1.1489707469655273     |     N/A    
+--------     13     |         0.03       |     -1.1639283323939431     |     N/A    
+--------     14     |         0.06       |     -1.1858383093198781     |     N/A    
+--------     15     |         0.05       |     -1.1948823863295166     |     N/A    
+--------     16     |         0.01       |     -1.2008647156288108     |     N/A    
+--------     17     |         0.05       |     -1.2035731923104818     |     N/A    
+--------     18     |         0.04       |     -1.2039942077777726     |     N/A    
+----OVOS optimized energy = -1.21177 Hartree @ iterations 77.
+
+Calculating UHF reference for comparison...
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.24       |     -1.0658029599589078     |     N/A    
+--------     2      |         0.06       |     -1.0686380470279115     |     N/A    
+--------     3      |         0.06       |     -1.0698125466057353     |     N/A    
+--------     4      |         0.09       |     -1.0714322271142116     |     N/A    
+--------     5      |         0.03       |     -1.0726981459368765     |     N/A    
+--------     6      |         0.02       |     -1.0750136582751082     |     N/A    
+--------     7      |         0.05       |     -1.0783530409882500     |     N/A    
+--------     8      |         0.02       |     -1.0840674508402159     |     N/A    
+--------     9      |         0.08       |     -1.0920766109789706     |     N/A    
+--------     10     |         0.07       |     -1.1036264872436328     |     N/A    
+--------     11     |         0.04       |     -1.1209085729828532     |     N/A    
+--UHF energy = -1.204475 Hartree @ iterations 55.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.856896 Hartree
+UMP2 energy (original): -0.921214 Hartree, correlation: -0.064318 Hartree
+UMP2 energy (natural orbitals): -0.921214 Hartree, correlation: -0.064318 Hartree
+Correlation energy difference: -0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------IteUHF energy = -1.204475 Hartree @ iterations 38.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.856896 Hartree
+UMP2 energy (original): -0.921214 Hartree, correlation: -0.064318 Hartree
+UMP2 energy (natural orbitals): -0.921214 Hartree, correlation: -0.064318 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.05       |     -1.0628737473236829     |     N/A    
+--------     2      |         0.08       |     -1.0682985466592718     |     N/A    
+--------     3      |         0.12       |     -1.0685367200663807     |     N/A    
+--------     4      |         0.09       |     -1.0688564529186777     |     N/A    
+--------     5      |         0.24       |     -1.0718646656845519     |     N/A    
+--------     6      |         0.11       |     -1.0760119971902522     |     N/A    
+--------     7      |         0.71       |     -1.0923252550325855     |     N/A    
+--------     8      |         0.34       |     -1.0925088430970606     |     N/A    
+--------     9      |         0.17       |     -1.0995427564961673     |     N/A    
+--------     10     |         0.07       |     -1.1132022405704187     |     N/A    
+--------     11     |         0.05       |     -1.1376233744486002     |     N/A    
+--------     12     |         0.06       |     -1.1531713795166099     |     N/A    
+--------     13     |         0.18       |     -1.1635849512530050     |     N/A    
+--------     14     |         0.09       |     -1.1700893302409263     |     N/A    
+--------     15     |         0.10       |     -1.1799121073239294     |     N/A    
+--------     16     |         0.11       |     -1.1937688062153891     |     N/A    
+--------     17     |         0.09       |     -1.2024400729132139     |     N/A    
+--------     18     |         0.07       |     -1.2034005473587543     |     N/A    
+--------     19     |    UHF energy = -1.204475 Hartree @ iterations 44.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.856896 Hartree
+UMP2 energy (original): -0.921214 Hartree, correlation: -0.064318 Hartree
+UMP2 energy (natural orbitals): -0.921214 Hartree, correlation: -0.064318 Hartree
+Correlation energy difference: -0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.08       |     -1.0667795870294050     |     N/A    
+--------     2      |         0.04       |     -1.0691493903207758     |     N/A    
+--------     3      |         0.01       |     -1.0699954553350246     |     N/A    
+--------     4      |         0.06       |     -1.0757166585688835     |     N/A    
+--------     5      |         0.04       |     -1.0808087738479890     |     N/A    
+--------     6      |         0.05       |     -1.0863236702192747     |     N/A    
+--------     7      |         0.05       |     -1.0936458197261918     |     N/A    
+--------     8      |         0.02       |     -1.1035500321694547     |     N/A    
+--------     9      |         0.08       |     -1.1193310853749099     |     N/A    
+--------     10     |         0.01       |     -1.1438428382691113     |     N/A    
+--------     11     |         0.02       |     -1.1662721357146366     |     N/A    
+--------     12     |         0.04       |     -1.1739545210903901     |     N/A    
+--------     13     |         0.05       |     -1.1869793713154098     |     N/A    
+--------     14     |         0.01       |     -1.1986906163165356     |     N/A    
+--------     15     |         0.01       |     -1.2008953619881750     |     N/A    
+--------     16     |         0.02       |     -1.2026346986403949     |     N/A    
+--------     17     |         0.02       |     -1.2027399976559898     |     N/A    
+--------     18     |         0.03       |     -1.2027655507232506     |     N/A    
+--------     19     |         0.01       |     -1.2027967517428686     |     N/A    
+--------     20     |         0.01       |     -1.2028288209418350     |     N/A    
+--------     21     |         0.01       |     -1.2028830250942633     |     N/A    
+--------     22     |         0.01       |     -1.2029767168889491     |     N/A    
+--------     23     |         0.01       |     -1.2031293548759958     |     N/A    
+--------     24     |         0.04       |     -1.2033206435116399     |     N/A    
+--------     25     |         0.02       |     -1.2036147486046214     |     N/A    
+--------     26     |         0.01       |     -1.2039283153440414     |     N/A    ---------     27     |         0.07       |     -1.2039736486688595     |     N/A    ---------     28     |         0.01       |     -1.2040499246995076     |     N/A    ---------     29     |         0.03       |     -1.2041729912300982     |     N/A    ---------     30     |         0.02       |     -1.2042979049644009     |     N/A   
+---------     31     |         0.01       |     -1.2043411390450487     |     N/A    ---------     32     |         0.01       |     -1.2044112708019563     |     N/A    ---------     33     |         0.08       |     -1.2044263858595465     |     N/A    
+--------     34     |         0.01       |     -1.2044411492156757     |     N/A    ---------     35     |         0.05       |     -1.2044494742725611     |     N/A    --------     29     |         0.05       |     -1.2007553542962603     |     N/A    
+--------     30     |         0.09       |     -1.2039386314564955     |     N/A    
+--------     31     |         0.02       |     -1.2043340686891242     |     N/A    
+--------     32     |         0.12       |     -1.2043584619939196     |     N/A    
+--------     33     |         0.05       |     -1.2043645241792482     |     N/A    
+--------     34     |         0.05       |     -1.2043656499025543     |     N/A    
+--------     35     |         0.04       |     -1.2043658585244406     |     N/A    
+--------     36     |         0.02       |     -1.2043660528978251     |     N/A    
+--------     37     |         0.02       |     -1.2043663860147422     |     N/A    
+--------     38     |         0.01       |     -1.2043669872768770     |     N/A    
+--------     39     |         0.07       |     -1.2043680911355572     |     N/A    
+--------     40     |         0.01       |     -1.2043701076857130     |     N/A    
+--------     41     |         0.04       |     -1.2043736821384003     |     N/A    
+--------     42     |         0.03       |     -1.2043794203499589     |     N/A    
+--------     43     |         0.03       |     -1.2043859685919311     |     N/A    
+--------     44     |         0.02       |     -1.2043954716059531     |     N/A    
+--------     45     |         0.03       |     -1.2044099523448317     |     N/A    
+--------     46     |         0.03       |     -1.2044179492231688     |     N/A    
+--------     47     |         0.04       |     -1.2044226108547644     |     N/A    
+--------     48     |         0.02       |     -1.2044260083804907     |     N/A    
+--------     49     |         0.05       |     -1.2044295449617024     |     N/A    
+--------     50     |         0.02       |     -1.2044330482805541     |     N/A    
+--------     51     |         0.01       |     -1.2044381636910506     |     N/A    
+--------     52     |         0.04       |     -1.2044418520976772     |     N/A    
+--------     53     |         0.05       |     -1.2044468727301985     |     N/A    
+--------     54     |         0.10       |     -1.2044487424476558     |     N/A    
+--------     55     |         0.01       |     -1.2044512853429694     |     N/A    
+--------     56     |         0.01       |     -1.2044540213904498     |     N/A    
+--------     57     |         0.05       |     -1.2044554657035449     |     N/A    
+--------     58     |         0.03       |     -1.2044576059069896     |     N/A    
+--------     59     |         0.01       |     -1.2044597239471626     |     N/A    
+--------     60     |         0.07       |     -1.2044605659344276     |     N/A    
+--------     61     |         0.03       |     -1.2044619654167983     |     N/A    
+--------     62     |         0.11       |     -1.2044629317678346     |     N/A    
+--------     63     |         0.01       |     -1.2044644373759579     |     N/A    
+--------     64     |         0.06       |     -1.2044659066407526     |     N/A    
+--------     65     |         0.01       |     -1.2044671635048554     |     N/A    
+--------     66     |         0.09       |     -1.2044683238186438     |     N/A    
+--------     67     |         0.08       |     -1.2044687412617685     |     N/A    
+--------     68     |         0.02       |     -1.2044689131979576     |     N/A    
+--------     69     |         0.06       |     -1.2044691340673506     |     N/A    
+--------     70     |         0.03       |     -1.2044695182322542     |     N/A    
+--------     71     |         0.05       |     -1.2044701435244527     |     N/A    
+--------     72     |         0.09       |     -1.2044704966067166     |     N/A    
+--------     73     |         0.06       |     -1.2044710544086306     |     N/A    
+--------     74     |         0.02       |     -1.2044717533401759     |     N/A    
+--------     75     |         0.08       |     -1.2044719376935809     |     N/A    
+--------     76     |         0.04       |     -1.2044722206881888     |     N/A    
+--------     77     |         0.06       |     -1.2044726628582225     |     N/A    
+--------     78     |         0.06       |     -1.2044731367031434     |     N/A    
+--------     79     |         0.13       |     -1.2044732613032925     |     N/A    
+--------     80     |         0.04       |     -1.2044734624864326     |     N/A    
+--------     81     |         0.03       |     -1.2044737759356807     |     N/A    
+--------     82     |         0.03       |     -1.2044740610414664     |     N/A    
+--------     83     |         0.04       |     -1.2044743366632458     |     N/A    
+--------     84     |         0.04       |     -1.2044745465468569     |     N/A    
+--------     85     |         0.05       |     -1.2044745833969035     |     N/A    
+--------     86     |         0.05       |     -1.2044746441279763     |     N/A    
+--------     87     |         0.05       |     -1.2044747414643464     |     N/A    
+--------     88     |         0.03       |     -1.2044748710426942     |     N/A    
+--------     89     |         0.08       |     -1.2044749177435963     |     N/A    
+--------     90     |         0.03       |     -1.2044749658794713     |     N/A    
+--------     91     |         0.04       |     -1.2044750327053728     |     N/A    
+--------     92     |         0.02       |     -1.2044750817155008     |     N/A    
+--------     93     |         0.03       |     -1.2044751194642169     |     N/A    
+--------     94     |         0.03       |     -1.2044751473619726     |     N/A    
+--------     95     |         0.05       |     -1.2044751535525644     |     N/A    
+--------     96     |         0.06       |     -1.2044751650914642     |     N/A    
+--------     97     |         0.06       |     -1.2044751721355658     |     N/A    
+--------     98     |         0.06       |     -1.2044751745213373     |     N/A    
+--------     99     |         0.02       |     -1.2044751755916261     |     N/A    
+--------    100     |         0.04       |     -1.2044751759578134     |     N/A    
+--------    101     |         0.03       |     -1.2044751762920687     |     N/A    
+--------    102     |         0.02       |     -1.2044751767321402     |     N/A    
+--------    103     |         0.01       |     -1.2044751768879667     |     N/A    
+--------    104     |         0.08       |     -1.2044751769031112     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.204475
+         Iterations: 104
+         Function evaluations: 130
+         Gradient evaluations: 130
+UHF natural orbital energy = -1.204475 Hartree @ iterations 104.
+
+Summary of results:
+Molecule: H 0 0 0; H 0 0 2.50000 with basis set 6-31G for a total of 2 electrons and 4 orbitals.
+OVOS correlation energy: -0.927046 Hartree (Active unocc. orbitals: 2)
+OVOS energy: -1.211770 Hartree  @ iterations 77 (Eval. func. 96, grad. 96
+UHF energy: -1.204475 Hartree  @ iterations 51 (Eval. func. 74, grad. 74
+UMP2 natural orbital energy: -1.204475 Hartree  @ iterations 104 (Eval. func. 130, grad. 130
+.2044418057196642     |     N/A    
+--------    102     |         0.04       |     -1.2044461445310819     |     N/A    
+------UHF energy = -1.204475 Hartree @ iterations 120.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.856896 Hartree
+UMP2 energy (original): -0.921214 Hartree, correlation: -0.064318 Hartree
+UMP2 energy (natural orbitals): -0.921214 Hartree, correlation: -0.064318 Hartree
+Correlation energy difference: -0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.06       |     -1.0539057130785565     |     N/A    
+--------     2      |         0.02       |     -1.1380337934794689     |     N/A    
+--------     3      |         0.01       |     -1.1831682518505833     |     N/A    
+--------     4      |         0.04       |     -1.1948844973102528     |     N/A    
+--------     5      |         0.02       |     -1.1980725505223062     |     N/A    
+--------     6      |         0.04       |     -1.2004817894752464     |     N/A    
+--------     7      |         0.02       |     -1.2008158827238018     |     N/A    
+--------     8      |         0.10       |     -1.2009146822131971     |     N/A    
+--------     9      |  UHF energy = -1.204475 Hartree @ iterations 129.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.856896 Hartree
+UMP2 energy (original): -0.921214 Hartree, correlation: -0.064318 Hartree
+UMP2 energy (natural orbitals): -0.921214 Hartree, correlation: -0.064318 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.06       |     -0.7098564222504259     |     N/A    
+--------     2      |         0.01       |     -0.9037950867297248     |     N/A    
+--------     3      |   UHF energy = -1.204475 Hartree @ iterations 128.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.856896 Hartree
+UMP2 energy (original): -0.921214 Hartree, correlation: -0.064318 Hartree
+UMP2 energy (natural orbitals): -0.921214 Hartree, correlation: -0.064318 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.07       |     -0.8075770904532660     |     N/A    
+--------     2      |         0.03       |     -1.0798337368583861     |     N/A    
+--------     3      |         0.03       |     -1.1324482652394880     |     N/A    
+--------     4      |         0.04       |     -1.1562441944780697     |     N/A    
+--------     5      |         0.03       |     -1.1748225663256207     |     N/A    
+--------     6      |         0.08       |     -1.1845990453050714     |     N/A    
+--------     7      |         0.02       |     -1.1890350879182654     |     N/A    
+--------     8      |         0.04       |     -1.1918433290563306     |     N/A    
+--------     9      |         0.02       |     -1.1920300578544376     |     N/A    
+--------     10     |         0.01       |     -1.1920395274063724     |     N/A    
+--------     11     |         0.01       |     -1.1920406405609594     |     N/A    
+--------     12     |         0.03       |     -1.1920499702459917     |     N/A    
+--------     13     |         0.01       |     -1.1920674316561526     |     N/A    
+--------     14     |         0.05       |     -1.1924435139193224     |     N/A    
+--------     15     |         0.02       |     -1.1925865213210418     |     N/A    
+--------     16     |         0.01       |     -1.1928063801382403     |     N/A    
+--------     17     |         0.01       |     -1.1932000938504714     |     N/A    
+--------     18     |         0.01       |     -1.1939241850691906     |     N/A    
+--------     19     |         0.01       |     -1.1952154997688955     |     N/A    
+--------     20     |         0.01       |     -1.1972207306318974     |     N/A    
+--------     21     |         0.01       |     -1.1981509023518158     |     N/A    
+--------     22     |         0.02       |     -1.1981637915374108     |     N/A    
+--------     23     |         0.01       |     -1.1981738227150478     |     N/A    
+--------     24     |         0.01       |     -1.1981756521405700     |     N/A    
+--------     25     |         0.01       |     -1.1981764183665859     |     N/A    
+--------     26     |         0.01       |     -1.1981774532580696     |     N/A    
+--------     27     |         0.01       |     -1.1981793393625222     |     N/A    
+--------     28     |         0.01       |     -1.1981828677290276     |     N/A    
+--------     29     |         0.01       |     -1.1981895266992226     |     N/A    
+--------     30     |         0.01       |     -1.1982021869214941     |     N/A    
+--------     31     |         0.06       |     -1.1986631318139851     |     N/A    
+--------     32     |         0.01       |     -1.1986918138440956     |     N/A    
+--------     33     |         0.01       |     -1.1987342743993081     |     N/A    
+--------     34     |         0.01       |     -1.1987724472344436     |     N/A    
+--------     35     |         0.01       |     -1.1988256224014249     |     N/A    
+--------     36     |         0.01       |     -1.1989244010171938     |     N/A    
+--------     37     |         0.01       |     -1.1991001825941872     |     N/A    
+--------     38     |         0.01       |     -1.1993646907778308     |     N/A    
+--------     39     |         0.01       |     -1.1996206815519082     |     N/A    
+--------     40     |         0.01       |     -1.1997819584680118     |     N/A    
+--------     41     |         0.01       |     -1.2000741029930273     |     N/A    
+--------     42     |         0.01       |     -1.2005424331028081     |     N/A    
+--------     43     |         0.01       |     -1.2010026878578792     |     N/A    
+--------     44     |         0.01       |     -1.2013039137980535     |     N/A    
+--------     45     |         0.02       |     -1.2014660614460437     |     N/A    
+--------     46     |         0.01       |     -1.2015640335984492     |     N/A    
+--------     47     |         0.01       |     -1.2016527749999151     |     N/A    
+--------     48     |         0.01       |     -1.2016962756347094     |     N/A    
+--------     49     |         0.01       |     -1.2017186104362452     |     N/A    
+--------     50     |         0.01       |     -1.2017294058031729     |     N/A    
+--------     51     |         0.01       |     -1.2017455414204485     |     N/A    
+--------     52     |         0.01       |     -1.2017633882365368     |     N/A    
+--------     53     |         0.01       |     -1.2017894927263750     |     N/A    
+--------     54     |         0.01       |     -1.2018302385374091     |     N/A    
+--------     55     |         0.01       |     -1.2018876281619213     |     N/A    
+--------     56     |         0.01       |     -1.2019805294403345     |     N/A    
+--------     57     |         0.01       |     -1.2020892527469174     |     N/A    
+--------     58     |         0.02       |     -1.2021220984692127     |     N/A    
+--------     59     |         0.01       |     -1.2021307795153608     |     N/A    
+--------     60     |         0.01       |     -1.2021366228849817     |     N/A    
+--------     61     |         0.06       |     -1.2023270004650024     |     N/A    
+--------     62     |         0.02       |     -1.2023413659090953     |     N/A    
+--------     63     |         0.03       |     -1.2027487637495686     |     N/A    
+--------     64     |         0.01       |     -1.2031634893889949     |     N/A    
+--------     65     |         0.01       |     -1.2033712293117400     |     N/A    
+--------     66     |         0.01       |     -1.2034433544791823     |     N/A    
+--------     67     |         0.01       |     -1.2035224220294634     |     N/A    
+--------     68     |         0.01       |     -1.2036127332686855     |     N/A    
+--------     69     |         0.01       |     -1.2037067743648291     |     N/A    
+--------     70     |         0.01       |     -1.2038564309029947     |     N/A    
+--------     71     |         0.01       |     -1.2040629506507603     |     N/A    
+--------     72     |         0.02       |     -1.2041461245657268     |     N/A    
+--------     73     |         0.01       |     -1.2042367320354419     |     N/A    
+--------     74     |         0.01       |     -1.2042958842473039     |     N/A    
+--------     75     |         0.01       |     -1.2043259040312091     |     N/A    
+--------     76     |         0.01       |     -1.2043444217010968     |     N/A    
+--------     77     |         0.01       |     -1.2043633297562533     |     N/A    
+--------     78     |         0.01       |     -1.2043787112421900     |     N/A    
+--------     79     |         0.01       |     -1.2043950325512083     |     N/A    
+--------     80     |         0.01       |     -1.2044158341279425     |     N/A    
+--------     81     |         0.01       |     -1.2044232711315690     |     N/A    
+--------     82     |         0.01       |     -1.2044346145760361     |     N/A    
+--------     83     |         0.01       |     -1.2044433240826413     |     N/A    
+--------     84     |         0.01       |     -1.2044517910521229     |     N/A    
+--------     85     |         0.02       |     -1.2044568504190918     |     N/A    
+--------     86     |         0.01       |     -1.2044607330067032     |     N/A    
+--------     87     |         0.02       |     -1.2044622739161350     |     N/A    
+--------     88     |         0.01       |     -1.2044633451397524     |     N/A    
+--------     89     |         0.01       |     -1.2044645006503150     |     N/A    
+--------     90     |         0.01       |     -1.2044657981621538     |     N/A    
+--------     91     |         0.01       |     -1.2044664524117066     |     N/A    
+--------     92     |         0.01       |     -1.2044672818773925     |     N/A    
+--------     93     |         0.01       |     -1.2044678794096302     |     N/A    
+--------     94     |         0.01       |     -1.2044681669765680     |     N/A    
+--------     95     |         0.01       |     -1.2044682141497045     |     N/A    
+--------     96     |         0.01       |     -1.2044682846039239     |     N/A    
+--------     97     |         0.01       |     -1.2044683229063080     |     N/A    
+--------     98     |         0.01       |     -1.2044683372285832     |     N/A    
+--------     99     |         0.01       |     -1.2044683451768947     |     N/A    
+--------    100     |         0.01       |     -1.2044683469789808     |     N/A    
+--------    101     |         0.01       |     -1.2044683482163374     |     N/A    
+--------    102     |         0.01       |     -1.2044683504023301     |     N/A    
+--------    103     |         0.01       |     -1.2044683544137105     |     N/A    
+--------    104     |         0.01       |     -1.2044683618730279     |     N/A    
+--------    105     |         0.01       |     -1.2044683757601120     |     N/A    
+--------    106     |         0.01       |     -1.2044684014765130     |     N/A    
+--------    107     |         0.01       |     -1.2044684487107817     |     N/A    
+--------    108     |         0.01       |     -1.2044685348080066     |     N/A    
+--------    109     |         0.01       |     -1.2044686905724793     |     N/A    
+--------    110     |         0.01       |     -1.2044689643180109     |     N/A    
+--------    111     |         0.01       |     -1.2044693842025012     |     N/A    
+--------    112     |         0.01       |     -1.2044698359719002     |     N/A    
+--------    113     |         0.01       |     -1.2044700781053663     |     N/A    
+--------    114     |         0.03       |     -1.2044710417286211     |     N/A    
+--------    115     |         0.01       |     -1.2044718972902673     |     N/A    
+--------    116     |         0.02       |     -1.2044721893039887     |     N/A    
+--------    117     |         0.01       |     -1.2044725518959243     |     N/A    
+--------    118     |         0.01       |     -1.2044729215658243     |     N/A    
+--------    119     |         0.01       |     -1.2044733160125620     |     N/A    
+--------    120     |         0.01       |     -1.2044734685438394     |     N/A    
+--------    121     |         0.02       |     -1.2044735619095430     |     N/A    
+--------    122     |         0.02       |     -1.2044736008448931     |     N/A    
+--------    123     |         0.01       |     -1.2044736183831779     |     N/A    
+--------    124     |         0.01       |     -1.2044736430821608     |     N/A    
+--------    125     |         0.01       |     -1.2044736579296804     |     N/A    
+--------    126     |         0.01       |     -1.2044736664808491     |     N/A    
+--------    127     |         0.01       |     -1.2044736796725544     |     N/A    
+--------    128     |         0.01       |     -1.2044737012205482     |     N/A    
+--------    129     |         0.01       |     -1.2044737393196225     |     N/A    
+--------    130     |         0.01       |     -1.2044738092190119     |     N/A    
+--------    131     |         0.01       |     -1.2044739398620716     |     N/A    
+--------    132     |         0.01       |     -1.2044741740144131     |     N/A    
+--------    133     |         0.01       |     -1.2044745390948264     |     N/A    
+--------    134     |         0.02       |     -1.2044745821684872     |     N/A    
+--------    135     |         0.01       |     -1.2044746230181103     |     N/A    
+--------    136     |         0.01       |     -1.2044746471895982     |     N/A    
+--------    137     |         0.01       |     -1.2044746603321232     |     N/A    
+--------    138     |         0.01       |     -1.2044746816712100     |     N/A    
+--------    139     |         0.01       |     -1.2044747013533024     |     N/A    
+--------    140     |         0.01       |     -1.2044747038131915     |     N/A    
+--------    141     |         0.01       |     -1.2044747075675430     |     N/A    
+--------    142     |         0.01       |     -1.2044747131561753     |     N/A    
+--------    143     |         0.01       |     -1.2044747229939290     |     N/A    
+--------    144     |         0.01       |     -1.2044747411035603     |     N/A    
+--------    145     |         0.01       |     -1.2044747741311961     |     N/A    
+--------    146     |         0.01       |     -1.2044748155260689     |     N/A    
+--------    147     |         0.01       |     -1.2044748640124843     |     N/A    
+--------    148     |         0.01       |     -1.2044748736281752     |     N/A    
+--------    149     |         0.01       |     -1.2044748793434326     |     N/A    
+--------    150     |         0.01       |     -1.2044748816110755     |     N/A    
+--------    151     |         0.01       |     -1.2044748854197886     |     N/A    
+--------    152     |         0.01       |     -1.2044748911380196     |     N/A    
+--------    153     |         0.01       |     -1.2044749000830881     |     N/A    
+--------    154     |         0.01       |     -1.2044749151042748     |     N/A    
+--------    155     |         0.02       |     -1.2044749247416493     |     N/A    
+--------    156     |         0.01       |     -1.2044749360931852     |     N/A    
+--------    157     |         0.01       |     -1.2044749398519425     |     N/A    
+--------    158     |         0.01       |     -1.2044749432476864     |     N/A    
+--------    159     |         0.01       |     -1.2044749490929523     |     N/A    
+--------    160     |         0.01       |     -1.2044749582808174     |     N/A    
+--------    161     |         0.01       |     -1.2044749658161926     |     N/A    
+--------    162     |         0.02       |     -1.2044749703047881     |     N/A    
+--------    163     |         0.01       |     -1.2044749748169039     |     N/A    
+--------    164     |         0.01       |     -1.2044749785415005     |     N/A    
+--------    165     |         0.01       |     -1.2044749818822180     |     N/A    
+--------    166     |         0.01       |     -1.2044749859642456     |     N/A    
+--------    167     |         0.01       |     -1.2044749922469447     |     N/A    
+--------    168     |         0.01       |     -1.2044749966412043     |     N/A    
+--------    169     |         0.01       |     -1.2044749988685262     |     N/A    
+--------    170     |         0.01       |     -1.2044750021932016     |     N/A    
+--------    171     |         0.01       |     -1.2044750064539325     |     N/A    
+--------    172     |         0.01       |     -1.2044750102726365     |     N/A    
+--------    173     |         0.02       |     -1.2044750113893341     |     N/A    
+--------    174     |         0.01       |     -1.2044750131324569     |     N/A    
+--------    175     |         0.01       |     -1.2044750156600466     |     N/A    
+--------    176     |         0.01       |     -1.2044750186451405     |     N/A    
+--------    177     |         0.01       |     -1.2044750230067067     |     N/A    
+--------    178     |         0.02       |     -1.2044750260083095     |     N/A    
+--------    179     |         0.01       |     -1.2044750303366576     |     N/A    
+--------    180     |         0.01       |     -1.2044750329968776     |     N/A    
+--------    181     |         0.02       |     -1.2044750344485220     |     N/A    
+--------    182     |         0.01       |     -1.2044750369586821     |     N/A    
+--------    183     |         0.01       |     -1.2044750408714713     |     N/A    
+--------    184     |         0.04       |     -1.2044750425343884     |     N/A    
+--------    185     |         0.01       |     -1.2044750451044774     |     N/A    
+--------    186     |         0.01       |     -1.2044750476226573     |     N/A    
+--------    187     |         0.01       |     -1.2044750500787351     |     N/A    
+--------    188     |         0.02       |     -1.2044750517580411     |     N/A    
+--------    189     |         0.01       |     -1.2044750530484662     |     N/A    
+--------    190     |         0.01       |     -1.2044750551935548     |     N/A    
+--------    191     |         0.01       |     -1.2044750579207626     |     N/A    
+--------    192     |         0.01       |     -1.2044750591501465     |     N/A    
+--------    193     |         0.01       |     -1.2044750601792726     |     N/A    
+--------    194     |         0.01       |     -1.2044750619775180     |     N/A    
+--------    195     |         0.01       |     -1.2044750649906655     |     N/A    
+--------    196     |         0.01       |     -1.2044750685292851     |     N/A    
+--------    197     |         0.02       |     -1.2044750698382765     |     N/A    
+--------    198     |         0.01       |     -1.2044750718663721     |     N/A    
+--------    199     |         0.01       |     -1.2044750729144136     |     N/A    
+--------    200     |         0.01       |     -1.2044750746911439     |     N/A    
+--------    201     |         0.01       |     -1.2044750759120642     |     N/A    
+--------    202     |         0.01       |     -1.2044750773912327     |     N/A    
+--------    203     |         0.01       |     -1.2044750788494607     |     N/A    
+--------    204     |         0.01       |     -1.2044750804483231     |     N/A    
+--------    205     |         0.02       |     -1.2044750809985250     |     N/A    
+--------    206     |         0.01       |     -1.2044750818206562     |     N/A    
+--------    207     |         0.01       |     -1.2044750832282010     |     N/A    
+--------    208     |         0.01       |     -1.2044750851867774     |     N/A    
+--------    209     |         0.02       |     -1.2044750860214148     |     N/A    
+--------    210     |         0.01       |     -1.2044750872058447     |     N/A    
+--------    211     |         0.01       |     -1.2044750889732723     |     N/A    
+--------    212     |         0.02       |     -1.2044750899956544     |     N/A    
+--------    213     |         0.01       |     -1.2044750916127955     |     N/A    
+--------    214     |         0.01       |     -1.2044750931325918     |     N/A    
+--------    215     |         0.02       |     -1.2044750936621720     |     N/A    
+--------    216     |         0.01       |     -1.2044750944535465     |     N/A    
+--------    217     |         0.01       |     -1.2044750957301373     |     N/A    
+--------    218     |         0.01       |     -1.2044750970290901     |     N/A    
+--------    219     |         0.02       |     -1.2044750973370013     |     N/A    
+--------    220     |         0.01       |     -1.2044750978901904     |     N/A    
+--------    221     |         0.01       |     -1.2044750988643573     |     N/A    
+--------    222     |         0.01       |     -1.2044751003480241     |     N/A    
+--------    223     |         0.01       |     -1.2044751016927611     |     N/A    
+--------    224     |         0.02       |     -1.2044751026153242     |     N/A    
+--------    225     |         0.01       |     -1.2044751031266669     |     N/A    
+--------    226     |         0.01       |     -1.2044751039508006     |     N/A    
+--------    227     |         0.01       |     -1.2044751048496154     |     N/A    
+--------    228     |         0.01       |     -1.2044751055413603     |     N/A    
+--------    229     |         0.01       |     -1.2044751065434145     |     N/A    
+--------    230     |         0.01       |     -1.2044751077543292     |     N/A    
+--------    231     |         0.01       |     -1.2044751085846410     |     N/A    
+--------    232     |         0.02       |     -1.2044751091634283     |     N/A    
+--------    233     |         0.01       |     -1.2044751101111466     |     N/A    
+--------    234     |         0.01       |     -1.2044751113207359     |     N/A    
+--------    235     |         0.02       |     -1.2044751119071535     |     N/A    
+--------    236     |         0.01       |     -1.2044751122981991     |     N/A    
+--------    237     |         0.01       |     -1.2044751129606766     |     N/A    
+--------    238     |         0.01       |     -1.2044751139742560     |     N/A    
+--------    239     |         0.01       |     -1.2044751149273618     |     N/A    
+--------    240     |         0.01       |     -1.2044751159620424     |     N/A    
+--------    241     |         0.01       |     -1.2044751171845267     |     N/A    
+--------    242     |         0.02       |     -1.2044751180775373     |     N/A    
+--------    243     |         0.02       |     -1.2044751183487747     |     N/A    
+--------    244     |         0.01       |     -1.2044751188206408     |     N/A    
+--------    245     |         0.01       |     -1.2044751195530634     |     N/A    
+--------    246     |         0.02       |     -1.2044751199891255     |     N/A    
+--------    247     |         0.01       |     -1.2044751206759423     |     N/A    
+--------    248     |         0.01       |     -1.2044751216444802     |     N/A    
+--------    249     |         0.01       |     -1.2044751228175796     |     N/A    
+--------    250     |         0.02       |     -1.2044751234888162     |     N/A    
+--------    251     |         0.02       |     -1.2044751237815339     |     N/A    
+--------    252     |         0.01       |     -1.2044751242612093     |     N/A    
+--------    253     |         0.01       |     -1.2044751249200802     |     N/A    
+--------    254     |         0.02       |     -1.2044751251711225     |     N/A    
+--------    255     |         0.01       |     -1.2044751255901023     |     N/A    
+--------    256     |         0.01       |     -1.2044751262742721     |     N/A    
+--------    257     |         0.01       |     -1.2044751273319683     |     N/A    
+--------    258     |         0.01       |     -1.2044751278700352     |     N/A    
+--------    259     |         0.01       |     -1.2044751286805597     |     N/A    
+--------    260     |         0.01       |     -1.2044751293184133     |     N/A    
+--------    261     |         0.01       |     -1.2044751301584145     |     N/A    
+--------    262     |         0.02       |     -1.2044751306552774     |     N/A    
+--------    263     |         0.02       |     -1.2044751309392354     |     N/A    
+--------    264     |         0.01       |     -1.2044751314120024     |     N/A    
+--------    265     |         0.01       |     -1.2044751319956217     |     N/A    
+--------    266     |         0.02       |     -1.2044751321972840     |     N/A    
+--------    267     |         0.01       |     -1.2044751325478986     |     N/A    
+--------    268     |         0.01       |     -1.2044751331454655     |     N/A    
+--------    269     |         0.03       |     -1.2044751335123687     |     N/A    
+--------    270     |         0.01       |     -1.2044751341011941     |     N/A    
+--------    271     |         0.01       |     -1.2044751346685565     |     N/A    
+--------    272     |         0.01       |     -1.2044751347676981     |     N/A    
+--------    273     |         0.02       |     -1.2044751354899321     |     N/A    
+--------    274     |         0.01       |     -1.2044751359353034     |     N/A    
+--------    275     |         0.02       |     -1.2044751361937565     |     N/A    
+--------    276     |         0.01       |     -1.2044751365312836     |     N/A    
+--------    277     |         0.01       |     -1.2044751366974915     |     N/A    
+--------    278     |         0.01       |     -1.2044751369876776     |     N/A    
+--------    279     |         0.01       |     -1.2044751374609226     |     N/A    
+--------    280     |         0.01       |     -1.2044751381764423     |     N/A    
+--------    281     |         0.02       |     -1.2044751384153047     |     N/A    
+--------    282     |         0.01       |     -1.2044751387697565     |     N/A    
+--------    283     |         0.01       |     -1.2044751392841306     |     N/A    
+--------    284     |         0.01       |     -1.2044751395662749     |     N/A    
+--------    285     |         0.01       |     -1.2044751400328362     |     N/A    
+--------    286     |         0.01       |     -1.2044751405980993     |     N/A    
+--------    287     |         0.01       |     -1.2044751411363219     |     N/A    
+--------    288     |         0.02       |     -1.2044751414063009     |     N/A    
+--------    289     |         0.02       |     -1.2044751415738477     |     N/A    
+--------    290     |         0.01       |     -1.2044751417763893     |     N/A    
+--------    291     |         0.01       |     -1.2044751420741422     |     N/A    
+--------    292     |         0.01       |     -1.2044751423590723     |     N/A    
+--------    293     |         0.01       |     -1.2044751427100657     |     N/A    
+--------    294     |         0.01       |     -1.2044751432004264     |     N/A    
+--------    295     |         0.01       |     -1.2044751438348225     |     N/A    
+--------    296     |         0.02       |     -1.2044751440235124     |     N/A    
+--------    297     |         0.01       |     -1.2044751442745683     |     N/A    
+--------    298     |         0.01       |     -1.2044751446589979     |     N/A    
+--------    299     |         0.01       |     -1.2044751450370348     |     N/A    
+--------    300     |         0.01       |     -1.2044751454654417     |     N/A    
+--------    301     |         0.02       |     -1.2044751457923952     |     N/A    
+--------    302     |         0.01       |     -1.2044751459420269     |     N/A    
+--------    303     |         0.01       |     -1.2044751461795484     |     N/A    
+--------    304     |         0.01       |     -1.2044751465197918     |     N/A    
+--------    305     |         0.01       |     -1.2044751468490238     |     N/A    
+--------    306     |         0.02       |     -1.2044751470691404     |     N/A    
+--------    307     |         0.01       |     -1.2044751473853563     |     N/A    
+--------    308     |         0.01       |     -1.2044751477655538     |     N/A    
+--------    309     |         0.02       |     -1.2044751479080422     |     N/A    
+--------    310     |         0.01       |     -1.2044751481448102     |     N/A    
+--------    311     |         0.01       |     -1.2044751485217216     |     N/A    
+--------    312     |         0.02       |     -1.2044751487446166     |     N/A    
+--------    313     |         0.01       |     -1.2044751490940295     |     N/A    
+--------    314     |         0.02       |     -1.2044751492775156     |     N/A    
+--------    315     |         0.01       |     -1.2044751495741404     |     N/A    
+--------    316     |         0.01       |     -1.2044751500055024     |     N/A    
+--------    317     |         0.02       |     -1.2044751501575059     |     N/A    
+--------    318     |         0.01       |     -1.2044751503458251     |     N/A    
+--------    319     |         0.01       |     -1.2044751506502207     |     N/A    
+--------    320     |         0.01       |     -1.2044751509935638     |     N/A    
+--------    321     |         0.01       |     -1.2044751514172973     |     N/A    
+--------    322     |         0.02       |     -1.2044751516496679     |     N/A    
+--------    323     |         0.02       |     -1.2044751517513421     |     N/A    
+--------    324     |         0.01       |     -1.2044751519235526     |     N/A    
+--------    325     |         0.01       |     -1.2044751521936155     |     N/A    
+--------    326     |         0.02       |     -1.2044751523415793     |     N/A    
+--------    327     |         0.01       |     -1.2044751525810269     |     N/A    
+--------    328     |         0.01       |     -1.2044751529546371     |     N/A    
+--------    329     |         0.01       |     -1.2044751532884299     |     N/A    
+--------    330     |         0.01       |     -1.2044751537305616     |     N/A    
+--------    331     |         0.02       |     -1.2044751538427598     |     N/A    
+--------    332     |         0.01       |     -1.2044751539991927     |     N/A    
+--------    333     |         0.01       |     -1.2044751542543024     |     N/A    
+--------    334     |         0.01       |     -1.2044751546112202     |     N/A    
+--------    335     |         0.02       |     -1.2044751547223844     |     N/A    
+--------    336     |         0.01       |     -1.2044751548772903     |     N/A    
+--------    337     |         0.01       |     -1.2044751551281510     |     N/A    
+--------    338     |         0.01       |     -1.2044751554650936     |     N/A    
+--------    339     |         0.02       |     -1.2044751555630020     |     N/A    
+--------    340     |         0.01       |     -1.2044751557154825     |     N/A    
+--------    341     |         0.01       |     -1.2044751559591467     |     N/A    
+--------    342     |         0.01       |     -1.2044751562887106     |     N/A    
+--------    343     |         0.02       |     -1.2044751563734217     |     N/A    
+--------    344     |         0.01       |     -1.2044751565156275     |     N/A    
+--------    345     |         0.01       |     -1.2044751567485317     |     N/A    
+--------    346     |         0.01       |     -1.2044751570572423     |     N/A    
+--------    347     |         0.01       |     -1.2044751573963199     |     N/A    
+--------    348     |         0.02       |     -1.2044751576258350     |     N/A    
+--------    349     |         0.02       |     -1.2044751576817487     |     N/A    
+--------    350     |         0.01       |     -1.2044751577776682     |     N/A    
+--------    351     |         0.01       |     -1.2044751579349424     |     N/A    
+--------    352     |         0.01       |     -1.2044751581366691     |     N/A    
+--------    353     |         0.01       |     -1.2044751583442743     |     N/A    
+--------    354     |         0.02       |     -1.2044751584830506     |     N/A    
+--------    355     |         0.02       |     -1.2044751585844837     |     N/A    
+--------    356     |         0.01       |     -1.2044751587547595     |     N/A    
+--------    357     |         0.01       |     -1.2044751589668601     |     N/A    
+--------    358     |         0.02       |     -1.2044751590239409     |     N/A    
+--------    359     |         0.01       |     -1.2044751591244898     |     N/A    
+--------    360     |         0.01       |     -1.2044751592990870     |     N/A    
+--------    361     |         0.01       |     -1.2044751594825496     |     N/A    
+--------    362     |         0.01       |     -1.2044751597344192     |     N/A    
+--------    363     |         0.01       |     -1.2044751598412329     |     N/A    
+--------    364     |         0.01       |     -1.2044751600096684     |     N/A    
+--------    365     |         0.01       |     -1.2044751602712100     |     N/A    
+--------    366     |         0.01       |     -1.2044751604485517     |     N/A    
+--------    367     |         0.01       |     -1.2044751606426443     |     N/A    
+--------    368     |         0.02       |     -1.2044751607513748     |     N/A    
+--------    369     |         0.01       |     -1.2044751608576845     |     N/A    
+--------    370     |         0.01       |     -1.2044751610160791     |     N/A    
+--------    371     |         0.01       |     -1.2044751611641444     |     N/A    
+--------    372     |         0.01       |     -1.2044751613151115     |     N/A    
+--------    373     |         0.01       |     -1.2044751615594225     |     N/A    
+--------    374     |         0.02       |     -1.2044751616564549     |     N/A    
+--------    375     |         0.01       |     -1.2044751618145120     |     N/A    
+--------    376     |         0.01       |     -1.2044751620392131     |     N/A    
+--------    377     |         0.02       |     -1.2044751621152996     |     N/A    
+--------    378     |         0.01       |     -1.2044751622445125     |     N/A    
+--------    379     |         0.01       |     -1.2044751624483876     |     N/A    
+--------    380     |         0.02       |     -1.2044751625224031     |     N/A    
+--------    381     |         0.01       |     -1.2044751626433348     |     N/A    
+--------    382     |         0.01       |     -1.2044751628328088     |     N/A    
+--------    383     |         0.02       |     -1.2044751629286532     |     N/A    
+--------    384     |         0.01       |     -1.2044751630842581     |     N/A    
+--------    385     |         0.01       |     -1.2044751633028588     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.204475
+         Iterations: 385
+         Function evaluations: 471
+         Gradient evaluations: 471
+UHF natural orbital energy = -1.204475 Hartree @ iterations 385.
+
+Summary of results:
+Molecule: H 0 0 0; H 0 0 2.50000 with basis set 6-31G for a total of 2 electrons and 4 orbitals.
+OVOS correlation energy: -0.927046 Hartree (Active unocc. orbitals: 2)
+OVOS energy: -1.211770 Hartree  @ iterations 150 (Eval. func. 174, grad. 174
+UHF energy: -1.204475 Hartree  @ iterations 128 (Eval. func. 148, grad. 148
+UMP2 natural orbital energy: -1.204475 Hartree  @ iterations 385 (Eval. func. 471, grad. 471

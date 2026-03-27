@@ -1,0 +1,1050 @@
+Number of electrons: 2, Number of orbitals: 4
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 2 active virtual orbitals (out of 3 total virtual orbitals).
+
+#### Active and inactive spaces ####
+Total number of spin-orbitals:    8
+Active occupied spin-orbitals:    [0, 1]
+Active unoccupied spin-orbitals:  [2, 3, 4, 5]
+Inactive unoccupied spin-orbs:    [6, 7]
+
+
+#### OVOS Iteration 1 ####
+    [4/6]: MP2 energy = -0.030478407856
+
+#### OVOS Iteration 2 ####
+    [4/6]: MP2 energy = -0.030478407856
+Keep track: 1/50
+
+#### OVOS Iteration 3 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = 0.00e+00  ‖grad‖ = 1.93e-16  
+Keep track: 2/50
+
+#### OVOS Iteration 4 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = 1.04e-17  ‖grad‖ = 4.41e-16  (energy increased!)
+Keep track: 3/50
+
+#### OVOS Iteration 5 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = -6.94e-18  ‖grad‖ = 1.61e-15  
+Keep track: 4/50
+
+#### OVOS Iteration 6 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = 2.43e-17  ‖grad‖ = 5.79e-15  (energy increased!)
+Keep track: 5/50
+
+#### OVOS Iteration 7 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = -2.78e-17  ‖grad‖ = 2.01e-14  
+Keep track: 6/50
+
+#### OVOS Iteration 8 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = 1.73e-17  ‖grad‖ = 4.60e-14  (eKeep track: 7/50
+
+Keep track: 7/50
+
+#### OVOS Iteration 9 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = 6.94e-18  ‖grad‖ = 1.64e-13  (eKeep track: 8/50
+
+Keep track: 8/50
+
+#### OVOS Iteration 10 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = -6.94e-18  ‖grad‖ = 5.92e-13  KKeep track: 9/50
+
+#### OVOS Iteration 11 ####
+    [4/6]: MP2 energy = -0.030478407856             ΔE = 3.47e-18  ‖grad‖ = 2.14e-12  (eKeep track: 10/50
+
+#### OVOS Iteration 12 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = 0.00e+00  ‖grad‖ = 1.18e-11  
+Keep track: 11/50
+Keep track: 11/50
+
+#### OVOS Iteration 13 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = -3.47e-18  ‖graKeep track: 12/50
+
+#### OVOS Iteration#### OVOS Iteration 14 ####
+    [4/6]: MP2 energy             ΔE = 6            ΔE = 1.04e-17  ‖grad‖ = 1.01e-10  (eKeep track: 13/50
+KKeep track: 13/50
+
+#### OVOS Iteration 15 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = 2.78e-17  ‖grad‖ = 2.94e-09  (eKeep track: 14/50
+Keep track: 14/50
+
+#### OVOS Iteration 16 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = 5.76e-16  ‖grad‖ = 1.07e-08  (energy increased!)
+Keep track: 15/50
+
+#### OVOS Iteration 17 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = 7.42e-15  ‖grad‖ = 3.86e-08  (energy increased!)
+Keep track: 16/50
+
+#### OVOS Iteration 18 ####
+    [4/6]: MP2 energy = -0.030478407856
+            ΔE = 9.75e-14  ‖grad‖ = 1.40e-07  (energy increased!)
+Keep track: 17/50
+
+#### OVOS Iteration 19 ####
+    [4/6]: MP2 energy = -0.030478407855
+            ΔE = 1.28e-12  ‖grad‖ = 5.08e-07  (energy increased!)
+Keep track: 18/50
+
+#### OVOS Iteration 20 ####
+    [4/6]: MP2 energy = -0.030478407838
+            ΔE = 1.68e-11  ‖grad‖ = 1.84e-06  (energy increased!)
+Keep track: 19/50
+
+#### OVOS Iteration 21 ####
+    [4/6]: MP2 energy = -0.030478407617
+            ΔE = 2.21e-10  ‖grad‖ = 6.67e-06  (energy increased!)
+Keep track: 20/50
+
+#### OVOS Iteration 22 ####
+    [4/6]: MP2 energy = -0.030478404716
+            ΔE = 2.90e-09  ‖grad‖ = 2.42e-05  (energy increased!)
+Keep track: 21/50
+
+#### OVOS Iteration 23 ####
+    [4/6]: MP2 energy = -0.030478366609
+            ΔE = 3.81e-08  ‖grad‖ = 8.76e-05  (energy increased!)
+
+#### OVOS Iteration 24 ####
+    [4/6]: MP2 energy = -0.030477866095
+            ΔE = 5.01e-07  ‖grad‖ = 3.17e-04  (energy increased!)
+
+#### OVOS Iteration 25 ####
+    [4/6]: MP2 energy = -0.030471292812
+            ΔE = 6.57e-06  ‖grad‖ = 1.15e-03  (energy increased!)
+
+#### OVOS Iteration 26 ####
+    [4/6]: MP2 energy = -0.030385106938
+            ΔE = 8.62e-05  ‖grad‖ = 4.14e-03  (energy increased!)
+
+#### OVOS Iteration 27 ####
+    [4/6]: MP2 energy = -0.029352479657
+            ΔE = 1.03e-03  ‖grad‖ = 1.33e-02  (energy increased!)
+
+#### OVOS Iteration 28 ####
+    [4/6]: MP2 energy = -0.028884230642
+            ΔE = 4.68e-04  ‖grad‖ = 1.71e-02  (energy increased!)
+
+#### OVOS Iteration 29 ####
+    [4/6]: MP2 energy = -0.031479131140
+            ΔE = -2.59e-03  ‖grad‖ = 3.45e-03  
+
+#### OVOS Iteration 30 ####
+    [4/6]: MP2 energy = -0.031573109894
+            ΔE = -9.40e-05  ‖grad‖ = 2.87e-03  
+
+#### OVOS Iteration 31 ####
+    [4/6]: MP2 energy = -0.031605283154
+            ΔE = -3.22e-05  ‖grad‖ = 1.80e-03  
+
+#### OVOS Iteration 32 ####
+    [4/6]: MP2 energy = -0.031613786539
+            ΔE = -8.50e-06  ‖grad‖ = 1.31e-03  
+
+#### OVOS Iteration 33 ####
+    [4/6]: MP2 energy = -0.031619598683
+            ΔE = -5.81e-06  ‖grad‖ = 8.65e-04  
+
+#### OVOS Iteration 34 ####
+    [4/6]: MP2 energy = -0.031621731171
+            ΔE = -2.13e-06  ‖grad‖ = 6.12e-04  
+
+#### OVOS Iteration 35 ####
+    [4/6]: MP2 energy = -0.031622939171
+            ΔE = -1.21e-06  ‖grad‖ = 4.14e-04  
+
+#### OVOS Iteration 36 ####
+    [4/6]: MP2 energy = -0.031623447579
+            ΔE = -5.08e-07  ‖grad‖ = 2.89e-04  
+
+#### OVOS Iteration 37 ####
+    [4/6]: MP2 energy = -0.031623710335
+            ΔE = -2.63e-07  ‖grad‖ = 1.98e-04  
+
+#### OVOS Iteration 38 ####
+    [4/6]: MP2 energy = -0.031623828249
+            ΔE = -1.18e-07  ‖grad‖ = 1.37e-04  
+
+#### OVOS Iteration 39 ####
+    [4/6]: MP2 energy = -0.031623886583
+            ΔE = -5.83e-08  ‖grad‖ = 9.41e-05  
+
+#### OVOS Iteration 40 ####
+    [4/6]: MP2 energy = -0.031623913568
+            ΔE = -2.70e-08  ‖grad‖ = 6.51e-05  
+
+#### OVOS Iteration 41 ####
+    [4/6]: MP2 energy = -0.031623926643
+            ΔE = -1.31e-08  ‖grad‖ = 4.48e-05  
+
+#### OVOS Iteration 42 ####
+    [4/6]: MP2 energy = -0.031623932779
+            ΔE = -6.14e-09  ‖grad‖ = 3.09e-05  
+Keep track: 1/50
+
+#### OVOS Iteration 43 ####
+    [4/6]: MP2 energy = -0.031623935723
+            ΔE = -2.94e-09  ‖grad‖ = 2.13e-05  
+Keep track: 2/50
+
+#### OVOS Iteration 44 ####
+    [4/6]: MP2 energy = -0.031623937114
+            ΔE = -1.39e-09  ‖grad‖ = 1.47e-05  
+Keep track: 3/50
+
+#### OVOS Iteration 45 ####
+    [4/6]: MP2 energy = -0.031623937778
+            ΔE = -6.64e-10  ‖grad‖ = 1.01e-05  
+Keep track: 4/50
+
+#### OVOS Iteration 46 ####
+    [4/6]: MP2 energy = -0.031623938093
+            ΔE = -3.15e-10  ‖grad‖ = 6.99e-06  
+Keep track: 5/50
+
+#### OVOS Iteration 47 ####
+    [4/6]: MP2 energy = -0.031623938243
+            ΔE = -1.50e-10  ‖grad‖ = 4.82e-06  
+Keep track: 6/50
+
+#### OVOS Iteration 48 ####
+    [4/6]: MP2 energy = -0.031623938314
+            ΔE = -7.12e-11  ‖grad‖ = 3.32e-06  
+Keep track: 7/50
+
+#### OVOS Iteration 49 ####
+    [4/6]: MP2 energy = -0.031623938348
+            ΔE = -3.39e-11  ‖grad‖ = 2.29e-06  
+Keep track: 8/50
+
+#### OVOS Iteration 50 ####
+    [4/6]: MP2 energy = -0.031623938364
+            ΔE = -1.61e-11  ‖grad‖ = 1.58e-06  
+Keep track: 9/50
+
+#### OVOS Iteration 51 ####
+    [4/6]: MP2 energy = -0.031623938372
+            ΔE = -7.66e-12  ‖grad‖ = 1.09e-06  
+Keep track: 10/50
+
+#### OVOS Iteration 52 ####
+    [4/6]: MP2 energy = -0.031623938376
+            ΔE = -3.64e-12  ‖grad‖ = 7.51e-07  
+Keep track: 11/50
+
+#### OVOS Iteration 53 ####
+    [4/6]: MP2 energy = -0.031623938377
+            ΔE = -1.73e-12  ‖grad‖ = 5.18e-07  
+Keep track: 12/50
+
+#### OVOS Iteration 54 ####
+    [4/6]: MP2 energy = -0.031623938378
+            ΔE = -8.23e-13  ‖grad‖ = 3.57e-07  
+Keep track: 13/50
+
+#### OVOS Iteration 55 ####
+    [4/6]: MP2 energy = -0.031623938378
+            ΔE = -3.91e-13  ‖grad‖ = 2.46e-07  
+Keep track: 14/50
+
+#### OVOS Iteration 56 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -1.86e-13  ‖grad‖ = 1.70e-07  
+Keep track: 15/50
+
+#### OVOS Iteration 57 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -8.85e-14  ‖grad‖ = 1.17e-07  
+Keep track: 16/50
+
+#### OVOS Iteration 58 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -4.21e-14  ‖grad‖ = 8.07e-08  
+Keep track: 17/50
+
+#### OVOS Iteration 59 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -2.00e-14  ‖grad‖ = 5.56e-08  
+Keep track: 18/50
+
+#### OVOS Iteration 60 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -9.52e-15  ‖grad‖ = 3.84e-08  
+Keep track: 19/50
+
+#### OVOS Iteration 61 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -4.54e-15  ‖grad‖ = 2.65e-08  
+Keep track: 20/50
+
+#### OVOS Iteration 62 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -2.12e-15  ‖grad‖ = 1.82e-08  
+Keep track: 21/50
+
+#### OVOS Iteration 63 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -1.03e-15  ‖grad‖ = 1.26e-08  
+Keep track: 22/50
+
+#### OVOS Iteration 64 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -4.93e-16  ‖grad‖ = 8.67e-09  
+Keep track: 23/50
+
+#### OVOS Iteration 65 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -2.29e-16  ‖grad‖ = 5.98e-09  
+Keep track: 24/50
+
+#### OVOS Iteration 66 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -1.25e-16  ‖grad‖ = 4.12e-09  
+Keep track: 25/50
+
+#### OVOS Iteration 67 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -4.16e-17  ‖grad‖ = 2.84e-09  
+Keep track: 26/50
+
+#### OVOS Iteration 68 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -5.55e-17  ‖grad‖ = 1.96e-09  
+Keep track: 27/50
+
+#### OVOS Iteration 69 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 2.08e-17  ‖grad‖ = 1.35e-09  (energy increased!)
+Keep track: 28/50
+
+#### OVOS Iteration 70 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -6.94e-18  ‖grad‖ = 9.32e-10  
+Keep track: 29/50
+
+#### OVOS Iteration 71 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -6.94e-18  ‖grad‖ = 6.43e-10  
+Keep track: 30/50
+
+#### OVOS Iteration 72 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 6.94e-18  ‖grad‖ = 4.43e-10  (energy increased!)
+Keep track: 31/50
+
+#### OVOS Iteration 73 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 1.39e-17  ‖grad‖ = 3.06e-10  (energy increased!)
+Keep track: 32/50
+
+#### OVOS Iteration 74 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -2.08e-17  ‖grad‖ = 2.11e-10  
+Keep track: 33/50
+
+#### OVOS Iteration 75 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -6.94e-18  ‖grad‖ = 1.45e-10  
+Keep track: 34/50
+
+#### OVOS Iteration 76 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 0.00e+00  ‖grad‖ = 1.00e-10  
+Keep track: 35/50
+
+#### OVOS Iteration 77 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -6.94e-18  ‖grad‖ = 6.91e-11  
+Keep track: 36/50
+
+#### OVOS Iteration 78 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -6.94e-18  ‖grad‖ = 4.76e-11  
+Keep track: 37/50
+
+#### OVOS Iteration 79 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 1.39e-17  ‖grad‖ = 3.29e-11  (energy increased!)
+Keep track: 38/50
+
+#### OVOS Iteration 80 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 1.39e-17  ‖grad‖ = 2.27e-11  (energy increased!)
+Keep track: 39/50
+
+#### OVOS Iteration 81 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 6.94e-18  ‖grad‖ = 1.56e-11  (energy increased!)
+Keep track: 40/50
+
+#### OVOS Iteration 82 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -1.39e-17  ‖grad‖ = 1.08e-11  
+Keep track: 41/50
+
+#### OVOS Iteration 83 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -6.94e-18  ‖grad‖ = 7.44e-12  
+Keep track: 42/50
+
+#### OVOS Iteration 84 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 6.94e-18  ‖grad‖ = 5.14e-12  (energy increased!)
+Keep track: 43/50
+
+#### OVOS Iteration 85 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 6.94e-18  ‖grad‖ = 3.54e-12  (energy increased!)
+Keep track: 44/50
+
+#### OVOS Iteration 86 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -6.94e-18  ‖grad‖ = 2.46e-12  
+Keep track: 45/50
+
+#### OVOS Iteration 87 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 0.00e+00  ‖grad‖ = 1.70e-12  
+Keep track: 46/50
+
+#### OVOS Iteration 88 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = -6.94e-18  ‖grad‖ = 1.20e-12  
+Keep track: 47/50
+
+#### OVOS Iteration 89 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 6.94e-18  ‖grad‖ = 8.35e-13  (energy increased!)
+Keep track: 48/50
+
+#### OVOS Iteration 90 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 0.00e+00  ‖grad‖ = 6.87e-13  
+Keep track: 49/50
+
+#### OVOS Iteration 91 ####
+    [4/6]: MP2 energy = -0.031623938379
+            ΔE = 0.00e+00  ‖grad‖ = 6.09e-13  
+Keep track: 50/50
+OVOS converged after 91 iterations
+
+#### OVOS Summary ####
+Initial MP2 energy: -0.030478407856 Ha
+Final MP2 energy:   -0.031623926643 Ha
+Total chan
+Optimization finished. Final MP2 energy = -1.011093466310959 Hartree. (ΔE_corr = -0.03162391940142038 Hartree)
+OVOS optimi
+Optimization finished. Final MP2 energy = -1.0110934735525345 Hartree. (ΔE_corr = -0.03162392664299592 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+hf_string: 110000
+hf_de--------     1      |         0.45       |     -1.2623124369010086     |     N/A    
+--------     2      |         0.02      --------     1      |         0.37       |     -1.0983722490692736     |     N/A    
+--------     2      |         0.02       |     -1.2198839033913838     |     N/A    
+--------     3      |         0.02       |     -1.2338926499516922     |     N/A    
+--------     4      |         0.03       |     -1.2596179634479909     |     N/A    
+--------     5      |         0.03       |     -1.2999812674408513     |     N/A    
+--------     6      |         0.02       |     -1.3144024323800518     |     N/A    
+--------     7      |         0.03       |     -1.3192741549022184     |     N/A    
+--------     8      |         0.02       |     -1.3225298953880085     |     N/A    
+--------     9      |         0.04       |     -1.3382490960356184     |     N/A    
+--------     10     |         0.02       |     -1.3523820377590212     |     N/A    
+--------     11     |         0.02       |     -1.3636272682805022     |     N/A    
+--------     12     |         0.02       |     -1.3699007631284901     |     N/A    
+--------     13     |         0.02       |     -1.3724001725210901     |     N/A    
+--------     14     |         0.02       |     -1.3727518550786793     |     N/A    
+--------     15     |         0.02       |     -1.3727817421251778     |     N/A    
+--------     16     |         0.02       |     -1.3727884265215338     |     N/A    
+--------     17     |         0.03       |     -1.3727894899060031     |     N/A    
+--------     18     |         0.03       |     -1.3727905110322096     |     N/A    
+--------     19     |         0.03       |     -1.3727911173163270     |     N/A    
+--------     20     |         0.02       |     -1.3727911766546879     |     N/A    
+--------     21     |         0.03       |     -1.3727911872800596     |     N/A    
+--------     22     |         0.04       |     -1.3727912051506730     |     N/A    
+--------     23     |         0.02       |     -1.3727912373512727     |     N/A    
+--------     24     |         0.02       |     -1.3727912966255909     |     N/A    
+--------     25     |         0.03       |     -1.3727914052089094     |     N/A    
+--------     26     |         0.05       |     -1.3727915982288235     |     N/A    
+--------     27     |         0.04       |     -1.3727919152034163     |     N/A    
+--------     28     |         0.07       |   --------     30     |         0.16      --------     29     |         0.03       |   --------     31     |         0.04      --------     30     |         0.03       |  
+--------     32     |         0.04       |     -1.3727569848610166     |     N/A    
+--------     33     |         0.03       |     -1.3727584025561754     |     N/A    
+--------     34     |         0.03       |     -1.3727592649967679     |     N/A    
+--------     35     |         0.08       |     -1.3727599483435937     |     N/A    
+--------     36     |         0.10       |     OVOS optimized energy = -1.372795 Hartree @ iterations 31.
+
+Calculating UHF reference for comparison...
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.09       |     -1.3093622104515714     |     N/A    
+--------     2      |         0.21       |     -1.3099490887590384     |     N/A    
+--------     3      |         0.24       |     -1.3285580298907698     |     N/A    
+--------     4      |         0.12       |     -1.3343920094728066     |     N/A    
+--------     5      |         0.16       |     -1.3424546403243314     |     N/A    
+--------     6      |         0.14       |     -1.3479044565365339     |     N/A    
+--------     7      |         0.02       |     -1.3568003271586309     |     N/A    
+--------     8      |         0.10       |     -1.3627796023070744     |     N/A    
+--------     9      |         0.04       |     -1.3683575270245139     |     N/A    
+--------     10     |         0.03       |     -1.3705802386697103     |     N/A    
+--------     11     |         0.02       |     -1.3711534554118143     |     N/A    
+--------     12     |         0.06       |     -1.3712014338829934     |     N/A    
+--------     13     |         0.07       |     -1.3712037392124228     |     N/A    
+--------     14     |         0.05       |     -1.3712044340897247     |     N/A    
+--------     15     |         0.04       |     -1.3712044571016098     |     N/A    
+--------     16     |         0.02       |     -1.3712044597208781     |     N/A    
+--------     17     |         0.03       |     -1.3712044597502500     |     N/OVOS oOptimization terminated successfully.
+         Current function value: -1.371204
+         Iterations: 17
+         Function evaluations: 24
+         Gradient evaluations: 24
+UHF energy = -1.371204 Hartree @ iterations 17.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.979470 Hartree
+UMP2 energy (original): -1.009948 Hartree, correlation: -0.030478 Hartree
+UMP2 energy (natural orbitals): -1.009948 Hartree, correlation: -0.030478 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.11       |     -1.2985305039361543     |     N/A    
+--------     2      |         0.01       |     -1.3063413358230775     |     N/A    
+--------     3      |         0.07       |     -1.3089755647658663     |     N/A    
+--------     4      |         0.01       |     -1.3099561715777839     |     N/A    
+--------     5      |         0.05       |     -1.3101443049895665     |     N/A    
+--------     6      |         0.01       |     -1.3102503065565569     |     N/A    
+--------     7      |         0.05       |     -1.3104491251531187     |     N/A    
+--------     8      |         0.02       |     -1.3108246118900411     |     N/A    
+--------     9      |         0.02       |     -1.3115214563801725     |     N/A    
+--------     10     |         0.02       |     -1.3126203555436184     |     N/A    
+--------     11     |         0.09       |     -1.3136694299681966     |     N/A    
+--------     12     |         0.09       |     -1.3157210143268805     |     N/A    
+--------     13     |         0.07       |     -1.3172278638285440     |     N/A    
+--------     14     |         0.03       |     -1.3198905887686008     |     N/A    
+--------     15     |         0.03       |     -1.3247765201249055     |     N/A    
+--------     16     |         0.07       |     -1.3335700536507185     |     N/A    
+--------     17     |         0.02       |     -1.3469766674728632     |     N/A    
+--------     18     |         0.04       |     -1.3527508922385951     |     N/A    
+--------     19     |         0.24       |     -1.3548997286955977     |     N/A    
+--------     20     |         0.02       |     -1.3586417891918252     |     N/A    
+--------     21     |         0.03       |     -1.3643963979222575     |     N/A    
+--------     22     |         0.04       |     -1.3683865588930237     |     N/A    
+--------     23     |         0.04       |     -1.3706592900106540     |     N/A    
+--------     24     |         0.12       |     -1.3710770359433795     |     N/A    
+--------     25     |         0.03       |     -1.3711901307770025     |     N/A    
+--------     26     |         0.06       |     -1.3712039140596115     |     N/A    
+--------     27     |         0.02       |     -1.3712043539476255     |     N/A    
+--------     28     |         0.03       |     -1.3712044420217182     |     N/A    
+--------     29     |         0.03       |     -1.3712044584828742     |     N/A    
+--------     30     |         0.04       |     -1.3712044595321045     |     N/A    
+--------     31     |         0.05       |     -1.3712044596785555     |     N/A    
+--------     32     |         0.03       |     -1.3712044597450044     |     N/A    
+--------     33     |         0.05       |     -1.3712044597513058     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.371204
+         Iterations: 33
+         Function evaluations: 37
+         Gradient evaluations: 37
+UHF natural orbital energy = -1.371204 Hartree @ iterations 33.
+
+Summary of results:
+Molecule: H 0 0 0; H 0 0 1.60000 with basis set 6-31G for a total of 2 ele--------     10     |         0.02       |     -1.3677241468516226     |     N/A    
+--------     11     |         0.09       |     -1.3700823087515812     |     N/A    
+--------     12     |         0.02       |     -1.3706991794978323     |     N/A    
+--------     13     |         0.01       |     -1.3709693131126617     |     N/A    
+--------     14     |         0.02       |     -1.3711836945337823     |     N/A    
+--------     15     |         0.02       |     -1.3711990364173350     |     N/A    
+--------     16     |         0.02       |     -1.3712026310061836     |     N/A    
+--------     17     |         0.04       |     -1.3712037742401553     |     N/A    
+--------     18     |         0.04       |     -1.3712043376394150     |     N/A    
+--------     19     |         0.02       |     -1.3712044512867512     |     N/A    
+--------     20     |         0.07       |     -1.3712044595873119     |     N/A    
+--------     21     |         0.01       |     -1.3712044597505197     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.371204
+         Iterations: 21
+         Function evaluations: 25
+         Gradient evaluations: 25
+UHF natural orbital energy = -1.371204 Hartree @ iterations 21.
+
+Summary of results:
+Molecule: H 0 0 0; H 0 0 1.60000 with bUHF energy = -1.371204 Hartree @ iterations 21.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.979470 Hartree
+UMP2 energy (original): -1.009948 Hartree, correlation: -0.030478 Hartree
+UMP2 energy (natural orbitals): -1.009948 Hartree, correlation: -0.030478 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.03       |     -0.9018609436511913     |     N/A    
+--------     2      |         0.01       |     -1.0337907203657437     |     N/A    
+--------     3      |         0.08       |     -1.3034376146624127     |     N/A    
+--------     4      |         0.02       |     -1.3045359767603624     |     N/A    
+--------     5      |         0.06       |     -1.3405390459604891     |     N/A    
+--------     6      |         0.01       |     -1.3624461817205220     |     N/A    
+--------     7      |         0.01       |     -1.3677340147053660     |     N/A    
+--------     8      |         0.01       |     -1.3696476557726931     |     N/A    
+--------     9      |         0.02       |     -1.3710652679890722     |     N/A    
+--------     10     |         0.02       |     -1.3711517685302606     |     N/A    
+--------     11     |         0.04       |     -1.3711794839674285     |     N/A    
+--------     12     |         0.03       |     -1.3711972004904822     |     N/A    
+--------     13     |         0.03       |     -1.3712023057344482     |     N/A    
+--------     14     |         0.02       |     -1.3712040323599033     |     N/A    
+--------     15     |         0.02       |     -1.3712044112455202     |     N/A    
+--------     16     |         0.05       |     -1.3712044576787963     |     N/A    
+--------     17     |         0.03       |     -1.3712044597164084     |     N/A    
+--------     18     |         0.02       |     -1.3712044597512296     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.371204
+         Iterations: 18
+         Function evaluations: 23
+         Gradient evaluations: 23
+UHF natural orbital energy = -1.371204 Hartree @ iterations 18.
+
+Summary of results:
+Molecule: H 0 0 0; H 0 0 1.60000 with basis set 6-31G for a total of 2 electrons and 4 orbitals.
+OVOS correlation energy: -1.011093 Hartree (Active unocc. orbitals: 2)
+OVOS energy: -1.372795 Hartree  @ iterations 86 (Eval. func. 95, grad. 95
+UHF energy: -1.371204 Hartree  @ iterations 21 (Eval. func. 23, grad. 23
+UMP2 natural orbital energy: -1.371204 Hartree  @ iterations 18 (Eval. func. 23, grad. 23
+1013768     |     N/A    
+--------    153     |         0.05       |     -1.3727933006335631     |     N/A    
+--------    154     |         0.05       |     -1.3727933014687739     |     N/A    
+--------    155     |         0.10       |     -1.3727933024474939     |     N/A    
+--------    156     |         0.05       |     -1.3727933031685573     |     N/A    
+--------    157     |         0.02       |     -1.3727933042519078     |     N/A    
+--------    158     |         0.03       |     -1.3727933048442293     |     N/A    
+--------    159     |         0.07       |     -1.3727933057475259     |     N/A    
+--------    160     |         0.11       |     -1.3727933062253281     |     N/A    
+--------    161     |         0.04       |     -1.3727933069795035     |     N/A    
+--------    162     |         0.06       |     -1.3727933079612022     |     N/A    
+--------    163     |         0.07       |     -1.3727933081889574     |     N/A    
+--------    164     |         0.07       |     -1.3727933085648134     |     N/A    
+--------    165     |         0.05       |     -1.3727933091746078     |     N/A    
+--------    166     |         0.07       |     -1.3727933100903225     |     N/A    
+--------    167     |         0.08       |   --------    169     |         0.20      --------    168     |         0.08       |   --------    170     |         0.13      --------    169     |         0.09       |     -1.3727933115533781     |     N/A    
+--------    170     |         0.07       |     -1.3727933124238050     |     N/A    
+--------    171     |         0.12       |     -1.3727933127215219     |     N/A    
+--------    172     |         0.04       |   --------    174     |         0.11       |     -1.3727637592987405     |     N/A    
+--------    175     |         0.04      --------    174     |         0.08       |   --------    176     |         0.05      --------    175     |         0.05       |   --------    177     |         0.06      --------    176     |         0.03       |   --------    178     |         0.05      --------    177     |         0.09       |   --------    179     |         0.09      --------    178     |         0.13       |     -1.3727933158956667     |     N/A    
+--------    179     |         0.02       |     -1.3727933162309829     |     N/A    
+--------    180     |         0.02       |     -1.3727933167708293     |     N/A    
+--------    181     |         0.02       |   --------    183     |         0.06     
+--------    182     |         0.02       |   --------    184     |         0.13      --------    183     |         0.13       |   --------    185     |         0.12       |     -1.3727637649827069     |     N/A    
+--------    186     |         0.02       |     -1.3727637652414013     |     N/A    
+--------    187     |         0.04      --------    186     |         0.16       |     -1.3727933194458617     |     N/A    
+--------    187     |         0.05       |     -1.3727933197482476     |     N/A    
+--------    188     |         0.03       |   --------    190     |         0.15       |     -1.3727637670694977     |     N/A    
+--------    191     |         0.09       |     -1.3727637673326254     |     N/A    
+--------    192     |         0.10       |     -1.3727637677538900     |     N/A    
+--------    193     |         0.12       |     -1.3727637682591365     |     N/A    
+--------    194     |         0.07       |     -1.3727637686183256     |     N/A    
+--------    195     |         0.23       |     -1.3727637688554637     |     N/A    
+--------    196     |         0.08       |     -1.3727637691903387     |     N/A    
+--------    197     |         0.02       |     -1.3727637696879043     |     N/A    
+--------    198     |         0.14       |     -1.3727637700560475     |     N/A    
+--------    199     |         0.08       |     -1.3727637703269417     |     N/A    
+--------    200     |         0.05       |     -1.3727637705201814     |     N/A    
+--------    201     |         0.15       |     -1.3727637708524791     |     N/A    
+--------    202     |         0.06       |     -1.3727637713340017     |     N/A    
+--------    203     |         0.02       |     -1.3727637717395582     |     N/A    
+--------    204     |         0.25       |     -1.3727637719682972     |     N/A    
+--------    205     |         0.12       |     -1.3727637721855146     |     N/A    
+--------    206     |         0.07       |     -1.3727637725392443     |     N/A    
+--------    207     |         0.06       |     -1.3727637730085773     |     N/A    
+--------    208     |         0.05       |     -1.3727637733849798     |     N/A    
+--------    209     |         0.12       |     -1.3727637736646887     |     N/A    
+--------    210     |         0.11       |     -1.3727637738235441     |     N/A    
+--------    211     |         0.08OVOS optimized energy = -1.372793 Hartree @ iterations 205.
+
+Calculating UHF reference for comparison...
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.19       |     -1.2765625779483831     |     N/A    
+--------     2      |         0.08       |     -1.3139109704243390     |     N/A    
+--------     3      |         0.10       |     -1.3353212817526443     |     N/A    
+--------     4      |         0.15       |     -1.3469051391148867     |     N/A    
+--------     5      |         0.04       |     -1.3602537025112118     |     N/A    
+--------     6      |         0.18       |     -1.3659151023387264     |     N/A    
+--------     7      |         0.03       |     -1.3707731333340580     |     N/A    
+--------     8      |         0.01       |     -1.3709972652625286     |     N/A    
+--------     9      |         0.01       |     -1.3711469746068805     |     N/A    
+--------     10     |         0.02       |     -1.3712002342766523     |     N/A    
+--------     11     |         0.10       |     -1.3712039563865086     |     N/A    
+--------     12     |         0.09       |     -1.3712043261648015     |     N/A    
+--------     13     |         0.01       |     -1.3712043738318549     |     N/A    
+--------     14     |         0.01       |     -1.3712044278592264     |     N/A    
+--------     15     |         0.06       |     -1.3712044523059141     |     N/A    
+--------     16     |         0.05       |     -1.3712044592410924     |     N/A    
+--------     17     |         0.01       |     -1.3712044597377282     |     N/A    
+--------     18     |         0.01       |     -1.3712044597514761     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.371204
+         Iterations: 18
+         Function evaluations: 19
+         Gradient evaluations: 19
+UHF energy = -1.371204 Hartree @ iterations 18.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.979470 Hartree
+UMP2 energy (original): -1.009948 Hartree, correlation: -0.030478 Hartree
+UMP2 energy (natural orbitals): -1.009948 Hartree, correlation: -0.030478 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.08       |     -1.2509058186237771     |     N/A    
+--------     2      |         0.04       |     -1.3095771859323360     |     N/A    
+--------     3      |         0.02       |     -1.3284183952586146     |     N/A    
+--------     4      |         0.02       |     -1.3462889922727386     |     NUHF energy = -1.371204 Hartree @ iterations 17.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.979470 Hartree
+UMP2 energy (original): -1.009948 Hartree, correlation: -0.030478 Hartree
+UMP2 energy (natural orbitals): -1.009948 Hartree, correlation: -0.030478 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.04       |     -1.0170336401944740     |     N/A    
+--------     2      |         0.04       |     -1.3052015641569219     |     N/A    
+--------     3      |         0.01       |     -1.3255776944838602     |     N/A    
+--------     4      |         0.03       |     -1.3450273932999499     |     N/A    
+--------     5      |         0.03       |     -1.3639609220429016     |     N/A    
+--------     6      |         0.03       |     -1.3670439343508347   UHF energy = -1.371204 Hartree @ iterations 20.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.979470 Hartree
+UMP2 energy (original): -1.009948 Hartree, correlation: -0.030478 Hartree
+UMP2 energy (natural orbitals): -1.009948 Hartree, correlation: -0.030478 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.04       |     -1.1304605669768248     |     N/A    
+--------     2      |         0.01       |     -1.2956434579958591     |     N/A    
+--------     3      |         0.03       |     -1.3215012302584348     |     N/A    
+--------     4      |         0.02       |     -1.3311209182914694     |     N/A    
+--------     5      |         0.04       |     -1.3373866023933219     |     N/A    
+--------     6      |         0.03       |     -1.3494496931868853     |     N/A    
+--------     7      |         0.01       |     -1.3580981694369465     |     N/A    
+--------     8      |         0.02       |     -1.3627455201290710     |     N/A    
+--------     9      |         0.01       |     -1.3662095442359075     |     N/A    
+--------     10     |         0.01       |     -1.3688639195848635     |     N/A    
+--------     11     |         0.01       |     -1.3697930366218836     |     N/A    
+--------     12     |         0.01       |     -1.3703233904070271     |     N/A    
+--------     13     |         0.01       |     -1.3710003466884302     |     N/A    
+--------     14     |         0.01       |     -1.3711774617656345     |     N/A    
+--------     15     |         0.01       |     -1.3711984842641309     |     N/A    
+--------     16     |         0.01       |     -1.3712024623346788     |     N/A    
+--------     17     |         0.01       |     -1.3712042121405481     |     N/A    
+--------     18     |         0.01       |     -1.3712044464620889     |     N/A    
+--------     19     |         0.01       |     -1.3712044595511719     |     N/A    
+--------     20     |         0.01       |     -1.3712044597489688     |     N/A    
+--------     21     |         0.01       |     -1.3712044597515123     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.371204
+         Iterations: 21
+         Function evaluations: 23
+         Gradient evaluations: 23
+UHF natural orbital energy = -1.371204 Hartree @ iterations 21.
+
+Summary of results:
+Molecule: H 0 0 0; H 0 0 1.60000 with basis set 6-31G for a total of 2 electrons and 4 orbitals.
+OVOS correlation energy: -1.011093 Hartree (Active unocc. orbitals: 2)
+OVOS energy: -1.372793 Hartree  @ iterations 232 (Eval. func. 275, grad. 275
+UHF energy: -1.371204 Hartree  @ iterations 20 (Eval. func. 21, grad. 21
+UMP2 natural orbital energy: -1.371204 Hartree  @ iterations 21 (Eval. func. 23, grad. 23
+    299     |         0.05       |     -1.3727637894631028     |     N/A    
+--------    300     |         0.07       |     -1.3727637895757145     |     N/A    
+--------    301     |         0.02       |     -1.3727637896220906     |     N/A    
+--------    302     |         0.03       |     -1.3727637897004401     |     N/A    
+--------    303     |         0.05       |     -1.3727637898089267     |     N/A    
+--------    304     |         0.03       |     -1.3727637898702774     |     N/A    
+--------    305     |         0.09       |     -1.3727637899679110     |     N/A    
+--------    306     |         0.04       |     -1.3727637899806566     |     N/A    
+--------    307     |         0.05       |     -1.3727637900046712     |     N/A    
+--------    308     |         0.07       |     -1.3727637900472878     |     N/A    
+--------    309     |         0.06       |     -1.3727637901161915     |     N/A    
+--------    310     |         0.05       |     -1.3727637901778820     |     N/A    
+--------    311     |         0.03       |     -1.3727637902661864     |     N/A    
+--------    312     |         0.11       |     -1.3727637902996410     |     N/A    
+--------    313     |         0.04       |     -1.3727637903493630     |     N/A    
+--------    314     |         0.03       |     -1.3727637904234440     |     N/A    
+--------    315     |         0.12       |     -1.3727637904536594     |     N/A    
+--------    316     |         0.05       |     -1.3727637904989467     |     N/A    
+--------    317     |         0.03       |     -1.3727637905671406     |     N/A    
+--------    318     |         0.03       |     -1.3727637905950687     |     N/A    
+--------    319     |         0.06       |     -1.3727637906383388     |     N/A    
+--------    320     |         0.03       |     -1.3727637907020773     |     N/A    
+--------    321     |         0.05       |     -1.3727637907265959     |     N/A    
+--------    322     |         0.06       |     -1.3727637907600012     |     N/A    
+--------    323     |         0.03       |     -1.3727637908127384     |     N/A    
+--------    324     |         0.03       |     -1.3727637908565125     |     N/A    
+--------    325     |         0.03       |     -1.3727637909177395     |     N/A    
+--------    326     |         0.03       |     -1.3727637909399153     |     N/A    
+--------    327     |         0.01       |     -1.3727637909687358     |     N/A    
+--------    328     |         0.01       |     -1.3727637910140162     |     N/A    
+--------    329     |         0.01       |     -1.3727637910430808     |     N/A    
+--------    330     |         0.01       |     -1.3727637910868151     |     N/A    
+--------    331     |         0.01       |     -1.3727637911222090     |     N/A    
+--------    332     |         0.01       |     -1.3727637911638537     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.372764
+         Iterations: 332
+         Function evaluations: 400
+         Gradien--------    334    OVOS optimized energy = -1.372764 Hartree @ iterations 332.
+
+Calculating UHF reference for comparison...
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.02       |     -1.2741271366604996     |     N/A    
+--------     2      |         0.01       |     -1.3001896205492831     |     N/A    
+--------     3      |         0.01       |     -1.3070639443949836     |     N/A    
+--------     4      |         0.01       |     -1.3127800247159234     |     N/A    
+--------     5      |         0.01       |     -1.3153961004412724     |     N/A    
+--------     6      |         0.01       |     -1.3172604711982823     |     N/A    
+--------     7      |         0.01       |     -1.3207769660759257     |     N/A    
+--------     8      |         0.02       |     -1.3219416709425538     |     N/A    
+--------     9      |         0.01       |     -1.3240963442862101     |     N/A    
+--------     10     |         0.01       |     -1.3277976145791486     |     N/A    
+--------     11     |         0.01       |     -1.3317721673359151     |     N/A    
+--------     12     |         0.01       |     -1.3392350042477923     |     N/A    
+--------     13     |         0.01       |     -1.3526180744940046     |     N/A    
+--------     14     |         0.01       |     -1.3667737879571584     |     N/A    
+--------     15     |         0.01       |     -1.3684576652240517  --------    352  --------     16     |         0.01       |     -1.3707327932206934  --------    353  --------     17     |         0.01       |     -1.3711278645943004  --------    354     |         0.02       |     -1.3727658950508026     |     N/A    
+--------    355     |         0.01       |     -1.3727658951822916     |     N/A    
+--------    356     |         0.02       |     -1.3727658952892701     |     N/A    
+--------    357     |         0.04       |     -1.3727658953095796     |     N/A    
+--------    358     |         0.01       |     -1.3727658953462714     |     N/A    
+--------    359     |         0.03       |     -1.3727658954101469     |     N/A    
+--------    360     |         0.02       |     -1.3727658955024107     |     N/A    
+--------    361     |         0.04       |     -1.3727658956355007     |     N/A    
+--------    362     UHF energy = -1.371204 Hartree @ iterations 23.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.979470 Hartree
+UMP2 energy (original): -1.009948 Hartree, correlation: -0.030478 Hartree
+UMP2 energy (natural orbitals): -1.009948 Hartree, correlation: -0.030478 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.02       |     -1.2833682119049736     |     N/A    
+--------     2      |         0.01       |     -1.3030010370435248     |     N/A    
+--------     3      |         0.01       |     -1.3160285219248244     |     N/A    
+--------     4      |         0.01       |     -1.3238318754608258     |     N/A    
+--------     5      |         0.01       |     -1.3322681984807925     |     N/A    
+--------     6      |         0.01       |     -1.3429713623770878     |     N/A    
+--------     7      |         0.01       |     -1.3545994027719626     |     N/A    
+--------     8      |         0.01       |     -1.3601918590876405     |     N/A    
+--------     9      |         0.01       |     -1.3678996150483822     |     N/A    
+--------     10     |         0.01       |     -1.3705305992492776     |     N/A    
+--------     11     |         0.01       |     -1.3710890531237949     |     N/A    
+--------     12     |         0.01       |     -1.3711863429478623     |     N/A    
+--------     13     |         0.01       |     -1.3712020056528680     |     N/A    
+--------     14     |         0.01       |     -1.3712043345493223     |     N/A    
+--------     15     |         0.01       |     -1.3712044323358772     |     N/A    
+--------     16     |         0.01       |     -1.3712044596968560     |     N/A    
+--------     17     |         0.01       |     -1.3712044597511288     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.371204
+         Iterations: 17
+         Function evaluations: 18
+         Gradient evaluations: 18
+UHF natural orbital energy = -1.371204 Hartree @ iterations 17.
+
+Summary of results:
+Molecule: H 0 0 0; H 0 0 1.60000 with basis set 6-31G for a total of 2 electrons and 4 orbitals.
+OVOS correlation energy: -1.011093 Hartree (Active unocc. orbitals: 2)
+OVOS energy: -1.372764 Hartree  @ iterations 332 (Eval. func. 400, grad. 400
+UHF energy: -1.371204 Hartree  @ iterations 23 (Eval. func. 25, grad. 25
+UMP2 natural orbital energy: -1.371204 Hartree  @ iterations 17 (Eval. func. 18, grad. 18
+     |     N/A    
+--------    396     |         0.02       |     -1.3727658974149763     |     N/A    
+--------    397     |         0.09       |     -1.3727658974522350     |     N/A    
+--------    398     |         0.08       |     -1.3727658974702279     |     N/A    
+--------    399     |         0.03       |     -1.3727658974784267     |     N/A    
+--------    400     |         0.02       |     -1.3727658974913313     |     N/A    
+--------    401     |         0.02       |     -1.3727658975068628     |     N/A    
+--------    402     |         0.03       |     -1.3727658975238950     |     N/A    
+--------    403     |         0.08       |     -1.3727658975521204     |     N/A    
+--------    404     |         0.02       |     -1.3727658975848414     |     N/A    
+--------    405     |         0.04       |     -1.3727658976314554     |     N/A    
+--------    406     |         0.04       |     -1.3727658976462658     |     N/A    
+--------    407     |         0.04       |     -1.3727658976699866     |     N/A    
+--------    408     |         0.03       |     -1.3727658977004746     |     N/A    
+--------    409     |         0.03       |     -1.3727658977398365     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.372766
+         Iterations: 409
+         Function evaluations: 504
+         Gradient evaluations: 504
+OVOS optimized energy = -1.372766 Hartree @ iterations 409.
+
+Calculating UHF reference for comparison...
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.03       |     -0.8779421504560558     |     N/A    
+--------     2      |         0.02       |     -1.1277287473147599     |     N/A    
+--------     3      |         0.01       |     -1.2881389218632771     |     N/A    
+--------     4      |         0.01       |     -1.2914557174459311     |     N/A    
+--------     5      |         0.01       |     -1.2974166070658470     |     N/A    
+--------     6      |         0.03       |     -1.3060697956542997     |     N/A    
+--------     7      |         0.01       |     -1.3083188075402099     |     N/A    
+--------     8      |         0.03       |     -1.3100462294858999     |     N/A    
+--------     9      |         0.02       |     -1.3101610124330587     |     N/A    
+--------     10     |         0.03       |     -1.3103547880175177     |     N/A    
+--------     11     |         0.04       |     -1.3106007178844870     |     N/A    
+--------     12     |         0.02       |     -1.3107470368716818     |     N/A    
+--------     13     |         0.04       |     -1.3134012388567187     |     N/A    
+--------     14     |         0.04       |     -1.3134388839649733     |     N/A    
+--------     15     |         0.04       |     -1.3137883643246127     |     N/A    
+--------     16     |         0.02       |     -1.3144514576081041     |     N/A    
+--------     17     |         0.02       |     -1.3156867637095653     |     N/A    
+--------     18     |         0.01       |     -1.3177777267765018     |     N/A    
+--------     19     |         0.01       |     -1.3208207093491124     |     N/A    
+--------     20     |         0.01       |     -1.3260048821661972     |     N/A    
+--------     21     |         0.01       |     -1.3346336954068849     |     N/A    
+--------     22     |         0.01       |     -1.3455778519726691     |     N/A    
+--------     23     |         0.01       |     -1.3514682763917218     |     N/A    
+--------     24     |         0.01       |     -1.3594996480395178     |     N/A    
+--------     25     |         0.01       |     -1.3649942124288286     |     N/A    
+--------     26     |         0.01       |     -1.3671058279962105     |     N/A    
+--------     27     |         0.01       |     -1.3690237717843434     |     N/A    
+--------     28     |         0.01       |     -1.3707634371443160     |     N/A    
+--------     29     |         0.01       |     -1.3709358492118116     |     N/A    
+--------     30     |         0.01       |     -1.3710706026271986     |     N/A    
+--------     31     |         0.01       |     -1.3711896884245864     |     N/A    
+--------     32     |         0.01       |     -1.3712026063326059     |     N/A    
+--------     33     |         0.01       |     -1.3712043493391628     |     N/A    
+--------     34     |         0.01       |     -1.3712044219511470     |     N/A    
+--------     35     |         0.01       |     -1.3712044518790765     |     N/A    
+--------     36     |         0.01       |     -1.3712044593533979     |     N/A    
+--------     37     |         0.01       |     -1.3712044597439130     |     N/A    
+--------     38     |         0.01       |     -1.3712044597515534     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.371204
+         Iterations: 38
+         Function evaluations: 46
+         Gradient evaluations: 46
+UHF energy = -1.371204 Hartree @ iterations 38.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 4, Active orbitals: 3 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 1 orbitals (indices [3]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -0.979470 Hartree
+UMP2 energy (original): -1.009948 Hartree, correlation: -0.030478 Hartree
+UMP2 energy (natural orbitals): -1.009948 Hartree, correlation: -0.030478 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+hf_string: 110000
+hf_det 48
+### Parameters information:
+### Number theta: 10
+--------Iteration # | Iteration time [s] | Electronic energy [Hartree]
+--------     1      |         0.01       |     -0.9413548162846345     |     N/A    
+--------     2      |         0.01       |     -1.2084371027422449     |     N/A    
+--------     3      |         0.01       |     -1.2841700959550788     |     N/A    
+--------     4      |         0.01       |     -1.3081082978586571     |     N/A    
+--------     5      |         0.01       |     -1.3161008918048314     |     N/A    
+--------     6      |         0.01       |     -1.3203643518800516     |     N/A    
+--------     7      |         0.01       |     -1.3238686351593740     |     N/A    
+--------     8      |         0.01       |     -1.3293638450925949     |     N/A    
+--------     9      |         0.01       |     -1.3317248554998304     |     N/A    
+--------     10     |         0.01       |     -1.3354188468596830     |     N/A    
+--------     11     |         0.01       |     -1.3416396116665881     |     N/A    
+--------     12     |         0.01       |     -1.3504895778473658     |     N/A    
+--------     13     |         0.01       |     -1.3588529731145771     |     N/A    
+--------     14     |         0.01       |     -1.3630669294678479     |     N/A    
+--------     15     |         0.01       |     -1.3684654767333944     |     N/A    
+--------     16     |         0.01       |     -1.3702933349740742     |     N/A    
+--------     17     |         0.01       |     -1.3709670955340834     |     N/A    
+--------     18     |         0.01       |     -1.3711607317636525     |     N/A    
+--------     19     |         0.01       |     -1.3711872503366487     |     N/A    
+--------     20     |         0.01       |     -1.3711986855815297     |     N/A    
+--------     21     |         0.01       |     -1.3712038006279355     |     N/A    
+--------     22     |         0.01       |     -1.3712043784134795     |     N/A    
+--------     23     |         0.01       |     -1.3712044524155231     |     N/A    
+--------     24     |         0.01       |     -1.3712044589212387     |     N/A    
+--------     25     |         0.01       |     -1.3712044597286894     |     N/A    
+--------     26     |         0.01       |     -1.3712044597512676     |     N/A    
+Optimization terminated successfully.
+         Current function value: -1.371204
+         Iterations: 26
+         Function evaluations: 27
+         Gradient evaluations: 27
+UHF natural orbital energy = -1.371204 Hartree @ iterations 26.
+
+Summary of results:
+Molecule: H 0 0 0; H 0 0 1.60000 with basis set 6-31G for a total of 2 electrons and 4 orbitals.
+OVOS correlation energy: -1.011093 Hartree (Active unocc. orbitals: 2)
+OVOS energy: -1.372766 Hartree  @ iterations 409 (Eval. func. 504, grad. 504
+UHF energy: -1.371204 Hartree  @ iterations 38 (Eval. func. 46, grad. 46
+UMP2 natural orbital energy: -1.371204 Hartree  @ iterations 26 (Eval. func. 27, grad. 27
