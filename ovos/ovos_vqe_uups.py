@@ -293,6 +293,7 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                     "dist": dist,
                     "thetas": thetas,
                     "oo": oo,
+                    "E_corr_OVOS": E_corr,
                     "mo": E_corr_mo,
                     "iterations": iter_ovos_opt,
                     "final_energy": E_ovos_opt,
@@ -538,26 +539,63 @@ if False:
     # Rounds of seeds:
         # [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
         # [9, 19, 29, 39, 49, 59, 69, 79, 89, 99, 109, 119, 129, 139, 149, 159, 169, 179, 189, 199]
-
-if True:
+HF_list_full_seeds = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99, 109, 119, 129, 139, 149, 159, 169, 179, 189, 199]
+if False:
     for dist in HF_list_full:
         dist = round(dist, 5)
         for atom in [f"H 0 0 0; F 0 0 {dist:.5f}"]: 
             for basis in [basis_lst[0]]:
-                for num_opt_virtual_orbs in [num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
+                for num_opt_virtual_orbs in [0.25]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
                     for oo in [oo_lst[1]]: # True, False
                         print(f"\nRunning VQE with OVOS optimization for {atom} in basis {basis} with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
                         # To ensure reproducibility, set random seed for SlowQuant optimizations
                             # Prepare arguments for each seed
-                        seeds = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99, 109, 119, 129, 139, 149, 159, 169, 179, 189, 199]
+                        seeds = HF_list_full_seeds
                         args_list = [(atom, basis, dist, num_opt_virtual_orbs, oo, seed) for seed in seeds]
 
                         # Run in parallel with one process per core
-                        num_cores = len(seeds) if len(seeds) < 11 else int(len(seeds)/2)  # Use all available cores
+                        num_cores = len(seeds) if len(seeds) < 11 else  10  # Use all available cores
                         with Pool(processes=num_cores) as pool:
                             pool.map(run_single_seed, args_list)
                         # Every seed wil run before moving a dist forward...
 
+# Rewrite to one seed but make Pool over an amount of dist variations instead of seeds, to get the rest of the HF data for all dist variations for one seed (e.g. 9) to verify in plots, and then I can run the rest of the seeds in parallel over dist variations once I verify the data looks correct for one seed.
+if True:
+    # Set seed
+    seed = 9
+    # Make args list for all dist variations for one seed
+    args_list = []
+    for dist in [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]: # HF_list_full: # [0.7, 0.725, 0.75, 0.775, 0.8, 0.825, 0.85, 0.875, 0.9, 0.925, 0.95, 0.975, 1.0, 1.025, 1.05, 1.075, 1.1, 1.125, 1.15, 1.175, 1.2, 1.225, 1.25, 1.275, 1.3, 1.325, 1.35, 1.375, 1.4, 1.425, 1.45, 1.475, 1.5, 1.525, 1.55, 1.575, 1.6, 1.625, 1.65, 1.675, 1.7, 1.725, 1.75, 1.775, 1.8, 1.825, 1.85, 1.875, 1.9, 1.925, 1.95, 1.975]:
+        dist = round(dist, 5)
+        for atom in [f"H 0 0 0; F 0 0 {dist:.5f}"]: 
+            for basis in [basis_lst[0]]:
+                for num_opt_virtual_orbs in [0.25]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
+                    for oo in [oo_lst[1]]: # True, False
+                        args_list.append((atom, basis, dist, num_opt_virtual_orbs, oo, seed))
+
+    # Run in parallel with one process per core
+    num_cores = len(args_list) if len(args_list) < 11 else 10  # Use all available cores
+    with Pool(processes=num_cores) as pool:
+        pool.map(run_single_seed, args_list)
+
+# Rewrite to 10 seeds for one dist variation (e.g. 1.375) to verify the variability across seeds for one dist variation, and then I can run the rest of the dist variations in parallel over seeds once I verify the data looks correct for one dist variation.
+if True:
+    # Set dist
+    dist = 1.375
+    dist = round(dist, 5)
+    # Make args list for all seeds for one dist variation
+    args_list = []
+    for atom in [f"H 0 0 0; F 0 0 {dist:.5f}"]: 
+        for basis in [basis_lst[0]]:
+            for num_opt_virtual_orbs in [0.75]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
+                for oo in [oo_lst[1]]: # True, False
+                    for seed in [9, 19, 29, 39, 49, 59, 69, 79, 89, 99]:  # Run each configuration with different random seeds to assess variability
+                        args_list.append((atom, basis, dist, num_opt_virtual_orbs, oo, seed))
+
+    # Run in parallel with one process per core
+    num_cores = len(args_list) if len(args_list) < 11 else 10  # Use all available cores
+    with Pool(processes=num_cores) as pool:
+        pool.map(run_single_seed, args_list)
                         
 
 # Run and get the UHF data for all atom dist variations to verify in plots
