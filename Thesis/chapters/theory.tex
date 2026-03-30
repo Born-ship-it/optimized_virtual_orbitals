@@ -4,6 +4,37 @@
 \chapter{Theory}
 \label{ch:theory}
 
+\section{Notation and Integral Conventions}
+\label{sec:notation}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.0 PRELIMINARIES]
+%   "To ensure clarity and consistency throughout this chapter,
+%    we establish the notation and integral conventions used in all
+%    OVOS derivations. This adopts the physicists' antisymmetrised
+%    notation unless otherwise specified."
+%
+% [WHAT TO COVER]
+%   - Integral notation: <ab||ij> (antisymmetrised physicists')
+%     Definition: <ab||ij> = <ab|ij> - <ab|ji>
+%   - Index ordering:
+%     i,j,... occupied orbitals
+%     a,b,... virtual orbitals
+%     e,f inactive virtual; a,b active virtual (OVOS partition)
+%   - Molecular orbital basis: all quantities in MO basis unless AO noted
+%   - Spin summation: closed-shell RHF, spinless formula
+%   - Fock matrix: f_pq = h_pq + sum_i <pi||iq>
+%   - Orbital energies: epsilon_a from canonical MO transform
+%
+%   CITE: \cite{Szabo2012} \S 1-2 (integral conventions)
+%         \cite{Jensen2014} \S 2+ (physics vs chemistry notation)
+%         \cite{Adamowicz1987_OVOS} (state OVOS convention)
+% ---------------------------------------------------------------
+\subsection{Index Ordering and Orbital Partitioning}
+\subsection{Integral Notation: Antisymmetrised vs Non-antisymmetrised}
+\subsection{Fock Matrix and Orbital Energy Definitions}
+
+\clearpage
+
 % ---------------------------------------------------------------
 % WRITING TIPS – THEORY
 % ---------------------------------------------------------------
@@ -19,6 +50,10 @@
 %         is equivalent to maximising the MP2 correlation energy.
 %       - Stationary conditions → MP1 amplitudes.
 %       - Write out J₂ explicitly in terms of integrals and amplitudes.
+%       - PRIMARY CITE: \cite{Adamowicz1987_OVOS} § Second-Order Hylleraas Functional
+%         (seminal definition; trace all derivations here)
+%       - Supporting CITE: \cite{Szabo2012} § 6.0-6.8 Rayleigh-Schrödinger perturbation theory
+%       - Check notations against \cite{Jensen2014} § 4.8 MP2 energy expressions
 %
 %  3.2  Orbital Rotation Parameterisation
 %       - Define the orbital rotation matrix R (antisymmetric,
@@ -28,6 +63,9 @@
 %         φ'_a = φ_a + Σ_e R_{ea}φ_e − ½Σ_{b,e}R_{ea}R_{eb}φ_b + …
 %       - Why only active-inactive rotations? (Active-active and
 %         inactive-inactive rotations are redundant for J₂.)
+%       - PRIMARY CITE: \cite{Adamowicz1987_OVOS} for orbital rotation parametrization
+%       - SECONDARY CITE: \cite{Neogrady2011_CC_OVOS} § Unitary Transformation Theory
+%         (modern formulation; alternative theoretical foundation)
 %
 %  3.3  Gradient of J₂ with Respect to Orbital Rotations
 %       - Derive G_{ea} = ∂J₂/∂R_{ae} from first principles.
@@ -100,11 +138,50 @@
 %     are antisymmetrised physicists' notation. (Cross-ref \S~\ref{ch:background}.)
 %   - Note that $J_2$ operates only over the ACTIVE virtual space.
 %     This is what makes OVOS a TRUNCATED optimisation.
+%   CITE STRATEGY:
+%     • Hylleraas principle & MP2 energy: \cite{Adamowicz1987_OVOS} Eq. (1) [PRIMARY]
+%     • Perturbation-theory background: \cite{Szabo2012} § 6.0-6.8 [context]
+%     • MP2 amplitude definitions: \cite{Jensen2014} § 4.8 [notation reference]
 %
 % [LEAD-IN TO §3.2]
 %   "In order to minimise $J_2$ with respect to orbital choice, we
-%    parameterise the unitary rotation of the active virtual space,
-%    as described in the following section."
+%    must first address a key decision: which variational functional?
+%    The original OVOS uses energy; alternatives use overlap. The next
+%    section compares both before we proceed to orbital rotations."
+% ---------------------------------------------------------------
+
+% ---------------------------------------------------------------
+% NEW SECTION: ENERGY VS OVERLAP FUNCTIONALS
+% ---------------------------------------------------------------
+\section{Energy Functional vs Overlap Functional}
+\label{sec:functionals}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.1.5]
+%   "The OVOS method can be formulated using different variational
+%    functionals. The original Adamowicz & Bartlett approach uses
+%    the Hylleraas energy functional J²_E. An alternative formulation
+%    by Neogrady et al. uses an overlap-based functional J²_O that
+%    is more robust for higher-order methods."
+%
+% [WHAT TO COVER]
+%   - Energy Functional (Adamowicz & Bartlett):
+%     Minimises correlation energy directly.
+%     Advantage: energetically optimised virtuals.
+%     Drawback: may not generalise to CC(higher).
+%
+%   - Overlap Functional (Neogrady et al.):
+%     Maximises overlap between reference and correlated state.
+%     Advantage: more stable; generalises to CCSD, CCSD(T).
+%     Drawback: does not directly optimise energy.
+%
+%   CITE: \cite{Adamowicz1987_OVOS} for energy functional
+%         \cite{Neogrady2011_CC_OVOS} for overlap functional [PRIMARY]
+%         \cite{Pitonak2009_CCSD_T} for application to CCSD(T)
+% ---------------------------------------------------------------
+\subsection{The Energy Functional (Adamowicz \& Bartlett)}
+\subsection{The Overlap Functional (Neogrady Formulation)}
+\subsection{Practical Selection: When to Use Which}
+
 % ---------------------------------------------------------------
 
 \section{Orbital Rotation Parameterisation}
@@ -165,6 +242,8 @@
 %   - Note dimension: $G$ is $(N_{\rm virt}-N') \times N'$ matrix.
 %   - Discuss the NOTATION of $\langle ij\|eb\rangle$: confirm physical
 %     antisymmetrised, and state index order unambiguously.
+%   CITE: \cite{Adamowicz1987_OVOS} Eq. (7) [explicit gradient formula]
+%         \cite{Neogrady2011_CC_OVOS} § Unitary Transformation Theory [modern derivation]
 %
 % [LEAD-IN TO §3.4]
 %   "The gradient alone is insufficient for fast convergence;
@@ -194,6 +273,7 @@
 %               + D_{ab} f_{ef}(1-\delta_{ef})$
 %   - Write out EACH term and explain its physical origin.
 %   - State index ordering of $\langle ij\|ef\rangle$ unambiguously.
+%   CITE: \cite{Adamowicz1987_OVOS} for all four Hessian terms [PRIMARY]
 %   §Block Structure:
 %   - $H_{ea,fb}$ depends on inactive orbital pair $(e,f)$.
 %   - For $e = f$: diagonal block $H_{ea,fa}$ — square matrix of size $N'\times N'$.
@@ -201,12 +281,16 @@
 %     when $e \neq f$ contributes off-diagonal terms that are typically small.
 %   - The block structure means only $N_{\rm inact}$ blocks of size $N'^2$
 %     need to be inverted separately — cite Adamowicz \& Bartlett step (vi).
+%   CITE: \cite{Adamowicz1987_OVOS} step (vi) for block-diagonal structure
+%         \cite{Helgaker2000} § 12.6 for general orbital optimization Hessian theory
 %   §Negative Eigenvalues and Level-Shift:
 %   - $\mathbf{H}$ may be indefinite near saddle points or with small virtual gaps.
 %   - Level shift: replace $\mathbf{H}$ with $\mathbf{H} + \lambda\mathbf{I}$
 %     such that all eigenvalues are positive.
 %   - Discuss the choice of $\lambda$ (empirical or dynamic threshold).
 %   - Reference: augmented Hessian / trust-region Newton methods in general.
+%   CITE: \cite{Adamowicz1987_OVOS} for OVOS-specific level-shift strategy
+%         \cite{Helgaker2000} § 12.0–12.8 MCSCF optimization [general reference]
 %
 % [LEAD-IN TO §3.5]
 %   "With both gradient and Hessian derived, the Newton-Raphson orbital
@@ -235,6 +319,8 @@
 %   - Level-shift application: if any diagonal block has negative
 %     eigenvalue, shift to ensure $H + \lambda I$ is positive-definite.
 %   - State the convergence criterion used: $|J_2^{(n)}-J_2^{(n-1)}| < 10^{-8}$.
+%   CITE: \cite{Adamowicz1987_OVOS} algorithm step (v) for full NR procedure
+%         \cite{Helgaker2000} § 12.0–12.8 for general MCSCF-style optimization
 %
 % [LEAD-IN TO §3.6]
 %   "Given the rotation step $\Delta\mathbf{R}$, the unitary matrix
@@ -265,6 +351,7 @@
 %     exact to all orders; avoids convergence issues for large $|R_{ae}|$.
 %   - Edge case: $\mathbf{d} \approx 0$ for small rotations —
 %     $\sinh(d)/d \to 1$ smoothly; use L'H\^opital or Taylor expansion near 0.
+%   CITE: \cite{Adamowicz1987_OVOS} algorithm step (vii) for eigendecomposition approach
 %
 % [LEAD-IN TO §3.7]
 %   "After applying $\mathbf{U}$ to the orbital coefficients, the
@@ -290,11 +377,55 @@
 %   - INACTIVE virtuals and OCCUPIED orbitals are NOT rotated
 %     (only the active block changes at each OVOS iteration).
 %   - This step corresponds to step (viii) of the Adamowicz \& Bartlett algorithm.
+%   CITE: \cite{Adamowicz1987_OVOS} algorithm step (viii)
+%         \cite{Jensen2014} § 10.0–10.5 for general canonical orbital concepts
 %
 % [LEAD-IN TO §3.8]
 %   "With canonical orbitals re-established, the MP2 energy for the
 %    new active space can be evaluated and the energy recovery
-%    fraction defined, as presented in the following section."
+%    fraction defined. But first, we consolidate the entire OVOS
+%    procedure in a single algorithm overview for clarity."
+% ---------------------------------------------------------------
+
+% ---------------------------------------------------------------
+% NEW SECTION: ALGORITHM SUMMARY
+% ---------------------------------------------------------------
+\section{OVOS Algorithm Summary}
+\label{sec:algorithm_summary}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.7.5]
+%   "This section consolidates the OVOS procedure into a single
+%    pseudocode algorithm, synthesising all steps (i)–(viii) discussed
+%    in Sections~\ref{sec:hylleraas}–\ref{sec:canon}. This serves as
+%    a roadmap for implementation and reference for computational
+%    cost analysis in Section~\ref{sec:scaling}."
+%
+% [WHAT TO COVER]
+%   ALGORITHM: Full OVOS procedure from HF to converged active space
+%   Input:  HF orbitals; desired active space size N' (or cutoff criterion)
+%   Output: Optimised active virtual orbital basis; energy recovery eta
+%
+%   (i)   Compute initial MP2 amplitudes t_ij^ab (full virtual space)
+%   (ii)  Compute MP2 virtual-virtual density matrix D_ab
+%   (iii) Compute gradient G_ea (Eq. ref)
+%   (iv)  Compute Hessian H_ea,fb in block-diagonal form (Eq. ref)
+%   (v)   Solve Newton step: H * Delta_R = -G
+%   (vi)  Apply level-shift if necessary for positive-definite H
+%   (vii) Compute unitary U = exp(R) via eigendecomposition
+%   (viii)Apply rotation to active MOs; re-diagonalise active Fock block
+%   (ix)  Recompute t_ij^ab in new orbital basis
+%   (x)   Check convergence: |J_2^(n) - J_2^(n-1)| < tol?
+%   (xi)  If converged: output active space; else go to (ii)
+%
+%   Convergence criterion: typically tol = 10^-8 Hartree
+%   Output metrics: active virtual count N'; energy recovery eta
+%
+%   CITE: \cite{Adamowicz1987_OVOS} for original steps (i)–(viii)\n%         \cite{Neogrady2011_CC_OVOS} \S Algorithm & Implementation
+% ---------------------------------------------------------------
+\subsection{Pseudocode and Step-by-Step Procedure}
+\subsection{Convergence Criteria and Precomputation Strategy}
+\subsection{Output: Active Space Definition and Recovery Metrics}
+
 % ---------------------------------------------------------------
 
 \section{Energy Recovery and the OVOS Error Metric}
@@ -320,88 +451,163 @@
 %     is computed perturbatively from the complement space.
 %   - The error $\Delta E = E_{\rm corr}^{\rm MP2} - E_{\rm corr}^{\rm OVOS}\geq 0$
 %     monotonically decreases with $N'$.
+%   CITE: \cite{Adamowicz1987_OVOS} Results section for energy recovery concept & numerics
+%         \cite{Rolik2011_Cost_Reduction} § Results for benchmarking energy recovery curves
 %
 % [FOOTNOTE/BOX] Clarify: OVOS optimises $J_2$ over the active space;
 %   the recovery $\eta$ is NOT the same as optimising the TOTAL MP2 energy.
 %
 % [LEAD-IN TO §3.9]
-%   "The stationarity condition $\partial J_2/\partial R_{ae} = 0$
-%    satisfied by the converged OVOS orbitals has a deep theoretical
-%    significance: it establishes a formal connection to the concept
-%    of Brueckner orbitals, as explored in the following section."
+%   "Energy recovery metrics quantify the accuracy of OVOS. But what
+%    about computational cost? The next section analyses the scaling
+%    of OVOS iterations and downstream methods to quantify speedup."
 % ---------------------------------------------------------------
 
 % ---------------------------------------------------------------
-% WRITING TIPS – OVOS AS APPROXIMATE BRUECKNER ORBITALS (Theory)
+% NEW SECTION: COMPUTATIONAL SCALING
 % ---------------------------------------------------------------
-% This section makes the formal connection between OVOS and Brueckner
-% orbitals. Key arguments:
+\section{Computational Cost and Scaling Analysis}
+\label{sec:scaling}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.9]
+%   "A central motivation for OVOS is computational speedup via active
+%    virtual space reduction. This section analyses the algorithmic
+%    scaling of OVOS iterations and compares the total cost to
+%    traditional full-space correlation methods."
 %
+% [WHAT TO COVER]
+%   §Cost of One OVOS Iteration:
+%   - MP2 amplitude evaluation: O(N_occ² N_virt²)
+%   - Density matrix D_ab: O(N_occ² N'²)
+%   - Gradient G_ea: O(N_occ² N'(N_virt - N'))
+%   - Hessian H_ea,fb: O(N_occ² N_inact N'²) [block-diagonal key]
+%   - Block inversion: O(N_inact N'³) [parallelizable]
+%   - Unitary matrix: O((N_virt - N')³) [eigendecomposition]
+%   - Per iteration: dominated by O(N_occ² N_virt²)
+%
+%   §Full Space vs OVOS Speedup:
+%   - Full MP2: ~O(N_occ² N_virt⁴)
+%   - OVOS per-iteration: ~O(N_occ² N_virt²)
+%   - Speedup per iteration: (N_virt/N')²
+%     Example: N_virt=20, N'=10 => 4x per iteration
+%   - With 5-20 iteration convergence: overall speedup factors
+%
+%   §Downstream CCSD Cost Savings:
+%   - CCSD full space: O(N_occ² N_virt⁴) [quartic!]
+%   - CCSD on OVOS: O(N_occ² N'⁴)
+%   - Speedup: (N_virt/N')⁴
+%     Example: N'=N_virt/2 => 16x CCSD speedup
+%
+%   §Practical Breakeven:
+%   - OVOS not free: overhead from iterations must be recouped
+%   - Breakeven typically at N' ≲ 0.6*N_virt for CCSD
+%   - For larger reductions (N' ~ 0.3*N_virt): dramatic speedup
+%
+%   CITE: \cite{Adamowicz1987_OVOS} Discussion section\n%         \cite{Rolik2011_Cost_Reduction} \S Results [experimental speedup curves]\n%         \cite{Neogrady2011_CC_OVOS} \S Implementation for detailed timing
+% ---------------------------------------------------------------
+\subsection{Per-Iteration Cost of OVOS Optimisation}
+\subsection{Comparison: Full Virtual Space vs OVOS-Reduced}
+\subsection{Downstream CCSD/CCSD(T) Speedup Factors}
+\subsection{Breakeven Analysis and Practical Realisation}
+
+% ---------------------------------------------------------------
+
+% ---------------------------------------------------------------
+% NEW SECTION: LIMITATIONS AND SCOPE
+% ---------------------------------------------------------------
+\section{Limitations and Scope of OVOS}
+\label{sec:limitations}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.10]
+%   "While OVOS provides significant speedup for correlation methods,
+%    its applicability depends on system characteristics. This section
+%    outlines regimes where OVOS excels and where it may offer
+%    minimal advantage."
+%
+% [WHAT TO COVER]
+%   §Ideal OVOS Regimes (HIGH benefit):
+%   - Large basis sets (N_virt > 50): reduction most impactful
+%   - Multireference / bond-breaking: active space essential
+%   - Higher-order CC (CCSD(T), CC4): quartic scaling dominates
+%   - VQE/NISQ quantum computing: qubit savings critical
+%
+%   §Limited OVOS Benefit:
+%   - Small basis sets (N_v < 30): already manageable
+%   - Single-reference, well-behaved systems: MP2 often accurate
+%   - MP2-only studies: iterations overhead may not be worth it
+%   - Highly diffuse basis: diffuse orbitals cannot be neglected
+%
+%   §Known Issues:
+%   - Negative Hessian eigenvalues near convergence
+%   - Geometry dependence: re-optimize for each structure
+%   - Numerical sensitivity in convergence region
+%
+%   CITE: \cite{Adamowicz1987_OVOS} Applications section\n%         \cite{Rolik2011_Cost_Reduction} Discussion\n%         \cite{Quantum_Computing_Age_QC} VQE applications
+% ---------------------------------------------------------------
+\subsection{Systems Where OVOS Maximises Benefit}
+\subsection{Regimes of Limited Applicability}
+\subsection{Numerical Challenges and Remedies}
+\subsection{Geometry Dependence and Re-Optimisation Strategy}
+
+% ---------------------------------------------------------------
+
+\section{OVOS Orbitals as Approximate Brueckner Orbitals}
+\label{sec:ovos_brueckner}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.11]
+%   "The stationarity condition ∂J₂/∂R_{ae} = 0 satisfied by
+%    converged OVOS orbitals has profound theoretical significance.
+%    It establishes a formal connection to Brueckner orbitals,
+%    with implications for single-excitation amplitudes and
+%    higher-level correlation treatments."
+%
+% [SUBSECTION COVERAGE]
 %  Stationarity conditions
 %    - At convergence of OVOS, ∂J₂/∂R_{ae} = G_{ae} = 0 for all a,e.
 %    - This is exactly the condition that the MP2 energy is stationary
 %      wrt orbital rotations between active and inactive virtual spaces.
-%    - Full orbital-optimised MP2 (OO-MP2) \cite{Lee2018} achieves this
+%    - Full orbital-optimised MP2 (OO-MP2) achieves this
 %      for ALL orbital rotations (occ-virt as well). OVOS restricts
 %      to active_virt – inactive_virt rotations.
 %    - At the OO-MP2 level, stationarity ⟺ T1 = 0 ⟺ Brueckner orbitals.
 %    - OVOS achieves the same stationarity within the truncated space,
 %      so OVOS MOs are the Brueckner orbitals of the active virtual space.
 %
-%  Formal proof sketch (can go in Appendix A)
-%    - Show G_{ae} = 0 is equivalent to the MP1 T1 residual = 0
-%      when restricted to active-inactive rotations.
-%    - Cite Helgaker et al. Chapter 4 \cite{Helgaker2000} for
-%      the Brueckner orbital derivation in full CC theory.
-%
-%  Consequences
-%    - OVOS MOs have smaller T1 amplitudes than canonical HF MOs → the
-%      T1 diagnostic will be reduced.
-%    - In a subsequent CC calculation on the OVOS orbital basis, single
-%      excitations into the inactive virtual space are suppressed.
-%    - For VQE UCCSD, the ansatz |Φ_OVOS⟩ + UCCSD has better starting
-%      overlap with FCI than |Φ_HF⟩ + UCCSD.
+%  CITE: \cite{Neogrady2011_CC_OVOS} for orbital optimization theory
+%        \cite{Lee2018_OO-MP2} for OO-MP2 and T1 reduction
+%        \cite{Helgaker2000} § 13.0+ for general Brueckner theory
 % ---------------------------------------------------------------
-\section{OVOS Orbitals as Approximate Brueckner Orbitals}
-\label{sec:ovos_brueckner}
 \subsection{Orbital Stationarity and the Brueckner Condition}
 \subsection{Relationship to Orbital-Optimised MP2}
 \subsection{Expected Reduction of T1 Amplitudes}
 
 % ---------------------------------------------------------------
-% WRITING TIPS – OVOS AS VQE TRIAL STATE (Theory)
-% ---------------------------------------------------------------
-% This section lays the theoretical case for using OVOS MOs in VQE.
-%
-%  Key quantity: the reference-state overlap
-%    - Define the overlap F = |⟨Φ_ref|Ψ_FCI⟩|² (fidelity).
-%    - For HF reference: F_HF = |⟨Φ_HF|Ψ_FCI⟩|².
-%    - Claim: F_OVOS ≥ F_HF because OVOS orbitals minimise the
-%      MP2 energy, i.e. maximise the second-order contribution to
-%      the correlation energy captured by a single determinant.
-%
-%  VQE cost function and parameter count
-%    - UCCSD circuit depth scales as O(N² M²) where N = n_occ,
-%      M = n_virt. Reducing M via OVOS directly reduces circuit depth.
-%    - With better reference overlap, fewer UCCSD parameters are needed
-%      to reach a target accuracy.
-%    - Formal connection: for an exact Brueckner reference (T1 = 0),
-%      the UCCSD ansatz reduces to UCCD — halving the single-excitation
-%      parameters and their corresponding circuit layers.
-%
-%  Qubit count
-%    - State the qubit saving formula: ΔN_qubits = 2(N_virt − N'_virt).
-%    - Provide a concrete example (e.g. H₂O/cc-pVDZ).
-%
-% Tips:
-%   - Be careful to state that this is a theoretical motivation;
-%     actual VQE calculations on quantum hardware are left to Outlook.
-%   - Cite \cite{Peruzzo2014, Cao2019, deGracia2024} for VQE background.
-%   - Cite \cite{Lee2018} and \cite{Handy1989} for the Brueckner / OO-MP2
-%     connection.
-% ---------------------------------------------------------------
+
 \section{OVOS Molecular Orbitals as a Trial State for VQE}
 \label{sec:ovos_vqe}
-\subsection{Reference-State Overlap with the FCI Ground State}
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.12]
+%   "We now pivot from classical quantum chemistry to quantum
+%    computing. OVOS orbitals, by reducing the virtual orbital count,
+%    directly reduce qubit requirements and circuit depth in VQE.
+%    This section motivates why OVOS trial states are beneficial
+%    for variational quantum algorithms on NISQ devices."
+%
+% [SUBSECTION COVERAGE]
+%  Key quantity: the reference-state overlap
+%    - Define the overlap F = |⟨Φ_ref|Ψ_FCI⟩|² (fidelity).
+%    - Claim: F_OVOS ≥ F_HF because OVOS orbitals minimise MP2 energy.
+%
+%  VQE cost function and parameter count
+%    - UCCSD circuit depth scales as O(N² M²); reducing M reduces depth.
+%    - For exact Brueckner (T1 = 0): UCCSD reduces to UCCD.
+%
+%  Qubit count
+%    - Qubit saving formula: ΔN_qubits = 2(N_virt − N'_virt).
+%
+%  CITE: \cite{Quantum_Computing_Age_QC} for VQE background
+%        \cite{deGracia2024_Hamiltonian} for qubit resource calculations
+%        \cite{Lee2018_OO-MP2} for Brueckner / OO-MP2 connection
+% ---------------------------------------------------------------\n\subsection{Reference-State Overlap with the FCI Ground State}
 \subsection{Reduction of T1 Amplitudes and Circuit Depth}
 \subsection{Qubit Resource Savings}
