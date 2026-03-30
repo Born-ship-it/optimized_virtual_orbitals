@@ -1,0 +1,923 @@
+
+--- PAGE 1 ---
+Optimized virtual orbitals for correlated calculations: Towards large scale
+CCSD( T) calculations of molecular dipole moments and polarizabilities
+Michal Piton ˇa´k, Filip Holka, Pavel Neogra ´dy, Miroslav Urban *
+Department of Physical and Theoretical Chemistry, Faculty of Natural Sciences, Comenius University, Mlynska ´dolina, SK-842 15 Bratislava, Slovakia
+Received 30 April 2006; accepted 1 May 2006
+Available online 23 May 2006
+This paper is dedicated to Professor Debashis Mukherjee on the occasion of his 60th birthday.
+Abstract
+The optimized virtual orbitals space (OVOS) approach is applied to coupled cluster CCSD( T) calculations of dipole moments and dipole
+polarizabilities of selected systems. Particular attention is paid to OVOS reduced to about 50% of the full virtual space, which leads to the
+computer time savings larger than one order of magnitude. The ﬂuorine anion, the carbon monoxide, formaldehyde, thiophene, and a push–pull 1-
+amino-4-nitrobutadiene molecules serve as testing examples. For all systems are OVOS results compared with the full virtual space CCSD( T)
+results. Augmented correlation consistent aug-cc-pVXZ basis sets ( XZD,T, and also Q, 5 in some applications) were used in a systematic way. It
+is shown that the performance of OVOS improves with increasing the basis set size. OVOS method is shown to be useful in reliable extrapolations
+to the basis set limit. With the standard aug-cc-pVTZ basis set OVOS CCSD( T) dipole moments differ from the full virtual space results typically
+by 0.002 a.u. The largest difference is 0.006 a.u. Components of the dipole polarizabilities differ typically by 0.02–0.05 a.u. For the FKanion
+larger basis sets are needed. The difference between the OVOS and the full space CCSD( T) polarizability with the daug-cc-pV5Z basis set is
+0.32 a.u. (2.0% of the total value); the complete basis set limits differ by 0.07 a.u.
+q2006 Elsevier B.V. All rights reserved.
+Keywords: Coupled cluster CCSD( T) method; OVOS; Dipole moment; Polarizability; Fluorine anion; CO; Formaldehyde; Thiophene; Push–pull; 1-Amino-4-
+nitrobutadiene
+1. Introduction
+The idea of accelerating the highly sophisticated quantum
+chemistry calculations remains extremely attractive. Densityfunctional theory (DFT) methods dominate the present effortstowards expanding the applicability of quantum chemistrymethods to really large many-electron molecules. Suchmethods can provide many useful information on molecularproperties, but the price is that the controlled accuracy isusually lost. When treating small or medium size moleculesor molecular complexes we may wish obtaining ‘right result fora right reason’, that is, results with high and controlledaccuracy. The methods of choice in this area are the ‘standard’wave function theory (WFT) methods capable of recoveringthe substantial portion of the electron correlation. Since, thesemethods are normally much more computer time consumingthan DFT methods efforts leading to more efﬁcient algorithms
+allowing extended applicability of the highly correlatedmethods are very important. We will focus our attention to
+the most frequently used method for accurate calculations of
+molecular properties, namely the coupled cluster (CC) method[1–4] . We will restrict ourselves to the single determinant
+reference CCSD( T) method [5](coupled clusters with the
+iterative treatment of the single and double excitation ampli-tudes and the perturbative treatment of the triple excitations[5,6] ). We note, however, that the progress in the development
+of multi-reference CC methods and other methods applicable
+also to quasi-degenerate systems is really impressive in recent
+years [2,4,7–12] . Methods investigated in the present work can
+be used with such CC methods and with other methods suitablefor treating the electron correlation problem in a straight-forward way.
+One group of techniques, which may lead to savings of the
+computer time needed in CC methods is based on the idea ofmodifying the underlying orbital picture. These methods either
+exploit the localization of MO’s (molecular orbitals) [13–17] ,
+or use other modiﬁcations, for instance approximate or frozennatural orbitals (ANO’s or FNO’s) [18,19] . Another alternative
+Journal of Molecular Structure: THEOCHEM 768 (2006) 79–89
+www.elsevier.com/locate/theochem
+0166-1280/$ - see front matter q2006 Elsevier B.V. All rights reserved.
+doi:10.1016/j.theochem.2006.05.018*Corresponding author. Fax: C421 7 65429 064.
+E-mail address: urban@fns.uniba.sk (M. Urban).
+
+--- PAGE 2 ---
+is based on the Cholesky decomposition of two-electron
+integrals [20]. This technique was recently used for calcu-
+lations of polarizabilities of small annulenes [21].
+In the HF-SCF (Hartree–Fock self-consistent ﬁeld)
+procedure occupied orbitals (OO’s) are optimized to minimizethe HF energy. Virtual orbitals (VO’s) are obtained as abyproduct, fulﬁlling the only necessary condition, namely theorthogonality to the subspace of OO’s. SCF virtual orbitals arenot optimized having in mind the electron correlation energy.From the point of view of the most frequently used single-reference correlated CCSD( T) method, the modiﬁcation of
+virtual orbitals opens a possibility of constraining theexcitations (expressed by the single, double, .excitation
+amplitudes t
+a
+i,tab
+ij,.) to a smaller subspace of MO’s. The
+most demanding steps in CCSD( T) scale as N2
+oN4
+v,N3
+oN3
+v, and
+(in noniterative triples) as N3
+oN4
+v.Nois the number of OO’s, Nv
+is the number of VO’s. Reducing the number of virtual orbitals
+by a factor of two, the CCSD( T) calculation can be theoreti-
+cally accelerated by a factor of 24, i.e. 16. Obviously, the
+accuracy of a calculated property using the full virtual spaceand the reduced virtual space is required to be similar.
+Usual one-electron reference in CCSD( T) calculation is the
+HF wave function, typically in a canonical form. ‘Freezing’ ofthe low-lying occupied orbitals in correlated calculations israther routine approximation. Although it affects the corre-lation energy signiﬁcantly, it usually leads to only minor effecton calculated properties. Analogously, we could delete corre-
+sponding VO’s with highest orbital energies from the electron
+correlation treatment. The beneﬁt is usually small since thenumber of orbitals, which can be safely deleted typicallyrepresents less than 10% of t he full VOS (virtual orbital
+space). Further ‘freezing’ of VO’s leads to roughly ‘linear’loss of the accuracy in the correlation energy with no control ofresults for molecular properties [22].
+Rigorously deﬁned electro n correlation methods (vari-
+ational, perturbative, CC) are invariant to canonicaltransformations (unitary transformations) within the subspaceof OO’s and VO’s, respectively. Thus, we can impose furtherconstrains on the VO’s including a possibility of rotating theseorbitals with respect to their importance in the correlated wavefunction. One particular cho ice implemented in this work
+utilizes the optimized virtual orbital space (OVOS), which isobtained by imposing the additional requirement on VO’s,namely the maximum overlap of the ﬁrst-order perturbativewave function deﬁned in the ‘reduced’ and the full virtualorbital space, respectively [22,23] . Alternative possibility of
+deﬁning OVOS is using the second-order Hylleraas functionalas implemented by Adamowicz, Bartlett and Sadlej in theirpioneering papers on OVOS [24,25] , or one can use FNO’s
+[18,19] obtained by diagonalizing the ﬁrst-order density matrix
+and reducing the virtual space afterwards.
+The principles and the applicability of the OVOS method to
+calculations of molecular properties have been presented in ourprevious papers [22,23] . In the ﬁrst paper, we have carried out
+demonstrative calculations on various properties like isomeri-zation and dissociation energies, spectroscopic constants anddipole moments. We were able to show [22] that the OVOSmethod can be used successfully as an efﬁcient tool for
+obtaining results corresponding to the complete basis setlimit (CBS limit). In a more recent paper [23],w eh a v e
+demonstrated the applicability of OVOS using the ﬁrst-orderoverlap to calculations of electric properties of molecules
+containing a heavy metal element, which require considering
+the relativistic effects along with rigorous treatment of theelectron correlation. We have also shown [23] that the OVOS
+technique can be used within uncontracted basis sets, whichallows avoiding the basis set contraction as a tool for reducingthe basis set size in correlated relativistic calculations. Weremind that selection of the method for the basis set contractionis even less straightforward than it is in non-relativistic
+calculations.
+In this work, we will demonstrate the usefulness of the
+OVOS technique in calculations of the electric dipole momentsand dipole polarizabilities of selected small systems, like theF
+Kanion, carbon monoxide, formaldehyde and medium size
+molecules, namely thiophene and a ‘push–pull’ 1-amino-4-nitrobutadiene compound. Molecular properties obtained withdifferently reduced OVOS will be compared with large-scale
+CCSD( T) calculations within the full virtual space. We will
+examine the performance of the OVOS technique along withthe study of the effect of the AO (atomic orbitals) basis setquality. Most convenient for this purpose are the cc-pVXZ,aug-cc-pVXZ and the d-aug-cc-pVXZ ( XZD,T,Q,.) series
+of Dunning’s et al. style correlation consistent basis sets[26,27] . The systematic structure of these basis sets allows
+extrapolations to the CBS limit [28,29] . We will try to show
+that such extrapolations lead to virtually identical electric
+properties in the full VOS and the reduced space representedby OVOS. Since, analytic gradient techniques within OVOSare not yet available to us (see, however Ref. [19]) electric
+properties were calculated by the FFPT (ﬁnite ﬁeld pertur-bation theory) approach. This method is known to be verysensitive to the accuracy of calculated energies. At the sametime electric properties are known as being sensitive to the
+basis set size and quality and can thus serve as a tough test for
+the reliability of the OVOS method.
+2. Theory overview
+2.1. Principles of OVOS
+Two arbitrary orthogonal sets of MO’s describing the same
+system are related via unitary transformation U. Requiring the
+CC energy to be invariant with respect to the unitary rotation U,
+then blocks which represent mixing of OO’s and VO’s must bezero. Furthermore, we leave the subspace of OO’s untouched.
+Let us split full VOS into three subspaces, V1, V2, and V3,
+respectively. V1 represents the subspace of ‘inactive’ VO’s andremains untouched in the OVOS procedure. The principal part
+within OVOS is the V2 subspace, which should ‘absorb’ the
+‘information’ included in the full VOS. Virtual orbitalsbelonging to the V3 subspace are deleted in the subsequentcorrelation calculation. That means that using OVOS the actualvirtual space used in CCSD( T) is V2. Virtual orbitals belongingM. Piton ˇa´k et al. / Journal of Molecular Structure: THEOCHEM 768 (2006) 79–89 80
+
+--- PAGE 3 ---
+to V2 are created by the optimization procedure using the
+overlap of the ﬁrst order wave function deﬁned in the fullvirtual space and the V2 OVOS space, respectively, as anoptimization criterion, see also discussion in Ref. [22].T h e
+VO’s entering to the V2 subspace can be usually selected in
+two ways. The ﬁrst possibility is based on the orbital energies
+of the virtual orbitals, and the second is based on a morephysical argument, namely on their 1st order FNO occupationnumbers. One should realize, however, that the orbital picturemay undergo signiﬁcant modiﬁcations during the optimizationprocedure. The V2 space consists ﬁnally from modiﬁed orbitalshaving lowest leigenvalues resulting from the optimization
+procedure, see [22]. Inspecting leigenvalues serves as
+a-posteriori check of proper selection of the V2 space. When
+treating systems with symmetry, it is crucial to create abalanced occupation of the V2 subspace, with special cautionon preserving (if necessary) the actual degeneracy of theparticular symmetry representations.
+2.2. Optimization functional
+There are several possible optimization criteria for creating
+the modiﬁed VOS aimed at achieving efﬁcient expansion of the
+correlated wave function (for details on this topic and the
+underlying theoretical discussion see our recent paper [22]). In
+the present work, we use exclusively the ‘overlap’ functional
+LZ hF
+0jTMBPT ð2ÞjTOVOS
+MBPT ð2ÞjF0i (1)
+where the excitation operator TOVOS
+MBPT ð2Þis, in general, deﬁned as
+a sum of the two terms:
+TOVOS
+1ZX
+i;a*ta*
+ia*†i;TOVOS
+2Z1
+4X
+i;j;a*;b*ta*b*
+ija*†ib*†j (2)
+In our present application to closed shell molecules only the
+double excitation operator is employed. Indices a*,b* rep-
+resent virtual orbitals from the V2 VOS. Deﬁnition of theT
+MBPT(2) operator is fully analogous, except that VO’s indices
+range over the whole virtual orbitals space.
+2.3. Optimization procedure
+The OVOS transformation matrix is obtained in an iterative,
+SCF-like procedure, which scales roughly as N5. Depending on
+the available core memory which should allow storing of the
+double-excitation amplitudes the procedure is usually donein-core. Normally the OVOS optimization takes negligible partof the CPU time of the subsequent CCSD( T) calculation.
+Our experience from using OVOS indicates, that although
+we can reclaim more than 99% of the full-space correlationenergy when reducing OVOS to one half, this accuracy maynot be sufﬁcient for calculations of sensitive properties like
+spectroscopic constants, or pol arizability. Fortunately, the
+remedy for increasing the accuracy of OVOS is available.We can use a correction suggested by Adamowicz and Bartlett[24], which lies in exploiting the full-space second-order
+perturbation theory MBPT(2)
+Fullresult, which usuallyrepresents a dominating part of the electron correlation energy,
+X2ZCCOVOSKMBPT ð2ÞOVOS(3)
+CCOVOS
+2ZMBPT ð2ÞFullCX2: (4)
+Since, the MBPT(2)Fullenergy is always calculated
+(because we use the 1st order excitation amplitudes in theoptimization procedure) no extra CPU time is needed. Theadvantage is that we avoid using the less accurate reducedvirtual space CC
+OVOSenergy (MBPT(2)OVOSCX2), which
+utilizes exclusively the reduced virtual space.
+Although OVOS is a very efﬁcient method, we are aware of
+some its drawbacks. The iterative procedure is based on theknowledge of the gradient. It is not always convergent and canoccasionally converge to the solution, which does not representa global optimum. We avoid most of these situations bycomparing the solutions starting from different zeroth-orderestimate of U. If we fail to remove this instability, the CC
+correlation energy can differ by cca 10
+K5a.u. Another problem
+is a balanced selection of the reduced virtual space within all
+symmetry representations particularly for high symmetrysystems. Missing tools for reliable diagnostic for properselection of the virtual space remains a principal bottleneckfor using OVOS as a highly efﬁcient black-box method leadingto results with controlled accuracy.
+OVOS module was implemented within MOLCAS [30]
+quantum-chemical package. The strength of the external
+electric ﬁeld was 0.003 a.u. in all calculations. It was selected
+after a few numerical tests as a compromise between thenumerical stability requirements and the need of reducinghigher order contributions in the response of the system onthe external ﬁeld.
+3. Results
+3.1. The ﬂuorine anion
+Demanding tests for the performance of the OVOS method
+are calculations of polarizabilities of the ‘diffuse’ systems withhigh symmetry. Molecular orbitals of such systems split intodifferent symmetry representations with a smaller dimensionreducing this way the variational space for the optimizationprocedure. Also, one has to be careful in selecting orbitals
+entering into the symmetry adapted virtual space reduced by
+the OVOS treatment. All symmetry equivalent orbitals (like,e.g. p-, d-, etc. atomic orbitals) belonging to different symmetryrepresentations must be either included in the reduced space orcompletely omitted (if they contribute to OVOS only little).Finally, we note that our standard reduction within OVOSwould be 50% of the full space of virtual orbitals. Due to therequirement of the balanced reduction within each symmetry
+representation we reach this target value only approximately,
+see also detailed analysis presented in our paper, Ref. [23].
+For obtaining accurate dipole polarizabilities of the ﬂuorine
+anion it is essential to include highly diffuse functions up to thetriply-augmented correlation-consistent triple zeta basis setM. Piton ˇa´k et al. / Journal of Molecular Structure: THEOCHEM 768 (2006) 79–89 81
+
+--- PAGE 4 ---
+[18,27,31-33] . Our ambition here is to demonstrate the per-
+formance of the OVOS method rather than repeating publishedbenchmark data for this system.
+Results for polarizabilities of the ﬂuorine anion are sum-
+marized in Tables 1 and 2 .
+InTable 1 , we demonstrate the performance of OVOS in
+obtaining the CCSD and the triples electron correlationcontribution to the polarizability with differently reducedvirtual space. Two basis sets are used as examples, namely asmaller daug-cc-pVTZ Dunnig’s correlation consistent basisset 27 with 57 VOs and the larger, daug-cc-pV5Z basis set (158VOs).
+We observe that the electron correlation contribution to the
+polarizability aof the F
+Kanion is rather insensitive to the
+change of the cardinal number Xof extensive daug-cc-pVXZ
+basis sets (when XZ3 or 5).
+CCSDðOVOS Þ
+2 plus the triples correlation contribution with
+the daug-cc-pVTZ basis is K5.39 and K5.68 a.u. with the
+daug-cc-pV5Z basis set, respectively. Reducing the daug-cc-pVTZ virtual space down to -49% we obtained the CCSDðTÞ
+ðOVOS Þ
+2 electron correlation contribution K4.91 a.u. With
+larger daug-cc-pV5Z basis set is the CCSD ðTÞðOVOS Þ
+2 contri-
+butionK5.35 a.u. (reduction of VOS to 56%) and K5.22 a.u.
+(reduction to 33.5%). As it is usually the case [22,23] , OVOS
+performs better with larger basis sets.
+In contrast to small basis set sensitivity of the electron
+correlation contribution to the FKanion polarizability (at
+least at the level of the (d)aug-cc-pVXZ basis sets with XZ
+T,Q, 5) the total value of adepends on the basis set very
+signiﬁcantly due to the SCF contribution, see Table 2 . The
+total CCSD( T) polarizability awith the full virtual space
+changes from 8.78 a.u. (with the aug-cc-PVTZ basis set) upto 16.28 a.u. with the daug-cc-pV5Z basis set, i.e. by 46%.With the virtual space reduced to about 50% OVOS
+reproduces all basis set dependencies (with both aug-
+cc-pVXZ and d-aug-cc-pVXZ series) excellently. Whenextrapolating ausing results with the cardinal number
+XZQand 5, respectively, complete basis set limits arereproduced by OVOS using both aug- and daug- basis set
+series with the accuracy of 0.08 and 0.07 a.u. Slightly largererror bars are calculated for CBS limit with the three point(TQ5) extrapolation formula. This is rationalized by the
+observation that OVOS performs better for larger basissets, as mentioned above. Extrapolated ( Q5) results with
+the full virtual space augmented and doubly augmentedbasis sets differ by 3.49 a.u. Effect of the double augmenta-tion is thus as large as 21% for aand is completely
+reproduced by OVOS reduced to 50%. The importance ofthe double augmentation for the F
+Kanion polarizability is
+well known from the literature [31]. Our best values, aZ
+16.38 and 16.31 a.u. with the full VOS and with OVOS,respectively, agree well with best theoretical data [27,31-33]
+including those with the explicitly correlated CC results[18],aZ17.3G0.9 a.u. The uncertainty of best theoretical
+values is larger than is the uncertainty introduced by OVOS.We also stress the usefulness of OVOS in detecting thebasis set effects in electric properties of the F
+Kanion as
+well as in extrapolations to the CBS limit.Table 1
+CCSD and ( T) correlation part of the FKpolarizability [a.u.] in daug-cc-pVTZ and daug-cc-pV5Z basis sets
+% Of virt. o. No. of virt. o. MP2(OVOS)X2 CCSD(OVOS)CCSDðOVOS Þ
+2(T)
+daug-cc-pVTZ
+(100.00) 57 K5.23 1.45 K3.78 K3.78 K1.61
+(89.47) 45 K5.20 1.68 K3.52 K3.55 K1.45
+(71.93) 41 K5.17 1.69 K3.48 K3.54 K1.42
+(49.12) 28 K5.46 1.77 K3.70 K3.46 K1.45
+(43.86) 25 K4.02 1.84 K2.18 K3.39 K1.10
+(31.58) 18 K4.21 1.72 K2.48 K3.51 K1.10
+daug-cc-pV5Z
+(100.00) 158 K5.68 1.87 K3.82 K3.82 K1.86
+(77.22) 122 K5.60 1.93 K3.66 K3.75 K1.76
+(73.42) 116 K5.97 2.08 K3.90 K3.60 K1.78
+(56.33) 89 K5.76 2.06 K3.70 K3.62 K1.73
+(33.54) 53 K5.49 2.04 K3.46 K3.65 K1.57
+(28.48) 45 K5.00 2.04 K2.96 K3.64 K1.60
+1s orbital is frozen. MP2, CCSD, and triples ( T) contributions to awith OVOS are compared with the full virtual space results. MP2(OVOS)and CCSD(OVOS)are
+results obtained with OVOS, while CCSDðOVOS Þ
+2 represents the CCSD correction to the full MP2 result using X2, see Eq. (3).
+Table 2
+CCSD( T) polarizability [a.u.] of FKin aug-cc-pVXZ and daug-cc-pVXZ basis
+sets
+X SCF CCSD( T) CCSD ðTÞðOVOS Þ
+2
+100% 50%
+aug-XZ/daug-XZ
+T 7.09/10.30 8.78/15.69 8.68/15.22
+Q 8.22/10.56 10.55/16.18 10.51/15.63
+5 8.84/10.61 11.69/16.28 11.63/15.96
+(TQ5) 12.30/16.47 12.26/16.10
+G(0.33)a/G(0.05) G(0.30)/G(0.12)
+(Q5) 12.89/16.38 12.81/16.31
+1s orbital is frozen. Full and z50% reduced OVOS calculations. OVOS results
+correspond to CCSD ðTÞðOVOS Þ
+2 , see Eq. (3). ( TQ) corresponds to the CBS limit.
+Extrapolation formula: EZECBSCk/X3.
+aError bars from the ﬁt.M. Piton ˇa´k et al. / Journal of Molecular Structure: THEOCHEM 768 (2006) 79–89 82
+
+--- PAGE 5 ---
+3.2. Carbon monoxide
+The dipole moment calculations of the CO molecule using
+OVOS were published recently [22]. Accurate experimental
+[34] and theoretical data [18,35–38] are available from the
+literature. The crucial importance of the electron correlation for
+obtaining even correct sign of the CO dipole moment is
+notoriously known, see e.g. [39]. Concerning the dipole
+moment as presented in Table 3 we just stress that CCSD( T)
+calculations with OVOS reduced to 50% reproduce the full
+space results perfectly, particularly when basis sets with higher
+cardinal number are used. CBS limit resulting from OVOS
+differs from that with the full virtual space by 0.002 a.u. with
+the aug-cc-pVXZ series. More detailed analysis of the capa-
+bility of OVOS in representing basis set effects with the
+cc-pVXZ and aug-cc-pVXZ series was presented previously
+[22].
+In the present paper, we extend previous OVOS data by
+more demanding dipole polarizability calculations of the CO
+molecule, see Table 4 .
+When reducing OVOS to, say 50%, both polarizability
+components must be calculated with well balanced accuracy
+for obtaining correct values of the polarizability anisotropy and
+the average polarizability. This is not automatically guaranteed
+since azzandaxxare calculated in different point groups when
+using the ﬁnite ﬁeld technique. Two ways of deﬁning the
+OVOS reduction were examined. First, the total number of
+virtual orbitals was preserved or, second, the percentage of the
+optimization functional (i.e. sum of the ldiagonal values
+compared to the full VOS) was kept constant within OVOS
+(see Ref. [22]) when calculating both polarizability com-
+ponents. When the optimization procedure was well
+converging, these two approaches were equivalent. Otherwise
+the second option should be preferred.
+The full space CCSD( T) results for the dipole polarizability
+demonstrate typical effect of the standard cc-pVXZ basis set
+augmentation by the diffuse functions, although both azzand
+axxcomponents are less sensitive to the electron correlation
+effects than was the case with the dipole moment [22]. They arealso less sensitive to the basis set extension (when considering
+the aug-cc-pVXZ series). As expected, cc-pVXZ basis sets are
+not suitable for calculations of this property. At least the
+cc-pV5Z is needed to reach results with acceptable accuracy.
+Due to larger sensitivity of ato the cardinal number in the
+cc-pVXZ series than in the aug-cc-pVXZ series the CBS limit
+of the former set is slightly overestimated particularly for the
+parallel component. Of course, using the cc-pVXZ basis sets ismeaningless for calculations of the polarizability. In fact, better
+polarizability is obtained with the aug-cc-pVDZ basis set than
+with much larger cc-pV5Z basis set. The only purpose ofpresenting results with the cc-pVXZ series is to demonstrate
+that all basis set trends observed in the full space of virtuals are
+perfectly reproduced with OVOS reduced to 50%. With most
+basis sets (notable exception is the smallest cc-pVXZ basis set)
+a
+zzandaxxcalculated with OVOS reduced to 50% deviate from
+the full virtual space results typically by 0.01 a.u. (less than
+0.1%). Even such small deviations affect the ( TQ5) and ( Q5)
+extrapolated values with the full space and the OVOS space,respectively, which differ by 0.01–0.03 a.u. This can be
+explained by the fact that OVOS performs better for larger
+basis sets. Due to slightly better stability of the OVOS resultswith increasing the cardinal number the two-point ( Q5)
+extrapolation should be preferred over the three-point ( TQ5)
+extrapolation even if both formulae lead virtually to the same
+result. Our results for static a
+zzandaxxagree very well with
+ﬁnal estimates of Christiansen et al., 15.41 and 11.83 a.u.,respectively, based on a systematic studies of electron corre-
+lation and basis set effects [41].
+The polarizability anisotropy and the average polarizability
+calculated with OVOS are presented in Table 5 .Table 3
+CCSD( T) dipole moment m[a.u.] of CO in cc-pVXZ and aug-cc-pVXZ basis
+sets
+X SCF CCSD( T) CCSD ðTÞðOVOS Þ
+2
+100% 50%
+aug-XZ
+Dipole moment, mz
+D K0.102 0.056 0.058
+T K0.105 0.050 0.052
+Q K0.104 0.046 0.048
+5 K0.104 0.046 0.046
+(Q5) 0.046a0.044
+1s orbitals of C and O are frozen. Full and z50% reduced OVOS calculations,
+r(CO)Z1.128 A ˚[40]. OVOS results correspond to CCSD ðTÞðOVOS Þ
+2 , see Eq. (3).
+(TQ) and ( TQ5) correspond to the CBS limit, see footnote in Table 2 . Results
+for dipole moment taken from Ref. [22].
+aExperimental value [a.u.]: 0.0481 [34] previously published data [a.u.]:
+CCSD( T) aug-cc-pV5Z ( r(CO)Z1.12834 A ˚[40]): 0.0451 [37].Table 4
+CCSD( T) polarizability components [a.u.] of CO in cc-pVXZ and aug-
+cc-pVXZ basis sets, 1s frozen, full and z50% reduced OVOS calculations,
+r(CO)Z1.128 A ˚
+X SCF CCSD( T) CCSD ðTÞðOVOS Þ
+2
+100% 50%
+XZ/aug-XZ
+Polarizability, azz
+D 12.17/14.42 12.66/15.60 12.76/15.51
+T 13.39/14.49 14.06/15.53 14.07/15.51
+Q 14.04/14.48 14.88/15.48 14.88/15.47
+5 14.37/14.47 15.30/15.44 15.30/15.45(TQ5) 15.59/15.42 15.59/15.44
+G(0.08)/G(0.01) G(0.08)/G(0.00)
+(Q5) 15.74/15.40
+a15.74/15.43
+Polarizability, axx
+D 8.00/10.95 8.17/11.65 8.20/11.53
+T 9.63/11.22 9.98/11.86 9.97/11.84
+Q 10.47/11.27 10.93/11.87 10.93/11.87
+5 10.86/11.27 11.39/11.86 11.38/11.85
+(TQ5) 11.73/11.87 11.73/11.86
+G(0.08)/G(0.01) G(0.07)/G(0.02)
+(Q5) 11.87/11.85a11.85/11.83
+OVOS results correspond to CCSD ðTÞðOVOS Þ
+2 , see Eq. (3). ( TQ) and ( TQ5)
+correspond to the CBS limit, see footnote in Table 2 .
+aPreviously published data [a.u.]: CCSD( T) aug-cc-pV5Z ( r(CO)Z1.
+12834 A ˚[40]):azz: 15.45, axx: 11.86 [37].M. Piton ˇa´k et al. / Journal of Molecular Structure: THEOCHEM 768 (2006) 79–89 83
+
+--- PAGE 6 ---
+The ( Q5) extrapolated OVOS results differ from the full
+space results by about 0.02 a.u. and demonstrate excellentperformance of OVOS. OVOS perfectly reproduces behavior
+of both Daanda
+swhen going from the aug-cc-pVDZ to the
+aug-cc-pV5Z basis set.
+3.3. Formaldehyde
+To proceed further towards larger molecules we present
+results for formaldehyde in Tables 6–8 . Our results can be
+compared with other selected theoretical [44–48] or experi-
+mental data [49,50] for electric properties of formaldehyde to
+mention at least a few recent papers.
+In all calculations the CCSD( T) geometry [51] optimized
+with the aug-cc-pVTZ basis was exploited.
+For electric properties we used no larger than the aug-
+cc-pVQZ basis set (244 virtuals in the full space and 12valence electrons correlated), which is sufﬁcient for demon-strating the performance of OVOS and can still be used forlarger molecules like thiophene. Dipole moments calculated in
+the full space of virtuals and OVOS reduced to 50% differ with
+all basis sets no more than by 0.002 a.u. (0.21%). Suchdifference is much smaller than is the basis set dependenceparticularly when comparing results with the aug-cc-pVDZ andaug-cc-pVQZ basis sets, respectively. Considering very smallbasis set dependence on the cardinal number Xwithin the aug-
+cc-pVXZ series the deviation of theoretical values fromexperiment is not quite small (0.031 and 0.036 a.u. or 3.9%
+with the aug-cc-pVQZ and the ( TQ) extrapolated dipole
+moments, respectively). However, the experimental value[49] corresponds to the ground vibrational state. Theoretical
+CCSD( T) value published by Thomas et al. [45] is a bit closer
+to experiment but was obtained with smaller basis set than wehave used for our best results. We note that there is a tendency
+of increasing the dipole moment with the basis set, see Table 6 .
+Nevertheless, perfect agreement of CCSD( T) dipole moment
+with large basis set is not expected without analyzing the core-correlation effects, the impo rtance of higher excitations,
+vibrational effects, the inﬂuence of geometry, etc. Anyway,good performance of OVOS is clearly documented and thiswas actually our primary goal.
+The performance of OVOS is also demonstrated in calcu-
+lations of dipole polarizabilities. Aug-cc-pVDZ results for a
+zz
+andaxxcomponents obtained with OVOS reduced to 50% of
+the full virtual space are less accurate than those for larger basissets so that the trend with increasing cardinal number Xis not
+perfectly reproduced by OVOS. However, the difference of
+0.05 a.u. (0.2 and 0.3% for a
+zzandaxx, respectively) should
+still be considered as small taking into account the size of thevirtual space of the aug-cc-pVDZ basis set. For theseTable 6
+CCSD( T) dipole moment m[a.u.] of the formaldehyde molecule with aug-
+cc-pVXZ basis sets, XZD,T,Q
+X SCF CCSD( T) CCSD ðTÞðOVOS Þ
+2
+100% 50%
+Dipole moment, mz
+D 1.136 0.933 0.934
+T 1.134 0.941 0.941
+Q 1.132 0.948 0.946
+(TQ)a0.953b0.950
+1s orbitals of C and O are frozen. Full virtual space and z50% reduced OVOS
+calculations. OVOS results correspond to CCSD ðTÞðOVOS Þ
+2 , see Eq. (3). aug-
+cc-pVTZ CCSD( T) optimized geometry from [51].
+aExtrapolation formula: see Table 2 .
+bExperimental value [a.u.]: K0.9173 [49], previous CCSD( T) calculated
+data [a.u.]: K0.921 [45].
+Table 7
+CCSD( T) dipole polarizability components of the formaldehyde molecule with
+aug-cc-pVXZ basis sets, XZD,T,Q
+X SCF CCSD( T) CCSD ðTÞðOVOS Þ
+2
+100% 50%
+Polarizability, azz
+D 21.42 22.28 22.23
+T 21.47 22.25 22.28
+Q 21.47 22.21 22.18
+(TQ)a22.18 22.12
+Polarizability, axx
+D 15.88 17.22 17.17
+T 16.29 17.56 17.51
+Q 16.38 17.59 17.59
+(TQ)a17.61 17.65
+Polarizability, ayy
+D 12.07 12.45 12.43
+T 12.47 12.86 12.87
+Q 12.57 12.93 12.94
+(TQ)a12.98b12.99
+1s orbitals of C and O are frozen. Full and z50% reduced optimized virtual
+orbital space calculations. OVOS results correspond to CCSD ðTÞðOVOS Þ
+2 , see Eq.
+(3). aug-cc-pVTZ CCSD( T) optimized geometry from [51].
+aExtrapolation formula: see Table 2 .
+bPrevious calculated data [a.u.]: axx: 17.70, ayy: 12.90, azz: 21.96 [46].Table 5
+CCSD( T) polarizability anisotropy and average value [a.u.] of CO in cc-pVXZ
+and aug-cc-pVXZ basis sets
+X CCSD( T) CCSD ðTÞðOVOS Þ
+2
+100% z50%
+XZ/aug-XZ
+Polarizability anisotropy, Da
+D 4.48/3.95 4.56/3.94
+T 4.08/3.67 4.10/3.67
+Q 3.95/3.60 3.95/3.60
+5 3.91/3.58a3.90/3.59
+(Q5) 3.87/3.56b3.85/3.58
+Average polarizability, as
+D 9.67/12.97 9.72/12.89
+T 11.34/13.08 11.34/13.07
+Q 12.24/13.07 12.24/13.07
+5 12.69/13.06a12.68/13.05
+(Q5) 13.16/13.05b13.14/13.03
+1s orbitals of C and O atoms are frozen. Full and z50% reduced OVOS
+calculations, r(CO)Z1.128 A ˚. OVOS results correspond to CCSD ðTÞðOVOS Þ
+2 ,
+see Eq. (3). ( TQ5) and ( Q5) correspond to the CBS limit, see footnote in
+Table 2 .
+aPreviously published data [a.u.]: CCSD( T) aug-cc-pV5Z ( r(CO)Z1.
+12834 A ˚[40]):Da: 3.589, as: 13.057 [37].
+bExperimental data [a.u.]: Da: 3.54 [42],as: 13.04 [43].M. Piton ˇa´k et al. / Journal of Molecular Structure: THEOCHEM 768 (2006) 79–89 84
+
+--- PAGE 7 ---
+components (and consequently also for the average polariz-
+ability and the polarizability anisotropy) aug-cc-pVQZ resultswith OVOS are probably more accurate than are ( TQ) extrapo-
+lated numbers. We believe that the same holds for the fullvirtual space as well. Our calculated polarizability com-ponents, Daanda
+sall agree with experiment and other
+theoretical data reasonably well, see Tables 7 and 8 .
+3.4. Thiophene
+Thiophene is substantially larger molecule than those
+presented before, with 304 and 557 virtual orbitals withthe aug-cc-pVTZ and aug-cc-pVQZ basis sets, respectively.All 26 valence electrons were correlated. CCSD( T) calcu-
+lations of this species with the full virtual space, needed forcomparison with OVOS, is really a challenging task for ourstandard computational resources. This holds true particu-larly for calculations of the perpendicular component ofpolarizability since the external electric ﬁeld reduces themolecular symmetry.
+There is very few references on either theoretical or
+experimental values of electric properties of thiophene. Theavailable data from Ref. [52] are presented together with our
+results in Tables 9–11 . We used the MP2 aug-cc-pVDZ basis
+set optimized geometry employing the GAUSSIAN 03package [53]. It is similar but not identical with that used in
+Ref. [52]. Molecular symmetry is C
+2v,w i t ht h exa x i s
+perpendicular to the molecular zyplane. Actual cartesian
+coordinates (in [A ˚]) are accessible on our web page: http://
+www.qch.fns.uniba.sk/thiophene.html .
+Performance of OVOS utilizing 50% of the full virtual
+space is excellent for the dipole moment of thiophene evenwith the smallest aug-cc-pVDZ basis. We note that the electroncorrelation contribution to the dipole moment is large andrepresents 31% of the total value. With extension of the basisset from aug-cc-pVDZ to the aug-cc-pVQZ basis set the totaldipole moment increases by 0.2 a.u. that means by 8.9%. When
+the virtual space is reduced by OVOS to 50% of the full spacethe error within the aug-cc-PVXZ series is no larger than0.002 a.u. (0.98%), which is about 10 times smaller then isthe total basis set effect. TQextrapolated values with the full
+virtual space and the OVOS space reduced to 50% agree towithin 0.001 a.u. Very good agreement of the calculated dipolemoment with experiment [54] should not be overemphasized
+since geometry was not optimized with the CCSD( T) method,
+the experimental value has large error bars and also ourtheoretical methods did not use all tools needed for obtainingcompletely accurate results.Table 8
+CCSD( T) polarizability anisotropy and average value [a.u.] of formaldehyde
+molecule in aug-cc-pVXZ basis sets
+X CCSD( T) CCSD ðTÞðOVOS Þ
+2
+100% z50%
+Polarizability anisotropy, Da
+D 8.52 8.49
+T 8.13 8.15
+Q 8.03 8.00
+(TQ) 7.96a7.89
+Average polarizability, as
+D 17.32 17.28
+T 17.56 17.55
+Q 17.58 17.57
+(TQ) 17.59b17.58
+1s orbitals of C and O are frozen. Full and z50% reduced OVOS calculations.
+OVOS results correspond to CCSC ðTÞðOVOS Þ
+2 , see Eq. (3). ( TQ) corresponds to
+the CBS limit, see heading to the Table 2 . For geometry see footnote to the
+Table 6 .
+aPrevious calculated data [a.u.] 7.923 [47].
+bExperimental value [a.u.]: 18.69 [50], previous calculated data 17.63 [47].
+Table 10
+CCSD( T) polarizability acomponents [a.u.] of the thiophene molecule with
+aug-cc-pVXZ basis sets, XZD,T
+X SCF CCSD( T) CCSD ðTÞðOVOS Þ
+2
+100% 50%
+Polarizability, azz
+D 76.63 77.63 77.55
+T 77.29 77.75 77.78
+Q 77.44 77.76a77.78b
+(DT)c77.80 77.88
+(TQ)c77.77 77.78
+Polarizability, axx
+D 44.72 44.96 44.85
+T 45.04 44.83a44.88
+(DT)c44.78 44.89
+Polarizability, ayy
+D 69.46 71.20 71.06
+T 70.17 71.54a71.54
+(DT)c71.68 71.74
+1s orbitals of S and C frozen. Full and z50% reduced optimized virtual orbital
+space calculations. OVOS results correspond to CCSD ðTÞðOVOS Þ
+2 , see Eq. (3).
+aPreviously published data [52] (see footnote (a), Table 9 ):azz: 72.93 (A),
+77.34 (B), 75.50 (C). axx: 40.38 (A), 45.67 (B), 44.62 (C). ayy: 64.80 (A), 69.21
+(B), 68.32 (C).
+b54.95% (311 VO’s) used due to the OVOS procedure instability issue, see
+Section 2.3. azzin 50.00% (283 VO’s) OVOS: 77.62 [a.u.].
+cExtrapolation formula: see Table 2 .Table 9
+CCSD( T) dipole moment m[a.u.] of the thiophene molecule with aug-cc-pVXZ
+basis sets, XZD,T
+X SCF CCSD( T) CCSD ðTÞðOVOS Þ
+2
+100% 50%
+Dipole moment, mz
+D 0.294 0.195 0.195
+T 0.283 0.204 0.202
+Q 0.280 0.214a0.212b
+(DT)c0.208 0.205
+(TQ)c0.221 0.220
+1s orbitals of S and C frozen. Full and z50% reduced optimized virtual orbital
+space calculations. OVOS results correspond to CCSD ðTÞðOVOS Þ
+2 , see Eq. (3).
+aExperimental value [a.u.]: 0.21 [54]; previously published data [52] using
+the SCF optimized geometry, CCSD( T) or the fourth order perturbation theory
+and different basis sets: A: CCSD( T) 6-31GCpd, B: CCSD( T) 6-31GCpdd, C:
+MP4SDTQ 6-31G(3d) Cpd):mz: 0.400 (A), 0.362 (B), 0.218 (C).
+b54.95% (311 VO’s) used due to the OVOS procedure instability, see
+Section 2.3. mzwith 50.00% (283 VO’s) OVOS: 0.212 [a.u.].
+cExtrapolation formula: see Table 2 .M. Piton ˇa´k et al. / Journal of Molecular Structure: THEOCHEM 768 (2006) 79–89 85
+
+--- PAGE 8 ---
+Electron correlation effects are less important for the dipole
+polarizability of thiophene than for its dipole moment, seeTable 10 . Most important is the electron correlation contri-
+bution for the a
+yycomponent (1.37 a.u. or 1.9% of the total
+value). Results for the dipole polarizability components calcu-lated with OVOS reduced to 50% differ from the full valencespace results by 0.08–0.14 a.u. with the aug-cc-pVDZ basis set.
+Analogous differences with the aug-cc-pVTZ basis are typi-
+cally less than 0.05 a.u. Largest difference is for the the a
+xx
+component, but it still represents no more than 0.11% of the
+total value. Considering the pure correlation effects for, e.g. the
+azzcomponent, OVOS leads to the error of about 8% (electron
+correlation effects with the full space and with OVOS are 1.0and 0.92 a.u., respectively). For a
+xxcomponents where the
+electron correlation contribution is very small is the relative
+difference even larger. One consequence is that the basis seteffects for this component with aug-cc-pVDZ and aug-
+cc-pVTZ bases is not well reproduced by OVOS, although
+with larger of the two the agreement of results with the fullvalence space and the OVOS space (reduced by 50%) isreasonable. It was already reminded that the extrapolation to
+the CBS is not recommended with the lowest members of the
+aug-cc-pVXZ series particularly with the aug-cc-pVDZ basisset. This holds with both the full space and the OVOS space,
+although if the (DT) extrapolated polarizabilities differ from
+the two spaces differ at most by 0.11 a.u., which is forCCSD( T) calculation of the relatively large molecule as is
+thiophene quite satisfactory. Good performance of OVOS with
+various reductions of the virtual space in calculation of the
+average dipole polarizability and its anisotropy is also shown inresults presented in Table 11 . This holds particularly when the
+OVOS result is corrected by the full space MP2 electron
+correlation contribution using Eq. (4). With the Xcorrection
+OVOS performs very well even if the virtual space is reduceddown to about 40%, with the theoretical saving factor of 40 in
+this case.
+It is fair mentioning that calculations of the parallel
+polarizability of thiophene have revealed unexpected problemswith the aug-cc-pVQZ basis set. Reduction of OVOS down to
+50% of the full space led to problems with deﬁning balanced
+reduction of virtual orbitals within different C
+2vsymmetry
+representations, to unstable optimization solutions (seeSection 2) and consequently to relatively large deviation ofthe OVOS result from the full space result. To circumvent thisproblem we have selected OVOS reduced to 54% of the virtualspace which gave very smooth and stable optimization result.The dipole moment remains unaffected by the optimization
+instability of OVOS leading to the same value with OVOS
+reduced to 50 and 54%. Since, the main purpose of usingOVOS is aimed at solving problems for which the full virtualspace result is not obtainable we need some diagnostic capableof revealing possible problems. One such diagnostic is theconvergence of the OVOS optimization procedure, selectingthe reduced virtual space using leigenvalues of the optimi-
+zation Eqs. (for details see Ref. [22] or using natural orbitals as
+a starting point for the optimization procedure. Safer tool is
+using two different reductions, which can reveal uneven cuttingof the virtual space in respective symmetry representations.Detailed discussion of this issue is presented in our previouspaper [23]. The two other components, a
+xxandayy, were not
+calculated with the larger aug-cc-pVQZ basis since obtainingthe full virtual space result was prohibitively demanding.
+Finally, using our results within the aug-cc-pVXZ series one
+can get an impression that the basis set effects are very small
+for electric properties of thiophene, particularly for its polariz-ability. One should realize that this series represents actuallylarge basis sets including the diffuse functions needed forproper calculations of polarizabilities. Popular smaller andless systematically constructed basis set series like 6-31G C
+pd and 6-31G Cpdd and similar show basis sets effects as large
+as 5 a.u. [52]. This supports our approach. Namely, it is more
+proﬁtable to use reasonably large basis set with appropriately
+reduced virtual space using OVOS (that means cutting thevirtual space to about 50–60% of the full space) rather thanusing small and less elaborated basis sets for the polarizabilitycalculation.
+3.5. 1-amino-4-nitrobutadiene
+The largest molecule considered in this paper is NH
+2–
+(CH) 4–NO 2, 1-amino-4-nitro- trans -buta-1,3-diene (or shorter:
+1-amino-4-nitrobutadiene). This ‘push–pull’ compound wasstudied before [55] as a part of a series of molecules with
+interesting nonlinear optical properties using semiempirical oruncorrelated molecular orbitals methods. Such data may besufﬁciently accurate in some cases, particularly when trend of
+polarizabilities within similar molecules is the main concern.
+However, these methods do not provide results with controlledaccuracy like CCSD( T) calculations normally do. CCSD( T)
+calculations of the low symmetry 1-amino-4-nitrobutadienemolecule with 44 correlated valence electrons are reallyTable 11
+CCSD( T) thiophene molecule polarizability average asand anisotropy Da
+values [a.u.] in aug-cc-pVTZ basis set, 1s, 2s S and 1s C orbitals frozen
+% of virt.o. CCSD( T)(OVOS)CCSD ðTÞðOVOS Þ
+2
+as
+(100.0) 64.71a64.71
+(59.87) 64.53 64.73
+z(51.00) 64.33 64.73
+(39.80) 64.18 64.73z(30.00) 64.78 64.84
+Da
+(100.0) 30.30
+b30.30
+(59.87) 30.29 30.26z(51.00) 30.16 30.27
+(39.80) 30.61 30.32
+z(30.00) 31.89 30.58
+CCSD( T) values are calculated in the full and the OVOS virtual space,
+respectively. Results are presented as plain (CCSD( T)
+(OVOS)) and the full
+space MP2 corrected contributions ( ðCCSD ðTÞðOVOS Þ
+2 Þ), see deﬁnitions in
+Eq. (3).
+aExperimental value [54]: 65.18. Previously published data [52] (see
+footnote of Table 9 ):as: 59.37 (A), 64.07 (B), 62.81 (C).
+bPreviously published data [52] (see footnote of Table 9 ): 29.34 (A), 28.49
+(B), 27.99 (C).M. Piton ˇa´k et al. / Journal of Molecular Structure: THEOCHEM 768 (2006) 79–89 86
+
+--- PAGE 9 ---
+demanding even with our smallest aug-cc-pVDZ basis set (208
+virtual orbitals in the full space). Calculations with larger aug-cc-pVTZ basis set (altogether 506 basis functions and 468virtual orbitals in the full virtual space) is at the limit of thecapacity of our 64 bit Opteron machine. Aug-cc-pVQZ basisset would be tractable within OVOS, but not with standard fullspace CCSD( T) calculations needed for our testing purposes.
+We used the MP2 geometry optimized with the cc-pVDZ basis
+set using the GAUSSIAN 03 package. Molecule has C
+s
+symmetry, with the yaxis perpendicular to the molecular xz
+plane ( zcan be considered as an approximate principal axis of
+the molecule). Actual cartesian coordinates of atoms (in [A ˚])
+are accessible on our web page on location: http://www.qch.
+fns.uniba.sk/push-pull.html .
+Detailed analysis of the electron correlation contributions
+to the z-component of the dipole moment and the parallel
+polarizability azzis presented in Table 12 . It is done with
+the smallest aug-cc-pVDZ basis set, which is most sensitiveto the reduction of the virtual space. The CCSD( T) electron
+correlation contribution to the z-component of the dipole
+moment ( K0.434 a.u.) has opposite sign as the SCF contri-
+bution and represents 17% of the total value, see Table 12
+The CCSD contributions to the dipole moment are quitestable when OVOS is reduced down to 50 or even 40% of
+the full virtual space. As expected, CCSD
+ðOVOS Þ
+2 values (i.e.
+CCSD corrected by the X2term) are more stable than pure
+CCSD(OVOS). With OVOS reduced to 80–50% of the full
+space all CCSD contributions lie within the interval of0.007 a.u., which represents 1.7% of the full spaceCCSD contribution. Perturbative triples contributions varywithin OVOS slightly more, by 0.012 a.u. Similar analysisfor the parallel polarizability, see Table 12 , ( shows that the
+CCSD correlation contributions with OVOS reduced to
+80–50% differ from the full space result by at most
+2.35 a.u. when CCSD
+(OVOS)is used. This difference is
+reduced by the order of magnitude to 0.18 a.u. withCCSDðOVOS Þ
+2 . The largest deviation from the full space
+contribution is for OVOS reduced to 61% while withreduction to 50% OVOS performs better. This indicatesthat the reduction of the virtual space is not completelybalanced within the two symmetry representations of1-amino-4-nitrobutadiene, which leads to slight numericalinstability. Again, triples are less stable and deviate fromthe full space result by 0.37 a.u. when OVOS is reduced to50%. The total correlation c ontribution to the parallel
+polarizability with OVOS differs from the full spacecontribution (10.92 a.u.) by less than 4.4% with all 80–50% reductions, which is quite acceptable with our smallestaug-cc-pVDZ basis set.Table 12
+CCSD and the triples ( T) correlation part of the dipole moment mz[a.u.] and the polarizability azz[a.u.] of the push–pull compound with aug-cc-pVDZ basis set
+% Of virt. o. No. of virt. o. MP2(OVOS)X2 CCSD(OVOS)CCSDðOVOS Þ
+2(T)
+mz
+(100.00) 208 K0.370 K0.038 K0.408 K0.408 K0.026
+(79.81) 166 K0.368 K0.039 K0.407 K0.409 K0.026
+(69.71) 145 K0.367 K0.041 K0.409 K0.411 K0.027
+(61.06) 127 K0.379 K0.045 K0.425 K0.415 K0.030
+(50.00) 104 K0.385 K0.044 K0.429 K0.414 K0.038
+(40.87) 85 K0.387 K0.034 K0.421 K0.404 K0.025
+(29.81) 62 K0.327 K0.071 K0.398 K0.441 K0.014
+azz
+(100.00) 208 K15.06 5.53 K9.53 K9.53 K1.39
+(79.81) 166 K14.96 5.53 K9.43 K9.53 K1.34
+(69.71) 145 K14.65 5.60 K9.05 K9.46 K1.26
+(61.06) 127 K14.17 5.71 K8.46 K9.35 K1.09
+(50.00) 104 K12.74 5.56 K7.18 K9.51 K1.02
+(40.87) 85 K12.30 5.72 K6.59 K9.35 K0.41
+(29.81) 62 K12.48 5.27 K7.21 K9.79 K0.63
+1s orbitals of C, N and O are frozen. MP2, CCSD, and triples ( T) contributions to mzandazzin OVOS are compared with the full virtual space results. MP2(OVOS)and
+CCSD(OVOS)are results obtained with OVOS, CCSDðOVOS Þ
+2 represents the CCSD corrected value using the full MP2 result correction X2, see Eq. (3). 1-Amino-4-
+nitrobutadiene. SCF dipole moment [a.u.]: 3.005 and polarizability [a.u.]: K160.91.
+Table 13
+CCSD( T) dipole moment components [a.u.] of the push–pull compound with
+aug-cc-pVXZ basis sets, XZD,T
+X SCF CCSD(T) CCSD ðTÞðOVOS Þ
+2
+100% 50%
+Dipole moment, mz
+D 3.005 2.571 2.554
+T 2.998 2.568 2.562
+(DT)a2.567 2.565
+Dipole moment, mx
+D 1.478 1.168 1.163
+T 1.469 1.172 1.170
+(DT)a1.174 1.173
+Total dipole momentb,m
+D 3.349 2.824 2.806
+T 3.339 2.823 2.817
+(DT)a2.823 2.822
+1s orbitals of C, N and O frozen. Full and z50% reduced optimized virtual
+orbital space calculations. OVOS results correspond to CCSD ðTÞðOVOS Þ
+2 , see Eq.
+(3). Exact chemical formula: 1-amino-4-nitrobutadiene.
+aExtrapolation formula: see Table 2 .
+bTotal dipole moment calculated as ðm2
+xCm2
+zÞ1=2.M. Piton ˇa´k et al. / Journal of Molecular Structure: THEOCHEM 768 (2006) 79–89 87
+
+--- PAGE 10 ---
+Dipole moments and polarizabilities of 1-amino-4-nitrobu-
+tadiene obtained with the full virtual space of the aug-cc-pVTZbasis and the OVOS space (reduced to 50%) are compared inTables 13 and 14 .
+The performance of OVOS is very good with this basis set.
+Full space results for the two components of the dipole momentare reproduced by OVOS with the accuracy of 0.006 and0.002 a.u., respectively. Extrapolated (DT) dipole momentsdiffer from the full space results by less than 0.002 a.u. Thea
+zzpolarizability component calculated with OVOS differs
+from the full space reference no more than by 0.20 a.u.(0.12% of the total value). For a
+xxOVOS performs even
+better, the deviation from the reference full space result is
+0.08 a.u. or 0.11%. The deviation of the OVOS extrapolated(DT) polarizabilities from the full virtual space reference issimilar, which should not be overemphasized consideringlower stability with the aug-cc-pVDZ basis set.
+4. Conclusions
+Results presented in this paper demonstrate the usefulness
+of OVOS in calculations of dipole moments and dipolepolarizabilities with the CCSD( T) approach using routine
+(d)aug-cc-pVXZ basis sets. We proceed from a few smallsystems for which relatively large basis sets can be used upto thiophene and 1-amino-4-nitrobutadiene (44 correlatedelectrons). This is the largest molecule for which the full
+virtual space needed for comparison with OVOS results was
+tractable with the aug-cc-pVDZ and aug-cc-pVTZ basis sets.We pay particular attention to OVOS calculations in which thevirtual space was reduced to one half of the full virtual space.Such reduction leads to the computer time savings larger thanone order of magnitude.
+With the above mentioned reduction is the accuracy,
+particularly for the dipole moment, impressive. With rela-
+tively small aug-cc-pVTZ basis set so obtained CCSD( T)
+dipole moments differ from the full virtual space resultstypically by 0.002 a.u. For thiophene, for example, this ismuch smaller error than is the basis set effect within the aug-cc-pVXZ ( XZD,T,Q)s e r i e s .F o rt h e m
+xcomponent of1-amino-4-nitrobutadiene is deviation slightly larger,
+0.006 a.u., i.e. 0.2% of the full virtual space CCSD( T)
+value. Components of the dipole polarizabilities differ typi-cally by 0.02–0.05 a.u. For the F
+Kanion at least doubly
+augmented basis sets are needed. The difference betweenthe OVOS and the full space CCSD( T) polarizability with
+the daug-cc-pV5Z basis set is 0.32 a.u. (2.0% of the totalvalue). This is the largest deviation of the OVOS result fromits full virtual space equivalent. However, the complete basisset limits with OVOS and the full virtual space differ by only0.07 a.u. Since, the CCSD( T) electron correlation energies
+using OVOS reduced down to 50% of the full virtual spacediffer from the full space value usually by 1.0–0.01 millihartree, the accuracy of the OVOS dipole polariz-abilities calculated using the ﬁnite ﬁeld method depend on thebalanced energy change due to the external ﬁeld. This is achallenging test for the performance of OVOS. Particularattention should be paid to the balanced reduction of the
+symmetry equivalent orbitals entering into different symmetry
+representations of the virtual space.
+Problems with the convergence of the OVOS optimization
+procedure [22] may lead to loosing the control of accuracy.
+Such problems were encountered in calculations of the polariz-ability of thiophene with the a ug-cc-pVQZ basis set. We
+recommend using the two alternative OVOS reductions insuch cases.
+For all molecules the OVOS approach reproduces the
+pattern of the basis set dependence of the dipole moment andthe dipole polarizability very well. The performance of OVOSimproves with extending the basis set size. For this reasonOVOS can be used for the basis set extrapolations to thecomplete basis set limit.
+While conventional CCSD( T) calculations of molecular
+properties are tractable with about 500–600 virtuals (dependingon the number of correlated electrons and the molecularsymmetry) with computationa l resources available to us,
+OVOS allows substantional extension of CCSD( T) calcu-
+lations. OVOS can be useful either in extending the size ofthe basis set for calculations of relatively small moleculesallowing this way to approach closer to the complete basis setlimit or it can be used for calculations of larger molecules,which cannot be treated by conventional CCSD( T) methods.
+The present research also opens a route to more efﬁcientcalculations of higher excitations than those considered inCCSD( T).
+Present results extend the applicability of the OVOS
+techniques investigated previously in calculations of molecularspectroscopic constants, dissociation and reaction energies[22], and in quasi-relativistic CCSD( T) calculations of mol-
+ecular properties of a heavy metal element containing smallmolecules [23].
+Acknowledgements
+This paper is dedicated to Professor Debashis Mukherjee on
+the occasion of his 60th birthday, in appreciation of hisTable 14
+CCSD( T) dipole polarizability components [a.u.] of the push–pull compound
+with aug-cc-pVXZ basis sets, XZD,T
+X SCF CCSD( T) CCSD ðTÞðOVOS Þ
+2
+100% 50%
+Polarizability, azz
+D 160.91 171.83 171.43
+T 161.11 171.62 171.42
+(DT)a171.53 171.42
+Polarizability, axx
+D 69.83 74.37 73.85
+T 70.38 74.64 74.56
+(DT)a74.75 74.86
+1s orbitals of C, N and O frozen. Full and z50% reduced optimized virtual
+orbital space calculations. OVOS results correspond to CCSD ðTÞðOVOS Þ
+2 , see Eq.
+(3). 1-Amino-4-nitrobutadiene.
+aExtrapolation formula: see Table 2 .M. Piton ˇa´k et al. / Journal of Molecular Structure: THEOCHEM 768 (2006) 79–89 88
+
+--- PAGE 11 ---
+outstanding contribution to the ﬁeld of the many-body theories
+in theoretical and computational chemistry.
+The support of the Slovak Grant Agency VEGA (Contract
+No. 1/3560/06) and the APVV grant agency (Contract No.APVV-20-018405) is gratefully acknowledged.
+References
+[1] J. C ˇı´zˇek, J. Chem. Phys. 45 (1966) 4256.
+[2] J. Paldus, X. Li, Adv. Chem. Phys. 110 (1999) 1.
+[3] M. Urban, I. C ˇernusˇa´k, V. Kello ¨, J. Noga, I. C ˇernusˇa´k,, V. Kello ¨,J .
+Noga, in: S. Wilson (Ed.), Methods in Computational Chemistry, PlenumPress, New York, 1987, p. 117.
+[4] R.J. Bartlett, in: D.R. Yarkony (Ed.), Modern Electronic Structure
+Theory, Part II, World Scientiﬁc, Singapore, 1995, p. 1047.
+[5] K. Raghavachari, G.W. Trucks, J.A. Pople, M. Head-Gordon, Chem.
+Phys. Lett. 157 (1989) 479.
+[6] M. Urban, J. Noga, S.J. Cole, R.J. Bartlett, J. Chem. Phys. 83 (1985) 4041.
+[7] M. Nooijen, K.R. Shamasundar, D. Mukherjee, Mol. Phys. 103 (2005)
+2277.
+[8] J. Ma ´sˇik, I. Hubac ˇ,, in: R. McWeeny, J. Maruani, Y.G. Smeyers,
+S. Wilson (Eds.), Quantum Systems in Chemistry and Physics: Trendsin Methods and Applications, Kluwer, Dordrecht, 1997, pp. 282–308;J. Pittner, J. S ˇmydke, P. C ˇa´rsky, I. Hubac ˇ, J. Mol. Struct. (Theochem), 547
+(2001) 239.
+[9] X.Z. Li, J. Paldus, J. Chem. Phys. 107 (1997) 6257.
+[10] P. Piecuch, S.A. Kucharski, R.J. Bartlett, J. Chem. Phys. 110 (1999) 6103.[11] Y.J. Bomble, J.F. Stanton, M. Kallay, J. Gauss, J. Chem. Phys. 123 (2005)
+054101.
+[12] M. Musial, S.A. Kucharski, R.J. Bartlett, J. Chem. Phys. 116 (2002) 4382.[13] P. Pulay, S. Saebø, Theor. Chim. Acta 69 (1986) 367; J.W. Boughton,
+P. Pulay, J. Comput. Chem. 14 (1993) 736.
+[14] W.D. Laidig, G.D. Purvis, R.J. Bartlett, J. Phys. Chem. 89 (1985) 2161.[15] M. Schu ¨tz, G. Hetzer, H-J. Werner, J. Chem. Phys. 111 (1999) 5691;
+M. Schu ¨tz, H-J. Werner, J. Chem. Phys. 114 (2001) 661.
+[16] T. Korona, K. Pﬂu ¨ger, H-J. Werner, Phys. Chem. Chem. Phys. 6 (2004)
+2059.
+[17] N. Flocke, R.J. Bartlett, J. Chem. Phys. 121 (2004) 10935.[18] W. Klopper, J. Noga, H. Koch, T. Helgaker, Theor. Chem. Acc. 97 (1997)
+164.
+[19] A.G. Taube, R.J. Bartlett, Collect. Czechoslov. Chem. Commun. 70
+(2005) 837.
+[20] H. Koch, A.S. de Mera ´s, J. Chem. Phys. 113 (2000) 508; H. Koch, A.S. de
+Mera´s, T.B. Pedersen, J. Chem. Phys. 118 (2003) 9481.
+[21] I.G. Cuesta, T.B. Pedersen, H. Koch, A.M.K.S. de Mera ´s, Chem. Phys.
+Lett. 390 (2004) 170.
+[22] P. Neogra ´dy, M. Piton ˇa´k, M. Urban, Mol. Phys. 103 (2005) 2141.
+[23] M. Piton ˇa´k, P. Neogra ´dy, V. Kello ¨, M. Urban, Mol. Phys. 104 (2006) 2277.
+[24] L. Adamowicz, R.J. Bartlett, J. Chem. Phys. 86 (1987) 6314.[25] L. Adamowicz, R.J. Bartlett, A.J. Sadlej, J. Chem. Phys. 88 (1988) 5749.
+[26] T.H. Dunning Jr., K.A. Peterson,, Encyclopedia of Computational
+Chemistry, in: P. Von Rague Schleyer (Ed.),, Wiley, Chichester, 1998.
+[27] D.E. Woon, T.H. Dunning Jr., J. Chem. Phys. 100 (1994) 2975.[28] W. Klopper, T. Helgaker, Theor. Chem. Acc. 99 (1998) 265; A. Halkier,
+T. Helgaker, P. Jørgensen, W. Klopper, H. Koch, J. Olsen, A.K. Wilson,
+Chem. Phys. Lett. 286 (1998) 243.
+[29] P. Neogra ´dy, M. Medved, I. C ˇernusˇa´k, M. Urban, Mol. Phys. 100 (2002)
+541.[30] K. Andersson, M. Barysz, A. Bernhardsson, M.R.A. Blomberg, D.L.
+Cooper, M.P. Fu ¨lscher, C. de Graaf, B.A. Hess, G. Karlstro ¨m, R. Lindh,
+P.-A˚. Malmqvist, T. Nakajima, P. Neogra ´dy, J. Olsen, B.O. Roos, B.
+Schimmelpfennig, M. Schu ¨tz, L. Seijo, L. Serrano-Andre ´s, P.E.M.
+Siegbahn, J. Sta ˚lring, T. Thorsteinsson, V. Veryazov, P.-O. Widmark.
+MOLCAS Version 5.4, Lund University, Sweden, 2002.
+[31] O.N. Ventura, M. Kieninger, I. C ˇernusˇa´k, 437 (1997) 489.
+[32] T.H. Dunning Jr., K.A. Peterson, J. Chem. Phys. 113 (2000) 7799.
+[33] R. Franke, H. Muller, J. Noga, J. Chem. Phys. 114 (2001) 7746.
+[34] J.S. Muenter, J. Mol. Spektrosc. 55 (1975) 490.
+[35] A. Halkier, H. Koch, O. Christiansen, P. Jørgensen, T. Helgaker, J. Chem.
+Phys. 107 (1997) 849.
+[36] K.L. Bak, J. Gauss, T. Helgaker, P. Jørgensen, J. Olsen, Chem. Phys. Lett.
+319 (2000) 563.
+[37] K.A. Peterson, T.H. Dunning Jr., J. Molec. Struc. (Theochem) 400 (1997)
+93.
+[38] G. Maroulis, J. Phys. Chem. 100 (1996) 13466.[39] M. Medved, M. Urban, J. Noga, Theor. Chem. Acc. 98 (1997) 75.
+[40] K.P. Huber, G.H. Herzberg, in: Constants of Diatomic Molecules, Van
+Nostrand-Reinhold, New York, 1979.
+[41] O. Christiansen, C. Ha ¨ttig, J. Gauss, J. Chem. Phys. 109 (1998) 4745.
+[42] C. Asawaroengchai, G.M. Rosenblatt, J. Chem. Phys. 72 (1980) 2664.
+[43] G.A. Parker, R.T. Pack, J. Chem. Phys. 64 (1976) 2010.
+[44] P.J. Bruna, M.R.J. Hachey, F. Grein, J. Mol. Struct. (Theochem) 400
+(1997) 177.
+[45] J.R. Thomas, B.J. DeLeeuw, G. Vacek, D.T. Crawford, Y. Yamaguchi,
+H.F. Schaefer, J. Chem. Phys. 99 (1993) 403.
+[46] J.E. Rice, R.D. Amos, S.M. Colwell, N.C. Handy, J. Sanz, J. Chem. Phys.
+93 (1990) 828.
+[47] S.P.A. Sauer, J. Oddershede, Int. J. Quantum Chem. 50 (1994) 317.
+[48] J. Leszczynski, L. Goodman, J.S. Kwiatkowski, Theor. Chem. Acc. 97
+(1997) 195.
+[49] P.H. Vaccaro, J.L. Kinsey, R.W. Field, H-L. Dai, J. Chem. Phys. 78
+(1983) 3659.
+[50] T.N. Olney, N.M. Cann, G. Cooper, C.E. Brion, Chem. Phys. 223 (1997)
+59.
+[51] M. Feller, M. Dupuis, B.C. Garrett, J. Chem. Phys. 113 (2000) 218.
+[52] K. Kamada, M. Ueda, H. Nagao, K. Tawa, T. Sugino, Y. Shmizu, K. Ohta,
+J. Phys. Chem. 104 (2000) 4723.
+[53] M.J. Frisch, G.W. Trucks, H.B. Schlegel, G.E. Scuseria, M.A. Robb, J.R.
+Cheeseman, J.A. Montgomery Jr., T. Vreven, K.N. Kudin, J.C. Burant,
+J.M. Millam, S.S. Iyengar, J. Tomasi, V. Barone, B. Mennucci, M. Cossi,
+G. Scalmani, N. Rega, G.A. Petersson, H. Nakatsuji, M. Hada, M. Ehara,
+K. Toyota, R. Fukuda, J. Hasegawa, M. Ishida, T. Nakajima, Y. Honda, O.
+Kitao, H. Nakai, M. Klene, X. Li, J.E. Knox, H.P. Hratchian, J.B. Cross,
+V. Bakken, C. Adamo, J. Jaramillo, R. Gomperts, R. E.Stratmann, O.
+Yazyev, A.J. Austin, R. Cammi, C. Pomelli, J.W. Ochterski, P.Y. Ayala,
+K. Morokuma, G.A. Voth, P. Salvador, J.J. Dannenberg, V.G. Zakr-
+zewski, S. Dapprich, A.D. Daniels, M.C. Strain, O. Farkas, D.K. Malick,
+A.D. Rabuck, K. Raghavachari, J.B. Foresman, J.V. Ortiz, Q. Cui, A.G.
+Baboul, S. Clifford, J. Cioslowski, B.B. Stefanov, G. Liu, A. Liashenko,
+P. Piskorz, I. Komaromi, R.L. Martin, D.J. Fox, T. Keith, M.A.
+Al-Laham, C.Y. Peng, A. Nanayakkara, M. Challacombe, P.M.W. Gill,
+B. Johnson, W. Chen, M.W. Wong, C. Gonzalez, and J.A. Pople,
+GAUSSIAN
+03, Gaussian, Inc., Wallingford, CT, 2004.
+[54] F. Friguelli, G. Marino, A. Taticchi, Adv. Heterocykl. Chem. 21 (1977)
+119.
+[55] J.O. Morley, Int. J. Quantum Chem. 59 (1996) 401.M. Piton ˇa´k et al. / Journal of Molecular Structure: THEOCHEM 768 (2006) 79–89 89

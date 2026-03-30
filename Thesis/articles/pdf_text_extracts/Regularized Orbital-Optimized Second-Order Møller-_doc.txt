@@ -1,0 +1,1601 @@
+
+--- PAGE 1 ---
+Regularized Orbital-Optimized Second-Order Møller −Plesset
+Perturbation Theory: A Reliable Fifth-Order-Scaling Electron
+Correlation Model with Orbital Energy Dependent Regularizers
+Joonho Lee *and Martin Head-Gordon *
+Department of Chemistry, University of California, Berkeley, California 94720, United States
+Chemical Sciences Division, Lawrence Berkeley National Laboratory, Berkeley, California 94720, United States
+ABSTRACT: We derive and assess two new classes of regularizers that
+cope with o ﬀending denominators in the single-reference second-order
+Møller−Plesset perturbation theory (MP2). In particular, we discuss the
+use of two types of orbital energy dependent regularizers, κandσ,i n
+conjunction with orbital-optimized MP2 (OOMP2). The resulting ﬁfth-
+order-scaling methods, κ-OOMP2 and σ-OOMP2, have been examined
+for bond-breaking, thermochemistry, nonbonded interactions, andbiradical problems. Both methods with strong enough regularizationrestore restricted to unrestricted instability (i.e., Coulson −Fischer
+points) that unregularized OOMP2 lacks when breaking bonds in H
+2,
+C2H6,C 2H4, and C 2H2. The training of the κand σregularization
+parameters was performed with the W4-11 set. We further developedscaled correlation energy variants, κ-S-OOMP2 and σ-S-OOMP2, by
+training on the TAE140 subset of the W4-11 set. Those new OOMP2 methods were tested on the RSE43 set and the TA13 setwhere unmodi ﬁed OOMP2 itself performs very well. The modi ﬁcations we made were found insigni ﬁcant in these data sets.
+Furthermore, we tested the new OOMP2 methods on singlet biradicaloids using Yamaguchi ’s approximate spin-projection.
+Unlike the unregularized OOMP2, which fails to converge these systems due to the singularity, we show that regularizedOOMP2 methods successfully capture strong biradicaloid characters. While further assessment on larger data sets is desirable, κ-
+OOMP2 with κ= 1.45 E
+h−1appears to combine favorable recovery of Coulson −Fischer points with good numerical
+performance.
+■INTRODUCTION
+The single-reference second-order Møller −Plesset perturbta-
+tion theory (MP2) is one of the simplest correlated wavefunction methods (and therefore one of the most popular
+ones). There have been some signi ﬁcant developments in
+improving di ﬀerent aspects of MP2 in the past decade or so,
+and we shall mention those that are particularly relevant to this
+work.
+The development of the resolution-of-identity (RI)
+technique (or the density- ﬁtting technique) for MP2 was
+revolutionary.
+1,2Although RI-MP2 has fundamentally the same
+computational scaling as MP2 (i.e., 6N()5), it substantially
+reduces the prefactor of the algorithm and has allowed for
+large-scale applications of MP2. RI-MP2 is now considered the
+de facto algorithm for any MP2 calculations except for systemswith o ﬀ-atom electrons such as dipole-bound electrons
+3or
+electronic resonances.4Given its popularity, we shall focus on
+building a new theory on top of RI-MP2 and we will refer to
+RI-MP2 to as just MP2 for simplicity for the following
+discussion.
+Aside from faster MP2 algorithms, there are two common
+ways to improve the energetics of MP2: one is the spincomponent scaled (SCS)-MP2 approach
+5−10and another isthe orbital-optimized MP2 (OOMP2) method.11−13SCS-MP2
+improved the energetics of MP2 for thermochemistry and
+noncovalent interactions although the optimal scaling param-
+eters are di ﬀerent for these two classes of relative energies.
+From an e ﬃciency standpoint, the scaled opposite-spin MP2
+(SOS-MP2) method in this category is noteworthy as it is an
+overall6N()4algorithm while improving the energetics.6,8,10
+The idea of SCS-MP2 is also often used in double-hybrid
+density functional approximations.14−17Additionally, over-
+binding molecular interactions due to inherent errors in MP2
+and basis set superposition error were reduced by an
+attenuated MP2 approach.18−21
+OOMP2 often produces a qualitatively better set of orbitals
+for systems where unrestricted Hartree −Fock (UHF) orbitals
+exhibit arti ﬁcial spin-symmetry-breaking. Arti ﬁcial symmetry-
+breaking is a quite common problem in open-shell systems and
+polyaromatic hydrocarbons that are weakly correlated
+systems.22,23In such cases, using UHF orbitals for correlated
+wave function calculations leads to catastrophically wrong
+energies and properties.24−27The use of Bru ̈ckner orbitals
+Received: July 17, 2018
+Published: August 21, 2018Article
+pubs.acs.org/JCTC Cite This: J. Chem. Theory Comput. 2018, 14, 5203 −5219
+© 2018 American Chemical Society 5203 DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −5219
+Downloaded via COPENHAGEN UNIV LIBRARY on March 30, 2026 at 13:03:24 (UTC).
+See https://pubs.acs.org/sharingguidelines for options on how to legitimately share published articles.
+
+
+--- PAGE 2 ---
+often improves the results signi ﬁcantly, though obtaining those
+orbitals is quite expensive.28,29Therefore, OOMP2 was
+proposed as an economical way to approximate Bru ̈ckner
+orbitals.11Orbital optimizing at the MP2 level often restores
+the spin-symmetry and results in far better energetics.11,12,30
+Furthermore, OOMP2, in principle, removes the discontinuity
+in the ﬁrst-order properties that can be catastrophic at the
+onset of symmetry-breaking in MP2.31These two observations
+motivated several research groups to apply32,33and to develop
+OOMP2 and its variants.34−41It was also extended to higher
+order perturbation theory methods, such as OOMP3 andOOMP2.5.42−44The analytic nuclear gradient of OOMP2 was
+also e ﬃciently implemented,33,45,46and the Cholesky decom-
+position was also used for an e ﬃcient implementation.47
+However, OOMP2 has shown multiple problems that limit
+its applicability. First, the inclusion of the MP2 form of thecorrelation energy in orbital optimization tends to producevery small energy denominators. In some cases, this leads to adivergence of the total energy and it is commonly observedwhen stretching bonds. Moreover, this is the cause for thesigniﬁcant underestimation of ha rmonic frequencies at
+equilibrium geometries.
+36Given that it is very unlikely to
+observe vanishing energy denominators in ﬁnite systems at the
+HF level,48the applicability of MP2 on top of HF orbitals is
+greater than that of OOMP2.
+Second, OOMP2 often does not continuously break spin-
+symmetry even when there exists a broken-symmetry solutionthat is lower in energy.49To have a continuous transition from
+a restricted (R) solution to a unrestricted (U) solution, there
+should be a point at which the lowest eigenvalue of the R to U
+stability Hessian becomes zero. In the case where two solutionsare separated by a barrier, we often observe a discontinuoustransition from R to U (or even no transition at all) and thereare only positive nonzero eigenvalues in the R to U stabilityHessian. We have observed multiple systems where ROOMP2does not undergo a continuous transition to UOOMP2 whilethe corresponding HF calculation does. In this case, this is anartifact of OOMP2 and it is necessary to resolve this issue toreach a proper dissociation limit.
+Our group has attempted to solve these two separate issues
+using a simple regularization scheme that shifts the energydenominator by a constant δ.
+36Despite its simple form, it was
+eﬀective enough to solve those two issues described above. It is
+immediately obvious that the energy can no longer diverge.Moreover, as the MP2 energy is damped away, the qualitative
+behavior of OOMP2 approaches that of HF where we observe
+continuous transitions from R to U. Razban et al.40tried to
+ﬁnd a regularization parameter δthat solves those two issues
+within OO-SOS-MP2. Since the desired regularization strengthto restore Coulson −Fischer points50was too strong (i.e., the
+true correlation energy attenuated), one faces di ﬃculties in
+dealing with rather easier problems for MP2, such as typicalthermochemistry problems. This led us to consideringalternative forms of regularizers which may depend on theorbital energy gap. Ideally, we need a regularizer that leaves theenergy contribution from a large denominator unchanged and
+damps away the contribution from an o ﬀending small
+denominator.
+We note that the idea of regularizing perturbation theory has
+been explored by several others. Other ideas include the level-shifted complete active space second-order perturbation theory(CASPT2),
+51restrained denominator MP2 (RD-MP2),52and
+the recently introduced driven similarity renormalization group(DSRG) methods.53In particular the DSRG methods are
+particularly interesting as they regularize each term di ﬀerently
+depending on the associated energy denominator. In fact theregularizers we study here were motivated by DSRG. We alsomention that there are other approaches that are computa-tionally as simple as (or cheaper than) MP2 and do not divergeeven for metallic systems. These include direct random phaseapproximation
+54and degeneracy-corrected perturbation
+theory.55We also mention our group ’s previous work on
+penalty functions which regularize PT amplitudes.56It is
+worthwhile to mention that there may be formal connectionsbetween regularized OOMP2 and correlation theories withscreened interactions such as random phase approximation
+57
+and coupled-pair theories58as these all exhibit no singular
+behavior for metallic systems.
+This work is organized as follows: (1) we review OOMP2,
+(2) we describe the regularizers that we used in this work andderive the pertinent orbital gradient of them, (3) we investigatethe e ﬀect of regularizers on the stability Hessian, (4) we
+demonstrate preliminary training and test of the newregularizers on the W4-11 set,
+59the RSE43 set,60,61and the
+TA13 set,62and (5) we apply these new methods to two
+chemically interesting biradical molecules.63,64
+■THEORY
+We will use i,j,k,l, ... to index occupied orbitals; a,b,c,d, ... to
+index virtual orbitals; and p,q,r,s, ... to index either of those
+two.
+OOMP2 Lagrangian in Spin −Orbital Basis. We review
+the OOMP2 Lagrangian formulation and its orbital gradientwithin the spin −orbital notation. For generality, we do not
+assume orbitals to be real.
+Hylleraas Functional. The Hylleraas functional J
+His given
+as
+[Ψ] = ⟨Ψ| ̂−| Ψ ⟩ + ⟨ Ψ | ̂|Ψ⟩ + ⟨Ψ| ̂|Ψ ⟩
+=⟨ Ψ | ̂|Ψ⟩ + ⟨Ψ | ̂|Ψ⟩ + ⟨Ψ| ̂|Ψ ⟩JF EV V
+FV VH
+NN N11 0 1 0 11 0
+11 01 1 0 (1)
+where the subscript Ndenotes “normal-ordered ”operators65
+and the OOMP2 ansatz for |Ψ1⟩by de ﬁnition includes only
+doubly excited determinants:
+∑ |Ψ⟩ = ̂|Ψ ⟩ = |Ψ ⟩ Tt1
+4ijabijab
+ijab
+12 0
+(2)
+In a simpler notation, this functional is
+[]= Δ + +†††Jtt t t V V tH (3)
+whereΔis a rank-8 tensor de ﬁned as
+Δ =⟨ Ψ | ̂|Ψ⟩ Fijabklcd
+ijab
+Nk lcd(4)
+andVis
+=⟨ | | ⟩ Va b i jabij(5)
+In passing we note that when we include orbital optimization
+eﬀects, |Ψ1⟩is no longer composed of canonical orbitals.
+Instead it is convenient to use pseudocanonical orbitals66,67
+that diagonalize the occupied −occupied (OO) and the
+virtual−virtual (VV) blocks of the Fock operator, F̂. Strictly
+speaking, singles contributions do not vanish. However, weargue that this is a part of our ansa ̈tz, consistent with the idea
+of variational Bru ̈ckner orbitals. Orbital optimization incorpo-Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195204
+
+
+--- PAGE 3 ---
+rates the most important singles e ﬀects. Indeed, the e ﬀect of
+singles was examined in the context of OOMP2 and foundnegligible as in ref 12.
+MP2 Lagrangian. We construct a Lagrangian that consists
+of Hylleraas functional J
+Hand the Hartree −Fock energy E1as
+in
+3
+∑∑∑
+∑∑ ∑ΘΘ Θ[] = [ ] + []
+=⟨ | | ⟩ + ⟨ ⟩ + ⟨⟩
++* ⟨ ⟩ + +EJ
+i h i i ji j i ja b t
+ta b i j P F P Ftt,,
+1
+21
+4
+1
+4()H
+ii j i j a bijab
+ijabijab
+ijij ji
+abab ba1
+(2) (2)
+(6)
+where the OO and VV MP2 one-particle density matrices
+(OPDMs) are
+∑
+∑=− *
+=*Pt t
+Pt t1
+2() ( 7 )
+1
+2() ( 8 )ij
+abkikab
+jkab
+ab
+ijcijac
+ijbc(2)
+(2)
+Assuming pseudocanonical orbitals, the variation in tyields
+=−⟨⟩
+Δtab ij
+ijab
+ijab(9)
+where the denominator is de ﬁned as a non-negative quantity,
+Δ=ϵ +ϵ −ϵ −ϵijab
+abi j (10)
+With the optimal amplitudes, JHyields the familiar MP2 energy
+expression,
+∑ =−|⟨ ⟩|
+ΔEij ab 1
+4ijab ijab MP22
+(11)
+We apply the RI approximation1,2to the two-electron integrals,
+∑ ⟨|⟩ = | | |−ij ab ia P P Q Q jb () ( ) ( )
+PQ1
+(12)
+We further de ﬁne RI ﬁt coeﬃcients, CpqP, for the |pq⟩charge
+distribution as
+∑=| |−CP Q Q p q () ( )pqP
+pqQ1
+(13)
+and the 3-center, 2-particle density matrix (TPDM) as
+∑ Γ= tCaiP
+jbijab
+jbP
+(14)
+The TPDM piece of the Hylleraas functional then becomes
+∑ Γ+V1
+2h. c.
+iaPiaP
+aiP
+(15)
+where we used
+=|Vi a P ()iaP(16)
+Orbital Optimization. The self-consistent ﬁeld procedure
+can be described as rotating Nmoorthonormal vectors until an
+objective function reaches its stationary point. Thus, it ispossible to relate two di ﬀerent molecular orbital coe ﬃcients
+with a unitary transformation as in′=CC U (17)
+where Uis a unitary (or orthogonal for real variables) matrix.
+As both the Hartree −Fock energy and the Hylleraas functional
+ineq 6 are invariant under OO and VV rotations, we consider
+only the nonredundant OV orbital rotations. We then write the
+transformation matrix,
+ΔΘ Δ ΔΘΔ =[ − ]†† †U expov v o (18)
+whereΔoandΔvare skinny matrices of the dimensions Nmo×
+noccand Nmo×nvir, respectively, and they have 1 ’s on the
+diagonal, and Θis a matrix of the dimension nocc×nvir. It will
+be useful to expand U,
+6 ΔΘ Δ ΔΘΔ Θ =+ − + | |†† †U I() ( )ov v o2(19)
+Up to ﬁrst order in Θ, occupied and virtual orbitals transform
+in the following way:
+∑
+∑′= − Θ *
+′= + Θμμ μ
+μμ μCC C
+CC C(20)
+(21)ii
+aai a
+aa
+iii a
+We now consider the variation of the energy, 3δ,u pt o ﬁrst
+order in Θ,
+3∑
+∑
+∑∑∑∑
+∑∑
+∑δ=− Θ − Θ *
+−⟨ ⟩ Θ *+⟨ ⟩ Θ *+⟨ ⟩ Θ +⟨ ⟩ Θ
+−Θ + Θ *− ⟨ ⟩Θ + ⟨ ⟩Θ *
++Θ *+ Θ − ⟨ ⟩Θ + ⟨ ⟩Θ *
++− ⟨ ⟩ Θ + ⟨ ⟩ Θ
++ ⟨ ⟩Θ + ⟨ ⟩Θ +hh
+ij aj ij ia aj ij ia ij
+P F F P jc ik jk icP F F P bc ak bk ac
+tc j a b i c a b
+ij kb ij ak()
+1
+2()
+() ( )() (
+)
+1
+4()
+() h . c .iaai ia ia ia
+ijaia ja ia ja
+ijcij ci jc jc ic
+ijckij kc kc
+kabab ka kb bk ka
+abckab kc kc
+ijabijab
+cic jc
+kka kb(2) (2)
+(2) (2)
+Ä
+ÇÅÅÅÅÅÅÅÅÅÅÅÅÅi
+kjjjjjj
+y
+{zzzzzzÉ
+ÖÑÑÑÑÑÑÑÑÑÑÑÑÑ
+(22)
+Theﬁrst line corresponds to the HF orbital gradient, and the
+rest belongs to the MP2 contribution. We apply the RI
+technique we described before to the last line of eq 22 :
+−Γ Θ − Γ Θ + Θ Γ + Θ Γ+VVV V1
+2() h . c .caP
+aiP
+ic cbP
+bjP
+jc ikP
+ka aiP
+jkP
+kb bjP
+(23)
+The orbital optimization treats the real and imaginary parts of
+Θiaas separate variables as is done in Wirtinger calculus.68
+33 3
+33 3δ
+δδ
+δδ
+δ
+δ
+δδ
+δδ
+δΘ=Θ+Θ*
+Θ=−Θ−Θ*iRe( )(24)
+Im( )(25)kc kc kc
+kc kc kci
+kjjjjjy
+{zzzzz
+whereJournal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195205
+
+
+--- PAGE 4 ---
+3
+33∑∑
+∑∑
+∑∑δ
+δ
+δ
+δδ
+δΘ=− − +
+−⟨ ⟩ −⟨ ⟩
+−Γ +Γ
+Θ*=Θ*FF P P F
+Pj c i k Pb c a k
+VV(26)
+(27)kcck
+iciik
+aca ak
+ijij
+abab
+aPcaP
+akP
+iPikP
+ciP
+kc kc(2) (2)
+(2) (2)
+i
+kjjjjjy
+{zzzzz
+In passing we note that the last two terms in eq 26 are
+evaluated by the usual mixed Lagrangian technique as used inthe nuclear gradient implementation of RI-MP2.69
+Regularized OOMP2. Stück and Head-Gordon found a
+rather disturbing feature of OOMP2 when breaking bonds.36
+The energy denominator Δijabapproaches zero near dissocia-
+tion limits in the case of restricted orbitals if optimized at theMP2 level. This leads to a divergent ROOMP2 solution evenwhen using UOOMP2, as it is variationally preferred. In the
+perturbation theory literature, this existence of a divergent
+solution is sometimes referred to as an intruder state problem.
+To ameliorate this problem, Stu ̈ck and Head-Gordon
+employed a simple level-shift scheme to remove the divergentROOMP2 solution associated with single bond-breaking andfound it somewhat e ﬀective. This regularizer will be referred to
+as aδ-regularizer: Δ
+ijab←Δijab+δ. Some preliminary results on
+thermochemistry were encouraging with δ=4 0 0m Eh.
+However, later it was found that the level-shift parameter torestore Coulson −Fischer points for double- and triple-bond
+dissociations is too large to give reasonable thermochemistryresults.
+40This sets the main objective of this work. Namely, we
+are interested in designing a regularizer that can solve the ﬁrst-
+order derivative discontinuity and the energy singularityproblems while keeping the thermochemistry performanceundamaged.
+Design Principles of Regularizers. Ideally, one needs a
+regularizer that damps away a strongly divergent term whilekeeping physical correlation terms unchanged. As an attemptto achieve this goal, we propose multiple classes of orbitalenergy gap dependent regularizers that remove the singularityproblem while (hopefully) damaging thermochemistry resultsto only a small extent.
+One may understand the MP2 singularity problem based on
+the following integral transform:
+∫∑∑ τ =− | ⟨ ⟩ | = ϵτ∞−ΔEi j a b1
+4de1
+4ijab ijabijab
+MP202ijab
+(28)
+where
+∫ τ ϵ= − | ⟨ ⟩ |τ∞−Δij ab deijab
+02ijab
+(29)
+This energy expression is derived from a Laplace trans-
+formation of the energy expression in eq 11 and is a foundation
+of various linear-scaling MP2 methods.70−72WhenΔijab= 0, the
+corresponding energy contribution ϵijabis divergent as the
+integrand does not decay to zero when τ→∞.
+One may try to regularize ϵijabby changing ΔijabtoΔijab+δ
+with a positive constant δso that when Δijab= 0, the integrand
+decays to zero as τ→∞. This corresponds to the δ-regularizer.
+Alternatively, one may replace Δijabin the integrand with afunction of Δijabthat does not go to zero as Δijab→0. One such
+example is
+αΔ+
++Δ1
+()ijab
+ijab p(30)
+where α> 0 and pis a positive integer which can be chosen
+empirically. This function has a nonzero asymptote forinﬁnitesimal Δ
+ijaband becomes Δijabfor large positive values of
+Δijab. This yields an energy expression,
+∑ α =−|⟨ ⟩|
+Δ+α+ΔEpij ab(, )1
+4ijab ijab MP22
+1
+()ijab p(31)
+and we call this class of regularizers αpregularizers.
+Another way to approach this problem is to change the
+domain of integration for small Δijabvalues. The upper limit of
+the integral should approach ∞for large Δijaband become a
+ﬁnite value for small Δijabto remove the singularity. A simple
+way to achieve this is to have a two-parameter integral upperlimit σ(Δ
+ijab)p, where σ> 0 and pis a positive integer. We call
+this regularizer a σp-regularizer. The regularized energy
+expression then reads
+∑ σ =−|⟨ ⟩|
+Δ−σ−ΔEpij ab(, )1
+4(1 e )
+ijab ijab MP22
+()ijab p
+(32)
+Interestingly, p= 2 leads to an energy expression that was
+derived from the driven similarity renormalization grouptheory by Evangelista.53
+Lastly, one may modify the two-electron integrals such that
+the resulting integrand decays to zero when Δijab→0.
+Motivated by the above exponential damping function, wepropose to modify V
+abijto
+κ =−κ−ΔWp V(, ) ( 1 e )abij
+abij ()ijab p
+(33)
+The regularized energy then reads
+∑ κ =−|⟨ ⟩|
+Δ−κ−ΔEpij ab(, )1
+4(1 e )
+ijab ijab MP22
+() 2ijab p
+(34)
+We call this class of regularizers κpregularizers.
+In this work, we shall investigate the σ1- and κ1-regularizers.
+These were chosen because one can easily write down aLagrangian that yields the regularized energy expressions andthe orbital gradient is not so complicated.
+κ
+1-Regularizer. We de ﬁne the following rank-8 tensor Σthat
+depends on a single parameter β,
+β Σ =ββ β β −−ee e e ( ) () () ( ) ( )ijklabcd
+ik jl ac b dFF F Foo oo vv vv
+(35)
+where FooandFvvare occupied −occupied and virtual −virtual
+blocks of Fock matrix, respectively. If orbitals are pseudoca-nonical, Σbecomes much sparser:
+βδ δ δ δ Σ =β−Δ() eijklabcd
+ik jl ac b dijab
+(36)
+We write the regularized OOMP2 Lagrangian modifying the
+two-electron integrals in eq 3,
+κκΣ →− ≡†† †tV t 1 V tW (( ) ) ( ) (37)
+where the damped integral Wis deﬁned as
+κκ Σ =− W 1V () ( () ) (38)Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195206
+
+
+--- PAGE 5 ---
+Using this, the modi ﬁed Lagrangian reads
+3 3 κκ ΘΘ Σ Σ[] = [] − −††tt V t t V, , () ()0 (39)
+This leads to modi ﬁed amplitudes,
+=−⟨⟩
+Δ−κ−Δtab ij(1 e )ijab
+ijabijab
+(40)
+In the limit of Δijab→0,tijab→−κ⟨ab∥ij⟩as opposed to ∞.
+The regularized MP2 energy from the modi ﬁed Lagrangian
+follows
+∑ κ=−|⟨ ⟩|
+Δ−κ−ΔEij ab()1
+4(1 e )
+ijab ijab MP22
+2ijab
+(41)
+which is the κ1-OOMP2 energy. We note that Δijab→0 does
+not contribute to the energy. Obviously, the large κlimit
+recovers the unregularized energy expression.
+The orbital gradient is simply the sum of eq 26 (where P(2)
+andΓare computed with modi ﬁed amplitudes) and the
+contribution from the two additional terms in eq 39 .I nt h e
+pseudocanonical basis,
+∑ κΣ =⟨ ⟩κ †− Δij ab t Vt()1
+4e
+ijabijabijab
+(42)
+Diﬀerentiating ⟨ij∥ab⟩was already explained before, so we
+focus on the derivative of eκΔijab. We have
+∫κτ∂
+∂Θ=∂
+∂Θκ
+τκ τ κ− F ede e
+kc kcF
+FF
+01(1 )oooo
+oo oo
+(43)
+δ∂
+∂Θ=− −⟨ ⟩F
+Fi c j kij
+kccj ik(44)
+Similarly,
+∫κτ∂
+∂Θ=−∂
+∂Θκ
+τκ τ κ−
+−− − F ede e
+kc kcF
+FF
+01(1 )vvvv
+vv v v
+(45)
+δ∂
+∂Θ=− ⟨ ⟩FFa c b kab
+kcak bc(46)
+Generally, one needs to perform a one-dimensional quadrature
+to compute this contribution to the orbital gradient. In thepseudocanonical basis, the extra contribution to the orbitalgradient is given as
+∫
+∫∑∑
+∑κ
+κτ τ τ
+κτ τ τ μ νΣ∂+
+∂Θ
+=− Γ ̃+Γ ̃
+− ̃ +
+−[ − ⟨ ⟩ ]∼∼κκ
+τκ τ κ
+μννμ νμ†
+−Δ −Δ
+−ϵ − ϵVB
+FF
+XY c kVt( ( ) h .c .)
+ee
+d( ( ) e ( ) e )
+d ( () () )kc
+aPcaP
+akP
+iPciP
+ikP
+ck ck01(1 )
+01ka
+ic
+kc
+i
+kjjjjjjjy
+{zzzzzzz
+(47)
+where we de ﬁne
+Δ=ϵ −ϵpq
+q p (48)∑ Γ̃=κ−ΔtB eaiP
+jbijab
+jbPjb
+(49)
+∑ τω ω̃ = *+τκϵFF() e ( )ck
+lcl lk kll
+(50)
+∑ τω ω=+ *∼∼τκ −− ϵFF() ( ) eck
+aca ac ak(1 )a
+(51)
+∑ τω ω= *+ *νμτκ
+νμτκ ϵ− ϵX CC () e ( ) e
+ijjj i i j i(1 )ji
+(52)
+∑ τω ω=+ **νμτκ
+νμτκ −ϵ −− ϵY CC () e ( ) e
+abbb a a b a(1 )b a
+(53)
+∑ ω=Γ ̃κ−ϵVelk
+aPlaP
+akPa
+(54)
+∑ ω=Γ ̃κϵV eac
+iPaiP
+icPi
+(55)
+Those extra terms can be readily implemented to any existing
+OOMP2 programs, and there is only a mild increase in the
+computational cost. The only additional 6N()5step is the
+formation of Γ̃ineq 49 and this can be done at the same time
+as forming Γ.
+σ1-Regularizer. The σ1-regularizer can be derived from a
+Hylleraas functional with a set of auxiliary amplitudes s.W e
+write the new Hylleraas functional in the following way:
+σ Θ [] = Δ + ++†† †Jts s t s W t V,,1
+21
+2()1
+2h. c.H (56)
+where W(σ) is the damped integral de ﬁned in eq 38 . The
+modiﬁed Hylleraas functional is now a functional of t,s, andΘ.
+Stationary conditions on s†andt†yields
+Δ
+Δ=−
+=−−
+−sV
+tW(57)
+(58)1
+1
+(57)
+Plugging eq 57 andeq 58 toeq 56 leads to the following
+energy expression:
+∑ σ=−|⟨ ⟩|
+Δ−σ−ΔEij ab()1
+4(1 e )
+ijab ijab MP22
+ijab
+(59)
+which is the σ1-OOMP2 energy expression. Unlike eq 41 ,eq
+59has nonzero contributions from small Δijabas the limit yields
+−σ|⟨ij∥ab⟩|2. The orbital gradient is more or less the same as
+that of κ1-OOMP2. σ1-OOMP2 can also be implemented with
+a moderate increase in the computational cost.■COMPUTATIONAL DETAILS
+All the calculations presented below are carried out by thedevelopment version of Q-Chem.73The self-consistent ﬁeld
+calculations are based on Q-Chem ’s new object-oriented SCF
+library, libgscf and the relevant MP2 components are
+implemented through Q-Chem ’sn e wM P 2l i b r a r y ,
+libgmbpt . All those implementations are already at the
+production level and OpenMP parallelized. All the correlatedwave function calculations presented here were performed withall electrons correlated and all virtual orbitals included unlessspeciﬁed otherwise.Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195207
+
+
+--- PAGE 6 ---
+The quadrature evaluation in eq 47 was performed using the
+standard Gauss −Legendre quadrature. The accuracy of the
+quadrature for a given quadrature order depends on the orbitalenergies and thus it is system-dependent. For systemspresented below, 20 quadrature points were found to besuﬃcient. The precise assessment of the accuracy of the
+quadrature will be an interesting subject for future study.
+■RESULTS AND DISCUSSION
+For the sake of simplicity, we will refer to κ1andσ1-regularizers
+asκ- and σ-regularizers, respectively.
+ROOMP2 to UOOMP2 Stability Analysis. As noted
+before, we would like UOOMP2 to spontaneously spin-polarize to reach the proper dissociation limits. Withoutregularization, it is quite common to observe that UOOMP2stays on an R solution and never spontaneously polarizes eventhough there is a more stable U solution that dissociatescorrectly. This may not be a serious problem if stability analysiscan detect those more stable polarized solutions. However, inmost cases, there exists a barrier between R and U solutions sothat both solutions are stable up to the quadratic stabilityanalysis.
+We revisit and assess the new regularizers on the bond-
+breaking of H
+2(single-bond), C2H6(single-bond), C2H4
+(double-bond), and C 2H2(triple-bond). We present the
+results for unregularized, κ-, and σ- OOMP2. Interested
+readers are referred to ref 40for the δ-OOMP2 result. The
+main objective of this section is to ﬁnd out whether there is a
+reasonably weak single parameter κorσthat recovers the
+Coulson −Fischer points50(i.e., the geometries at which
+spontaneous, continuous symmetry-breaking start to occur)for all four cases. All the results are obtained with the cc-pVDZ
+basis set74along with its auxiliary basis set.75The
+diagonalization of the R to U stability Hessian was performed
+iteratively with the Davidson solver76based on the ﬁnite
+diﬀerence matrix −vector product technique developed in ref
+49. This technique utilizes the analytic orbital gradient and
+does not require the implementation of the analytic orbital
+Hessian.
+InFigure 1 , we present the potential energy curve (PEC) of
+the H2dissociation. It is clear that there is a lower U solution
+starting from 1.6 Å and this is the solution that dissociatesproperly. However, there is a slight ﬁrst-order discontinuity
+between 1.58 and 1.60 Å. This was previously noted by one ofus in ref 40. On the other hand, both κ- and σ-UOOMP2
+exhibit smooth curves and dissociate properly. We picked the
+range of κandσbased on the absolute energies that yield 1 −2
+mE
+hhigher than the unregularized one at the equilibrium
+geometry. The precise determination of those values will be
+discussed in the next section.
+The continuous transition from R to U in regularized
+OOMP2 can be understood based on the R to U Hessian
+lowest eigenvalues as illustrated in Figure 2 . The unregularized
+ROOMP2 exhibits no R to U instability at every given bonddistance. In other words, there is no solution that smoothlyand barrierlessly connects this R solution to the lower Usolution in UOOMP2. This is the source of the ﬁrst-order
+discontinuity of ROOMP2 in Figure 1 . In contrast to the
+unregularized ROOMP2 result, both κ- and σ-ROOMP2
+exhibit negative eigenvalues after the critical bond lengtharound 1.5 Å. This results in a continuous and smooth
+Figure 1. Potential energy curve of H2within the cc-pVDZ basis set. All the regularized OOMP2 are performed with spin-unrestriction: (a) κ-
+OOMP2 and (b) σ-OOMP2.
+Figure 2. R to U Hessian lowest eigenvalues of H 2within the cc-pVDZ basis set: (a) κ-OOMP2 and (b) σ-OOMP2.Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195208
+
+
+--- PAGE 7 ---
+transition from the R solution to the U solution as we stretch
+the bond.
+We repeat this analysis for ethane, ethene, and ethyne. The
+corresponding R to U Hessian lowest eigenvalues are plotted
+inFigure. 3 . ROOMP2 shows numerical instabilities in the
+case of ethene and ethyne whereas both of the regularized onesconverge properly. In all cases, the κ- and σ-regularizers show
+clear di ﬀerences. Namely, the σ-regularizer shows clearly
+slower appearance of the negative roots compared to the κ
+case. Furthermore, the eigenvalue of the σ-regularizer tends to
+turn around after some distance; this is not desirable as therecan be a discontinuous transition between R and U solutionsdepending on where we start. Furthermore, the bond length, atwhich the Coulson −Fischer point is located, is longer in
+ethene than in ethyne in the case of σ-OOMP2. Given these
+results, we would prefer the κ-regularizer over the σ-regularizer.However, a more detailed assessment is necessary to make a
+general recommendation.
+Training the Regulariz ation Parameter and Its
+Validation. W4-11 Set. Though the investigation of the
+stability Hessian eigenvalues was informative, it is not su ﬃcient
+to suggest a value for the regularization parameter to be used
+for general chemical applications. Training the regularization
+parameter on a minimal training set and validating on othertest sets will provide a sensible preliminary value.
+We chose the W4-11 set developed by Martin and co-
+workers for the training set.
+59The W4-11 set has played a
+crucial role in density functional development. The W4-11 set
+consists of the following subsets: 140 total atomization
+energies (TAE140), 99 bond dissociation energies (BDE99),
+707 heavy-atom transfer (HAT707), 20 isomerization
+(ISOMER20), and 13 nucleophilic substitution reaction(SN13). MP2 and OOMP2 do not perform very well on this
+Figure 3. R to U Hessian lowest eigenvalues of ethane, ethene and ethyne within the cc-pVDZ basis set: (a) Ethane with κ-ROOMP2; (b) ethane
+with σ-ROOMP2; (c) ethene with κ-ROOMP2; (d) ethene with σ-ROOMP2; (e) ethyne with κ-ROOMP2; (f) ethyne with σ-ROOMP2. Note
+that discontinuities in the plots indicate discontinuous transitions in the corresponding ROOMP2 curves. ROOMP2 does not converge after 2.72 Åfor ethene and 2.18 Å for ethyne.Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195209
+
+
+--- PAGE 8 ---
+set (i.e., root-mean-square deviations (RMSD) of 15.10 and
+11.08 kcal/mol within the aug-cc-pVTZ basis,74respectively).
+Therefore, it is sensible to choose it as a training set as anattempt to improve upon both MP2 and OOMP2.
+The training was done within the aug-cc-pVTZ (aVTZ)
+basis set
+74along with the corresponding auxiliary basis set.75
+All the calculations are performed with the geometric direct
+minimization (GDM) algorithm77and a stable UHF solution.
+OO methods used a stable UHF solution as a guess. We alsoperformed additional training at the complete basis set (CBS)limit using the aVTZ and aug-cc-pVQZ (aVQZ)
+74extrap-
+olation (i.e., the TQ extrapolation).78
+Initially, we optimized only one nonlinear parameter ( κor
+σ) by scanning over [0.05, 4.0]. The optimal values were κ=
+1.45 with the RMSD of 7.09 kcal/mol and σ= 1.00 with the
+RMSD of 6.72 kcal/mol as shown in Figure 4 a. The optimal
+values change slightly for the TQ extrapolated results as in
+Figure 4 b. We have κ= 1.40 and σ= 0.95 with the RMSDs of
+7.80 and 7.28 kcal/mol, respectively. These values are alsoenough to restore the Coulson −Fischer points in the systems
+studied before. We recommend those values for general
+applications.
+We also developed a scaled correlation energy variant by
+adding a linear parameter that scales the overall correlation
+energy to improve the thermochemistry performance. This is
+achieved by optimizing a linear parameter cin
+=+EE c Etot HF MP2 (60)in addition to the nonlinear parameter ( κorσ) for the
+regularizer. ccan be optimized by a means of least-squares ﬁt.
+Since changing calters orbitals, one needs to accomplish self-
+consistency when optimizing c.W ef o u n dt h r e es e l f -
+consistency cycles enough to converge cand present only
+theﬁnal result. For preliminary results, we simply trained this
+over the TAE-140 set where unregularized OOMP2 performsmuch worse (an RMSD of 17.48 kcal/mol) than it does in theother subsets of the W4-11 set.
+InFigure 5 , we present the RMSD values of the TAE140 set
+and the entire W4-11 set as a function of the regularizationstrength. All the RMSD values are obtained with the scalingfactor optimized for the TAE-140 set. In Figure 5 a, we have
+optimal values of κ= 2.80 and σ= 2.05. These values are not
+enough to restore the Coulson −Fischer points. Validating
+those values over the entire W4-11 set as in Figure 5 b shows
+that those values are not optimal on the entire W4-11 set. Theoptimal values are κ= 2.25 and σ= 1.70, and those are not
+enough to restore the Coulson −Fischer points.
+For general applications, we recommend the values of κ=
+1.50 along with c= 0.955 and σ= 1.00 along with c= 0.973.
+Both yield the RMSD of 6.48 kcal/mol over the entire W4-11set. We refer to each model as κ-S-OOMP2 and σ-S-OOMP2,
+respectively. Although the scaling factor is not optimalanymore, those values are still an improvement over theirunscaled variants on the W4-11 set. The values are slightly
+smaller than 1.00 because orbital optimization can often
+overcorrelate.
+Figure 4. W4-11 set RMSD (kcal/mol) as a function of regularization parameters κandσ: (a) aVTZ and (b) TQ extrapolated results. The optimal
+values are κ= 1.45 Eh−1andσ= 1.0 Eh−1for aVTZ and κ= 1.40 Eh−1andσ= 0.95 Eh−1for the TQ extrapolated case.
+Figure 5. (a) TAE140 set RMSD and (b) W4-11 set RMSD as a function of regularization parameters κandσwhere the scaling parameter cfor
+each data point is optimal within the TAE-140 set. Discontinuities are caused by the appearance of di ﬀerent orbital solutions in the MR16 subset of
+the TAE140 set. The basis set used was aVTZ.Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195210
+
+
+--- PAGE 9 ---
+The TQ extrapolated results are qualitatively similar, and we
+only mention the ﬁnal results here. We have κ= 1.50 along
+with c= 0.931 with the RMSD of 6.61 kcal/mol and σ= 1.00
+along with c= 0.949 with the RMSD of 6.63 kcal/mol. These
+are more or less identical results to those of aVTZ with asmaller scaling factor c. Therefore, for the rest of this work, we
+will use parameters optimized for the aVTZ basis set.
+We summarize the resulting regularized OOMP2 methods
+inTable 1 along with MP2, OOMP2, and other variants of
+them. All of them were performed with the aVTZ basis set. In
+particular, we compare the regularized OOMP2 methods withSCS-
+5and SOS-MP26and their OOMP2 variants.11,12For
+SCS-MP2 and SCS-OOMP2, css= 1/3 and cos= 6/5 are
+used.5,12cos= 1.3 is used for SOS-MP26andcos= 1.2 is used for
+SOS-OOMP2.11For comparison, we developed a single-
+scaling parameter OOMP2 (S-OOMP2) where the parameter
+wasﬁtted to the TAE140 set. The optimal-scaling parameter is
+c= 0.90.
+InTable 1 , MP2 performs the worst among the methods
+examined in this work and SCS-MP2 and SOS-MP2 provide
+only a small improvement over MP2. OOMP2 improves about4 kcal/mol in the RMSD compared to MP2. SCS-OOMP2
+shows roughly a factor of 2 improvement over SCS-MP2. SOS-
+OOMP2 performs the best among the methods presented andshows a 2.5 times smaller RMSD than that of SOS-MP2.
+RMSD, MAD, and MAX −MIN show the same trend.
+The unscaled regularized OOMP2 methods, κ-OOMP2 and
+σ-OOMP2, both provide improved energetics compared to the
+unregularized one. They are comparable to SCS-OOMP2 and
+SOS-OOMP2. However, it should be noted that the
+regularization parameters are optimized for the W4-11 set. Itis not so surprising that κ-OOMP2 and σ-OOMP2 perform
+relatively well.S-OOMP2 performs better than those unscaled regularized
+OOMP2. Given that S-OOMP2 was trained over only the
+TAE140 set, this is an interesting outcome. Adding regularizers
+to S-OOMP2 provides no improvement and it makes theperformance a little worse. However, the regularization isnecessary to restore the Coulson −Fischer points for molecules
+studied in the previous section. We also note that κ-S-OOMP2
+andσ-S-OOMP2 exhibit a more or less identical performance
+in terms of RMSD, MAD, and MAX-MIN.
+RSE43 Set. We also validate the regularized OOMP2
+methods on the RSE43 set
+61where unregularized OOMP2
+performs nearly perfectly.12The RSE43 has a total of 43 radical
+stabilization energies, and all of them are energies of a reactionwhere a methyl radical abstracts a hydrogen from ahydrocarbon. The original RSE43 set reference values were
+not considered of very high quality
+61and thus we use the
+updated reference data based on the work by Grimme and co-workers.
+60
+We compare MP2, OOMP2, their variants, and three
+combinatorially designed density functionals ( ωB97X-V,
+ωB97M-V, and B97M-V) developed in our group. ωB97X-V
+is a range-separated generalized gradient approximation(GGA) hybrid functional with the VV10 dispersion tail, andωB97M-V is a range-separated meta GGA with the VV10
+dispersion tail. B97M-V is a meta GGA pure functional with
+the VV10 dispersion tail. All DFT calculations are performed
+with the aVQZ basis set,
+74and all the MP2 and OOMP2
+calculations are done with the aVTZ basis set.74MP2
+calculations are performed with a stable UHF solution, and
+OOMP2 calculations started from a stable UHF solution.
+The RSE43 set RMSD values are presented in Table 2 . DFT
+functionals outperform MP2, SCS-MP2, and SOS-MP2. Thepoor quality of those MP2 methods is likely because of theartiﬁcial spin-symmetry-breaking at the HF level. DFTTable 1. W4-11 Set RMSD (kcal/mol) of MP2, OOMP2, and Their Variantsa
+aMAD stands for mean absolute deviation, and MAX −MIN stands for the di ﬀerence between maximum and minimum. The colors represent the
+relative performance of each method; red means the worst and green means the best among the methods presented. For SOS-MP2 and SOS-
+OOMP2, the Laplace transformation trick is used. All of the calculations were performed with the aVTZ basis set.
+Table 2. RSE43 Set RMSD (kcal/mol) of ωB97X-V, ωB97M-V and B97M-V, MP2, OOMP2, and Their Variantsa
+aMAD stands for mean absolute deviation, and MAX −MIN stands for the di ﬀerence between maximum and minimum. The colors represent the
+relative performance of each method; red means the worst and green means the best among the methods presented.Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195211
+
+
+--- PAGE 10 ---
+functionals are in general less prone to the arti ﬁcial spin-
+symmetry-breaking problem. ωB97X-V and ωB97M-V exhibit
+nearly identical results, and B97M-V is roughly twice worse
+than those two in terms of RMSD, MAD, and MAX-MIN.
+Orbital optimization generally improves the energetics here.
+SOS-OOMP2 does not outperform OOMP2 and SCS-OOMP2 in this case. S-OOMP2 is comparable to OOMP2and SCS-OOMP2. κ-OOMP2 and σ-OOMP2 along with their
+scaled variants are comparable to the unregularized ones.Adding linear parameters on top of those to scale the MP2correlation energy does not alter the results signi ﬁcantly. Since
+the regularization damps out the absolute MP2 energy quitesigniﬁcantly, this is a nontrivial and exciting result.
+TA13 Set. We further test our new methods on the TA13
+set.
+62This data set involves 13 radical-closed-shell nonbonded
+interaction energies. We used the aVTZ basis set74and
+counterpoise corrections to mitigate basis set superpositionerror (BSSE). Examining spin-contamination, one data point,CO
++, was found to be an outlier. The UHF ⟨S2⟩for CO+is
+0.98, which deviates signi ﬁcantly from its ideal value of 0.75.
+With OOMP2, the zero-order ⟨S2⟩is 0.76, which is quite close
+to the ideal value. The same is observed in the case ofregularized OOMP2.
+InTable 3 , we present the interaction energy errors for each
+data point of MP2, OOMP2, and their variants. Going fromMP2 to OOMP2, there are several noticeable changes. The
+problematic HF −CO
++interaction is handled much better with
+OO. Another problematic case in MP2 is the H 2O−Finteraction, and this is also improved with OO. Overall,
+without OO, SCS-MP2 and SOS-MP2 are not any better thanMP2. Comparing SCS- and SOS-OOMP2 with OOMP2,scaling does not help improve the energetics of OOMP2 and infact tends to make it worse. κ- and σ-OOMP2 perform more or
+less the same, as do their scaled variants. Regularization keepsthe performance of OOMP2 unchanged. The regularized onesperform better than simple scaled OOMP2 methods (i.e., SCS-OOMP2, SOS-OOMP2, and S-OOMP2). It is interesting thatthe one-parameter model, S-OOMP2, performs better than the
+more widely used two-parameter models, SCS-OOMP2 and
+SOS-OOMP2.
+InTable 4 , we present the statistical errors of MP2,
+OOMP2, and their variants on the TA13 set. OOMP2performs the best among the methods presented here. We notethatωB97M-V has an RMSD of 2.75 kcal/mol,
+79a little worse
+than OOMP2. OOMP2, SCS-OOMP2, and SOS-OOMP2 allimproved the numerical performance compared to their parentmethods. Regularized OOMP2 methods perform very well,and unscaled ones perform better than the scaled ones. Wealso presented mean signed errors (MSEs) which are oftenused to infer a potential bias in statistical data. The MSEs areall positive in Table 4 and would be smaller if we performed a
+TQ extrapolation along with counterpoise corrections.
+80In
+summary, we found that regularization does not damage theperformance of OOMP2 in describing nonbonded interactionsin the TA13 set. Overall, κ-OOMP2 performs the best in the
+TA13 set among those tested.Table 3. Counterpoise-Corrected Interaction Energy Errors (kcal/mol) of MP2, OOMP2, and Their Variants in the 13 Data
+Points in TA13
+complex MP2 SCS-MP2 SOS-MP2 OOMP2 SCS-OOMP2 SOS-OOMP2 κ-OOMP2 σ-OOMP2 S-OOMP2 κ-S-OOMP2 σ-S-OOMP2
+H2O−Al 1.42 2.77 3.45 0.76 2.18 3.00 1.00 1.06 1.13 1.13 1.15
+H2O−Be+2.38 2.84 3.08 2.67 3.09 3.09 1.84 1.71 2.45 1.85 1.68
+H2O−Br 1.11 2.01 2.45 0.23 1.39 2.22 0.95 1.03 0.79 1.11 1.15
+HOH−CH 3 0.14 0.49 0.66 −0.01 0.39 0.67 0.08 0.12 0.16 0.14 0.16
+H2O−Cl 1.32 2.20 2.64 0.13 1.37 2.26 0.94 1.03 0.77 1.11 1.16
+H2O−F 4.25 5.33 5.87 −1.10 1.75 3.84 0.50 0.79 0.86 1.10 1.21
+H2O−Li 1.58 2.10 2.36 1.20 1.92 2.27 1.32 1.28 1.35 1.38 1.32
+H2O-HNH 2+−0.80 0.12 0.58 −0.73 0.21 0.71 −1.18 −1.18 −0.55 −1.05 −1.12
+H2O−NH 3+1.43 2.22 2.62 0.06 1.18 2.04 0.43 0.54 0.71 0.66 0.69
+FH−BH 2 0.14 0.51 0.70 −0.04 0.39 0.69 0.00 0.04 0.15 0.08 0.09
+HF−CO+−5.07 −5.22 −5.30 0.96 2.08 2.83 0.35 0.48 1.44 0.64 0.64
+FH−NH2−0.13 0.62 1.00 −0.25 0.56 0.98 −0.54 −0.53 −0.09 −0.44 −0.48
+FH−OH 0.27 0.76 1.00 0.16 0.69 0.98 0.01 0.02 0.28 0.08 0.05
+Table 4. TA13 Set RMSD (kcal/mol) of MP2, OOMP2, and Their Variantsa
+aMAD stands for mean absolute deviation, MSE stands for mean signed error, and MAX −MIN stands for the di ﬀerence between maximum and
+minimum. The colors represent the relative performance of each method; red means the worst and green means the best among the methods
+presented.Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195212
+
+
+--- PAGE 11 ---
+Application to Organic Singlet Biradicaloids. Organic
+biradicaloids are not very common to observe experimentallybecause they are quite unstable. Indeed, a molecule with asinglet biradical ground state is typically a contradiction. Asinglet biradicaloid is the ground state due to the presence ofsome closed-shell character.
+81They may appear in numerous
+interesting chemical reactions as a transition state.82In this
+section, we will study two experimentally observed organicsinglet biradicaloids.63,64
+One may attempt to use Yamaguchi ’s approximate spin-
+projected UMP2 (AP-UMP2) approach83,84to spin-project
+the broken-symmetry (BS) MS= 0 UMP2 state to obtain the
+spin-pure energy of the S= 0 state. Assuming we have only
+singlet and triplet states that contribute to the MS= 0 state,
+one can easily work out the spin-pure singlet energy based on
+⟨S2⟩:
+α
+α=−−
+==EEE (1 )
+SS
+0BS 1
+(61)
+where
+α=⟨⟩ − ⟨⟩
+⟨⟩ − ⟨⟩=
+==SS
+SSS
+SS2
+12
+BS
+2
+12
+0 (62)
+The projection is exact only if there is only one spin-
+contaminant (i.e., the triplet state since we are interested in thesinglet state). There are numerous ways to evaluate E
+S=1and
+⟨S2⟩S=1. We will choose the simplest way which is to assume
+ES=1≈EMS=1and replace ⟨S2⟩S=1with ⟨S2⟩MS=1. This requires
+MS= 1 calculations in addition to MS= 0 calculations. For this
+reason UMP2 cannot be reliably applied to the singlet state ( S
+= 0) as the MS= 0 UHF state is often massively spin-
+contaminated. The core orbitals are assumed to be more orless the same between M
+S= 0 and MS=1 .
+In passing, we note that more satisfying AP-UMP2 results
+may be obtained via the approach by Malrieu and co-workerswhich makes these assumptions exact in the case ofbiradicaloids.
+85−87This is achieved by allowing unrestriction
+only within the two electrons in two orbitals (2e,2o) activespace with a possibility of using restricted open-shellformalism. Furthermore, a common set of core orbitals isused for the BS state and the S= 1 state. Our group explored a
+similar approach called unrestricted in active pairs
+88which can
+be combined with the AP formula to produce a spin-pureenergy.
+It is common to observe ⟨S
+2⟩BS≫1 with a stable MS=0
+UHF solution of biradicaloids, and thus it can be dangerous toapply the spin-projection. Moreover, the M
+S= 1 state tends to
+be also spin-contaminated in biradicaloids. As a solution to thisproblem, one may try to use UOOMP2 to obtain minimallyspin-contaminated M
+S= 0, 1 states. This is not always possible
+due to the inherent numerical instability of UOOMP2 thatcommonly arises when applied to strongly correlated systemssuch as biradicaloids. Indeed, for the biradicaloids studied here,we were not able to obtain the UOOMP2 energies due to thisinstability.
+It is then natural to use regularized UOOMP2 to obtain the
+M
+S= 0,1 states of those systems. With the regularizers
+developed in this work, we do no longer run into the numericalinstability. Therefore, the combination of regularizedUOOMP2 and Yamaguchi ’s spin-projection is quite attractive
+for simulating the electronic structure of biradicaloids. We notethat AP-UOOMP2 is formally extensive as long as biradicalo-ism is not exceeded (i.e., spin-contamination is limited to a
+two-electron manifold).
+In passing, we note that the ﬁrst-order correction to ⟨S
+2⟩for
+regularized OOMP2 can be obtained in the same way as the
+usual MP2 method.11The only di ﬀerence for κ-OOMP2 is that
+we use regularized amplitudes instead of the unmodi ﬁed ones.
+In the case of σ-OOMP2, we get a half-contribution from the
+regularized ones and another half from the unregularized ones.This is obvious from the form of the modi ﬁed TPDMs in each
+regularized OOMP2.
+Heptazethrene Dimer. Oligozetherens have been exper-
+imentally synthesized and characterized as stable singlet
+biradicaloids.89Similar to oligoacenes, they exhibit a
+polyradicaloid character in the background along with a strong
+biradicaloid character. There have been experimental interests
+in synthesizing tetraradical oids using heptazethrenes. In
+particular, the experimental and theoretical work by Wu and
+co-workers has drawn our attention where they successfully
+synthesized heptazetherene dimer (HZD) as an attempt to
+synthesize a stable singlet tetraradicaloid.63Using unrestricted
+CAM-B3LYP90density functional calculations, they charac-
+terized a strong biradicaloid character along with a very small
+tetraradicaloid character. They conclude that this compound
+should be better described as a biradicaloid, and our work herealso con ﬁrms this conclusion as we shall see.
+The geometry was taken from ref 63and shown in Figure 6 .
+We used the cc-pVDZ basis set74and the corresponding
+auxiliary basis set.75Furthermore, the frozen core approx-
+imation was employed to reduce the computational cost.
+InTable 5 , we present the spin-gaps and ⟨S2⟩of HZD using
+regularized UOOMP2 methods developed in this work. The
+gap between MS= 0 and MS= 1 states is very small.
+Furthermore, the MS= 0 state is heavily spin-contaminated.
+This is a signature of biradicaloids. The ⟨S2⟩values of the MS=
+1,2 states are relatively close to the corresponding spin-pure
+states. There is also roughly a gap of 45 kcal/mol between thetriplet and the quintet state, and this supports that HZD is nota tetraradicaloid and better described as a biradicaloid. Giventhose observations, this system is well suited for Yamaguchi ’s
+AP. Applying AP will yield a lower singlet state than the M
+S=0
+state and thus provide a larger singlet −triplet gap.
+Figure 6. Molecular structure of heptazetherene dimer (HZD): white,
+H; gray, C.
+Table 5. Spin-Gaps (kcal/mol) of HZD from Regularized
+UOOMP2 Methods Developed in This Worka
+MS κ-OOMP2 σ-OOMP2 κ-S-OOMP2 σ-S-OOMP2
+0 0.00 (1.211) 0.00 (1.145) 0.00 (1.238) 0.00 (1.173)
+1 1.95 (2.117) 1.62 (2.091) 2.07 (2.129) 1.74 (2.104)2 46.07 (6.115) 45.23 (6.091) 45.99 (6.126) 45.26 (6.104)
+aThe numbers in parentheses are the corresponding ⟨S2⟩values.Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195213
+
+
+--- PAGE 12 ---
+InTable 6 , the spin-projection coe ﬃcient αand the
+resulting spin-projected singlet −triplet gap are presented.
+Diﬀerent methods exhibit a di ﬀerent magnitude of αand
+ΔES−T, and the range of ΔES−Tis from 3.59 to 4.96 kcal/mol,
+which is roughly a 1.4 kcal/mol variation. We also note thatthere is a roughly 1 kcal/mol di ﬀerence between κ- and σ-
+regularizers in both unscaled and scaled variants. The scaledvariants have a 0.5 kcal/mol larger ΔE
+S−Tcompared to their
+corresponding unscaled variants. Regardless of which regular-
+ized OOMP2 we use, ΔES−Tis small enough that this molecule
+is undoubtedly a biradicaloid. The extent of biradicaloidcharacter can be inferred from the value of αinTable 6 .α=
+0.5 is the perfect biradical limit, and HZD shows α= 0.40−
+0.45. This suggests that the stability of HZD may be attributedto some closed-shell con ﬁguration contribution.
+Pentaarylbiimidazole Complex. Recently, Miyasaka and
+co-workers studied a photochromic radical dimer, pentaar-ylbiimidazole (PABI) by a means of ultrafast spectroscopy.
+64
+Without any external perturbations, PABI stays as its closedconformer shown in Figure 7 a. This stable conformation is
+closed-shell and does not exhibit any biradicaloid characters.Once a laser ﬁeld is applied, the closed conformation
+undergoes a transition to its excited state and a subsequentrelaxation back to the ground state surface. During thisdynamics, the C −N bond in the middle in Figure 7 a gets
+dissociated, which results in two possible conformers, open 1and open 2, depicted in Figure 7 b,c, respectively. These two
+conformers were computationally shown
+64to exhibit quite
+strong biradicaloid characters, which drew our attention.
+As understanding the dynamics in the system requires a
+reliable method for treating excited states and stronglycorrelated ground state, Miyasaka and co-workers applied
+extended multistate complete active space second-order
+perturbation theory (XMS-CASPT2).
+91Here we will compare
+AP-UOOMP2 ground state results against XMS-CASPT2 (4e,6o).
+All the geometries are obtained from ref 64, and we used
+def2-SVP
+92and the corresponding density- ﬁtting basis93for
+the study of this molecule. The frozen core approximation wasemployed.
+The closed conformation exhibits ⟨S
+2⟩0= 3.31 at the MS=0
+UHF level which is attributed to arti ﬁcial symmetry-breaking.
+To support this, we ran κ-S-OOMP2 and σ-S-OOMP2 with κ
+andσranging from 0.05 to 4.0. The scaling factors for each κ
+andσare the optimal values which yielded Figure 5 . The κ
+values greater than 0.2 and all values of σwere enough to
+restore the restricted spin-symmetry. This strongly suggeststhat the closed conformation is a closed-shell molecule with no
+strong correlation.
+The open 1 and open 2 conformations are heavily spin-
+contaminated at the M
+S= 0 UHF level as they have ⟨S2⟩0=
+4.41 and ⟨S2⟩0= 4.47, respectively. These two cases are
+particularly interesting because if the regularization strength is
+too weak, then it fully restores the spin-symmetry and yields aclosed-shell solution. κ-S-OOMP2 requires κless than 3.8 for
+open 1 and κless than 3.5 to observe spin-symmetry-breaking.
+Atκ= 1.5 (recommended value), each conformer has ⟨S
+2⟩=
+0.929 and ⟨S2⟩= 0.918, respectively. This supports the
+conclusion that both open 1 and open 2 are biradicaloids as
+pointed in ref 64. A similar result was found for σ-S-OOMP2
+as well.Table 6. Spin-Projected Single −Triplet Gap ES−T(kcal/
+mol) of HZD from Regularized AP-UOOMP2 Methodsa
+κ-OOMP2 σ-OOMP2 κ-S-OOMP2 σ-S-OOMP2
+α 0.428 0.452 0.418 0.442
+ΔES−T 4.55 3.59 4.96 3.95
+aαis the spin-projection coe ﬃcient used to obtain the projected
+energy in eq 61 .
+Figure 7. Molecular structures of PABI: (a) closed, (b) open 1, and (c) open 2. White, H; gray, C; blue, N.Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195214
+
+
+--- PAGE 13 ---
+InTable 7 , we present the ⟨S2⟩values of the MS= 0, 1 states
+of open 1 and open 2. Di ﬀerent ﬂavors of regularized OOMP2
+do not deviate signi ﬁcantly from each other. The MS= 1 states
+are all almost spin-pure whereas the MS= 0 states are spin-
+contaminated. As the ⟨S2⟩values of the MS= 0 states are close
+to 1.0, those states exhibit signi ﬁcant biradicaloid character.
+Therefore, these two systems are perfect candidates for theYamaguchi ’s AP scheme.
+Applying the AP scheme to spin-purify the spin-contami-
+nated M
+S= 0 energies of open 1 and open 2 leads to the
+various OOMP2 relative energies shown in Table 8 . The
+results in Table 8 show almost no quantitative di ﬀerences
+between di ﬀerent regularized OOMP2 methods. It is
+interesting that the system is quite insensitive to what ﬂavor
+of OOMP2 we use. Compared to XMS-CASPT2, the relativeenergies of regularized OOMP2 for open 1 and open 2 areroughly 5 kcal/mol higher. The relative energies between open1 and open 2 are reproduced by every regularized OOMP2presented: open 2 is about 1.5 kcal/mol higher than open 1.While the regularized OOMP2 methods agree with XMS-CASPT2 on a very small relative energy scale between open 1
+and open 2, they di ﬀer signi ﬁcantly from XMS-CASPT2 for
+the relative energy between closed and open conformations. Itis unclear whether this small active space XMS-CASPT2 is areliable method for this problem just as it is unclear thatregularized OOMP2 is quantitatively accurate. This is aninteresting system to further study using a recently developedcoupled-cluster method in our group that can handle a muchlarger active space.
+94
+In summary, we applied the regularized OOMP2 methods
+developed in this work to obtain relative energies of threeconformations of PABI. Two of the three conformations werefound to be strong biradicaloids which agree well with whatwas found with the XMS-CASPT2 study before. We also foundthat the di ﬀerent regularized OOMP2 methods do not di ﬀer
+signiﬁcantly from each other.
+■CONCLUSIONS
+Orbital-optimized second-order Møller −Plesset perturbation
+theory (OOMP2) is an inexpensive approach to obtain
+approximate Bru ̈ckner orbitals, and thereby cut the umbilical
+cord between MP2 and mean- ﬁeld Hartree −Fock (HF)
+orbitals. This has demonstrated bene ﬁts for radicals and
+systems where HF exhibits arti ﬁcial symmetry-breaking.11However, the limited MP2 correlation treatment can introduce
+artifacts of its own, because the MP2 correlation energy
+diverges as the HOMO −LUMO gap approaches zero. One
+striking example is that restricted and unrestricted orbital
+solutions are each local minima for molecules with stretched
+bond lengths in other words there is no Coulson −Fischer
+point49,50where the restricted orbital solution becomes
+unstable to spin-polarization! It has been previously recognized
+that some type of regularization is necessary to avoid such
+divergences. Simple level shifts have been explored36but are
+inadequate in general because the size of the level shift needed
+to ensure a Coulson −Fischer point in general is so large that
+the MP2 correlation e ﬀects are grossly attenuated.40
+In this work we have therefore developed and assessed two
+new regularization approaches, called κ-OOMP2 and σ-
+OOMP2, which both have the feature that the strength ofregularization is largest as the HOMO −LUMO gap
+approaches zero, and becomes zero as the gap becomes
+large. This way the total correlation energy is not greatly
+attenuated even with quite strong regularization. The
+regularization strength in each case is controlled by a singleparameter (i.e., κandσ) which has units of inverse energy so
+that small values correspond to strong regularization. Despite
+the greater complexity of these regularizers relative to a simple
+level shift, they can be quite e ﬃciently implemented in
+conjunction with orbital optimization, at a cost that is notsigniﬁcantly increased relative to unmodi ﬁed OOMP2. These
+models can be used with just the single parameter, or,
+alternatively, an additional parameter corresponding to scaling
+the total correlation energy (i.e., S-OOMP2) can be included
+as well.
+The main conclusions from the numerical tests and
+assessment of the regularizers are as follows:
+(1)Regularization . We assessed the performance of the new
+regularizers on single, double, and triple bond-breaking
+problems, to determine the weakest regularizers that can
+properly restore the Coulson −Fischer (CF) points across these
+systems. The conclusion is very encouraging: a regularization
+parameter of κ≤1.5E
+h−1is capable of correctly restoring the
+CF points on all of these systems. For κ=1 . 5 Eh−1
+regularization applied to the ethane, ethene, and ethyne series,
+the CF distance, rCF, is much shorter for the two latter systems
+as is appropriate for the physics of the method. The σ-
+regularization is clearly less satisfactory in this regard, asr
+CF(C2H2)> rCF(C2H4) for the smallest σ= 1.0 Eh−1value
+considered, and the lowest eigenvalue of the stability matrix
+does not always show monotonic behavior as a function of
+bond-stretching displacements.
+(2)Scaling . We examined the performance of OOMP2 with
+and without regularizers, as well as with and without scaling
+(S) of the total correlation energy on two data sets
+representing thermochemical energy di ﬀerences (W4-11) and
+radical stabilization energies (RSE43) and one data setTable 7. ⟨S2⟩Values of Regularized UOOMP2 Methods
+⟨S2⟩ κ-OOMP2 σ-OOMP2 κ-S-OOMP2 σ-S-OOMP2
+open 1 ( MS= 0) 0.918 0.897 0.929 0.911
+open 1 ( MS= 1) 2.026 2.023 2.030 2.026
+open 2 ( MS= 0) 0.906 0.880 0.918 0.896
+open 2 ( MS= 1) 2.027 2.023 2.031 2.027
+Table 8. Relative Energies (kcal/mol) of the Three Conformers of PABI from XMS-CASPT2 and Regularized AP-UOOMP2
+Methodsa
+XMS-CASPT2aκ-OOMP2 σ-OOMP2 κ-S-OOMP2 σ-S-OOMP2
+closed 0 0 0 0 0
+open 1 32.03 37.13 36.52 36.21 35.97open 2 33.57 38.79 38.11 37.78 37.50
+aThe XMS-CASPT2 numbers were taken from ref 64, and the active space used was (4e, 6o).Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195215
+
+
+--- PAGE 14 ---
+representing radical-closed-shell nonbonded interaction en-
+ergies (TA13). The TAE140 subset of the W4-11 set was used
+to train scaling factors. The results show that unregularized
+OOMP2 overemphasizes correlation e ﬀects, as the optimal-
+scaling factor is only 0.9. By contrast, choosing a physically
+appropriate κvalue of 1.45 Eh−1is appropriate for use without
+scaling, by reducing the tendency of orbital optimization to
+overcorrelate through smaller energy gaps. A slight improve-ment in numerical results can be obtained with a scaled κ-S-
+OOMP2 method, using κ= 1.5 E
+h−1and c= 0.955. Broadly
+similar conclusions hold for σ-regularization. The regularized
+OOMP2 methods perform slightly better than OOMP2 for the
+TA13 set, and slightly worse for the RSE43 set.
+(3)Chemical application to singlet biradicaloids . We applied
+these regularized OOMP2 methods to two experimentally
+relevant organic biradicaloids, the heptazethrene dimer (HZD)
+and the pentaarylbiimidazole complex (PABI). We emphasizethat unmodifed OOMP2 diverges for these systems and the
+regularization is necessary to obtain energies in a numerically
+stable way. We combined the regularized OOMP2 methods
+with Yamaguchi ’s approximate projection scheme to spin-
+purify M
+S= 0 energies of the biradicaloids. We found that all
+four regularized OOMP2 methods developed in this work
+perform equally well.
+(4) Recommendation . Given the documented failures of
+OOMP2 for bond-breaking without regularization, and itsrelated tendency to overcorrelate, it cannot be recommended
+for general chemical applications despite its formal advantages.
+Fortunately, the κ= 1.45 E
+h−1regularization introduced here
+appears to resolve all of these issues in a way that is as
+satisfactory as could be hoped for, given that MP2 itself is
+inherently incapable of solving strong correlation problems
+(i.e., spin-polarization should occur in such cases). Werecommend κ-OOMP2 as a more robust replacement for
+OOMP2. We believe that it may also be valuable as a way of
+realizing well behaved orbital-optimized double-hybrid density
+functionals37,41in the future.
+Beyond stabilizing the OOMP2 method, the new regular-
+izers introduced in this work may also have other interesting
+and potentially useful applications in electronic structure
+theory. For example, they can be applied to Møller −Plesset
+theory without orbital optimization. At the MP2 level this willalter the relative energies of RMP2 and UMP2 in a way that
+raises the RMP2 energy when energy gaps are small, possibly
+avoiding artifacts that occur in that regime. It may also be
+interesting to explore the e ﬀect on higher order correlation
+energies, such as MP3 or MP4, or the triples correction tomethods such as coupled-cluster theory with singles and
+doubles, CCSD(T). Orbital optimization can also be
+performed with coupled-cluster doubles (i.e., OO −CCD),
+95
+and for cases where electron correlation e ﬀects are strong,
+regularization may be also be useful to ensure the correct
+presence of Coulson −Fischer points. Likewise regularizers may
+be helpful to avoid nonvariational failures of coupled-clustertheory without orbital regularization. Of course, it is an open
+question whether the forms we have presented here are
+appropriate for these non-MP2 applications or not.
+■AUTHOR INFORMATION
+Corresponding Authors
+*(J.L.) E-mail: linusjoonho@gmail.com .
+*(M.H.-G.) E-mail: mhg@cchem.berkeley.edu .ORCID
+Joonho Lee: 0000-0002-9667-1081
+Martin Head-Gordon: 0000-0002-4309-6669
+Notes
+T h ea u t h o r sd e c l a r et h ef o l l o w i n gc o m p e t i n g ﬁnancial
+interest(s): M.H.-G. is a part owner of Q-Chem, Inc.
+■ACKNOWLEDGMENTS
+J.L. thanks Evgeny Epifanovsky for useful discussions on
+eﬃcient implementation, Narbe Mardirossian and Yuezhi Mao
+for useful suggestions and discussions on the regularization
+parameter training, David Stu ̈ck, Roberto Peverati, and Eloy
+Ramos for some previous attempts related to this work, and
+Soojin Lee for consistent encouragement and support. We are
+grateful to Luke Bertels for validating the MP2 data reported
+for the W4-11 and TA13 data sets. This work was supported
+by a subcontract from MURI Grant W911NF-14-1-0359.
+■REFERENCES
+(1) Feyereisen, M.; Fitzgerald, G.; Komornicki, A. Use of
+approximate integrals in ab initio theory. An application in MP2energy calculations. Chem. Phys. Lett. 1993 ,208, 359−363.
+(2) Bernholdt, D. E.; Harrison, R. J. Large-scale correlated electronic
+structure calculations: the RI-MP2 method on parallel computers.Chem. Phys. Lett. 1996 ,250, 477−484.
+(3) Jordan, K. D.; Wang, F. Theory of Dipole-Bound Anions. Annu.
+Rev. Phys. Chem. 2003 ,54, 367−396.
+(4) Morgan, J. D.; Simon, B. The calculation of molecular
+resonances by complex scaling. J. Phys. B: At. Mol. Phys. 1981 ,14,
+L167−L171.
+(5) Grimme, S. Improved second-order Møller-Plesset perturbation
+theory by separate scaling of parallel- and antiparallel-spin paircorrelation energies. J. Chem. Phys. 2003 ,118, 9095−9102.
+(6) Jung, Y.; Lochan, R. C.; Dutoi, A. D.; Head-Gordon, M. Scaled
+opposite-spin second order moller-plesset correlation energy: Aneconomical electronic structure method. J. Chem. Phys. 2004 ,121,
+9793−9802.
+(7) Grimme, S. Accurate Calculation of the Heats of Formation for
+Large Main Group Compounds with Spin-Component ScaledMP2Methods. J. Phys. Chem. A 2005 ,109, 3067−3077.
+(8) Lochan, R. C.; Jung, Y.; Head-Gordon, M. Scaled opposite spin
+second order Møller-Plesset t heory with improved physical
+description of long-range dispersion interactions. J. Phys. Chem. A
+2005 ,109, 7598−7605.
+(9) Distasio, R. A., Jr.; Head-Gordon, M. Optimized spin-
+component scaled second-order Møller-Plesset perturbation theoryfor intermolecular interaction energies. Mol. Phys. 2007 ,105, 1073−
+1083.
+(10) Lochan, R. C.; Shao, Y.; Head-Gordon, M. Quartic-Scaling
+Analytical Energy Gradient of Scaled Opposite-Spin Second-OrderMøller-Plesset Perturbation Theory. J. Chem. Theory Comput. 2007 ,3,
+988−1003.
+(11) Lochan, R. C.; Head-Gordon, M. Orbital-optimized opposite-
+spin scaled second-order correlation: an economical method toimprove the description of open-shell molecules. J. Chem. Phys. 2007 ,
+126, 164101.
+(12) Neese, F.; Schwabe, T.; Kossmann, S.; Schirmer, B.; Grimme, S.
+Assessment of Orbital-Optimized, Spin-Component Scaled Second-
+Order Many-Body Perturbation Theory for Thermochemistry and
+Kinetics. J. Chem. Theory Comput. 2009 ,5, 3060−73.
+(13) Bozkaya, U.; Turney, J. M.; Yamaguchi, Y.; Schaefer, H. F.;
+Sherrill, C. D. Quadratically convergent algorithm for orbitaloptimization in the orbital-optimized coupled-cluster doubles methodand in orbital-optimized second-order Møller-Plesset perturbationtheory. J. Chem. Phys. 2011 ,135, 104103.Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195216
+
+
+--- PAGE 15 ---
+(14) Grimme, S. Semiempirical hybrid density functional with
+perturbative second-order correlation. J. Chem. Phys. 2006 ,124,
+034108.
+(15) Chai, J.-D.; Head-Gordon, M. Long-range corrected double-
+hybrid density functionals. J. Chem. Phys. 2009 ,131, 174105.
+(16) Kozuch, S.; Martin, J. M. L. DSD-PBEP86: in search of the best
+double-hybrid DFT with spin-component scaled MP2 and dispersion
+corrections. Phys. Chem. Chem. Phys. 2011 ,13, 20104.
+(17) Mardirossian, N.; Head-Gordon, M. Survival of the most
+transferable at the top of Jacob ’s ladder: Defining and testing the
+ømegaB97M(2) double hybrid density functional. J. Chem. Phys.
+2018 ,148, 241736.
+(18) Goldey, M.; Head-Gordon, M. Attenuating Away the Errors in
+Inter- and Intramolecular Interactions from Second-Order Møller-
+Plesset Calculations in the Small Aug-cc-pVDZ Basis Set. J. Phys.
+Chem. Lett. 2012 ,3, 3592−3598.
+(19) Goldey, M.; Dutoi, A.; Head-Gordon, M. Attenuated second-
+order Møller-Plesset perturbation theory: performance within the aug-
+cc-pVTZ basis. Phys. Chem. Chem. Phys. 2013 ,15, 15869.
+(20) Goldey, M. B.; Head-Gordon, M. Convergence of attenuated
+second order Møller-Plesset per turbation theor yt o w a r d st h e
+complete basis set limit. Chem. Phys. Lett. 2014 ,608, 249−254.
+(21) Goldey, M. B.; Belzunces, B.; Head-Gordon, M. Attenuated
+MP2 with a Long-Range Dispersion Correction for Treating
+Nonbonded Interactions. J. Chem. Theory Comput. 2015 ,11, 4159−
+4168.
+(22) Davidson, E. R.; Borden, W. T. Symmetry breaking in
+polyatomic molecules: real and artifactual. J. Phys. Chem. 1983 ,87,
+4783−4790.
+(23) Paldus, J.; Thiamova ́, G. Approximate symmetry-breaking in
+the independent particle model of monocyclic completely conjugated
+polyenes. J. Math. Chem. 2008 ,44,8 8−120.
+(24) Farnell, L.; Pople, J. A.; Radom, L. Structural predictions for
+open-shell systems: a comparative assessment of ab initio procedures.
+J. Phys. Chem. 1983 ,87,7 9−82.
+(25) Nobes, R. H.; Pople, J. A.; Radom, L.; Handy, N. C.; Knowles,
+P. J. Slow convergence of the møller-plesset perturbation series: the
+dissociation energy of hydrogen cyanide and the electron affinity of
+the cyano radical. Chem. Phys. Lett. 1987 ,138, 481−485.
+(26) Gill, P. M. W.; Pople, J. A.; Radom, L.; Nobes, R. H. Why does
+unrestricted Møller-Plesset perturbation theory converge so slowly for
+spin-contaminated wave functions? J. Chem. Phys. 1988 ,89, 7307−
+7314.
+(27) Jensen, F. A remarkable large effect of spin contamination on
+calculated vibrational frequencies. Chem. Phys. Lett. 1990 ,169, 519−
+528.
+(28) Dykstra, C. E. An examination of the Brueckner condition for
+the selection of molecular orbitals in correlated wavefunctions. Chem.
+Phys. Lett. 1977 ,45, 466−469.
+(29) Handy, N. C.; Pople, J. A.; Head-Gordon, M.; Raghavachari,
+K.; Trucks, G. W. Size-consistent Brueckner theory limited to double
+substitutions. Chem. Phys. Lett. 1989 ,164, 185−192.
+(30) Soydas ̧, E.; Bozkaya, U. Assessment of Orbital-Optimized
+MP2.5 for Thermochemistry and Kinetics: Dramatic Failures of
+Standard Perturbation Theory Approaches for Aromatic Bond
+Dissociation Energies and Barrier Heights of Radical Reactions. J.
+Chem. Theory Comput. 2015 ,11, 1564−1573.
+(31) Kurlancheek, W.; Head-Gordon, M. Violations of N-
+representability from spin-unrestricted orbitals in Møller-Plessetperturbation theory and related double-hybrid density functionaltheory. Mol. Phys. 2009 ,107, 1223−1232.
+(32) Stu ̈ck, D.; Baker, T. A.; Zimmerman, P.; Kurlancheek, W.;
+Head-Gordon, M. On the nature of electron correlation in C60. J.
+Chem. Phys. 2011 ,135, 194306.
+(33) Kurlancheek, W.; Lochan, R.; Lawler, K.; Head-Gordon, M.
+Exploring the competition between localization and delocalization ofthe neutral soliton defect in polyenyl chains with the orbital optimized
+second order opposite spin method. J. Chem. Phys. 2012 ,136, 054113.(34) Soydas ̧, E.; Bozkaya, U. Assessment of Orbital-Optimized
+Third-Order Møller-Plesset Perturbation Theory and Its Spin-Component and Spin-Opposite Scaled Variants for Thermochemistry
+and Kinetics. J. Chem. Theory Comput.
+2013 ,9, 1452−1460.
+(35) Bozkaya, U.; Sherrill, C. D. Orbital-optimized coupled-electron
+pair theory and its analytic gradients: Accurate equilibrium geo-metries, harmonic vibrational frequencies, and hydrogen transfer
+reactions. J. Chem. Phys. 2013 ,139, 054104.
+(36) Stu ̈ck, D.; Head-Gordon, M. Regularized orbital-optimized
+second-order perturbation theory. J. Chem. Phys. 2013 ,139, 244109.
+(37) Peverati, R.; Head-Gordon, M. Orbital optimized double-
+hybrid density functionals. J. Chem. Phys. 2013 ,139, 024110.
+(38) Sancho-García, J. C.; Pe ́rez-Jime ́nez, A. J.; Savarese, M.;
+Brémond, E.; Adamo, C. Importance of Orbital Optimization for
+Double-Hybrid Density Functionals: Application of the OO-PBE-
+QIDH Model for Closed- and Open-Shell Systems. J. Phys. Chem. A
+2016 ,120, 1756−1762.
+(39) Bozkaya, U. Orbital-optimized linearized coupled-cluster
+doubles with density-fitting and Cholesky decomposition approx-
+imations: an efficient implementation. Phys. Chem. Chem. Phys. 2016 ,
+18, 11362 −11373.
+(40) Razban, R. M.; Stu ̈ck, D.; Head-Gordon, M. Addressing first
+derivative discontinuities in orbital-optimized opposite-spin scaled
+second-order perturbation theory with regularisation. Mol. Phys. 2017 ,
+115, 2102−2109.
+(41) Najibi, A.; Goerigk, L. A Comprehensive Assessment of the
+Effectiveness of Orbital Optimization in Double-Hybrid Density
+Functionals in the Treatment of Thermochemistry, Kinetics, and
+Noncovalent Interactions. J. Phys. Chem. A 2018 ,122, 5610−5624.
+(42) Bozkaya, U. Orbital-optimized third-order Møller-Plesset
+perturbation theory and its spin-component and spin-opposite scaled
+variants: Application to symmetry breaking problems. J. Chem. Phys.
+2011 ,135, 224103.
+(43) Bozkaya, U.; Sherrill, C. D. Orbital-optimized MP2.5 and its
+analytic gradients: Approaching CCSD(T) quality for noncovalent
+interactions. J. Chem. Phys. 2014 ,141, 204105.
+(44) Bozkaya, U. Orbital-Optimized MP3 and MP2.5 with Density-
+Fitting and Cholesky Decomposition Approximations. J. Chem. Theory
+Comput. 2016
+,12, 1179−1188.
+(45) Bozkaya, U.; Sherrill, C. D. Analytic energy gradients for the
+orbital-optimized second-order Møller-Plesset perturbation theory. J.
+Chem. Phys. 2013 ,138, 184103.
+(46) Bozkaya, U. Analytic Energy Gradients and Spin Multiplicities
+for Orbital-Optimized Second-Order Perturbation Theory withDensity-Fitting Approximation: An Efficient Implementation. J.
+Chem. Theory Comput. 2014 ,10, 4389−4399.
+(47) Bozkaya, U. Orbital-Optimized Second-Order Perturbation
+Theory with Density-Fitting and Cholesky Decomposition Approx-imations: An Efficient Implementation. J. Chem. Theory Comput.
+2014 ,10, 2371−2378.
+(48) Bach, V.; Lieb, E. H.; Loss, M.; Solovej, J. P. There are no
+unfilled shells in unrestricted Hartree-Fock theory. Phys. Rev. Lett.
+1994 ,72, 2981−2983.
+(49) Sharada, S. M.; Stu ̈ck, D.; Sundstrom, E. J.; Bell, A. T.; Head-
+G o r d o n ,M .W a v e f u n c t i o ns t a b i l i ty analysis without analytical
+electronic Hessians: application to orbital-optimized second-order
+Møller-Plesset theory and VV10-containing density functionals. Mol.
+Phys. 2015 ,113, 1802−1808.
+(50) Coulson, C.; Fischer, I. XXXIV. Notes on the molecular orbital
+treatment of the hydrogen molecule. Philos. Mag. 1949 ,40, 386−393.
+(51) Roos, B. O.; Andersson, K. Multiconfigurational perturbation
+theory with level shift - the Cr2 potential revisited. Chem. Phys. Lett.
+1995 ,245, 215−223.
+(52) Ohnishi, Y.-y.; Ishimura, K.; Ten-no, S. Interaction Energy of
+Large Molecules from Restrained Denominator MP2-F12. J. Chem.
+Theory Comput. 2014 ,10, 4857−4861.
+(53) Evangelista, F. A. A driven similarity renormalization group
+approach to quantum many-body problems. J. Chem. Phys. 2014 ,141,
+054109.Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195217
+
+
+--- PAGE 16 ---
+(54) Eshuis, H.; Yarkony, J.; Furche, F. Fast computation of
+molecular random phase approximation correlation energies usingresolution of the identity and imaginary frequency integration. J.
+Chem. Phys. 2010 ,132, 234114.
+(55) Assfeld, X.; Almlo ̈f, J. E.; Truhlar, D. G. Degeneracy-corrected
+perturbation theory for electronic structure calculations. Chem. Phys.
+Lett. 1995 ,241, 438−444.
+(56) Lawler, K. V.; Parkhill, J. A.; Head-Gordon, M. Penalty
+functions for combining coupled-cluster and perturbation amplitudes
+in local correlation methods with optimized orbitals. Mol. Phys. 2008 ,
+106, 2309−2324.
+(57) Chen, G. P.; Voora, V. K.; Agee, M. M.; Balasubramani, S. G.;
+Furche, F. Random-Phase Approximation Methods. Annu. Rev. Phys.
+Chem. 2017 ,68, 421−445.
+(58) Bartlett, R. J.; Purvis, G. D. Many-body perturbation theory,
+coupled-pair many-electron theory, and the importance of quadrupleexcitations for the correlation problem. Int. J. Quantum Chem. 1978 ,
+14, 561−581.
+(59) Karton, A.; Daon, S.; Martin, J. M. W4 −11: A high-confidence
+benchmark dataset for computational thermochemistry derived fromfirst-principles W4 data. Chem. Phys. Lett. 2011 ,510, 165−178.
+(60) Goerigk, L.; Hansen, A.; Bauer, C.; Ehrlich, S.; Najibi, A.;
+Grimme, S. A look at the density functional theory zoo with the
+advanced GMTKN55 database for general main group thermochem-istry, kinetics and noncovalent interactions. Phys. Chem. Chem. Phys.
+2017 ,19, 32184 −32215.
+(61) Zipse, H. Radical Stability A Theoretical Perspective. In
+Radicals in Synthesis I ; Gansa ̈uer, I., Ed.; Springer: Berlin, Heidelberg,
+2006; pp 163 −189, DOI: 10.1007/128_028 .
+(62) Tentscher, P. R.; Arey, J. S. Binding in Radical-Solvent Binary
+Complexes: Benchmark Energies and Performance of Approximate
+Methods. J. Chem. Theory Comput. 2013 ,9, 1568−1579.
+(63) Hu, P.; Lee, S.; Herng, T. S.; Aratani, N.; Gonc ̧alves, T. P.; Qi,
+Q.; Shi, X.; Yamada, H.; Huang, K.-W.; Ding, J.; Kim, D.; Wu, J.Towards Tetraradicaloid: The Effect of Fusion Mode on Radical
+Character and Chemical Reactivity. J. Am. Chem. Soc. 2016 ,138
+,
+1065−1077.
+(64) Kobayashi, Y.; Okajima, H.; Sotome, H.; Yanai, T.; Mutoh, K.;
+Yoneda, Y.; Shigeta, Y.; Sakamoto, A.; Miyasaka, H.; Abe, J. Direct
+Observation of the Ultrafast Evolution of Open-Shell Biradical in
+Photochromic Radical Dimer. J. Am. Chem. Soc. 2017 ,139, 6382−
+6389.
+(65) Shavitt, I.; Bartlett, R. J. Many-Body Methods in Chemistry and
+Physics: MBPT and Coupled-Cluster Theory ; Cambridge University
+Press: Cambridge, U.K., 2009; p 67.
+(66) Hillier, I. H.; Saunders, V. R. A new SCF procedure and its
+applications toab initio calculations of the states of the fluorosulphate
+radical. Int. J. Quantum Chem. 1970 ,4, 503−518.
+(67) Hillier, I. H.; Saunders, V. R. Ab initio Molecular Orbital
+Calculations of the Ground and Excited States of the Permanganate
+and Chromate Ions. Proc. R. Soc. London, Ser. A 1970 ,320, 161−173.
+(68) Sorber, L.; Barel, M. V.; Lathauwer, L. D. Unconstrained
+Optimization of Real Functions in Complex Variables. SIAM J.
+Optimiz. 2012 ,22, 879−898.
+(69) Distasio, R. A.; Steele, R. P.; Rhee, Y. M.; Shao, Y.; Head-
+Gordon, M. An improved algorithm for analytical gradient evaluation
+in resolution-of-the-identity second-order Møller-Plesset perturbation
+theory: application to alanine tetrapeptide conformational analysis. J.
+Comput. Chem. 2007 ,28, 839−56.
+(70) Almlo ̈f, J. Elimination of energy denominators in Møller-Plesset
+perturbation theory by a Laplace transform approach. Chem. Phys.
+Lett. 1991 ,181, 319−320.
+(71) Ha ̈ser, M.; Almlo ̈f, J. Laplace transform techniques in Møller-
+Plesset perturbation theory. J. Chem. Phys. 1992 ,96, 489.
+(72) Ha ̈ser, M. Møller-Plesset (MP2) perturbation theory for large
+molecules. Theor. Chim. Acta 1993 ,87, 147−173.
+(73) Shao, Y.; Gan, Z.; Epifanovsky, E.; Gilbert, A. T.; Wormit, M.;
+Kussmann, J.; Lange, A. W.; Behn, A.; Deng, J.; Feng, X.; Ghosh, D.;Goldey, M.; Horn, P. R.; Jacobson, L. D.; Kaliman, I.; Khaliullin, R.Z.; Kus ́, T.; Landau, A.; Liu, J.; Proynov, E. I.; Rhee, Y. M.; Richard,
+R. M.; Rohrdanz, M. A.; Steele, R. P.; Sundstrom, E. J.; Woodcock, H.
+L.; Zimmerman, P. M.; Zuev, D.; Albrecht, B.; Alguire, E.; Austin, B.;
+Beran, G. J.; Bernard, Y. A.; Berquist, E.; Brandhorst, K.; Bravaya, K.
+B.; Brown, S. T.; Casanova, D.; Chang, C. M.; Chen, Y.; Chien, S. H.;
+Closser, K. D.; Crittenden, D. L.; Diedenhofen, M.; Distasio, R. A.;
+Do, H.; Dutoi, A. D.; Edgar, R. G.; Fatehi, S.; Fusti-Molnar, L.;Ghysels, A.; Golubeva-Zadorozhnaya, A.; Gomes, J.; Hanson-Heine,
+M. W.; Harbach, P. H.; Hauser, A. W.; Hohenstein, E. G.; Holden, Z.
+C.; Jagau, T. C.; Ji, H.; Kaduk, B.; Khistyaev, K.; Kim, J.; Kim, J.;King, R. A.; Klunzinger, P.; Kosenkov, D.; Kowalczyk, T.; Krauter, C.
+M.; Lao, K. U.; Laurent, A. D.; Lawler, K. V.; Levchenko, S. V.; Lin,
+C. Y.; Liu, F.; Livshits, E.; Lochan, R. C.; Luenser, A.; Manohar, P.;
+Manzer, S. F.; Mao, S. P.; Mardirossian, N.; Marenich, A. V.; Maurer,
+S. A.; Mayhall, N. J.; Neuscamman, E.; Oana, C. M.; Olivares-Amaya,R.; O'Neill, D. P.; Parkhill, J. A.; Perrine, T. M.; Peverati, R.; Prociuk,
+A.; Rehn, D. R.; Rosta, E.; Russ, N. J.; Sharada, S. M.; Sharma, S.;
+Small, D. W.; Sodt, A.; Stein, T.; Stu ̈ck, D.; Su, Y. C.; Thom, A. J.;
+Tsuchimochi, T.; Vanovschi, V.; Vogt, L.; Vydrov, O.; Wang, T.;
+Watson, M. A.; Wenzel, J.; White, A.; Williams, C. F.; Yang, J.;Yeganeh, S.; Yost, S. R.; You, Z. Q.; Zhang, I. Y.; Zhang, X.; Zhao, Y.;
+Brooks, B. R.; Chan, G. K.; Chipman, D. M.; Cramer, C. J.; Goddard,
+W. A.; Gordon, M. S.; Hehre, W. J.; Klamt, A.; Schaefer, H. F.;
+Schmidt, M. W.; Sherrill, C. D.; Truhlar, D. G.; Warshel, A.; Xu, X.;
+Aspuru-Guzik, A.; Baer, R.; Bell, A. T.; Besley, N. A.; Chai, J. D.;Dreuw, A.; Dunietz, B. D.; Furlani, T. R.; Gwaltney, S. R.; Hsu, C. P.;
+Jung, Y.; Kong, J.; Lambrecht, D. S.; Liang, W.; Ochsenfeld, C.;
+Rassolov, V. A.; Slipchenko, L. V.; Subotnik, J. E.; Van Voorhis, T.;Herbert, J. M.; Krylov, A. I.; Gill, P. M.; Head-Gordon, M. Advances
+in molecular quantum chemistry contained in the Q-Chem 4 program
+package. Mol. Phys. 2015 ,113, 184−215.
+(74) Dunning, T. H. Gaussian basis sets for use in correlated
+molecular calculations. I. The atoms boron through neon and
+hydrogen. J. Chem. Phys. 1989 ,90, 1007−1023.
+(75) Weigend, F.; Ko ̈hn, A.; Ha ̈ttig, C. Efficient use of the
+correlation consistent basis sets in resolution of the identity MP2
+calculations. J. Chem. Phys. 2002 ,116, 3175−3183.
+(76) Davidson, E. R. The iterative calculation of a few of the lowest
+eigenvalues and corresponding eigenvectors of large real-symmetricmatrices. J. Comput. Phys. 1975 ,17,8 7−94.
+(77) Van Voorhis, T.; Head-Gordon, M. A geometric approach to
+direct minimization. Mol. Phys. 2002 ,100, 1713−1721.
+(78) Helgaker, T.; Klopper, W.; Koch, H.; Noga, J. Basis-set
+convergence of correlated calculations on water. J. Chem. Phys. 1997 ,
+106, 9639−9646.
+(79) Mardirossian, N.; Head-Gordon, M. Thirty years of density
+functional theory in computational chemistry: an overview and
+extensive assessment of 200 density functionals. Mol. Phys. 2017 ,115,
+2315−2372.
+(80) Halkier, A.; Klopper, W.; Helgaker, T.; Jørgensen, P.; Taylor, P.
+R. Basis set convergence of the interaction energy of hydrogen-
+bonded complexes. J. Chem. Phys. 1999 ,
+111, 9157−9167.
+(81) Jung, Y.; Head-Gordon, M. How Diradicaloid Is a Stable
+Diradical? ChemPhysChem 2003 ,4, 522−525.
+(82) Abe, M. Diradicals. Chem. Rev. 2013 ,113, 7011−7088.
+(83) Yamaguchi, K.; Jensen, F.; Dorigo, A.; Houk, K. A spin
+correction procedure for unrestricted Hartree-Fock and Møller-
+Plesset wavefunctions for singlet diradicals and polyradicals. Chem.
+Phys. Lett. 1988 ,149, 537−542.
+(84) Yamaguchi, K.; Takahara, Y.; Fueno, T.; Houk, K. N. Extended
+Hartree-Fock (EHF) theory of chemical reactions. Theor. Chim. Acta
+1988 ,73, 337−364.
+(85) Coulaud, E.; Guihe ́ry, N.; Malrieu, J.-P.; Hagebaum-Reignier,
+D.; Siri, D.; Ferre ́, N. Analysis of the physical contributions to
+magnetic couplings in broken symmetry density functional theory
+approach. J. Chem. Phys. 2012 ,137, 114106.
+(86) Coulaud, E.; Malrieu, J.-P.; Guihe ́ry, N.; Ferre ́, N. Additive
+Decomposition of the Physical Components of the MagneticJournal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195218
+
+
+--- PAGE 17 ---
+Coupling from Broken Symmetry Density Functional Theory
+Calculations. J. Chem. Theory Comput. 2013 ,9, 3429−3436.
+(87) Ferre ́, N.; Guihe ́ry, N.; Malrieu, J.-P. Spin decontamination of
+broken-symmetry density functional theory calculations: deeper
+insight and new formulations. Phys. Chem. Chem. Phys. 2015 ,17,
+14375−14382.
+(88) Lawler, K. V.; Small, D. W.; Head-Gordon, M. Orbitals That
+Are Unrestricted in Active Pairs for Generalized Valence Bond
+Coupled Cluster Methods. J. Phys. Chem. A 2010 ,114, 2930−2938.
+(89) Hu, P.; Wu, J. Modern zethrene chemistry. Can. J. Chem. 2017 ,
+95, 223−233.
+(90) Yanai, T.; Tew, D. P.; Handy, N. C. A new hybrid exchange-
+correlation functional using the Coulomb-attenuating method (CAM-B3LYP). Chem. Phys. Lett. 2004 ,393,5 1−57.
+(91) Shiozaki, T.; Gyo ̈rffy, W.; Celani, P.; Werner, H.-J.
+Communication: Extended multi-state complete active space
+second-order perturbation theory: Energy and nuclear gradients. J.
+Chem. Phys. 2011 ,135, 081106.
+(92) Weigend, F.; Ahlrichs, R. Balanced basis sets of split valence,
+triple zeta valence and quadruple zeta valence quality for H to Rn:
+Design and assessment of accuracy. Phys. Chem. Chem. Phys. 2005 ,7,
+3297.
+(93) Ha ̈ttig, C. Optimization of auxiliary basis sets for RI-MP2 and
+RI-CC2 calculations: Core-valence and quintuple- ζbasis sets for H to
+Ar and QZVPP basis sets for Li to Kr. Phys. Chem. Chem. Phys. 2005 ,
+7,5 9−66.
+(94) Lee, J.; Small, D. W.; Epifanovsky, E.; Head-Gordon, M.
+Coupled-Cluster Valence-Bond Singles and Doubles for StronglyCorrelated Systems: Block-Tensor Based Implementation and
+Application to Oligoacenes. J. Chem. Theory Comput. 2017 ,13,
+602−615.
+(95) Krylov, A. I.; Sherrill, C. D.; Byrd, E. F. C.; Head-Gordon, M.
+Size-consistent wave functions for nondynamical correlation energy:The valence active space optimized orbital coupled-cluster doubles
+model. J. Chem. Phys. 1998
+,109, 10669 −10678.Journal of Chemical Theory and Computation Article
+DOI: 10.1021/acs.jctc.8b00731
+J. Chem. Theory Comput. 2018, 14, 5203 −52195219
+
