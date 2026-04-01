@@ -1,0 +1,35 @@
+
+Running VQE with OVOS optimization for H2O w. bond length 1.35 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule H2O with basis 6-31G and bond length 1.35 Angstrom.
+Number of electrons: 10, Number of orbitals: 13
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 6 active virtual orbitals (out of 8 total virtual orbitals).
+
+Optimization finished. Final MP2 energy = -76.0033045094614 Hartree. (ΔE_corr = -0.16481372161155475 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+OVOS optimized energy = -82.376297 Hartree @ iterations 200.
+
+Calculating UHF reference for comparison...
+UHF energy = -82.37103 Hartree @ iterations 147.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 13, Active orbitals: 11 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 2 orbitals (indices [11, 12]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -75.838491 Hartree
+UMP2 energy (original): -75.962917 Hartree, correlation: -0.124426 Hartree
+UMP2 energy (natural orbitals): -75.962917 Hartree, correlation: -0.124426 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+UHF natural orbital energy = -82.37103 Hartree @ iterations 151.
+
+Summary of results:
+Molecule: O 0.0000 0.0000 0.1173; H 0.0000 1.0673 -0.7094; H 0.0000 -1.0673 -0.7094 with basis set 6-31G for a total of 10 electrons and 13 orbitals.
+OVOS correlation energy: -76.003305 Hartree (Active unocc. orbitals: 6)
+OVOS energy: -82.376297 Hartree  @ iterations 200 (Eval. func. 211, grad. 211
+UHF energy: -82.371030 Hartree  @ iterations 147 (Eval. func. 159, grad. 159
+UMP2 natural orbital energy: -82.371030 Hartree  @ iterations 151 (Eval. func. 165, grad. 165
+✓ Completed. Output saved to backup/data/H2O/6-31G/VQE/dist/1.35/OVOS_H2O_1.35_6-31G_VQE_opt_num_0.75_False_13_output.txt

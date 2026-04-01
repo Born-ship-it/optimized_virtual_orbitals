@@ -1,0 +1,14 @@
+README.md
+pyproject.toml
+optimized_virtual_orbitals.egg-info/PKG-INFO
+optimized_virtual_orbitals.egg-info/SOURCES.txt
+optimized_virtual_orbitals.egg-info/dependency_links.txt
+optimized_virtual_orbitals.egg-info/requires.txt
+optimized_virtual_orbitals.egg-info/top_level.txt
+ovos/__init__.py
+ovos/covo.py
+ovos/ovos.py
+ovos/ovos_vqe_uups.py
+test/test_ovos_random.py
+test/test_ovos_rhf.py
+test/test_ovos_uhf.py

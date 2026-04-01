@@ -1,0 +1,35 @@
+
+Running VQE with OVOS optimization for H2O w. bond length 0.8251 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule H2O with basis 6-31G and bond length 0.8251 Angstrom.
+Number of electrons: 10, Number of orbitals: 13
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 6 active virtual orbitals (out of 8 total virtual orbitals).
+
+Optimization finished. Final MP2 energy = -76.0527878700302 Hartree. (ΔE_corr = -0.11556210600315342 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+OVOS optimized energy = -86.60832 Hartree @ iterations 81.
+
+Calculating UHF reference for comparison...
+UHF energy = -86.605335 Hartree @ iterations 99.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 13, Active orbitals: 11 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 2 orbitals (indices [11, 12]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -75.937226 Hartree
+UMP2 energy (original): -76.001865 Hartree, correlation: -0.064639 Hartree
+UMP2 energy (natural orbitals): -76.001865 Hartree, correlation: -0.064639 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+UHF natural orbital energy = -86.605335 Hartree @ iterations 96.
+
+Summary of results:
+Molecule: O 0.0000 0.0000 0.1173; H 0.0000 0.6523 -0.3879; H 0.0000 -0.6523 -0.3879 with basis set 6-31G for a total of 10 electrons and 13 orbitals.
+OVOS correlation energy: -76.052788 Hartree (Active unocc. orbitals: 6)
+OVOS energy: -86.608320 Hartree  @ iterations 81 (Eval. func. 85, grad. 85
+UHF energy: -86.605335 Hartree  @ iterations 99 (Eval. func. 110, grad. 110
+UMP2 natural orbital energy: -86.605335 Hartree  @ iterations 96 (Eval. func. 108, grad. 108
+✓ Completed. Output saved to backup/data/H2O/6-31G/VQE/dist/0.8251/OVOS_H2O_0.8251_6-31G_VQE_opt_num_0.75_False_14_output.txt

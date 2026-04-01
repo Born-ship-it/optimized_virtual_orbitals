@@ -1,0 +1,35 @@
+
+Running VQE with OVOS optimization for H2O w. bond length 0.7 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule H2O with basis 6-31G and bond length 0.7 Angstrom.
+Number of electrons: 10, Number of orbitals: 13
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 6 active virtual orbitals (out of 8 total virtual orbitals).
+
+Optimization finished. Final MP2 energy = -75.83205387465611 Hartree. (ΔE_corr = -0.10431644148028517 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+OVOS optimized energy = -88.303283 Hartree @ iterations 164.
+
+Calculating UHF reference for comparison...
+UHF energy = -88.301066 Hartree @ iterations 105.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 13, Active orbitals: 11 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 2 orbitals (indices [11, 12]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -75.727737 Hartree
+UMP2 energy (original): -75.794274 Hartree, correlation: -0.066536 Hartree
+UMP2 energy (natural orbitals): -75.794274 Hartree, correlation: -0.066536 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+UHF natural orbital energy = -88.300896 Hartree @ iterations 10.
+
+Summary of results:
+Molecule: O 0.0000 0.0000 0.1173; H 0.0000 0.5534 -0.3114; H 0.0000 -0.5534 -0.3114 with basis set 6-31G for a total of 10 electrons and 13 orbitals.
+OVOS correlation energy: -75.832054 Hartree (Active unocc. orbitals: 6)
+OVOS energy: -88.303283 Hartree  @ iterations 164 (Eval. func. 191, grad. 191
+UHF energy: -88.301066 Hartree  @ iterations 105 (Eval. func. 110, grad. 110
+UMP2 natural orbital energy: -88.300896 Hartree  @ iterations 10 (Eval. func. 13, grad. 13
+✓ Completed. Output saved to backup/data/H2O/6-31G/VQE/dist/0.7/OVOS_H2O_0.7_6-31G_VQE_opt_num_0.75_False_123_output.txt

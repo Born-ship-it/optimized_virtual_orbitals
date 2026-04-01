@@ -605,10 +605,11 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
                         marker=marker[method],
                         label=f"{method_labels[method]} (25% virt. orbs) Points")
 
-    plt.xlim(0.7, 2)
-    plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
+    plt.xlim(0.7, 2.0)
+    plt.ylim(-76,-75.6)
+    # plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
     plt.xticks(np.arange(0.7, 2.1, 0.2))
-    plt.yticks(np.arange(-100.0, -99.8, 0.05))
+    # plt.yticks(np.arange(-100.0, -99.8, 0.05))
     plt.xlabel("Interatomic Distance (Angstrom)", fontsize=12)
     plt.ylabel("Energy (Hartree)", fontsize=12)
     plt.title(f"Zoomed Potential Energy Surface for {molecule} ({basis})", fontsize=14)
@@ -626,14 +627,13 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     
 
 if True:
-    # Run HF 6-31G VQE results file generation
-    molecule = "HF"
+    molecule = "H2O"
     basis = "6-31G"
     method = "OVOS" # Placeholder for getting dist and seed list
 
         # Get dist list from the folder
     # dist_list = gather_dist_lst(molecule, basis, method)
-    dist_list = np.arange(0.7, 2.025, 0.025).round(5).tolist()
+    dist_list = [0.4789]
         # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
     num_opt_virtual_orbitals = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0])
             # Set dist list with negatives floats first and then positive floats, and sorted by absolute value

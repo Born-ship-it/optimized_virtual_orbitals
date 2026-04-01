@@ -1,0 +1,35 @@
+
+Running VQE with OVOS optimization for H2O w. bond length 1.0251 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule H2O with basis 6-31G and bond length 1.0251 Angstrom.
+Number of electrons: 10, Number of orbitals: 13
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 6 active virtual orbitals (out of 8 total virtual orbitals).
+
+Optimization finished. Final MP2 energy = -76.10848500908857 Hartree. (ΔE_corr = -0.13319759015869878 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+OVOS optimized energy = -84.568455 Hartree @ iterations 277.
+
+Calculating UHF reference for comparison...
+UHF energy = -84.563458 Hartree @ iterations 282.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 13, Active orbitals: 11 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 2 orbitals (indices [11, 12]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -75.975287 Hartree
+UMP2 energy (original): -76.063779 Hartree, correlation: -0.088491 Hartree
+UMP2 energy (natural orbitals): -76.063779 Hartree, correlation: -0.088491 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+UHF natural orbital energy = -84.563458 Hartree @ iterations 359.
+
+Summary of results:
+Molecule: O 0.0000 0.0000 0.1173; H 0.0000 0.8104 -0.5104; H 0.0000 -0.8104 -0.5104 with basis set 6-31G for a total of 10 electrons and 13 orbitals.
+OVOS correlation energy: -76.108485 Hartree (Active unocc. orbitals: 6)
+OVOS energy: -84.568455 Hartree  @ iterations 277 (Eval. func. 319, grad. 319
+UHF energy: -84.563458 Hartree  @ iterations 282 (Eval. func. 312, grad. 312
+UMP2 natural orbital energy: -84.563458 Hartree  @ iterations 359 (Eval. func. 402, grad. 402
+✓ Completed. Output saved to backup/data/H2O/6-31G/VQE/dist/1.0251/OVOS_H2O_1.0251_6-31G_VQE_opt_num_0.75_False_14_output.txt

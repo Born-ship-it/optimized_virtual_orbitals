@@ -19,6 +19,7 @@ branch/
 *.lock
 *.log
 *.tmp
+*.json
 *.toml
 
 # Large PDF files

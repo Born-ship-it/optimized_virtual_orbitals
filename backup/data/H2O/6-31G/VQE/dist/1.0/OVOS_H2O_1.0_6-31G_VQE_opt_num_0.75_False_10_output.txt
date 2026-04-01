@@ -1,0 +1,35 @@
+
+Running VQE with OVOS optimization for H2O w. bond length 1.0 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule H2O with basis 6-31G and bond length 1.0 Angstrom.
+Number of electrons: 10, Number of orbitals: 13
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 6 active virtual orbitals (out of 8 total virtual orbitals).
+
+Optimization finished. Final MP2 energy = -76.11113148227147 Hartree. (ΔE_corr = -0.13098625227219912 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+OVOS optimized energy = -84.787684 Hartree @ iterations 224.
+
+Calculating UHF reference for comparison...
+UHF energy = -84.78283 Hartree @ iterations 121.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 13, Active orbitals: 11 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 2 orbitals (indices [11, 12]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -75.980145 Hartree
+UMP2 energy (original): -76.065421 Hartree, correlation: -0.085275 Hartree
+UMP2 energy (natural orbitals): -76.065421 Hartree, correlation: -0.085275 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+UHF natural orbital energy = -84.78283 Hartree @ iterations 125.
+
+Summary of results:
+Molecule: O 0.0000 0.0000 0.1173; H 0.0000 0.7906 -0.4951; H 0.0000 -0.7906 -0.4951 with basis set 6-31G for a total of 10 electrons and 13 orbitals.
+OVOS correlation energy: -76.111131 Hartree (Active unocc. orbitals: 6)
+OVOS energy: -84.787684 Hartree  @ iterations 224 (Eval. func. 242, grad. 242
+UHF energy: -84.782830 Hartree  @ iterations 121 (Eval. func. 126, grad. 126
+UMP2 natural orbital energy: -84.782830 Hartree  @ iterations 125 (Eval. func. 128, grad. 128
+✓ Completed. Output saved to backup/data/H2O/6-31G/VQE/dist/1.0/OVOS_H2O_1.0_6-31G_VQE_opt_num_0.75_False_10_output.txt

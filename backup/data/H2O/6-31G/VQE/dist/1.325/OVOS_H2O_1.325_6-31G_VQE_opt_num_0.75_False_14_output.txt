@@ -1,0 +1,35 @@
+
+Running VQE with OVOS optimization for H2O w. bond length 1.325 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule H2O with basis 6-31G and bond length 1.325 Angstrom.
+Number of electrons: 10, Number of orbitals: 13
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 6 active virtual orbitals (out of 8 total virtual orbitals).
+
+Optimization finished. Final MP2 energy = -76.01286017018359 Hartree. (ΔE_corr = -0.16208308628520787 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+OVOS optimized energy = -82.510432 Hartree @ iterations 193.
+
+Calculating UHF reference for comparison...
+UHF energy = -82.505046 Hartree @ iterations 194.
+
+Calculating UMP2 natural orbitals for comparison...
+Total number of orbitals: 13, Active orbitals: 11 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
+Freezing 2 orbitals (indices [11, 12]) for UMP2 natural orbital calculation.
+UMP2 natural orbitals are unrestricted (UHF-like).
+UHF energy: -75.850777 Hartree
+UMP2 energy (original): -75.972661 Hartree, correlation: -0.121884 Hartree
+UMP2 energy (natural orbitals): -75.972661 Hartree, correlation: -0.121884 Hartree
+Correlation energy difference: 0.000000 Hartree
+
+UHF natural orbital energy = -82.505046 Hartree @ iterations 220.
+
+Summary of results:
+Molecule: O 0.0000 0.0000 0.1173; H 0.0000 1.0475 -0.6941; H 0.0000 -1.0475 -0.6941 with basis set 6-31G for a total of 10 electrons and 13 orbitals.
+OVOS correlation energy: -76.012860 Hartree (Active unocc. orbitals: 6)
+OVOS energy: -82.510432 Hartree  @ iterations 193 (Eval. func. 213, grad. 213
+UHF energy: -82.505046 Hartree  @ iterations 194 (Eval. func. 209, grad. 209
+UMP2 natural orbital energy: -82.505046 Hartree  @ iterations 220 (Eval. func. 233, grad. 233
+✓ Completed. Output saved to backup/data/H2O/6-31G/VQE/dist/1.325/OVOS_H2O_1.325_6-31G_VQE_opt_num_0.75_False_14_output.txt
