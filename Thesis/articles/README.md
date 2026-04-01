@@ -6,6 +6,14 @@ This folder contains the key reading material for the thesis on
 
 Each entry lists: filename → BibTeX key → description and relevance.
 
+### Subfolder Structure
+
+📂 **`chapters_and_findings/`** — Detailed chapter breakdowns and key findings for each paper
+- Contains individual `.md` files for each PDF
+- Use these files to document chapters, key findings, and relevant sections
+- Each file has sections for chapters, main contributions, relevance to thesis, and annotations
+- Update these files as you read each paper to maintain comprehensive reference notes
+
 ---
 
 ## Primary OVOS Papers
@@ -19,6 +27,8 @@ Each entry lists: filename → BibTeX key → description and relevance.
 orbital optimisation, gradient and Hessian expressions. Numerical results for CH₂, C₆H₆,
 B₂H₆ and H₂O₂. Must-read and central citation throughout the thesis.
 
+**📝 Detailed Notes:** [chapters_and_findings/Adamowicz1987_OVOS.md](chapters_and_findings/Adamowicz1987_OVOS.md)
+
 ---
 
 ### `Optimized virtual orbitals for correlated calculations.pdf`
@@ -29,6 +39,8 @@ calculations of molecular dipole moments and polarizabilities"
 → Extension of OVOS to CCSD(T) property calculations (dipole moments, polarisabilities).
 Shows OVOS performs well with ~50% virtual space reduction. Relevant to background,
 theory (OVOS beyond MP2), and outlook (CCSD(T) extension).
+
+**📝 Detailed Notes:** [chapters_and_findings/Pitonak2009_CCSD_T.md](chapters_and_findings/Pitonak2009_CCSD_T.md)
 
 ---
 
@@ -41,6 +53,8 @@ and Physics* (2011).
 → Comprehensive review of using OVOS with high-level CC methods on large molecules.
 Useful for Background §CC methods and Outlook §OVOS beyond MP2.
 
+**📝 Detailed Notes:** [chapters_and_findings/Neogrady2011_CC_OVOS.md](chapters_and_findings/Neogrady2011_CC_OVOS.md)
+
 ---
 
 ### `Cost reduction of high-order coupled-cluster methods via active-space and orbital transformation techniques.pdf`
@@ -52,6 +66,8 @@ transformation techniques"
 → Discusses active-space truncation and orbital transformation for CCSDT and CCSDT(Q).
 Provides broader context for virtual space reduction beyond MP2. Relevant to Background
 §orbital space methods and Outlook §CCSD(T) scaling.
+
+**📝 Detailed Notes:** [chapters_and_findings/Rolik2011_Cost_Reduction.md](chapters_and_findings/Rolik2011_Cost_Reduction.md)
 
 ---
 
@@ -71,6 +87,8 @@ are Brueckner-like: the T1 diagnostic tends to zero. This paper is the key citat
 the claim that OVOS MOs approximate Brueckner orbitals. Also relevant for VQE: OO-MP2
 orbitals give better overlap with the correlated ground state than HF orbitals.
 
+**📝 Detailed Notes:** [chapters_and_findings/Lee2018_OO-MP2.md](chapters_and_findings/Lee2018_OO-MP2.md)
+
 ---
 
 ## Quantum Computing – VQE and Hamiltonians
@@ -85,6 +103,8 @@ reference when explaining the quantum computing motivation (Introduction §Quant
 Computing Context, Background §Quantum Computing). Not peer-reviewed – use as
 supplementary/tutorial reference.
 
+**📝 Detailed Notes:** [chapters_and_findings/deGracia2024_Hamiltonian.md](chapters_and_findings/deGracia2024_Hamiltonian.md)
+
 ---
 
 ## Previous UCPH Work
@@ -98,6 +118,8 @@ PREP Project, MSc in Quantum Information Science, University of Copenhagen,
 October 2025. Supervisors: Prof. S. P. A. Sauer & Asst. Prof. P. W. K. Jensen.  
 → **Your own previous project.** COVO is the correlated extension of OVOS.
 Directly motivates this master's thesis. Cite when justifying the choice of topic
+
+**📝 Detailed Notes:** [chapters_and_findings/Clausen2025_COVO.md](chapters_and_findings/Clausen2025_COVO.md)
 and the UHF framework. Also provides the UCPH institutional context. Key citation
 in Introduction §Motivation.
 
@@ -144,3 +166,29 @@ Also useful for Background §CI methods.
 | Quantum chemistry review | Cao et al. *Chem. Rev.* **119**, 10856 (2019) ← already in bib |
 | Jordan-Wigner / qubit mapping | Seeley, Richard, Love *J. Chem. Phys.* **137**, 224109 (2012) |
 | FNO comparison | Taube & Bartlett *Collect. Czech. Chem. Commun.* **70**, 837 (2005) ← already in bib |
+
+---
+
+## How to Use This Reading List
+
+### 📚 Workflow
+
+1. **Reference this README** for quick paper summaries, BibTeX keys, and relevance to your thesis
+2. **Use `chapters_and_findings/` folder** to maintain detailed notes as you read each paper
+3. **Fill in chapter breakdowns** with the main sections and subsections of each paper
+4. **Document key findings** relevant to OVOS, VQE, orbital optimization, or quantum computing
+5. **Update annotations** with insights, connections to other papers, or questions
+
+### 📝 Template Structure
+
+Each `.md` file in `chapters_and_findings/` includes sections for:
+- **Chapters/Sections** — Outline of the paper structure
+- **Key Findings** — Main contributions and important results
+- **Relevance to Thesis** — How it connects to your work
+- **Notes & Annotations** — Your observations and interpretations
+
+### 🔗 Quick Navigation
+
+- Use the **📝 Detailed Notes** links in each paper entry above to jump to the corresponding markdown file
+- Keep both README.md and the chapters_and_findings files open side-by-side for efficient reference
+- Update files incrementally as you work through the reading list

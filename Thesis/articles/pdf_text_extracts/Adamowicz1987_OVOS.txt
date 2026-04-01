@@ -1,0 +1,1168 @@
+
+--- PAGE 1 ---
+
+View
+Online
+Export
+CitationRESEARCH ARTICLE| JUNE 01 1987
+Optimized virtual orbital space for high ‐ level correlated
+calculations 
+Ludwik Adamowicz ; Rodney J. Bartlett
+J. Chem. Phys.  86, 6314–6324 (1987)
+https://doi.org/10.1063/1.452468
+Articles Y ou May Be Interested In
+Dipole ‐ bound anionic state of nitromethane. Ab initio coupled cluster study with first ‐ order correlation
+orbitals
+J. Chem. Phys.  (December 1989)
+Frozen natural orbital coupled-cluster theory: Forces and application to decomposition of nitroethane
+J. Chem. Phys.  (April 2008)
+ 30 March 2026 12:33:44
+
+
+--- PAGE 2 ---
+Optimized virtual ortibal space for high-level correlated calculations8
+) 
+Ludwik Adamowicz and Rodney J. Bartlettb) 
+Quantum Theory Project, Departments of Chemistry and Physics, University of Florida, Gainesville, 
+Florida 32611 
+(Received 6 January 1987; accepted 26 February 1987) 
+The second order Hylleraas functional and a Newton-Raphson orbital optimization technique 
+have been.used ~o generate an active, optimized virtual orbital space (OVOS) of substantially 
+reduc~ dImenSIOn for correlated calculations. Numerical examples for CH2 (IA I), C6H6, and 
+potentIal curves for B2H6 and H202 using MBPT and coupled-cluster theory demonstrate that 
+~ost of th~ correlation en~rgy can be obtained with a much smaller number of optimized 
+vIrtual orbItals, and effectIvely -100% of the correlation energy if the OVOS result is 
+combined with the exact second-order energy that is evaluated as a byproduct of the OVOS 
+generation. This suggests a potentially wide applicability of the OVOS method in high 
+accuracy quantum mechanical calculations. 
+I. INTRODUCTION 
+The vast majority of quantum chemical calculations, 
+which include electron correlation, are performed with the 
+wave function being represented as a linear combination of 
+Slater determinants. Both configuration coefficients, molec­
+ular orbital (MO) coefficients, and the primitive (usually 
+atomic orbital, AO) basis which defines the Hilbert space for 
+the problem, can be treated as variables of such expansions. 
+This leads to two of the three fundamental limitations in ab 
+initio quantum chemistry-the extent of the configuration 
+expansion and the limitations in the primitive (or MO) basis 
+set. (The third limitation, the number of atoms P leading to 
+3P-6 degrees of freedom in a molecule's potential surface is 
+best approached through analytical gradient methods, but is 
+not considered in this paper.) 
+For a given basis set, the configuration or the "correla­
+tion" problem, if viewed as the correction to a Hartree-Fock 
+SCF reference function, can be formally solved by the full CI 
+solution, i.e., all possible up to N-fold excitations for N elec­
+trons. I Although impractical for any but small "bench­
+mark" examples,2-4 other methods such as fourth-order 
+many-body perturbation theory (MBPT),5-8 coupled-clus­
+ter theory9-11 at various levels such as single and double exci­
+tation cluster operators (CCSD),12 and now extended 
+to include triple excitation clusters [CCSDT-l,13 
+CCSD + T(CCSD), 14 CCSDTI5], as well as multireference 
+configuration interaction (MR-CI) 16 have been shown to 
+quite accurately reproduce the full CI in many exam­
+ples3.?,II; but unlike full CI, these methods are applicable for 
+many realistic, chemically interesting problems. Conse­
+quently, in this paper we focus on the other fundmentallimi­
+tation in ab initio quantum chemistry, the primitive, and MO 
+basis sets. 
+The AO basis and the MO basis are actually two differ­
+ent but interconnected problems. Since the full CI results are 
+invariant to any transformation of the AO's, from simple 
+.) This research has been supported by the U.S. Office of Naval Research 
+b) Guggenheim Fellow. . linear algebra, the ultimate result for the energy or another 
+property is solely determined by the choice of primitive basis 
+set. Less complete correlated methods do not have this prop­
+erty, but usually possess a more restrictive set of invariant 
+transformation properties. Separating the molecular orbitals 
+into a set of nocc orbitals said to be occupied, and NVIRT said 
+to be unoccupied in a single determinant reference, CCSD, 
+CCSDT -1, CCSDT, etc., are all invariant to transformations 
+that mix occupied with occupied or virtual with virtual orbi­
+tals. (For reasons that will become clear later, we choose to 
+use the term "virtual" for the "excited" orbitals, although 
+this sometimes implies a canonical SCF set of excited orbi­
+tals.) Similarly, any truncated CI method that includes all 
+excitations at a particular level, like CISD, CISDT, etc., are 
+invariant to such transformations. Each order in MBPT is 
+also, provided that the choice of splitting of the Hamiltonian 
+intoHo + Vis not changed, however, that often means a less 
+natural division of H once the orbitals are rotated, so this 
+type of in variance has not been routinely employed. 17 How­
+ever, even with an alternative splitting of H by the time 
+MBPT is taken to third and fourth order, for all practical 
+purposes, the invariance to transformations among just the 
+occupied or just the virtual orbitals, manifests itself numeri-
+11 17,18 H ca y. owever, none of the less than full CI methods is 
+invariant to transformations that mix occupied and unoccu­
+pied orbitals. So in principle, it is possible to improve the 
+agreement between a correlated method and full CI by si­
+multaneously optimizing the MO's for the problem, as in 
+MCSCF,19 or perhaps natural-orbital iterations in CI,20 or 
+as in the orbital optimized CC methods that have been sug­
+gested and applied.12 Once a method includes enough 
+configurations to provide results that approach near agree­
+ment with full CI, though, there has to be little to gain from 
+that category of transformations as well. Since, in this paper 
+we are primarily focusing on the CCSD + T(CCSD), 
+CCSDT-l, and MBPT(4) methods that generally show 
+such agreement with full CI, II we will not generally address 
+transformations that mix the occupied and virtual space, 
+Even restricting ourselves to transformations just 
+a~ong the virtual orbitals, the one place where important 
+gaInS can be achieved is if we can reduce the dimension of 
+6314 J. Chern. Phys. 86 (11),1 June 1987 0021-9606/87/116314-11 $02.1 0 @ 1987 American Institute of Physics  30 March 2026 12:33:44
+
+
+--- PAGE 3 ---
+L. Adamowicz and R. J. Bartlett: Optimized virtual orbital space 6315 
+NVIRT' but with only an acceptable loss in the accuracy of the 
+final results. To illustrate, MBPT( 4) has an asymptotic de­
+pendence on the number of orbitals, of -n~NtIRT' while 
+CCSDT-l's dependence is -n~ccNtIRT XNITS where NITS 
+is the number of iterations required to reach convergence. 
+CCSDT requires -n~cc N ~IRT X NITs' Similarly, CCSD and 
+CISDhavea -n~cNtIRT XNITS dependence. Ifwe are able 
+to reduce NVIRT by some factor x> 1, N :'IRT = NvIRT/x, 
+then we can potentially save _X4 in the computer time per 
+iteration, and more for CCSDT or even higher-order ap­
+proximations. It is also true that the total number of primi­
+tive functions M = nocc + NVIRT' so if we can reduce to an 
+effective N :'IRT dimension that is manageable without sig­
+nificant loss in accuracy, we can greatly increase M beyond 
+the current level allowed for correlated calculations. This 
+follows because the asymptotic dependence is only _ M 4 for 
+an SCF computation and even less for very large molecules 
+where many of the integrals will be below a small threshold. 
+In practice, then, we are able to use much larger basis sets at 
+the SCF level than for correlated calculations.21 This fact 
+raises the possibility of trying to attempt to approach com­
+plete basis set results for some small examples. Once com­
+bined with full CI, such a result would give the "complete" 
+CI result which would be the solution to the nonrelativistic 
+Schrodinger equation. 
+There have been several previous proposals of ways to 
+obtain improved virtual orbitals for correlated calculations. 
+For example, since the Hartree-Fock SCF occupied orbitals 
+are determind in an effective potential, Veff, due to N -1 
+electrons, while the usual virtual orbitals come from an ef­
+fective potential generated by all N electrons, Kelly22 pro­
+posed a modification using a V N -1 potential for the virtual 
+orbitals obtained by excluding one ofthe occupied orbitals in 
+VN-I= L ftPj(2)r121(1-P12)tPj(2)dr2' 
+j(#i) 
+This was generalized by Silver and Bartlett'8 for MBPT, us­
+ing the form of Hamiltonian of Silverstone and Yin23 and 
+Huzinaga and Arnau,24 which define the sum of one particle 
+Hamiltonians to be Ho = h + Veff + Q( V -Veff)Q. This 
+permits any choice for V while Q is the projector for the 
+virtual space causing only the virtual orbitals to see the new 
+potential V. Various choices for V including excluding p 
+electrons in an average manner [VN-P = (N -p)N -IVN] 
+have been studied numerically by Silver and Bartlett'8 in 
+MBPT. 
+Another choice would be pseudonatural orbitals,25 ob­
+tained by diagonalizing an approximate density matrix, per­
+haps constructed form the first-order MBPT wave function. 
+These orbitals, unlike the V N -P choice, mix the occupied 
+and excited orbital spaces. However, if one diagonalizes the 
+occupied-occupied and virtual-virtual blocks separately the 
+SCF wave function remains intact. This procedure leads to 
+so-called frozen natural orbitals (FNO). 26 The success of 
+natural orbitals would rest upon the theorem that the natu­
+ral-orbital CI expansion would give the best approximation 
+to the exact density.20 Other choices, termed internally con­
+sistent (IC) SCF orbitals have been proposed by David­
+son,27 and another improved virtual orbitals (lVO) have been proposed by Hunt and Goddard.28 The latter two 
+schemes are close conceptually and numerically to the 
+V N -P virtual orbitals discussed above. 
+There is another group of methods, 29 which derive their 
+origin from the K-orbital method developed by Feller and 
+Davidson. 30 The virtual orbital transformation is evaluated 
+by solving Fock-like equations involving the HF exchange 
+potential. The procedure is based upon requiring that the 
+doubly excited determinants have maximum interaction 
+with the reference function. 
+Each of these different choices plus some others31 has 
+some physical or mathematical property to recommend 
+them, but each suffers from deficiencies as well. For exam­
+ple, for a given number of pseudonatural orbitals, predicted 
+energies can be poorer when the primitive basis set is expand­
+ed.32 
+In the following, we propose a new approach to obtain­
+ing an optimized virtual orbital space (OVOS) for energy 
+calculations. Unlike the above methods, we directly employ 
+an energy optimizing principle built upon the second-order 
+Hylleraas functional criteria to obtain a set of N :'IRT 
+<NVIRT orbitals which are linear combinations of all NVIRT 
+orbitals in the basis set. Unlike V N -1 orbitals or the usual 
+(not "frozen") pseudonatural orbitals, these OVOS orbitals 
+are chosen to diagonalize the Fock operator for the virtual 
+space, meaning that no modifications to MBPT of CC codes 
+that assume the use of SCF orbitals are required. The CCI 
+MBPT part of our PROPAGATOR program system33 uses any 
+orbital choice, 11,17 but having virtual orbitals that diagona­
+lize the Fock operator is still a computational simplification 
+and might be particularly important for the legion of 
+GAUSSIAN 8234 users in the community, where SCF orbitals 
+are required in MBPT ( = M41'>ller-Plesset) computations. A 
+series of examples using large basis sets and chosen to test the 
+method for CH2 ('A 1)' C6H6 and potential surfaces for B2H6 
+and H202 are reported in the following, after a discussion of 
+the theory. 
+II. METHODOLOGY 
+In the initial implementation of the OVOS method we 
+consider a closed shell N electron system. The total Hamilto­
+nian H of the system is partitioned into a zero-order Hamil­
+tonian Ho being the usual sum of the Hartree-Fock (HF) 
+operators 
+N 
+Ho = L l(i) (1) 
+;=1 
+and the correlation perturbation operator V = H -Ho. The 
+sum Eo + E, is the HF energy of the system, and E2, the 
+lowest-order correlation correction. The second-order Hyl­
+leraas functional35 constitutes an upper bound to E2 for a 
+trial first-order wave function CPI' 
+E2«ct>IIHo -Eolct>l) + 2(ct>d V -E,lct>o) =.J2• (2) 
+Intermediate normalization of cp(O) is assumed, which man­
+dates that the first-order wave function satisfy the following 
+orthogonality condition: 
+(cpllct>o) = O. (3) 
+By varying J2 with respect to ct> I and equating the result 
+J. Chern. Phys., Vol. 86, No. 11, 1 June 1987  30 March 2026 12:33:44
+
+
+--- PAGE 4 ---
+6316 L. Adamowicz and R. J. Bartlett: Optimized virtual orbital space 
+to zero, one obtains the usual first-order equation from 
+which the first-order wave function can be determined: 
+o -J2 = 2(Ho -Eo) 1cJ») + 2( V-E) lcJ>o) = o. 
+0cJ» (4) 
+For the special case of restricting cJ» to a sum of excitations 
+of one particle functions36 and for cJ>o an SCF wave function, 
+then only two-electron excited determinants contribute to 
+cJ» : 
+cJ» = I t ijb( 1) lijb), (5) 
+i>j 
+t,!.b(l) = (ab Iij) 
+IJ Ei + Ej -Ea -Eb 
+Our usual convention is used where letters i,j, ... are used to 
+indicate occupied spin orbitals and a,b, ... to indicate virtual 
+spin orbitals, while p,q, ... are unrestricted. The set {Ep} are 
+HF orbital energies. 
+Now, we separate the SCF virtual set into active spin 
+orbitals (a,b, ... ) and nonactive spin orbitals (e,!, ... ). The 
+second-order Hylleraas functional is used to find an optimal 
+rotation of the active virtual space against the nonactive 
+space, to minimize the second-order correlation energy. We 
+may borrow some of the theory effectively used for MCSCF 
+problems37,38 to define the orbital rotation by a unitary ma­
+trix V, represented in an exponential form with an antisym­
+metric matrix R, 
+tP~ = I UbatPb + I UeatPe, 
+b 
+VtV= 1, 
+VIR) = exp(R), 
+R= _Rt. (6) 
+A power expansion of the exponential operator is then 
+used, 
+exp(R) = 1 + R + ! RR + .... (7) 
+Since all possible double excitations are present in expansion 
+( 5 ), we can restrict the orbital transformation to only ac­
+tive-nonactive orbital rotations. This happens because the 
+active-active orbital rotations cannot change the second-or­
+der energy. Consequently, the following block form is as­
+sumed for the R matrix: 
+[ 0 R--Rae -Rea] o . (8) 
+An active orbital tP~ after rotation has the following 
+form: 
+tPa ~tP~ = tPa + I ReatPe -21 I I ReaRebtPb + .... 
+e b e 
+(9) 
+Expressing the second-order functional J2 for the reduced 
+virtual space in terms of active virtual orbitals, we have 
+J -~J(2) 2-~ ij' 
+i>j ( 10) Jf/) = I tijb(1)tijd(1) [(facObd + fbdOac -ladObe 
+a>b 
+c>d 
++ 2 I tijb(1)(ab lij), 
+a>b 
+where the electron-pair separability of the second-order Hyl­
+leraas functional has been employed. The matrix elementlab 
+indicates a Fock matrix element. By replacing active orbitals 
+by their rotated form, i.e., using Eq. (9) in Eq. (10), we 
+obtain the Hylleraas functional as a function of rotational 
+parameters. The differentiation of the functional with re­
+spect to the rotation parameters leads, then, to first-and 
+second-order derivatives: 
+G = oJ2 I (gradient), 
+ea oRea R=O ( lla) 
+H -{?J2 I (Hessian). ea,jb -oReaoRjb R = 0 ( lIb) 
+These can be expressed as follows: 
+Gea =2 IItijb(1)(ijleb) +2 ID~~1.b' (12a) 
+i>j b b 
+Hea,jb = 2 I t ijb( 1) (ijlef) 
+i>j 
+-II [tijc(1) (ijlbc) +tijb(l)(ijlca)]Oel 
+i>j c 
++ D ~~)(faa -hb )oel + D ~~1./(1 -0el)' 
+(12b) 
+where D (2) is the second-order density matrix: 
+D(2) = ~ ~ t,!.C(l)tbC(I) ab ~~ IJ I] • (13) 
+i>j c 
+Equation (12) has been derived with the assumption 
+that the active orbitals diagonalize the Fock matrix, i.e., are 
+canonical, which may be easily accomplished at each iter­
+ation step. It should be noticed that both the gradient and 
+Hessian of J2 exhibit the same pair separability as the sec­
+ond-order functional itself. It can be seen from Eq. (12) that 
+the G and H matrices are functions of first-order configura­
+tion amplitUdes, Fock matrix elements, and two-electron 
+molecular integrals. Only integrals of the kind (oce ( 1) occ­
+(2) I virt ( 1) virt(2» are involved, which causes the present 
+method to be computationally much simpler and less time 
+consuming than the Rayleigh-Ritz variational principle 
+used in MCSCF orbital optimization techniques. Once the G 
+and H matrices are determined, the orbital rotation param­
+eters are calculated from the Newton-Raphson equation 
+(14) 
+The application of the Newton-Raphson method to the 
+second-order Hylleraas functional results in the following 
+computational strategy: 
+(i) Compute the SCF solution. 
+(ii) Perform a partial transformation of atomic inte­
+grals to molecularintegrals ( (ijlab ) type only). The molecu­
+lar integrals (ijlab ) are sorted into a record structure. Each 
+J. Chem. Phys., Vol. 86, No. 11, 1 June 1987  30 March 2026 12:33:44
+
+
+--- PAGE 5 ---
+L. Adamowicz and R. J. Bartlett: Optimized virtual orbital space 6317 
+TABLE I. MBPT and CC results for the CH2 eA,) molecule calculated with the full and OVOS of various dimensions. A (9s7p2d If,5s2p) contracted 
+Gaussian basis set has been used. Energies in a.u. The reference SCF energy is equal to -38.89447 a.u. 
+N-number of active 70 46 
+virtual orbitals (100%) (65.7%) 
+MBPT(2) -0.182 683 -0.180 772 
+(99.0%) 
+MBPT(3) -0.204 817 -0.203261 
+(99.2%) 
+MBPT(4) -0.211 884 -0.210 171 
+(99.2%) 
+CCSDT·l -0.215 691 -0.213 163 
+(98.8%) 
+~[MBPT(3) 1 + E2(exact) -0.205173 
+(100.2%) 
+~[MBPT(4)1 +E2(exact) -0.212082 
+(100.1%) 
+~[CCSDT·l1 +E2(exact) -0.215 074 
+(99.7%) 
+record contains integrals with the same occupied indexes 
+(ij) and all possible virtual indexes (ab). 
+(iii) Make a selection of an initial active space. The 
+choice is based upon the contribution from each individual 
+virtual orbital to the second-order correlation energy. The 
+contribution is calculated as a sum of the diagonal and a half 
+of the off-diagonal part. 
+.(iv) Transform the molecular integrals (ijlab) 
+-+ (ijla' b ') and compute the first-order amplitudes t tb' (1) 
+for the active virtual orbitals. The integral transformation is 
+not needed in the first iteration. 
+( v) Construct the gradient and Hessian matrices. 
+(vi) Solve the Newton-Raphson equation for the orbi­
+tal rotation parameters R. A block generalization of the re­
+duced lnear equation technique of Purvis and Bartlett39 is 
+used. It is recognized that the Hessian matrix is dominated 
+by square blocks located diagonally. A particular block is 
+related to the rotation of all possible active orbitals with one 
+nonactive orbital (Hea,eb)' Only inverses of all diagonally 
+located blocks are kept in the core. 
+(vii) Generate the unitary transformation matrix U by 
+using the formula33 
+U = exp(R) = X cosh(d)Xt + RX sinh(d)d-1Xt, 
+(15) 
+where d is the square root of a diagonal matrix, which results 
+from the diagonalization of R2: 
+d2 = XtR2X. (16) 
+(viii) Construct the Fock matrix for the rotated active 
+space by a simple transformation which involves the orbital 
+energy matrix and the transformation matrix U. Next, the 
+F ock matrix is diagonalized to generate new canonical active 
+orbitals. 
+(ix) Calculate the second-order correlation energy for 
+the new active space. If the energy convergence is satisfac-Correlation energies 
+(percentage of the result in the full space) 
+35 22 12 8 
+(50.0%) (31.4%) (17.1%) (11.4%) 
+-0.176111 -0.162049 -0.116838 -0.096503 
+(96.4%) (88.7%) (64.0%) (52.8%) 
+-0.199225 -0.185732 -0.136710 -0.114056 
+(97.3%) (90.7%) (66.7%) (55.7%) 
+-0.205881 -0.192 018 -0.142052 -0.118 725 
+(97.2%) (90.6%) (67.0%) (56.0%) 
+-0.208 679 -0.194 551 -0.144 842 -0.121 113 
+(96.7%) (90.2%) (67.2%) (56.2%) 
+-0.205798 -0.206 366 -0.202555 -0.200236 
+(100.5%) (101.2%) (98.9%) (97.8%) 
+-0.212453 -0.212653 -0.207 897 -0.204905 
+(100.3%) (100.4%) (98.1%) (96.7%) 
+-0.215 251 -0.215 186 -0.210687 -0.207 293 
+(99.8%) (99.8%) (97.7%) (96.1%) 
+tory, the iteration process is terminated, if not a return to 
+(iv) is performed. 
+As seen, the proposed strategy is, in essence, a two-step 
+optimization procedure. Configuration coefficients are cal­
+culated independently from the orbital rotation parameters. 
+Our preliminary experience indicates that the most time 
+consuming step is the solution of the Newton-Raphson lin­
+ear equation. However, if the block structure of the Hessian 
+is fully exploited, the reduced linear equation method con­
+verges quickly. 
+III. APPLICATIONS AND DISCUSSION 
+A.CHz 
+As a first example of the OVOS method we consider the 
+excited lA 1 state of CH2. Because this state has some degree 
+of multireference character, higher-order correlation effects 
+measured relative to a single reference function would be 
+expected to be relatively important. Previously, we have re­
+ported a series of CC/MBPT results on the singlet-triplet 
+splitting in CH2 in a variety of basis sets.40 The largest of 
+these consisted of 74 contracted Gaussian functions defined 
+by Werner and Reinsch,41 distributed as (9s7p2d 1/ /5s2p). 
+The singlet-triplet separation was found to vary by as much 
+as 3.7 mhartree (2.2 kcal/mol) with basis extension at the 
+CCSDT -1 level. The results of our study40 showed that the 
+SCF energy for the singlet state improved by 7 and 1.5 mhar­
+tree, as one changed the basis from (4s2p1d /2s1p) to 
+(6s4p2d /4s2p) and to (9s7p2d 1/ /5s2p), respectively; but 
+the correlation effects as measured at the CCSDT -1 level 
+changed by an important 33.5 and 34.2 mhartree, respective­
+ly. 
+One of the primary reasons for developing the OVOS 
+procedure is to permit the use of much larger basis sets for 
+correlated calculations than is currently possible, by reduc­
+ing the effective dimension of the virtual orbital basis while 
+J. Chem. Phys., Vol. 86, No. 11, 1 June 1987  30 March 2026 12:33:44
+
+
+--- PAGE 6 ---
+6318 L. Adamowicz and R. J. Bartlett: Optimized virtual orbital space 
+retaining most of the essential correlation effects that would 
+be present in an expanded basis. We can obtain some mea­
+sure of this by performing a series of OVOS calculations 
+based upon our largest basis but reduced to basis sizes indica­
+tive of the different choices of contracted Gaussians made 
+above. These results are shown in Table I. 
+Of course, the largest percentage of the correlation ener­
+gy occurs in second order in the correlation perturbation 
+E2•5,42 However, by optimizing E2 for a given number of 
+virtual orbitals, we would expect that a much larger percen­
+tage of E2 could be retained compared to the percentage 
+reduction in the space. This is seen to be the case from Table 
+I, where a reduction in OVOS to 46, Le., 2/3 of the total, still 
+enables obtaining 99% of E2• The higher-order corrections 
+tend to be nearly the same as obtained before,40 resulting in 
+99.2% of the basis set correlation at the MBPT( 4) level, and 
+98.8% at the CCSDT -1 level. Similarly, a reduction to 50% 
+of the dimension of the entire virtual orbital space, causes a 
+loss of 3.6% in E2, 2.8% in MBPT(4), and 3.3% in 
+CCSDT-1. 
+Even a reduction by 1/3 to 22 functions, that is a smaller 
+dimension than a DZP basis, loses only -11 % in E2 and 
+-10% at the highest levels. This should be compared with 
+the actual use of a DZP basis for correlated calculations on 
+the CH2 (IA I) state. For such a calculation we obtain for the 
+correlation energy -0.15253 a.u. at the MBPT(4) level 
+and -0.156 63 a. u. for CCSDT -1. 14 Clearly, by taking a 
+much larger initial basis and reducing it to the same size as 
+DZP, we gain about 38 mhartree in the correlation energy or 
+about 64% of the 59 mhartree that would be possible using 
+the full basis. No doubt, much ofthis is due to the inclusion 
+off-orbital effects that would not be present in a DZP basis. 
+The consistency of the higher-order correlation correc­
+tions with OVOS, and the fact that the entire E2 must be 
+computed to define the OVOS anyway (this, however, is 
+only an -n~cN~irt procedure following a restricted, but 
+-n~NtIRT transformation to define only the integrals of 
+the form (ij lab) ) suggests using the exact E2 with only the 
+higher orders being obtained at the reduced level. These 
+numbers are shown in the bottom three rows of Table I. 
+Hence, in every case from a reduced level of 22 to 46, we 
+obtain almost exactly 100% of the full basis correlation ener­
+gy as measured by MBPT (3), MBPT ( 4 ), or CCSDT-1. 
+This provides an additional improvement, e.g., from using a 
+22 function OVOS from a 70 function starting point of 59 
+mhartree (36.7 kcallmol) in the correlation energy than 
+could be obtained with a slightly larger, though standard 
+DZP basis. It is convenient that unlike MBPT(3) or 
+MBPT(4), CCSDT-l even shows a bounding property al­
+ways being slightly less than 100% of the CCSDT-l correla­
+tion energy in the full space, even for this current example 
+where CCSDT-l is a significant 3 mhartree lower in energy 
+than MBPT ( 4), and the latter 7 mhartree lower than 
+MBPT(3), both having important effects on the predicted 
+singlet-triplet splitting in CH2. 
+With the success of the preceding, we even tried ridicu­
+lously low numbers of optimized virtual orbitals, going all 
+the way to less than a DZ level of only 12 and 8 functions. Of 
+course, it is well known that a DZ or smaller basis cannot 54/24 54/54 
+40 ,;---;r r-
+D --L =-= = =::; 
+35 I 54/18 E 
+'0 I ,\ 
+E 30 I A:~( ~y ~ 
+0 I u \v" ~ 25 
+>. I H/~H 01 B:~, " ... 20 ... c I H B V H ... H c 15 I / "~ .. >('" 0 c: :. ............. ., 
+0 'u 10 0 ., 
+.!!! , o:);:a :::< 'tI 5 \ I -a a.u.-
+\ I 
+0 ~ E>=20 a.u . .=< B 
+Reaction stages 
+FIG. 1. Dissociation curve for B2H,;-+2BH3 calculated with [CCSD 
++ T (CCSD) 1 + E2 (exact) method with different dimensions of OVOS. 
+Reaction stages have been chosen arbitrarily. 
+account for any angular correlation effects because of the 
+absence of polarization functions. However, in the OVOS 
+procedure that is not true, since the polarization functions 
+are mixed into the optimized virtual orbitals weighted as 
+measured by their effect in E2• For these two cases, corre­
+sponding to only 17% and 11 % of the excited orbital space, 
+still more than half of E2 is obtained, and once again, using 
+the exact Ez enables MBPT (3), MBPT ( 4), and CCSDT-l 
+to be within 4% of the full space correlation effects. In some 
+sense, the few correlating functions retained seem to be mea­
+suring much of the essential effects of electron correlation. 
+B. B2Ha -+ 2BH3 
+In addition to demonstrating that -100% of the corre­
+lation energy can be obtained at a molecule's equilibrium 
+configuration, it is also important to investigate how well the 
+OVOS procedure will work as a function of molecular geom­
+etry. Otherwise, predictions of structure and dissociation en­
+ergies could be in error compared to the full space predic­
+tions. To investigate this, we have studied two examples, the 
+dissociation of B2H6 -+ 2BH3 and H202 -+ 20H. In both 
+cases, the diborane "banana" band and the peroxide linkage 
+represent fairly weak chemical bonds Do = 35.5 and 32.6 
+kcallmol, respectively. Also, electron correlation accounts 
+for about half of the dissociation energy.43 
+The main difference in the two examples occur due to 
+the closed-shell diborane molecule dissociating into closed­
+shell BH3 units, while H202 dissociates into open-shell OH 
+radicals. The initial implementation of our OVOS procedure 
+is restricted to the closed-shell RHF reference case, although 
+UHF or two-configuration (TCSCF) extensions are possi­
+ble. Since for B2H6 --+ 2BH3 a closed-shell description is ap­
+propriate as a function of any RB-B separation, we should be 
+able to assess the suitability of OVOS as a function of RB-B 
+without any failure of the second-order functional employed 
+to define the OVOS. Since B2H6 is actually held together by 
+J. Chern. Phys., Vol. 86, No. 11, 1 June 1987  30 March 2026 12:33:44
+
+
+--- PAGE 7 ---
+L. Adamowicz and R. J. Bartlett: Optimized virtual orbital space 6319 
+TABLE II. D. for B2H6 at the CCSD + T(CCSD) level, as a function of 
+dimension of the OVOS. Units are kcallmol. B( Is) electrons are uncorre­
+lated. 
+Number of active CCSD+ A [CCSD + T(CCSD)] 
+virtual orbitals T(CCSD) +E2(exact) 
+54 (complete space) 39.2 39.2 
+30 36.8 38.8 
+24 34.6 38.4 
+18 33.1 38.0 
+banana bands, however, we define a quasireaction path by 
+defining the five geometries shown in Fig. 1. Using a 
+(4s2pld 12s1p) contracted Gaussian basis (62 functions), 
+which means the full virtual space contains 54 functions, we 
+consider spaces of size 18, 24, and 30; or 33%, 44%, and 
+56% of the full dimension. Figure 1 shows the behavior of 
+the energy at the five geometries, chosen to maintain the D2h 
+symmetry ofB2H6. The barrier, of course, simply arises from 
+choices of geometry and has nothing to do with any barrier 
+in the actual reaction path ofB2H6-+2BH3' 
+The CCSD + T (CCSD) model14 exploits the fact that a 
+final single triple excitation iteration using the T2 amplitudes 
+(t f/) from a converged CCSD calculation is usually a quite 
+accurate approximation to the iterative CCSDT -1 method 
+that allows T3 amplitudes (t iff) to affect the value of the Tl 
+and T2 amplitudes. Since the evaluation of the triple excita­
+tion contribution is the rate determining step in most CCI 
+MBPT calculations, T(CCSD) is a much more expeditious 
+model computationally, and for our purposes, will have no 
+significant numerical differences from CCSDT _114 or 
+CCSDT.1S 
+The slight difference in the dissociation energy (De) as a 
+function of the dimension of the OVOS is shown in Table II 
+at the CCSD + T(CCSD) level,14 and by adding the exact 
+second-order energy. Clearly the latter only introduces an 
+error of 1.2 kcallmol even for an OVOS of a dimension only one-third as large as the full space. Without the exact E2 the 
+errors are larger reflecting the fact that most of the impor­
+tant correlation corrections in De are recovered at the 
+MBPT (2) level. 
+Results for the correlation energy of B2H6 at equilibri­
+um calculated at various levels and with different numbers of 
+OVOS orbitals are presented in Table III. A comparison 
+with results for CH2 ( lA 1) shows somewhat poorer conver­
+gence. At about 50% reduction, even a partly multireference 
+problem like CH2eA1) shows -5% better agreement, yet 
+once again, almost all of the difference shows up in second 
+order. Hence, once the exact E2 is added to the higher-order 
+OVOS corrections, nearly perfect agreement with the best 
+correlation correction is achieved. Although B2H6 does not 
+show particularly poor convergence as judged by the differ­
+ences in the infinite-order CCSD vs its fourth-order SDQ­
+MBPT( 4) approximation (aE = 0.5 mhartree), e.g., which 
+is contrary to CH2 ( lA I) [aE = 2 mhartree for CCSD­
+SDQ(4)] and raE = 4 mhartree for CCSDT-l­
+STDQ ( 4) ], it is probable that the larger initial basis for the 
+latter molecule leads to better OVOS results for the correla­
+tion energy. The interplay between size of the initial basis 
+and the accuracy of the OVOS correlation predictions 
+should be studied in future work. 
+Some actual FPS timings for B2H6 calculations are 
+shown in Table IV, showing that even for a modest DZP 
+basis calculation a factor of 4.4 to 9.3 may be gained at the 
+CCSD level by using OVOS of 30 to 18 functions. The net 
+gain factor includes the fact that less iterations are required 
+to converge to the same threshold once the number of orbi­
+tals is reduced from the full space of 54. For example, 20 
+iterations are required in the full space, while only 12 are 
+needed for an OVOS of dimension 30, and 11 in the other 
+cases. Only a single triple excitation evaluation is used in 
+T (CCSD) as discussed above, so even though it requires 
+more time than a CCSD iteration, as it is only evaluated 
+once, only modest additional savings over the CCSD time 
+are possible for this example. 
+TABLE III. MBPT and CC calculations for B2H6 at its experimental equilibrium geometry (RB-B = 1.77 A, RB-H. = 1.33 A, RB-H, = 1.19 A, LH,BH, 
+= 120")." 
+N-numberof 54 30 24 18 
+active Vo full space (55.6%) (44.4%) (33.3%) 
+MBPT(2) -0.218413 -0.199 649 -0.184548 -0.158 765 
+(91.4%) (84.5%) (72.7%) 
+MBPT(3) -0.254338 -0.235 298 -0.218236 -0.187968 
+(92.7%) (85.8%) (73.9%) 
+CCSD -0.260 142 -0.242 208 -0.224 941 -0.194 967 
+(93.1%) (86.5%) (74.9%) 
+CCSD + T(CCSD) -0.266 361 -0.246581 -0.228 759 -0.197956 
+(92.6%) (85.9%) (74.3%) 
+A[MBPT(3)] + E2(exact) -0.254462 -0.252101 -0.247 616 
+(100.0%) (99.1%) (97.4%) 
+A [ CCSD] + E2 (exact) -0.260972 -0.258 806 -0.254615 
+(100.3%) (99.5%) (97.9%) 
+A [CCSD + T(CCSD) I + E2(exact) -0.265345 -0.262 624 -0.257604 
+(99.6%) (98.6%) (96.7%) 
+"Electrons in B( Is) orbitals are uncorrelated. 
+J. Chern. Phys., Vol. 86, No. 11, 1 June 1987  30 March 2026 12:33:44
+
+
+--- PAGE 8 ---
+6320 L. Adamowicz and R. J. Bartlett: Optimized virtual orbital space 
+TABLE IV. B2H6 (4s2pld/2slp) D2h• FPS 164 max timings (s) for OVOS calculations, RB-B = Req. 
+N 54 = full space 30 
+CCSD(per iteration) 512 175(34%) 
+T(CCSD) 696 120(17%) 
+OVOS generation 212 
+CCSD (net gain-all its.) X 4.4 
+CCSD + T(CCSD) (net gain) X4.5 
+C.HzOz ..... 20H 
+For H202 in a (4s3p Id /2s1p) contracted Gaussian ba­
+sis, the peroxide bond is broken while keeping the ROH dis­
+tance and OOH angle fixed (RoH = 1.795 bohr; 
+400H = 94.8017•18), while the two OH bonds are kept at 
+the gauche configuration (i.e., C2) that is experimentally 
+observed with a dihedral angle = 111.5". 
+The CCSDT-l potential curves at various sizes of opti­
+mized orbital space 7, 14, and 21 which, respectively, ac­
+count for 18%,36%, and 54% of the total of39 orbitals are 
+illustrated in Fig. 2. All calculations employ a restricted 
+Hartree-Fock (RHF) reference, hence, the reference func­
+tion does not correctly separate into two open-shell 2l; OH 
+radicals, but instead goes to a much higher asymptote that is 
+an average ofOH+ and OH-. This places a severe constraint 
+on any single RHF reference approach for electron correla­
+tion yet the CCSDT-l model, as shown in Fig. 2, still cor­
+rectly separates H202 into two OH radicals. Any lower level 
+of perturbation theory approximation such as MBPT ( 4) is 
+not able to handle this type of dissociation, however, since 
+one virtual and one occupied orbital are becoming degener­
+ate as the bond is broken. This causes the RHF perturbation 
+0.14 
+0.12 
+0.10 
+:i 0.08 
+ci 
+.~ 0.06 >. 
+~ 
+CI> c 0.04 CI> 
+0.02 
+0.00 
+2 __ ---<38/7 
+-., .. .. 
+.. 38/14 ... 
+... 38/21 
+• 39/38 
+118PT(2) 
+34567 
+internuclear distance in a.u. 
+FIG. 2. Dissociation of the H202 molecule calculated with the CCSDT-l 
+method. The horizontal axis indicates the HO--OH separation, with the 
+dihedral angle kept at a constant 111 S. N ~IRT / NVIRT symbols indicate the 
+virtual space reduction levels. The minima for all curves has been fixed at 
+the same level on the energy axis. For comparison, the dissociation curve 
+obtained at the MBPT (2) level with the complete virtual space is shown, to 
+indicate where the Hylleraas functional breaks down for this example. 24 18 
+127(25%) 89(17%) 
+67(9.6%) 32(4.6%) 
+202 98 
+X6.4 X9.5 
+X6.6 X9.9 
+theory denominators to become singular at infinite separa­
+tion, and to show a near singularity in the bond breaking 
+region, which causes MBPT ( 4) or any lower level of MBPT 
+to approach minus infinity at infinite separation. Even 
+though MBPT( 4) is the fourth-order approximation to 
+CCSDT -1, the remaining infinite-order terms introduced in 
+CCSDT -1 enable the method to overcome the approaching 
+denominator singularity. One way to understand this is that 
+unlike perturbation theory, CC theory is invariant to the 
+splitting of the Hamiltonian into Ho and V, and one can 
+conceive of other choices of Ho that would avoid the singu­
+larities. CCSD will also provide a reasonable curve all the 
+way to dissociation, but will be too high, reflecting its more 
+limited ability to overcome the erroneous behavior of the 
+RHF reference.11 Hence triples are essential in CC to obtain 
+a good potential curve for the breaking of a single bond, at 
+least subject to the usual SCF orbitals. 
+As mentioned above, the current implementation of the 
+OVOS scheme is limited to RHF cases and is based upon 
+MBPT (2); so it, too, should suffer as MBPT (2) misbehaves 
+in the bond breaking region. This is reflected in the potential 
+curves for H202• Although very similar in the vicinity of 
+equilibrium-Roo is predicted to be 2.82 for the full 39 orbi­
+tal space, 2.81 for N = 21, 2.80, for N = 14, and 2.78 for 
+N = 7-progressively poorer bond dissociation energies are 
+obtained as a function of the size of the OVOS, ranging from 
+an error of2 kcallmol for N = 21 to 9 for N = 14 and 22 for 
+N = 7. In Fig. 2, a dashed line superimposes the full space 
+MBPT (2) upon the potential curves, showing how the eron­
+eous behavior of the second-order functional parallels the 
+OVOS curves. Considering the atrocious behavior of 
+MBPT(2) beyond -5 bohr, it is surprising that the opti­
+mized virtual orbitals obtained from the second-order func­
+tional are as good as they are. Of course, the OVOS proce­
+dure can be readily generalized to a two-configuration RHF 
+case, then there should be no problem with using it for singly 
+bonded molecules that separate into open-shell fragments. A 
+generalization to an unrestricted Hartree-Fock (UHF) 
+OVOS method could also be made, to be consistent with the 
+large number of calculations that employ UHF references to 
+make a single determinant reference correctly separate into 
+open-shell fragments. Ultimately, of course, even a more 
+general MCSCF procedure could constitute a reference for 
+OVOS to study multiple bond breaking, for example. 
+Energy results are shown at the intermediate Roo dis­
+tance of 4.6 bohr in Table V. Despite the comparative poor­
+ness of the MBPT (2) energy, the behavior there is very simi­
+lar to that previously observed for CH2 and B2H6• Of course, 
+J. Chern. Phys., Vol. 86, No. 11, 1 June 1987  30 March 2026 12:33:44
+
+
+--- PAGE 9 ---
+L. Adamowicz and R. J. Bartlett: Optimized virtual orbital space 6321 
+TABLE V. MBPT and CC calculations for H202 at Roo = 4.6 bohr.· 
+N-numberof 39 
+active Vo full space 21 
+MBPT(2) -0.497204 -0.463 585 
+(93.2%) 
+MBPT(3) -0.494100 -0.460921 
+(93.3%) 
+MBPT(4) -0.553396 -0.512983 
+(92.7%) 
+CCSDT-l -0.548625 -0.508981 
+(92.8%) 
+d[MBPT(3)D] + E2(exact) -0.494540 
+(100.9%) 
+dMBPT(4) +E2(exact) -0.546 602 
+(98.8%) 
+d[CCSDT-l] + E2(exact) -0.542 600 
+(98.9%) 
+• Electrons in 0 ( Is) orbitals are uncorre1ated. 
+beyond -5 bohr MBPT(2) becomes much to low in the 
+bond breaking region, so it would be inappropriate to add the 
+exact E2 to the OVOS higher-order correlation energy re­
+sults in that region. 
+In terms of computer timings shown in Table VI, a few 
+points should be noted. Even for a smaller basis the lower 
+symmetry in H202 (which is only used passively by our CCI 
+MBPT codes) plus larger numbers of electrons causes the 
+CCSD iterations to be slower. Second, unlike the B2H6 ex­
+ample, here we report CCSDT -1 results and it is apparent 
+that the iterative inclusion of triple excitations via CCSDT-l 
+adds greatly to the time required for the calculation. Unlike a 
+single iteration of triples as in T(CCSD), we have two -n~ 
+NtIRT steps per iteration in CCSDT -1 and somewhat poorer 
+coding for the latter, which causes a CCSDT -1 iteration to be 
+almost a factor of 10 larger than for CCSD. This does enable 
+the savings from OVOS to be far more dramatic, with close 
+to two orders of magnitude (83) gained in the time for the 
+smallest basis. Once again, in the process of reducing the 
+space, we seem to obtain a set of orbitals that provide a better 
+essential description of electron correlation. Consequently, 
+for the iterative CC methods, we require fewer iterations for 
+the optimized virtual space to converge the energy to the 
+same threshold than for the full space. (The full space 
+CCSDT -1 calculation requires 19 iterations, while CCSDT-
+1 calculations with the virtual space reduced to 21, 14, and 7 
+orbitals require 14, 12, and 11 iterations, respectively.) Con­
+sidering the time required for each CCSDT-l iteration, our 
+savings in net time for the calculation can be far greater than 
+the already very significant factors associated with the vir-14 7 
+-0.393750 -0.303846 
+(79.2%) (61.1%) 
+-0.385 915 -0.293581 
+(78.1%) (59.4%) 
+-0.428 949 -0.316327 
+(77.5%) (57.2%) 
+-0.427915 -0.316259 
+(78.0%) (57.6%) 
+-0.489 369 -0.486939 
+(99.0%) (98.6%) 
+-0.532403 -0.509 685 
+(96.2%) (92.1%) 
+-0.531369 -0.509 617 
+(96.9%) (92.9%) 
+tual orbital reduction. The greater time required to generate 
+the OVOS orbitals for N~IRT = 14 compared to N~IRT 
+= 21, simply reflects the greater number of iterations in-
+curred by OVOS from starting from a poorer initial guess. 
+D. CaHa 
+As an illustration that is more typical of those planned 
+in the future, which simply could not be attempted without 
+OVOS, we have considered benzene in a DZP basis set of 126 
+contracted Gaussian orbitals (NV1RT = 105). If all the sym­
+metry in C6H6 were completely exploited, CC calculations 
+would require a modest amount of computer time. The cur­
+rent CC/MBPT part of our PROPAGATOR code33 uses sym­
+metry passively, by not processing integrals or evaluating 
+cluster amplitudes that are zero by symmetry, but does not 
+evaluate only the symmetry unique amplitudes, so our cur­
+rent observations will be fairly indicative of most 36 electron 
+-100 basis calculations. [The C( Is) electrons are uncorre­
+lated.] For CCSD, an -n~NtIRT X NITS procedure, this is 
+still a reasonable, but large scale correlated calculation for 
+our FPS 164. However, with our current code, even a single 
+iteration of triple excitations to evaluate T (CCSD) is a quite 
+demanding step, and CCSDT -1 would be prohibitive. 
+However, once we obtain an OVOS of dimension 30; or 
+some 29% of the entire space, we are able to easily carry out 
+CCSDT-l calculations. The numbers are shown in Table 
+VII, which we estimate took less than a hundreth of the time 
+which the full CCSDT-l result would require. The result of 
+-231.594456 a.u. of the valence correlation energy of 
+-0.862 00 a. u. for the DZP basis would be expected to be 
+TABLE VI. H202 (4s2pld /2s1p) c2• FPS 164 timings (s) forOVOS calculations, Roo = 4.6 bohr. 
+N 
+CCSD (per iteration) 
+CCSDT-l (periteration) 
+Orbital generation 
+CCSD (net gain-all its.) 
+CCSDT-l (net gain-all its.) 39 = full space 
+626 
+5909 21 14 7 
+151(23%) 64(10%) 52(6%) 
+797(13.5%) 288(4.9%) 110(1.9%) 
+323 409 127 
+X5 XIO X17 
+X9 X29 X83 
+J. Chern. Phys., Vol. 86, No. 11, 1 June 1987  30 March 2026 12:33:44
+
+
+--- PAGE 10 ---
+6322 L. Adamowicz and R. J. Bartlett: Optimized virtual orbital space 
+TABLE YII. C6H6 (126 fxns. 105 virtual). Comparison ofMBPT and CC results for the correlation energy for 
+the full basis and an OYOS of dimension 30. Experimental geometry. DZP basis SCF = -230.732 556. a 
+OYOS(30) ~[OYOS(30)] +E2(exact) 
+MBPT(2) -0.534605 -0.785 964 
+(68%) (100%) 
+E3 -0.024 699 
+MBPT(3) -0.559 304 -0.810663 
+(99%) 
+E4(D) -0.014 612 
+E4(S) -0.002 787 
+E4(n -0.016174 
+(42%) 
+E4(Q) + 0.010 698 
+(48%) 
+MBPT(4) -0.582179 -0.833538 
+(71%) (101%) 
+CCSD -0.568 954 -0.821021 
+(69%) (99%) 
+CCSD + T(CCSD) -0.584656 -0.836840 
+(68%) (97%) 
+CCSDT-I -0.584 640 -0.836000 
+a Electrons in C( Is) orbitals are left uncorrelated. 
+-60% of the exact valence correlation energy. 
+The triple excitation effect in C6H6 as measured by their 
+fourth-order contribution is -38.2 mhartree, while the 
+contribution from CI quadruple excitation contributions is 
+approximately E4(Q) + E2(¢II¢I) = -212 mhartree,44 
+where ¢1 is the first-order MBPT wave function. The second 
+term corresponds to the fourth-order unlinked diagrams 
+that would remain in a CI until all quadruple excitations are 
+included, while the first is the contribution from the linked 
+quadruple excitation diagrams. Hence, CI quadruple excita­
+tions would account for -25% of the correlation energy 
+with an additional -4.4% for triple excitations. Such a large 
+percentage of the correlation energy coming from higher 
+than double excitations attests to the well-known advantages 
+of many-body methods for handling the correlation problem 
+for larger molecules.5.42 
+For C6H6, one negative aspect of the OVOS procedure is 
+the poorer estimate of the triple and linked quadruple excita­
+tions. Although an OVOS of30 obtains 71 % ofMBPT(4), 
+and 101 % once the exact E2 is included, for the quadruple 
+and time consuming triple excitations only 48% and 42% of 
+the exact value is recovered. Though often an essential part 
+of the correlation in predictive quantum chemistry, and 
+-4% of the correlation energy for this example, due to tri­
+ple and quadruple excitation diagrams, numerically this is 
+still a small enough part of the whole correlation energy that 
+10 1 % is recovered for the MBPT ( 4) energy, with an overes­
+timate of 10 mhartree. The CCSD method does better, with 
+a[CCSD] + E2(exact) being 5.5 mhartree away from the 
+full basis result. T(CCSD), with an OVOS of 30, is still 
+about 20 mhartree from the full basis result. It would appear 
+that although an OVOS generated from second-order per­
+turbation theory does a good job with correlation overall, the 
+orbitals are not ideal for other, essentially different correla­
+tion effects such as those due to triple excitations. Other 
+methods based upon an infinite-order Bethe-Goldstone 
+cluster decomposition have shown a better behavior in nu­
+merical basis CC calculations.45 Full space (105) 
+-0.785 964 
+-0.033877 
+-0.819841 
+-0.020251 
+-0.005200 
+-0.038180 
++ 0.022 3105 
+-0.822 916 
+-0.825563 
+-0.861900 
+IV. CONCLUSION 
+This paper has presented a method (OVOS) for obtain­
+ing a second-order correlation energy optimum set of N VIRT 
+< NY1RT orbitals for high-level correlated calculations. As 
+long as the second-order energy is the largest part of the 
+correlation energy and is properly behaved, this set of orbi­
+tals should be nearly the best possible set of the chosen di­
+mension for the energy of the lowest state ofthat symmetry. 
+The orbitals are chosen to diagonalize the Fock operator, so 
+they may be used with the same simplicity as the canonical 
+virtual orbitals in correlated calculations. On the other 
+hand, some argument can be made for not diagonalizing the 
+Fock operator if different numbers of orbitals are used for 
+different levels of excitation. 30 Elsewhere, we will report de­
+tailed comparisons with pseudonatural orbitals25 and other 
+potential alternative choices. 18.26 
+When the dimension of the OVOS is a small fraction of 
+that for the full virtual space, there is an inevitable loss in the 
+second-order correlation energy, though much less than the 
+percent reduction in the space, yet the total energy effect of 
+higher correlation corrections tends to be relatively con­
+stant. Hence, adding the exact E2, which is a byproduct of 
+the OVOS generation procedure, enables recovering nearly 
+100% of the correlation energy even for examples where the 
+OVOS dimension is quite small. Futhermore, by reducing 
+the dimension of the virtual orbital space, we obtain better 
+convergence for CC methods resulting in additional impor­
+tant savings in computations beyond the already dramatic 
+savings achieved by the smaller dimension of the correlating 
+orbital space. Apparently, a few very well chosen correlating 
+orbitals suffice for most of the higher-order correlation ef­
+fects on the energy. 
+For properties like excitation energies46 or other proper­
+ties than the energy,47 there is less reason to believe that the 
+OVOS energy optimum orbitals would be a particularly ap­
+propriate choice. However, the same computational proce­
+dure could be used to employ the Hylleraas principle for 
+J. Chern. Phys., Vol. 86, No. 11, 1 June 1987  30 March 2026 12:33:44
+
+
+--- PAGE 11 ---
+L. Adamowicz and R. J. Bartlett: Optimized virtual orbital space 6323 
+some other property, perhaps the polarizability, e.g., to pro­
+vide orbitals that might be more appropriate for high-level 
+correlated studies of moments, polarizabilities, and hyper­
+polarizabilities.47 For such a case, it would appear to be ap­
+propriate to use either a finite-field procedure that adds the 
+perturbation to the Hamiltonian47 or to use two coupled si­
+multaneous optimizations,48 one for the correlation energy 
+and the other for the property to generate orbitals to best 
+describe the net correlation effects for some such property. 
+In particular, the orbital contributions allowed by symmetry 
+for the polarizability and the correlation energy will be quite 
+different and must be properly introduced into the computa­
+tion. 
+The best way to use the OVOS procedure would be for 
+correlated calculations which could not be done in the con­
+ventional way because of the excessive dimension of the 
+NVIRT space. In particular, SCF calculations are being done 
+routinely that use> 300 basis functions,49 yet NVIRT "'" 100 
+would be about the effective limit for most high-level corre­
+lated calculations today, even on supercomputers. A tool 
+like OVOS can potentially make it possible to exploit the full 
+dimension of the SCF basis augmented by even greater 
+numbers of polarization functions in high-level correlated 
+calculations with potentially modest losses in accuracy, 
+compared to the full basis results. Consequently, numerical­
+ly important effects such as those due to triple excitation 
+contributions could be included even for very large basis cal­
+culations. In fact, the OVOS method could conceivably be 
+used to extrapolate a correlated contribution to the basis set 
+limit. 
+The recent wealth of experimental results emerging for 
+anions,50.51 which are known to be among the most difficult 
+systems to describe in ab initio applications because of the 
+limited number of conventional GTO basis functions which 
+can be employed for these highly diffuse systems, represent a 
+natural class of applications of the OVOS technique. Corre­
+lation is essential for predictive results on such anions, but 
+except for a few studies we have made for diatomic systems 
+that alone permit the use of a numerical orbital basis set to 
+attempt to transcend the basis set limitation,52 there has been 
+no suitable approach to employing enough functions in cor­
+related calculations on polyatomic anions to be confident of 
+the results obtained. Perhaps the OVOS procedure will faci­
+litate such studies. 
+As we have shown, the OVOS method even restricted to 
+an RHF reference is quite good as a function of geometry, 
+but the one procedure that could be potentially better than 
+OVOS for any point on a potential energy surface might be a 
+multireference or MCSCF generalization of the procedure. 
+This would have the advantage of including the "nondyna­
+mic" correlation effects at most choices ofinternuclear sepa­
+ration. However, even a multireference generalization 
+would still benefit from being based upon the Hylleraas sec­
+ond-order functional for introducing the "dynamic" corre­
+lation effects since this procedure offers a much simpler cou­
+pling among orbitals than a Rayleigh-Ritz variational 
+procedure. 
+The OVOS method lends itself well to a routinely gener­
+ated "black-box" procedure for obtaining orbitals for MBPT, CC, or CI calculations, and we are in the process of 
+using the method to treat states of large molecules, some of 
+biochemical interest, at levels of sophistication not previous­
+ly attempted. 
+ACKNOWLEDGMENTS 
+We appreciate the assistance of Dr. Sam Cole in per­
+forming some of the reference calculations reported here. 
+This work has been supported by the U.S. Office of Naval 
+Research. 
+'R. Pauncz, in Alternant Molecular Orbital Theory (Saunders, Philadel­
+phia, 1967), pp. 7-8 
+2(a) P. Saxe, H. F. Schaefer III, and N. C. Handy, Chern. Phys. Lett. 79, 
+202 (1981); (b) R. J. Harrison and N. C. Handy, ibid. 95,386 (1983). 
+3(a) C. W. Bauschlicher, Jr., S. R. Langhoff, P. R. Taylor, and H. Par­
+tridge, Chern. Phys. Lett. 126,436 (1986); (b) C. W. Bauschlicher, Jr. 
+and P. R. Taylor, J. Chern. Phys. 85, 2779 (1986); (c) C. W. Bausch­
+licher, Jr., S. R. Langhoff, P. R. Taylor, N. C. Handy, and P. J. Knowles, 
+. ibid. 85, 1469 (1986). 
+4R. L. Graham, D. C. Yeager, J. Olsen, P. JQ\rgensen, R. Harrison, S. Zarra­
+bian, and R. J. Bartlett, J. Chern. Phys. 85, 6544 (1986). 
+sR. J. Bartlett, Annu. Rev. Chern. 32, 359 (1981), and references therein. 
+6R. J. Bartlett and D. M. Silver, Int. J. Quantum Chern. Syrnp. 8, 271 
+(1974); Chern. Phys. Lett. 29,199 (1974). 
+7R. J. Bartlett, H. Sekino, and G. D. Purvis III, Chern. Phys. Lett. 98, 66 
+(1983). 
+8M. J. Frisch, R. Krishnan, and J. A. Pople, Chern. Phys. Lett. 75, 66 
+(1980). . 
+9J. Cizek, J. Chern. Phys. 45, 4256 (1969); Adv. Chern. Phys. 14, 35 
+(1969). 
+IOR.J. BartlettandG. D. Purvis III, Int.J. Quantum Chern. 14, 561 (1978); 
+Phys. Scr. 21, 255 (1980). 
+"s. J. Cole and R. J. Bartlett, J. Chern. Phys. 86, 873 (1986). 
+12G. D. Purvis III and R. J. Bartlett, J. Chern. Phys. 76, 1910 (1982). 
+l3y' S. Lee, S. A. Kucharski, and R. J. Bartlett, J. Chern. Phys. 81, 5906 
+(1984); 82, 5761 (E) (1985). 
+14M. Urban, J. Noga, S. J. Cole, and R. J. Bartlett, J. Chern. Phys. 83, 4041 
+(1985). 
+ISJ. Noga and R. J. Bartlett, J. Chern. Phys. 86, 7041 (1987). 
+16(a) R. Shepard, I. Shavitt, and J. Simons, J. Chern. Phys. 76, 543 (1982); 
+(b) H. Lischka, R. Shepard, F. B. Brown, and I. Shavitt, Int. J. Quantum 
+Chern. Syrnp. 15,91 (1981); (c) P. E. M. Siegbahn, J. Alrnliif, A. Hei­
+berg, and B. O. Roos, J. Chern. Phys. 74, 2384 (1981). 
+17W. D. Laidig, G. D. Purvis III, and R. J. Bartlett, J. Phys. Chern. 89, 2161 
+(1985); Int. J. Quantum Chern. Syrnp. 16, 561 (1982). 
+18(a) D. M. Silver and R. J. Bartlett, Phys. Rev. A 13,1 (1976); (b) D. M. 
+Silver, S. Wilson, and R. J. Bartlett, Phys. Rev. 16,477 (1977). 
+'9(a) T. L. Gilbert, J. Chern. Phys. 43, 5248 (1985); (b) G. Das and A. C. 
+Wahl, ibid. 44, 87 (1966). 
+20(a) P. O. Uiwdin, Phys. Rev. 97, 1474 (1955); (b) E. R. Davidson, J. 
+Chern. Phys. 57, 2005 (1972); E. R. Davidson and C. F. Bender ibid. 56, 
+4334 (1972). 
+21R. C. Haddon, C. E. Brus, and K. Raghavachari, Chern. Phys. Lett. 125, 
+459 (1986). 
+22H. P. Kelly, Perturbation Theory and its Application in Quantum Mechan-
+ics, edited by C. H. Wilcox (Wiley, New York, 1966), pp. 215-241. 
+23H. J. Silverstone and M. L. Yin, J. Chern. Phys. 49, 2020 (1968). 
+24S. Huzinaga and C. Arnau, Phys. Rev. A 1, 1258 (1970). 
+2S(a) W. Meyer, J. Chern. Phys. 58, 1017 (1973); (b) P. J. Hay ibid. 59, 
+2468 (1973). 
+2"T. L. Barr and E. R. Davidson, Phys. Rev. A 1, 64 (1970). 
+27E. R. Davidson, J. Chern. Phys. 57, 1999 (1972). 
+28W. J. Hunt and W. A. Goddard III, Chern. Phys. Lett. 3, 414 (1969). 
+29(a) I. L. Cooper and C. N. M. Pounder, J. Chern. Phys. 77, 5045 (1982); 
+(b) S. Bird and T. A. Claxton, ibid. 80, 3742 (1984); (c) W. L. Luken and 
+B. A. B. Seiders, Chern. Phys. 92, 235 (1985); (d) F. Illas, M. Merchan, 
+M. Pelissier, and J. P. Malrieu, Chern. Phys. 107, 361 (1986). 
+30D. Feller and E. R. Davidson, J. Chern. Phys. 74, 3977 (1981). 
+3'P. Fantucci, V. Bonacic-Koutechky, andJ. Koutecky, J. Comput. Chern. 
+6,462 (1985). 
+J. Chem. Phys., Vol. 86, No. 11, 1 June 1987  30 March 2026 12:33:44
+
+
+--- PAGE 12 ---
+6324 L. Adamowicz and R. J. Bartlett: Optimized virtual orbital space 
+32G. Karlstrom, B. Jonsson, B. O. Roos, and P. E. M. Siegbahn, Theor. 
+Chim. Acta. 48, 59 (1978). 
+"PROPAGATOR program system consists of the molecule integral program 
+ofJ. Almlof, GRNFNC that does SCF calculations and integral transfor­
+mation of G. Purvis; and CC/MBPT for coupled-cluster and many-body 
+perturbation theory calculations, written by R. J. Bartlett, G. D. Purvis, 
+Y. Lee, S. J. Cole, and R. Harrison. 
+34J. S. Binkley, M. J. Frisch, D. J. DeFrees, K. Raghavachari, R. A. White­
+side, H. B. Schlegel, E. M. Fluder, and J. A. Pople, GAUSSIAN 82, Carnegie­
+Mellon University, Pittsburgh, 1983. 
+35E. A. Hylleraas, Z. Phys. 54, 347 (1929). 
+36L. Adamowicz and R. J. Bartlett, Int. J. Quantum Chern. 26, 213 ( 1984). 
+37(a) E. Dalgaardand P. J0rgensen, J. Chern. Phys. 69, 3833 (1978); (b) E. 
+Dalgaard, Chern. Phys. Lett. 65, 559 (1979). 
+38(a) R. Shepard and J. Simons, Int. J. Quantum Chern. Syrnp. 14, 211 
+(1980); (b) B. H. Lengsfie1d, J. Chern. Phys. 73, 382 (1980); (c) H.-J. 
+Werner, ibid. 73, 3342 (1980). 
+39G. D. Purvis III and R. J. Bartlett, J. Chern. Phys. 75, 1284 (1981). 
+4OS. J. Cole and R. J. Bartlett, Chern. Phys. Lett. 113,271 (1985). 
+4lH._J. Werner and E.-A. Reinsch, J. Chern. Phys. 76, 3144 (1982). 42R. J. Bartlett and G. D. Purvis III, Ann. N. Y. Acad. Sci. 367, 62 (1981). 
+43L. T. Redmon, G. D. Purvis III, and R. J. Bartlett, J. Am. Chern. Soc. 101, 
+2856 (1979). 
+44R. J. Bartlett, I. Shavitt, and G. D. Purvis III, J. Chern. Phys. 71, 281 
+(1979). 
+45(a) L. Adamowicz, R. J. Bartlett, and E. A. McCullough, Phys. Rev. 
+Lett. 54, 426 (1985); (b) L. Adamowicz and R. J. Bartlett, J. Chern. 
+Phys. 84, 6837 (1986). 
+46J. Oddershede and J. R. Sabin, J. Chern. Phys. 79, 2295 (1983). 
+47(a) R. J. Bartlett and G. D. Purvis III, Phys. Rev. A 20,3 (1979); (b) H. 
+Sekino and R. J. Bartlett, J. Chern. Phys. 84, 2726 (1986). 
+48 A. Mukherjee and M. Karplus, J. Chern. Phys. 38, 44 ( 1963). 
+49(a) J. Alrnlof, K. Faegri, Jr., and K. Kusell, J. Cornp. Chern. 3, 385 
+(1982); (b) H. P. Ljhi, J. H. Ammeter, J. Alrnlof, and K. Faegri, Jr., J. 
+Chern. Phys. 77, 2002 (1982). 
+50R. N. Compton, P. W. Reinhardt, and C. D. Cooper, J. Chern. Phys. 68, 
+4360 (1978). 
+"D. G. Leopold, K. K. Murray, and W. K. Lineberger, J. Chern. Phys. 81, 
+1048 (1984). 
+52L. Adamowicz and R. J. Bartlett, J. Chern. Phys. 83, 6268 (1985). 
+J. Chem. Phys., Vol. 86, No. 11, 1 June 1987  30 March 2026 12:33:44
+

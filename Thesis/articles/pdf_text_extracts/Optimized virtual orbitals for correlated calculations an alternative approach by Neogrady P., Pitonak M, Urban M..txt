@@ -1,0 +1,1081 @@
+
+--- PAGE 1 ---
+Optimized virtual orbitals for correlated calculations: an
+alternative approach
+PAVEL NEOGRA ´DY, MICHAL PITON ˇA´K and MIROSLAV URBAN*
+Department of Physical and Theoretical Chemistry, Faculty of Natural Sciences, Comenius University, Mlynska ´
+dolina, 842 15 Bratislava, Slovakia
+(Received 1 August 2004; in ﬁnal form 14 October 2005 )
+We propose an alternative formulation for creating the optimized virtual orbital space
+(OVOS). Our technique exploits and extends the method developed by Adamowicz andco-workers [L. Adamowicz, R.J. Bartlett. J. chem. Phys. ,86, 6314 (1987); L. Adamowicz,
+R.J. Bartlett, A.J. Sadlej. J. chem. Phys. ,88, 5749 (1988).]. The aim of the OVOS technique is
+to reduce the original SCF basis of the virtual molecular orbitals and to reduce the computer
+time in the coupled cluster (CC) and related highly sophisticated correlated methods. OVOSis created by using an invariant unitary rotation of the virtual orbitals subspace.
+New optimization functionals are proposed and implemented. The ﬁrst type are ‘energy’
+functionals. Their optimization leads to the minimal difference between the CCSD, CCD, orthe second-order perturbation energy, MP2, in the original orbital basis and the OVOS basis,respectively. Alternatively, linearized ‘overlap’ functionals optimize the overlap between
+the correlated wave function in the full and the OVOS space, respectively. The original
+exponential parametrization was replaced by the efﬁcient algorithm for the virtual orbitalsubspace rotation based on the Lagrangian multipliers technique which ensures orthogonalitywithin rotated virtual orbitals.
+The method is illustrated by calculations of correlation energies and/or reaction energies,
+spectroscopic constants or dipole moments of HF, HCN, HNC, CO and F
+2molecules and
+dissociation energies of pentane to propene and ethane. The ‘overlap’ functional is shown tobe more efﬁcient than the ‘energy’ one, particularly in representing triple excitations using
+OVOS. The basis set dependence of the efﬁciency of the OVOS technique was also studied.
+1. Introduction
+The idea of reducing the number of orbitals in all
+electron ab initio calculations has long since remained
+attractive [1–3]. A straightforward way for achieving
+this goal is the careful selection of a reasonably smallbasis set of atomic orbitals and possibly its optimization.Once the basis set is selected, the Hartree–Fock self-consistent ﬁeld (HF SCF) procedure scales with thenumber of atomic basis functions, N,a sN
+4. Subsequent
+electron correlation methods scale with Nless favour-
+ably. If we denote SCF molecular orbitals as occuppied
+(O) and virtual ( V) orbitals, respectively, the CCSD
+method for the closed-shell system has demanding termswhich scale roughly as O
+2V4orO3V3. CCSD is a basic
+coupled-cluster (CC) method [4, 5] in which the singleand double excitation amplitudes, t
+a
+iandtab
+ijrespectively,
+are calculated iteratively. With inclusion of triples,quadruples, etc., CC and other highly sophisticatedcorrelated methods scale even worse [6–11]. The mostfrequently used CC method, CCSD(T) [12, 13], adds to
+the CCSD energy a perturbative contribution fromtriples [14], which is calculated by using the converged t
+a
+i
+andtab
+ijamplitudes in a non-iterative step which scales
+asO3V4andO4V3. The simplest way of reducing the
+number of indices of molecular orbitals (MOs) whichenter into CC calculations is to keep few inner shell MOsuncorrelated (‘frozen’). Normally there is quite a largeenergy gap between these inner shell and the semi-valence and valence MOs so that this approximationaffects molecular properties resulting from CCSD orCCSD(T) calculations only a little. While uncorrelated
+inner shell electrons can be usually well selected on the
+general physical basis, there is no clear rule for deletingvirtuals. Usually the same number of virtual MOs canbe deleted from treating the electron correlation effectsas is the number of inner shell orbitals. This, however,reduces computer time very little, since the numberof virtual orbitals in highly accurate CC calculationsis much larger than is the number of occupied MOs.
+Thus, virtual MOs will be our target for reducing
+computational demands.
+*Corresponding author. Email: urban@fns.uniba.skMolecular Physics , Vol. 103, No. 15–16, 10–20 August 2005, 2141–2157
+Molecular Physics
+ISSN 0026–8976 print/ISSN 1362–3028 online #2005 Taylor & Francis Group Ltd
+http://www.tandf.co.uk/journals
+DOI: 10.1080/00268970500096251
+
+--- PAGE 2 ---
+Techniques which exploit the rotation of molecular
+orbitals (both virtual and possibly also occupied) maybe based on (approximate) natural orbitals (NOs) [3, 15,16]. First comparisons have shown [3] that the OVOSmethod is slightly preferable to results based on NOs
+in intermediate sized virtual spaces. By eliminating
+core correlations effectively perfect agreement isfound between the two approaches. Klopper et al. [16]
+transformed virtual orbitals into natural orbitals [17]with subsequent truncation aimed at more effectivecalculation of demanding triples in CCSD(T). Theircase studies have demonstrated very good performanceof this technique. Modiﬁed virtual orbitals and
+approximate orthogonalized natural orbitals in the
+conﬁguration interaction (CI SD) method were studiedby Wasilewski et al . [18]. There are several other
+possibilities of reducing the computer time of CCcalculations. Very promising is the use of localizedorbitals [19–23], especially for large spacially extendedmolecules with correlated electrons located on remoteorbitals. Particularly interesting and generally applica-
+ble is the technique aimed at the controlled treatment
+of small integrals which is based on the Choleskydecomposition of the denominators [24, 25]. Constansand Scuseria [26, 27] have implemented the Laplacefactorization of the energy denominators which permitsa lower scaling of the triples equations.
+In this paper we will focus on the reduction of the
+virtual orbital space. Due to the scaling with respect to
+the number of virtual molecular orbitals N
+/C29mentioned
+above, already the reduction of the virtual space by,e.g. 50%, can reduce the computer time in the CCSDstep by at least an order of magnitude. Savings can bemuch larger in the non-iterative treatment of triplesin CCSD(T) and even larger in approximate or fulliterative CCSDT [28] or CCSDTQ [29–31], pioneered byBartlett and Kucharski. One can possibly consider more
+drastic reduction of the virtual space for contributions
+emerging from the computationally demanding higherexcitation operators than for most important contribu-tions due to single and double excitation clusteroperators, T
+1and T2. Increased effectivity of CC
+methods may contribute to a wider exploitation ofthe single determinant reference techniques in quasi-degenerate situations in which higher excitation opera-
+tors are needed. Experience with the reduction of the
+virtual orbital space in routine CCSD and CCSD(T)calcuations and with efﬁcient optimization techniques ofOVOS may also be useful in multireference CC theories.Another area of application of these techniques mayemerge in externally corrected methods developedby Li and Paldus [32], in methods of momentsadvocated by Piecuch et al . [33] or in other related
+techniques [34].2. Techniques for obtaining OVOS
+2.1. Unitary transformations of CC amplitudes
+Let us ﬁrst summarize basic formulae for rotations of
+the CC excitation amplitudes [35] related by the unitarytransformation. Let us have two equivalent sets ofmolecular orbitals, representing the same system
+fj/C30
+iigN
+i¼1,h/C30ij/C30ji¼/C14ij;fj/C24iigN
+i¼1,h/C24ij/C24ji¼/C14ij:ð1Þ
+Both sets are orthonormal. The unitary transformation
+by which the two sets are mutually related may berepresented by the matrix U, which guarantees the
+orthonormality
+j/C24
+ii¼X
+pUð/C30!/C24Þipj/C30pi, ð2Þ
+Uð/C30!/C24Þip¼h/C24ij/C30pi, ð3Þ
+Uð/C30!/C24ÞyUð/C24!/C30Þ¼I: ð4Þ
+It is useful to split the matrix Uinto blocks of
+occupied, O, and virtual, V, orbitals, respectively, in
+both sets as
+Uð/C30!/C24Þ¼Oð/C30Þ!Oð/C24ÞOð/C30Þ!Vð/C24Þ
+Vð/C30Þ!Oð/C24ÞVð/C30Þ!Vð/C24Þ !
+:ð5Þ
+We require that CCSD and related methods are
+invariant with respect to the unitary rotation within
+the occupied and virtual subspaces, respectively. Thismeans that the block of occupied orbitals should notbe mixed with the block of virtual orbitals, i.e. U
+OVand
+UVOblocks should be zero.
+Using these relations, any N-excited determinant,
+originally expressed in the basis of /, can be written in
+terms of a new basis, n, as, e.g.
+jFð/C24Þa
+ii¼X
+pqUð/C30!/C24ÞipUð/C30!/C24ÞaqjFð/C30Þq
+pi,ð6Þ
+jFð/C24Þab
+iji¼X
+prX
+qsUð/C30!/C24ÞipUð/C30!/C24Þaq
+/C2Uð/C30!/C24ÞjrUð/C30!/C24ÞbsjFð/C30Þqs
+pri:ð7Þ
+Comparing the terms with the same level of
+excitations in the CC wave function expansion
+exp½T ð/C30Þ/C138jF0ð/C30Þi ¼exp½T ð/C24Þ/C138jF0ð/C24Þi, ð8Þ
+we obtain relations between corresponding single,
+double, etc. excitation amplitudes,
+tð/C24Þa
+i¼X
+pqtð/C30Þq
+pUð/C30!/C24ÞipUð/C30!/C24Þaq ð9Þ2142 P. Neogra ´dyet al.
+
+--- PAGE 3 ---
+tð/C24Þab
+ij¼X
+prX
+qstð/C30Þqs
+prUð/C30!/C24ÞipUð/C30!/C24Þaq
+/C2Uð/C30!/C24ÞjrUð/C30!/C24Þbs ð10Þ
+where indices p,rbelong to occupied and q,sto virtual
+orbitals, respectively.
+2.2. Partitioning of the virtual orbital space and
+notation used
+The partitioning of the virtual orbital space (see ﬁgure 1)
+is suggested with the prospect of calculations of bothclosed shell as well as high-spin open shell systems:
+(1)V1-subspace—inactive virtual orbitals : Virtual
+orbitals, which remain unchanged in the optimiza-tion procedure. This subspace is important partic-ularly in open shell calculations, where at least allhalf-occupied orbitals are contained in V1. This
+guarantees no O–V mixing, since orbitals, which areoccupied by /C11electrons are virtual for electrons
+with /C12spin. The V1 subspace can also be useful, for
+example, in calculations of reaction energies, whenthe occupation of orbitals changes in the course ofthe reaction. A suitably chosen V1 subspace should
+ensure the rotation of the same set of orbitalsduring the reaction process. Moreover, one canwish that some other virtual orbitals, usually those
+with lowest orbital energies, remain unrotated.
+(2) V2- subspace—OVOS, active virtual orbitals :
+This subspace involves orbitals which representthe OVOS active space. Only V1þV2 virtuals are
+considered in the correlation step. So V2 orbitals
+must reﬂect the ﬂexibility of the original V2þV3
+reduced virtual space.
+(3) V3- subspace—virtual orbitals, subjected to the
+reduction : Virtual orbitals, contributions from
+which are projected to the V2 subspace by the
+OVOS procedure. These virtuals are not consideredin the OVOS correlated calculations.
+The following notation will be used in this paper
+throughout: i,j,k2O;a
+0,b02V2;a/C3,b/C32V1þV2;
+a00,b002V3;aþ,bþ2V2þV3;~aa,~bb2V1a n d a,b2
+V1þV2þV3. When it is convenient, we will, in
+addition, distinguish between the original and the
+rotated set. Indices p,q,...will be used for the former
+set, while a,b,...indices for the latter.
+2.3. Optimization functionals
+Functionals useful in the OVOS technique must fulﬁll
+several requirements. They must preserve, as much aspossible, the ﬂexibility of the original virtual space of thesizeV2þV3 after the projection to the reduced OVOS
+V2 virtual space. That means they must serve as a good
+measure of the change of the correlation energy (or some
+other property which could be eventually considered)during the OVOS optimization. Second, the optimiza-tion functional should be simple and must require verylittle computer time. Also, the calculation of the ﬁrstderivative of the functional, needed in the search for theextreme, minimum or maximum, must be simple.Once the optimization functional is deﬁned, we express
+it in terms of parameters, which represent the trans-
+formation of the original virtual space into OVOSand minimize the functional with respect to theseparameters. We present a few optimization functionalsrelated to this work.
+2.3.1. Hylleraas J
+2functional. This functional was
+exploited in classical works by Bartlett, Adamowicz and
+Sadlej [1, 2, 15]. The second-order Hylleraas J2
+functional [36] generates the ﬁrst-order correlation
+orbitals. It represents the upper estimate of the Eð2Þ
+energy in the second-order many-body perturbation
+theory (MP2).
+Eð2Þ/C20J 2¼hC1jH0/C0Eð0ÞjC1iþ2hC1jW /C0 Eð1ÞjF0i,
+ð11Þα                    βV3 V3
+V2 V2
+V1
+V1
+O O
+Spin
+Figure 1. The separation of the orbital space for a general
+high-spin open shell system. The arrow symbolically represents
+the transfer of ‘contributions’ from the V3 to the V2 subspace.Optimized virtual orbitals for correlated calculations 2143
+
+--- PAGE 4 ---
+where jC1iis a trial wave function. In the OVOS
+approach jC1itakes formally the form of the ﬁrst-order
+perturbation theory (PT) wave function in the reducedV1þV2 space,
+jC
+1i¼1=4X
+i,jX
+a/C3,b/C3ta/C3b/C3
+ijð1ÞjFa/C3b/C3
+ijið 12Þ
+with
+ta/C3b/C3
+ijð1Þ¼hijjja/C3b/C3i
+ð/C15iþ/C15j/C0/C15a/C3/C0/C15b/C3Þ: ð13Þ
+The fourth-order Hylleraas functional was investigated
+by Adamowicz [37].
+2.3.2. CCSD energy in the V1QV2 space. CCSD
+calculations are presently considered as routine. Thus,for more demanding higher level CC calculations it is
+possible to consider the OVOS virtual space optimized
+with respect to the CCSD energy or the CCSD wavefunction. In this case, however, J
+2is not the best choice,
+since even with converged CCSD tab
+ijamplitudes the
+method would only lead to the best estimate of theﬁrst-order wave function. The information accumulatedduring the CCSD iterative process is better exploited ifwe use the functional Lin the form, directly referring to
+the CCSD energy,
+L¼/C1E
+OVOS
+CCSD ¼X
+i,a/C3fia/C3ta/C3
+iþ1
+4X
+i,j,a/C3,b/C3hijjja/C3b/C3i
+/C2ðta/C3b/C3
+ijþta/C3
+itb/C3
+j/C0tb/C3
+ita/C3
+jÞ:ð14Þ
+The minimization functional deﬁned in this way in the
+V1þV2 OVOS space will be referred to as the ‘energy’
+functional. The Lfunctional was originally employed
+in a slightly different form,
+L0¼ð/C1ECCSD /C0/C1EOVOS
+CCSDÞ2, ð15Þ
+which approaches zero when OVOS approaches the
+quality of the full virtual space. However, ﬁrst deriva-tives of LandL
+0differ only by a multiplicative factor,
+so that they have the same stationary points, i.e. the
+resulting OVOS orbitals are identical.
+2.3.3. Linearized overlap of the CCSD or the ﬁrst-order
+perturbative wave function in the full and the OVOSV1QV2 space. Although the energy funtionals
+described above are capable of mapping the quality ofthe converged CCSD energy or the CCSD wavefunction to the OVOS space and do not ‘reduce’ them
+to the MP2 energy or the ﬁrst-order PT wave function
+only, one cannot ignore the fact that their unanimousphysical interpretation is missing. While the optimized
+J
+2functional really leads to the best estimate of, at
+least, the ﬁrst-order PT wave function, there is no directlink between the quality of the optimized wave functionandL. The reason is that the energy in standard CC
+procedures is not obtained variationally. The essence of
+the standard CC procedure lies in obtaining amplitudesin the iterative process. The CCSD energy is subse-quently determined from the single and double excita-tion CC amplitudes. Really, it is not obvious, whetherthe proper interplay of CCSD amplitudes is satisfacto-rily preserved when performing the OVOS procedurewhen an energy functional is used. In order to
+circumvent this objection, we introduce an alternative
+functional, based on the overlap of the CCSD wavefunction in full virtual space and in the spacerepresented by OVOS, respectively. One can considersuch a functional in the linearized form,
+L¼hF
+0jTCCSDjTOVOS
+CCSDjF0ið 16Þ
+with mono- and biexcitations in TOVOS
+CCSD deﬁned as
+TOVOS
+1 ¼X
+i,a/C3ta/C3
+ia*yi,TOVOS
+2 ¼1=4X
+i,j
+a/C3,b/C3ta/C3b/C3
+ija*yib*yj:
+ð17Þ
+The functional, equation (16), will be referred to as an
+‘overlap’ functional. By optimizing the overlap oneassumes that the wave function expressed in terms ofOVOS ‘absorbs’ the maximum ﬂexibility of the originalvirtual space. The simplest way of considering the wavefunction corresponding to the MP2 energy is to replace
+the converged CCSD amplitudes by their ﬁrst-order
+counterparts, or simply to use amplitudes from the ﬁrstCCSD iteration. Note that for the closed-shell systemsthe ﬁrst-order single excitation amplitudes are absent.
+Equation (16) deserves a comment. First, the expan-
+sion of the wave function is inﬁnite and must betruncated anyway. However, the principal reason foromitting all nonlinear terms in our overlap functional
+is that some of these terms may break the size
+extensivity of the optimization method. This is, e.g.the case of disconnected contributions from thehF
+0jT2
+1jðTOVOS1Þ2jF0iterm. This problem can be solved
+by simply excluding disconnected terms. However inthat case the wave function is not rigorously deﬁned.Moreover, numerical tests have shown that the presenceof, e.g. quadratic T
+1terms change the results marginally.
+2.4. Optimization procedures
+Two alternative methods for optimizing the OVOS
+orbitals will be described. First, we will recall the2144 P. Neogra ´dyet al.
+
+--- PAGE 5 ---
+original method introduced by Adamowicz and
+Bartlett [1]. We have succeeded in implementing analternative method, a direct minimization of therespective functional using the Lagrangian multiplierstechnique. Our method allows one to circumvent the
+convergence problems which occur occasionally with
+the original Adamowicz and Bartlett [1] scheme, whichis based on the exponential parametrization of thetransformation matrix.
+2.5. Exponential parametrization of the
+OVOS transformation
+The optimization technique, introduced long ago, [1, 2],
+starts by expressing the transformation matrix U, see
+equations (2)–(5) in the exponential form
+U¼expðRÞ¼IþRþ
+1
+2!RRþ1
+3!RRR þ/C1/C1/C1 ,ð18Þ
+where Ris an antisymetric matrix, R¼/C0RT. This
+choice automatically guarantees the unitarity of U.
+Since the internal rotations of orbitals exclusively withinV2 and V3 subspaces should not bring any change of
+value for the optimization functional, it is sufﬁcient totreatRin the block form
+R¼0 ðRÞ
+c0c00
+/C0ðRÞc00c0 0/C18/C19
+: ð19Þ
+Due to the existence of the V1 space, the ﬁnal
+transformation matrix Utotmust be supplemented with
+the identity transformation in V1, i.e.
+Utot¼IðV1Þ0
+0U/C18/C19
+: ð20Þ
+Using this parametrization the optimization functional
+can be expressed in terms of Rc0c00. Its ﬁrst and second
+derivatives for R¼0 are expressed in relatively simple
+form. The system of equations can be solved iteratively,using the Newton–Raphson method or the Fletcher–
+Reeves conjugate gradient minimization.
+2.6. Direct parametrization of the OVOS
+transformation with boundary conditions
+We propose an alternative technique for obtaining
+OVOS using the elements of the unitary transformationmatrix U
+a/C3,pdirectly as optimization parameters. To
+ensure the othonormality of the transformed set oforbitals, hajbi¼/C14
+abwe implement the Lagrangian
+multipliers technique. Our approach is demonstrated
+for the energy functional Las an example. Analogous
+derivation applies to the overlap functional.Let us express the energy functional in the rotated
+virtual orbital space in terms of Up/C3,a. Note that our
+notation distinguishes indices in the original and therotated space. After supplementing this functional withthe Lagrangian multipliers we obtain a new functional,
+L, which is actually optimized, as
+L¼LþX
+a,b/C21abð/C14ab/C0hajbiÞ
+¼X
+iX
+a/C3fia/C3ta/C3
+iþ1=4X
+i,jX
+a/C3,b/C3hijjja/C3b/C3i/C28a/C3b/C3
+ij
+þX
+a,b/C21abð/C14ab/C0hajbiÞ
+¼X
+iX
+a/C3X
+p,qfiptq
+iUa/C3pUa/C3qþ1=4X
+i,jX
+a/C3,b/C3X
+p,q
+r,shijjjpqi
+/C2/C28rs
+ijUa/C3pUb/C3qUa/C3rUb/C3s
+þX
+a,b/C21ab/C14ab/C0X
+pUapUbp !
+, ð21Þ
+with effective two-particle amplitudes /C28deﬁned by the
+last line, equation (14).
+The diagrammatic representation of the conversion
+from the original to the rotated space of virtual orbitalsis shown in ﬁgure 2. The dashed vertical line representsthe two-electron perturbation, the triangle representsone-electron perturbation and the circle represents the
+OVOS transformation. Amplites are represented by the
+doubled vertical line, single and double arrow linesare related to unchanged and to the OVOS orbitals,respectively.
+All derivatives of the functional with respect to all
+U
+a0pþmatrix elements must be zero in the stationary
+point. Since Ua0~ppmatrix elements are zero by deﬁnition,
+UUUUUU
+Figure 2. One- and two-electron part of the energy
+functional with original and rotated virtual orbitals.Optimized virtual orbitals for correlated calculations 2145
+
+--- PAGE 6 ---
+they do not enter into the differentiation formula, which
+then reads as
+@L
+@Ua0pþ¼X
+iX
+qfipþtq
+iUa0q
+þX
+iX
+qfiqtpþ
+iUa0q
+þ1=2X
+ijX
+qrshijjjpþqi/C28rs
+ijPqsUa0r
+þ1=2X
+ijX
+qrshijjjrqi/C28pþs
+ijPqsUa0r
+/C02X
+b/C21a0bUbpþ¼0, ð22Þ
+where
+Ppq¼X
+a/C3Ua/C3pUa/C3q: ð23Þ
+The diagrammatic representation of the ﬁrst derivative
+is presented in the ﬁgure 3.
+Here it is convenient to deﬁne the auxiliary matrix Q,
+Qpþqþ¼X
+ifipþtbþ
+iþ1=2X
+ijX
+rshijjjrpþitsqþ
+ijPrs:ð24Þ
+Its calculation requires processes which scale as O2V3
+when we introduce the proper factorization of the
+second term. Using the Qmatrix, equation (22) can be
+easily expressed as
+QUTþQTUT¼ðQþQTÞUT¼2UT/C21T:ð25ÞQþQTis a symmetrical matrix having the V2þV3
+dimension. Since Umust be an unitary matrix, UUT¼I,
+and we ﬁnally get
+UðQþQTÞUT¼2/C21T: ð26Þ
+To conclude, the problem of searching the stationary
+point for our minimization functional, preserving
+the orthogonality requirements, reduces to the
+diagonalization of the QþQTmatrix. The procedure
+is iterative, because Q¼fðUÞ, but thanks to a suitable
+factorization it remains effective.
+la¼/C21aaeigenvalues are closely related to the overall
+contribution of a given orbital to the correlation energy,even if we admit that their physical interpretation is notstraightforward. In a sense they are analogous to
+occupation numbers considered in the NO techniques.
+Considering for a moment just closed-shell systems, forwhich the Fock operator matrix element f
+ov¼0, it holds
+for each iteration ( k)
+LðkÞ¼2X
+a0lðkÞ
+a0þC, ð27Þ
+where C¼ 1=4P
+i,j,~aa,~bbhijjj~aa~bbi/C28~aa~bb
+ij. This additional term
+contains only contributions from unchanged V1
+virtuals, provided that the V1 subspace is not empty.
+Rotated orbitals are sorted in a hierarchic sequence.
+Orbitals having the most negative lavalues enter into
+theV2 space. The dimension of the rotated V2 space
+determines the reduction of the original virtual spaceinto OVOS.
+There is some analogy of this technique with the SCF
+method. As in SCF, we try to construct a limitednumber of orbitals in the V2 space, into which we wish
+to project maximum ﬂexibility as obtained in the full
+space. This reminds us of the role played by the SCF
+occupied orbitals constructed from the basis of theatomic basis functions. At the same time the Pmatrix,
+deﬁned in equation (23), represents a special kind ofdensity matrix.
+Once the transformation matrix Uis determined,
+irrespective of whether the exponential or the directparametrization was used, the ﬁnal OVOS transforma-
+tion matrix can be created. This can be achieved by the
+additional diagonalization of the Fock operator F(or
+F
+Rin the case of the open shell) in the V2 space. In this
+way we obtain new virtual orbital energies, which areneeded when contributions to the correlation energy arecalculated in a perturbative-like way, as is the case, e.g.in CCSD(T). CCSD energy itself (and so L) is invariant
+to this rotation. However, this ﬁnal modiﬁcation of
+the Umatrix may affect the convergence of the
+CCSD procedure signiﬁcantly. Once the ﬁnal OVOS UUPU
+UUP
+UP
+Figure 3. One- and two-electron contributions to the 1st
+derivative of the Lfunctional.2146 P. Neogra ´dyet al.
+
+--- PAGE 7 ---
+transformation matrix is known, all necessary para-
+meters, i.e. one- and two-electron integrals overmolecular orbitals, excitation amplitudes and orbitalenergies can be used in the CC procedure. Molecularorbitals belonging originally to the V3 space were
+transformed into OVOS and are omitted.
+The OVOS approach can be compared with the NO
+approach, as was in fact done in previous papers [1, 3,15], see also more recent papers by Klopper et al. [16]
+and Jørgen et al. [17]. The relation between our OVOS
+and NO approaches is straightforward when consideringthe MP2 overlap type functional, analogous to equation(16). In fact, the two methods are equivalent in the full
+virtual space, i.e. in the case when our V3 space is left
+empty. With this choice the Pmatrix (23) is unitary and
+theQmatrix, equation (24), independent of Uin this
+case, is equivalent to the virtual–virtual one-electrondensity matrix Dof [16, 17]. Its eigenvectors are NOs
+and respective eigenvalues represent occupation num-bers. In the NO approach the virtual orbital space isreduced a posteriori , the selection parameter being
+the occupation number of the respective NO. In our
+approach the virtual orbital space is split a priori toV2
+andV3 subspaces. Within the OVOS technique the full
+virtual space is mapped into the reduced V2 space
+via the iterative process. Our selection parameters forreducing the virtual space are the l
+a¼/C21aaeigenvalues,
+see equation (26).
+3. Demonstrative calculations
+3.1. Introductory remarks
+The dominating part of the electron correlation effects
+is accounted for by the simplest approximation, i.e. thesecond-order many-body perturbation theory energy
+(MP2) and the corresponding ﬁrst-order perturbed wave
+function (when talking about the closed-shell system).Bartlett et al. [2] have noticed that one can eliminate a
+large portion of the error in the electron correlationconsidered in the reduced OVOS space V2 by using the
+MP2 energy in the full space. The electron correlationeffect arising from CCSD in the reduced space can berelated to that in the MP2 reduced space. Thus, we
+deﬁne the difference,
+X
+2¼½CCðOVOS Þ/C0MP2ðOVOS Þ/C138, ð28Þ
+where CC is usually CCSD or CCSD(T) and consider
+the total electron correlation contribution at thecoupled-cluster level, i.e. CC
+ðOVOS Þ
+2 as
+CCðOVOS Þ
+2 ¼MP2ðfullÞþX2 ð29Þin most applications. In a more general case one can
+deﬁne the quantity CCðOVOS Þ
+methodin which the index
+‘method’ denotes the level at which the correlationenergy (or property) is calculated in the full space ofvirtual orbitals. The correction at a more sophisticated
+CC level is subsequently calculated in the reduced
+OVOS space. An example of such a calculationwould be, e.g. the CCSD calculation in the full spaceand the CCSDT or CCSDTQ calculation using theOVOS technique. In a way this strategy resembles someother techniques for alleviating the computer demandsin highly sophisticated CC calculations. The commonassumption is that it migt be possible to obtain accurate
+CCSD(T) energies by performing CCSD(T) calculation
+in a small basis set and then correcting those energies(or properties) by adding the difference between theenergies obtained in the MP ncalculation with the small
+basis set and the larger, more accurate basis set [38, 39].This approximation is also a key assumption in theGnmethods ðn¼2, 3Þ[40]. One should realize, however,
+a distinct difference between these and our OVOS
+techniques. Namely, the space of occupied orbitals in
+OVOS is created with the same, frequently large basisset, for all levels of correlated calculations.
+The OVOS procedure described in section 2 is roughly
+aO
+2V3process which uses double- (and mono-)
+excitation amplitudes resulting from the formally ﬁrst-order PT or CCSD wave function in the full space ofvirtual orbitals. A natural starting point for practical
+applications is to choose the ﬁrst-order double excita-
+tion PT amplitudes t
+ab
+ijð1Þ. Using the CCSD excitation
+amplitudes as a starting point for OVOS may beproﬁtable in demanding cases of higher level CCSDTor CCSDTQ iterative (approximate or accurate)procedures. These processes scale with the number ofvirtual orbitals even worse than CCSD and thus theOVOS technique may lead to considerable computer
+time savings. We will present some results in this paper
+which use, along with the ﬁrst-order PT wave function,also CCSD starting amplitudes. These results servesolely for demonstrative purposes. Final remarksconcern the selection of virtual orbitals, which shouldundergo the OVOS transformation. First, one has to becareful in selecting all orbitals which are related bysymmetry and enter into different representations.
+This means that one cannot cut the virtual space
+blindly. Second, one has to be careful in selecting theOVOS space in applications to chemical reactivity.Uneven reduction of the virtual space for reactants andproducts may break cancellation of errors which isexpected in all approximate methods applied to calcula-tions of the reaction energy with an incomplete basis set.Third, we have examined diagonal elements l
+ðkÞ
+q0of the
+Lmatrix, equation (27), as a measure for selectingOptimized virtual orbitals for correlated calculations 2147
+
+--- PAGE 8 ---
+virtual orbitals which are suitable for the OVOS
+transformation. No reasonable conclusion about thismeasure is possible at present. This is important ifthe OVOS method should be used routinely.
+All calculations presented in the next sections of
+this paper were calculated with MOLCAS program
+package [41] with the OVOS module implemented.
+3.2. Electron correlation energies with OVOS
+The purpose of this section is to demonstrate the
+dependence of the CCSD and triples energies on the
+magnitude of the reduction of the virtual space.The ﬁrst example, the HF molecule, is the same as wasinvestigated by Adamowicz and Bartlett [1].
+Figure 4 shows the dependence of CCSD correlation
+energy on the size of the virtual space. Virtual orbitalswere optimized using either ‘energy’ or the ‘overlap’functionals, equations (14) and (16), respectively. In the
+‘overlap’ functional either CCSD or MP2 biexcitation
+amplitudes were selected. We observe very goodperformance of all functionals, losing only about 2%of the total CCSD correlation energy when the virtualspace is reduced by about one half. The overlapfunctional performs slightly better than the energy
+functional. Only the highest virtual orbital of HFcan be deleted when the OVOS procedure is omitted.The superiority of the overlap functional is even morepronounced in the triples energy, ﬁgure 5. The triples
+energy deteriorates slightly sooner than the CCSD
+energy. This feature of the energy-based optimizationfunctionals has already been observed in previousinvestigations [2, 15, 16].
+In fact, we present no essential new information
+concerning the OVOS performance. What is new is themuch better convergence of our direct parametrizedoptimization method of the OVOS transformation
+than the one based on the former exponential formula
+[1, 2], see sections 2.5 and 2.6. Better convergence ofthe optimization process may be helpful in futureapplications of the OVOS techniques.
+More interesting is the study of the efﬁciency of
+the OVOS procedure for propane, butane and pentaneusing Dunning et al .’s cc-pVDZ and cc-pVTZ basis
+sets [43, 44]. The size of the full occupied/virtual orbital
+space for the DZ and the TZ basis set of propane is
+(10/69) and (10/189), respectively. The correspondingnumbers for butane are DZ ¼(13/89) and TZ ¼(13/243),
+ 60 65 70 75 80 85 90 95 100
+ 8  10  12  14  16  18  20  22  24  26  28% E(corr) CCSD
+number of virtual orbitals"energetic" functional
+"overlap" functional, CCD w.f.
+"overlap" functional, MP2 w.f.
+Canonical v.o.
+Figure 4. CCSD correlation energy (au) of HF ( Re¼1:7328 au) calculated with the full and the OVOS reduced virtual space.
+Polarized GTO/CGTO basis set [42], F: 10s6p4d/5s3p2d, H: 6s4p/3s2p, 1s orbitals of F are frozen. Virtual orbitals were optimized
+using the energy and the overlap functional, respectively.2148 P. Neogra ´dyet al.
+
+--- PAGE 9 ---
+respectively; for pentane the size is: DZ ¼(16/109) and
+TZ¼(16/297), respectively. The efﬁciency of the OVOS
+procedure is expressed this time as a percentage of theCCSD energy related to the full space CCSD energy.The size of OVOS is expressed as a percentage of the fullV2þV3 space. Figure 6 shows that the energies are
+very similar with all functionals. Lower curves corre-spond to the plain CCSD OVOS energies. Not surpris-
+ingly, the larger cc-pVTZ basis performs better that the
+cc-pVDZ set. Excellent performance of OVOS shown inthe upper two curves demonstrates clearly the usefulnessof the full-space MP2 corrected OVOS CCSD energies,i.e. CCSD
+ðOVOS Þ
+2 , see equations (28) and (29).
+For our ﬁnal example, ﬁgures 7 and 8 show the CCSD
+and triples correlation contributions, respectively, as afunction of the OVOS reduction for HCN. We see, for
+example, that when the virtual space of the cc-pVTZ
+basis set is reduced by OVOS to about one third, weobtain more CCSD correlation energy than is obtainedwith the full cc-pVDZ basis set. Occupied orbitals are, ofcourse, represented by the more extended cc-pVTZbasis. Again, as was the case for the series of alkanes, theperformance of OVOS is signiﬁcantly better for largerbasis sets. This is clearly visible from the dependence of
+the CCSD and the triples energies of HCN on the size ofthe virtual space as presented in ﬁgures 7 and 8. OVOS
+performs in representing triples slightly worse, even ifmuch better than it was with HF. Finally, considerablesaving of the wall-clock computer time as estimatedfrom calculation performed with the 2.0 GHz IntelPentium IV processor is visible from data inserted inboth ﬁgures 7 and 8.
+3.3. HCN to HNC izomerization energies
+Demanding, but crucial applications of the OVOS
+technique are calculations of reaction energies. Thereason for difﬁculties is that the orbital structure maychange during the course of the chemical reaction andthus it is not always easy to guarantee a balanced
+structure and magnitude of the OVOS V2 subspace of
+virtual orbitals over the whole energy hypersurface,or for the reactants and products. Our ﬁrst applicationin this area is the isomerization reaction HCN $
+HNC which is not too demanding an example.Detailed studies of this reaction are available [45, 46].The smoothness of the curves of the CCSD and thetriples energy for different reductions of the virtual
+space, ﬁgures 7 and 8, supports the expectation that
+OVOS may lead to a high accuracy of both isomeriation 10 20 30 40 50 60 70 80 90 100
+ 8  10  12  14  16  18  20  22  24  26  28% E(T3)
+number of virtual orbitals"energetic" functional
+"overlap" functional, CCD w.f.
+"overlap" functional, MP2 w.f.
+Canonical v.o.
+Figure 5. Non-iterative T3contribution (au) of HF calculated with the full and the OVOS reduced virtual space. For details see
+ﬁgure 4.Optimized virtual orbitals for correlated calculations 2149
+
+--- PAGE 10 ---
+and activation energies. The performance of OVOS in
+reproducing the full space CCSD and triples contribu-tions to the isomerization energies is presented in table 1.
+Comparison of typical results with the cc-pVTZ
+(76 virtual orbitals) and the cc-pV5Z (230 virtualorbitals) basis sets shows, again, that OVOS performs
+better with a larger basis set. CCSD contribution to
+/C1Ecalculated as CCSD
+ðOVOS Þ
+2 is stable to within
+0.4 kJ mole/C01for OVOS reduced to about 50% with
+the cc-pVTZ basis set. Contribution to /C1Efrom triples
+is low, and is essentially the same with cc-pVTZ andcc-pV5Z basis sets. Triples are a bit less stable withrespect to the reduction of the virtual space than is theCCSD energy. This holds particularly for the cc-pVTZ
+basis set. Performance of OVOS with the cc-pV5Z basis
+set is excellent. Not only MP2
+ðfullÞcorrected OVOS
+CCSD energy is stable to within 0.2 kJ mole/C01for all
+OVOS reductions presented in table 1, but also theplain CCSD energy with OVOS is remarkably stable.The same holds for triples.
+For obtaining accurate results of the reaction energy it
+is crucial that the standard extrapolation techniques to
+the complete basis set limit (CBS) [47, 48] is possiblewith OVOS as with the full virtual space. Results
+in table 2 show that with OVOS reduced to 50% theCCSD contribution as well as the total CCSD(T)isomerization energy is reproduced excellently. TheCBS extrapolation with OVOS reproduces the fullspace CBS limit to within 0.02 kJ mole
+/C01. Also the
+difference of /C1Ewith the small cc-pVDZ basis set and
+the cc-pV5Z basis set (4 kJ mole/C01) is reproduced by the
+OVOS technique very well. These trends correspond tothose obtained in a detailed study of the HCN–HNCisomerization by van Mourik et al. [46]. We should note,
+however, that their study has been performed with allelectrons correlated using the cc-pCVXZ basis sets.
+We also note that CCSD(T) calculations with large or
+at least reasonable basis sets are needed for chemical
+accuracy of /C1E. As is clear from table 1, the plain MP2
+overestimates the electron correlation contribution to/C1Eby about 14 kJ mole
+/C01, a difference which is not
+chemically acceptable. The capability of OVOS inreproducing the CBS limit for the barrier of theHCN $HNC isomerization, table 3, is slightly worse
+than it was for /C1E, but the accuracy better than
+0.2 kJ mole
+/C01remains fully satisfactory.
+Figure 6. CCSD correlation energy (au) of propane, butane and pentane, calculated with the full and the OVOS reduced virtual
+space using the cc-pVDZ and cc-pVTZ basis sets. Core electrons were uncorrelated. Lines denoted as ‘Alkane þMP2’ correspond to
+the MP2 full virtual space corrected CCSD energies, CCSDðOVOS Þ
+2 , see equations (28) and (29).2150 P. Neogra ´dyet al.
+
+--- PAGE 11 ---
+3.4. Pentane dissociation energy
+The stability of the dissociation energy of pentane to
+propene and ethane with respect to the OVOS reductionis demonstrated in table 4 for the cc-pVTZ basis set.
+Plain CCSD(T)
+ðOVOS Þcorrelation contributions to the
+reaction energy lie within the narrow interval of 21.3to 22.2 kJ mole
+/C01for OVOS reduced down to 50%.
+CCSD(T)ðOVOS Þ
+2 corrected values are even more accurate,
+the interval now being 0.3 kJ mole/C01. Very accurate /C1E
+is obtained even when the virtual space is reduced to40% of the full space, with only a slightly larger numberof virtuals as contained in the full-space cc-pVDZ basis
+set, see data in table 4. We note that the error introduced
+by the OVOS technique is much lower than is the effectof the extension of the basis set from cc-pVDZ tocc-pVTZ. We also note that /C1Eobtained from the pure
+MP2 energies is inaccurate, differing from the CCSD(T)value by about 10 kJ mole
+/C01. The basis set effects and
+results with OVOS reduced to 50% are summarized intable 5. The importance of the CBS extrapolation based
+on cc-pVDZ and cc-pVTZ basis sets should not beoveremphasized. /C1Efrom the full space limit and /C1E
+from the CBS limit with OVOS reduced to about 50%
+agree to within 0.2 kJ mole
+/C01. This is much less than is
+the basis set effect in the electron correlation contri-bution. Finally, we note that the basis set effects in theSCF and the electron correlation contributions to /C1E
+compensate each other to some extent. The resultingfull space total /C1Ewith the smaller cc-pVDZ basis set
+and with the cc-pVTZ basis set are 107.3 and
+104.6 kJ mole
+/C01, respectively. The reduced OVOS space
+reproduces the electron correlation contribution to /C1E
+with an accuracy of 0.1–0.2 kJ mole/C01.
+3.5. Spectroscopic constants of F 2,1RQ
+g
+The capability of OVOS to provide an accurate
+spectroscopic constant is examined for the F 2molecule
+in its ground state. There are many sophisticatedcalculations published for the equilibrium bond distance(R
+e), harmonic frequency ( !e) and the anharmonicity
+constant ( !exe)o fF 2, see e.g. [38, 49–51]. The large
+basis sets CC calculation [38, 50] and sophisticated
+Figure 7. Dependence of the CCSD correlation contribution (au) to the energy of the HCN molecule on the size of OVOS with
+respect to the full virtual space. cc-pVXZ basis sets, X ¼D, T, Q and 5. 1s orbitals of C and N are frozen. ‘Overlap’ optimization
+functional and MP2 amplitudes were used in the optimization. Horizontal lines represent the CCSD energy with the full virtual
+space with the cc-pVXZ basis sets. Arrows on the right-hand side denote the wall-clock computer time for the full virtual space with
+the cc-pVXZ basis sets. Arrows on the left-hand side denote the computer time for the OVOS space reduced to about 30–40% of thefull cc-pVTZ, cc-pVQZ and cc-pV5Z basis set space, respectively.Optimized virtual orbitals for correlated calculations 2151
+
+--- PAGE 12 ---
+multireference calculations [49] as well as the newly
+implemented Brillouin–Wigner CCSD theory [51]were used in the cited papers. These results are useful
+for comparisons presented in this work. Potentialenergy curves were calculated for bond distances in the
+vicinity of the equilibrium bond length R
+ein order
+to avoid large CCSD amplitudes which accompany
+quasi-degeneracy problems at larger bond length. This
+Figure 8. Dependence of the non-iterative T3contribution (au) to the energy of the HCN molecule on the size of OVOS with
+respect to the full virtual space. For details see notes to ﬁgure 7.
+Table 1. CCSD and triples (T) correlation contributions to the HCN $HNC izomerization energya,/C1EðkJ mole/C01Þ, using
+cc-pVTZ and cc-pV5Z basis sets. 1s orbitals of C and N are frozen. MP2, CCSD and triples contributions are calculated in the full
+and the OVOS virtual space, respectively. CCSD results are presented as plain (CCSD(OVOS)) and the full space MP2 corrected
+contributions ðCCSDðOVOS Þ
+2 Þ, see deﬁnitions in equations (28) and (29).
+% of virt. o. # of virt. o. MP2(OVOS)X2 CCSD(OVOS)CCSDðOVOS Þ
+2 (T)
+cc-pVTZ
+(100.00) 67 /C033.07 13.67 /C019.40 /C019.40 /C01.63
+(76.12) 51 /C033.58 13.64 /C019.94 /C019.43 /C01.68
+(68.66) 46 /C033.38 13.30 /C020.08 /C019.78 /C01.66
+(59.70) 40 /C032.36 13.48 /C018.88 /C019.58 /C01.46
+(50.75) 34 /C030.84 13.43 /C017.41 /C019.63 /C01.20
+(38.81) 26 /C034.31 14.05 /C020.26 /C019.02 /C02.30
+cc-pV5Z
+(100.00) 230 /C033.49 13.57 /C019.92 /C019.92 /C01.63
+(50.87) 117 /C033.73 13.58 /C020.15 /C019.91 /C01.63
+(40.00) 92 /C034.08 13.74 /C020.34 /C019.75 /C01.65
+(31.74) 73 /C033.59 13.46 /C020.13 /C020.03 /C01.61
+(22.61) 52 /C034.67 13.56 /C021.11 /C019.93 /C01.54
+aGeometries are taken from [42].2152 P. Neogra ´dyet al.
+
+--- PAGE 13 ---
+can slightly affect the accuracy of the anharmonicity
+constant ( !exe).
+Spectroscopic constants with a series of the OVOS
+reductions are compared with the full space calculationsin table 6.
+Our treatment of spectroscopic constants is based
+on a conventional power series representation of thepotential energy function in terms of the reduced
+displacements, x¼ðR/C0R
+eÞ=Re, where Ris the inter-
+nuclear separation and Reis the equilibrium bond
+length. OVOS results reproduce the full space curveswith the aug-cc-pVTZ basis set (83 virtual orbitals) up to
+the aug-cc-pV5Z basis set (245 virtual orbitals) excel-
+lently. Even reduction of OVOS to about 30% issatisfactory for R
+e. As expected, the least stable is the
+anharmonicity constant !exe. The OVOS reduction to
+our ‘standard’, i.e. 50%, is safe and gives as accurate aspectroscopic constant for F
+2as the full space. Also,
+OVOS results reproduce the basis set dependence of Re,
+!eand !exevery well. It is known from the detailed
+study [50] of the basis set dependence of the CCSD(T)
+spectroscopic constants that !eis slightly overestimated
+by this method. The trend within the series of basis sets,table 6, conﬁrms this expectation, even if we are notsaying that !
+efrom the large basis set CCSD(T)
+calculation is inaccurate at all. To get an even moreaccurate result with the single reference CC method oneneeds to use at least CCSDTQ or an even higher version
+of CC [29–31, 53–55], an externally corrected CC
+method [8, 32], method of moments [33] or theBrillouin–Wigner multirefrence variant of CC [51, 56].To overcome problems with computer demands forthese methods, the use of OVOS offers one suchpossibility.
+Spectroscopic properties are quite sensitive to the
+selection of the basis set and are thus well suitable for
+the treatment with the OVOS technique. The study of
+Pawlowski et al. [50] reveals that, for example, !
+eis
+overestimated by CCSD(T) by about 133 and 39 cm/C01
+with the cc-pVDZ and the cc-pVTZ basis sets,
+respectively. Their !ewith the large cc-pV6Z basis
+is 928.5 cm/C01, in accord with our ﬁnal values with
+OVOS, table 6. It appears that the harmonic fre-quencies of F
+2obtained with the NO technique for
+triples [16] are slightly less stable with respect to the
+reduction of the virtual space than are our OVOSvalues. However, NO results were obtained with smallercc-pVXZ basis sets.
+3.6. CO dipole moments
+Another challenging problem for the OVOS approach
+are calculations of electric properties. Gradient techni-ques in CC, pioneered by Bartlett and co-workers[57–59] are useful in sophisticated CC calculationsof molecular spectroscopic constants and electric andmagnetic properties [55, 60, 61], but are not available forOVOS yet. Electric properties can be alternatively
+calculated by the ﬁnite ﬁeld technique [62, 63] which
+was used in this paper. This is favourable for OVOSTable 2. HCN $HNC izomerization energiesaðkJ mole/C01Þ
+using cc-pVXZ basis sets with the full and with OVOS virtual
+space reduced by /C2550%. 1s orbitals of C and N are frozen.
+OVOS results correspond to CCSDðOVOS Þ
+2 and CCSD(T)ðOVOS Þ
+2
+respectively, see equations (28) and (29). Extrapolations to the
+complete basis set limit with respect to the basis set cardinal
+number X were performed using the formula E ¼ECBSþk=X3.
+X Full spaceOVOS, /C2550%
+of virt. o.
+CCSD correlation contribution
+D /C019.59 –
+T /C019.40 /C019.63
+Q /C019.59 /C019.55
+5 /C019.92 /C019.91
+Extrapolated CCSD correlation contribution
+(TQ5) /C019.96 /C60.17 /C019.83 /C60.25
+(TQ) /C019.73 /C019.49
+(Q5) /C020.27 /C020.29
+Total CCSD(T) izomerization energy
+D /C066.00 –
+T /C062.46 /C062.25
+Q /C062.04 /C061.94
+5 /C062.18 /C062.16
+Extrapolated CCSD(T) izomerization energies
+(TQ5) /C062.00 /C60.18 /C063.47 /C60.65
+(TQ) /C061.74 /C064.35
+(Q5) /C062.32 /C062.28
+aGeometries are taken from [42].
+Table 3. CCSD(T) correlation contribution to the
+HCN $HNC reaction barriera(kJ mole/C01) using cc-pVXZ
+and aug-cc-pVXZ basis sets, X ¼D, T, Q. 1s C and N orbitals
+are frozen. Full and /C2550%reduced OVOS calculations.
+OVOS results correspond to CCSD(T)ðOVOS Þ
+2 , see equations (28)
+and (29). (TQ) corresponds to the CBS limit, see heading
+to table 2.
+XSCFCCSD(T) CCSD(T)ðOVOS Þ
+2
+100% /C2550%
+XZ/aug-XZ XZ/aug-XZ XZ/aug-XZ
+D 202.39/198.75 /C010.55/ /C011.55 /C09.77//C011.25
+T 204.72/203.98 /C09.31//C09.91 /C09.41//C09.97
+Q 204.37/204.00 /C09.03//C09.23 /C09.10//C09.38
+(TQ) /C08.83//C08.73 /C08.87//C08.95
+aGeometries are taken from [42].Optimized virtual orbitals for correlated calculations 2153
+
+--- PAGE 14 ---
+since small static homogenous external ﬁelds, which are
+used in ﬁnite ﬁeld calculations do not change theorbital structure signiﬁcantly. Consequently, substantialcancellation of errors for energies calculated without
+and with an external ﬁeld, respectively, is expected in
+OVOS. The external ﬁeld strength used in the presentapplication was 0.003 au. The SCF dipole momentcalculated with this ﬁeld strength agrees with theexpectation value dipole moment to more than threedecimal digits.
+Typical results with two augmented basis sets
+presented in table 7 conﬁrm expectations about the
+applicability of the OVOS approach in the treatment of
+the dipole moment of the CO molecule. CCSD andtriples contributions to the dipole moment of CO arestable to within 0.002–0.003 au for all selected OVOSreductions. Excellent results are obtained even whenthe virtual space of the aug-cc-pVQZ basis set(153 virtual orbitals in the full space) is reduced to/C2530% (the deviation of the total correlation contribu-
+tion from the full space value is 0.002 au). OVOS
+performs very well even with the relatively small aug-cc-pVDZ basis set (39 virtual orbitals in the full space).It is somewhat surprising that triples are insensitive tothe reduction of the virtual space, considering the otherapplications discussed so far. However, the same ﬁndingfollows from Klopper et al.’s calculations for the CO
+dipole moment [16] with their reduced virtual space
+based on the MP2 natural orbitals. In light of these
+ﬁndings it is not surprising that the OVOS treatmentreproduces trends of the correlation effects with respectto the systematic increase of the cardinal number Xin the series of cc-pVXZ and aug-cc-pVXZ basis setsexcellently.
+The CBS limit with OVOS reduced to /C2550% differs
+from results with the full virtual space by about
+0.001 au, see table 8.Table 4. CCSD(T) correlation contribution to the pentane to propene and ethane dissociation energy, /C1E(kJ mole/C01), using the
+cc-pVTZ basis set. Inner shell orbitals are frozen. MP2 and CCSD(T) contributions to /C1Eare calculated with the full and with the
+reduced virtual space using OVOS. CCSD(T) results are presented as plain (CCSD(T)(OVOS)) and the full space MP2 corrected
+contributions ðCCSD ðTÞðOVOS Þ
+2 Þ, respectively, see deﬁnitions in equations (28) and (29).
+%o f #o f
+MP2(OVOS)X2 CCSD(T)(OVOS)CCSD(T)ðOVOS Þ
+2 virt. o. virt. o.a
+(100.00)b109 28.3 /C011.1 17.0 17.0
+(100.00) 297 31.9 /C010.0 21.9 21.9
+(80.81) 240 32.2 /C010.2 22.0 21.7
+(70.37) 209 32.0 /C010.1 21.9 21.8
+(59.93) 178 31.3 /C010.0 21.3 21.9
+(50.17) 149 32.5 /C010.3 22.2 21.7
+(39.73) 118 29.7 /C09.9 19.7 22.0
+aNumber of virtual orbitals for pentane.
+bcc-pVDZ basis set data.
+Table 5. Pentane to propene and ethane dissociation energy,
+/C1E(kJ mole/C01). cc-pVXZ basis sets, X ¼D, T. 1s orbitals of
+C are frozen. Full and /C2550%reduced OVOS calculations.
+OVOS results correspond to CCSD(T)ðOVOS Þ
+2 , see equations (28)
+and (29). (DT) corresponds to the CBS limit, see heading to
+table 2.
+X SCFCCSD(T) CCSD(T)ðOVOS Þ
+2
+100% /C2550%
+D 90.3 17.0 17.7
+T 82.7 21.9 22.0
+(DT) 24.0 23.8
+Table 6. F 2spectroscopic constants, Reð10/C010mÞ;!eand
+!exeðcm/C01Þ, using aug-cc-pVXZ basis sets.a1s orbitals of the
+ﬂuorine atoms are frozen. OVOS results correspond to
+CCSD(T)ðOVOS Þ
+2 values, see equations (28) and (29).
+X % of virt. orb. Re !e !exe
+Exper.b1.4126 916.64 11.32
+T CCSD(T) (100.00) 1.418 917.0 12.21
+OVOS (69.88) 1.418 917.1 13.11
+(51.81) 1.418 917.2 12.15
+(31.33) 1.418 917.0 12.74
+Q CCSD(T) (100.00) 1.413 921.9 11.43
+OVOS (70.20) 1.413 920.4 11.73
+(48.34) 1.414 920.0 11.53
+(29.80) 1.415 916.4 11.51
+5 CCSD(T) (100.00) 1.411 927.5 12.28
+OVOS (70.20) 1.411 926.9 12.34
+(48.34) 1.411 927.9 13.58(29.80) 1.412 924.1 12.24
+aaug-cc-pVXZ basis sets contain 83, 151 and 245 virtual
+orbitals in the full space, for X ¼T, Q and 5, respectively.
+bFrom [52].2154 P. Neogra ´dyet al.
+
+--- PAGE 15 ---
+Both DZ basis sets lead to inaccurate results.
+As expected, the cc-pVDZ basis set performs muchworse than the aug-cc-pVDZ basis and overshoots theCBS limit for the CCSD(T) contribution to the dipole
+moment by 0.040 au, i.e. by about 30%. This reﬂects the
+well-known fact that electric properties require aug-mented basis sets for highly accurate results [44, 64–67].Our results agree very well with available accuratetheoretical investigations of the dipole moment of CO[16, 66–68]. Our best CCSD(T) dipole moment alsoagrees with the experimental value, /C22
+e¼0:048 au or
+0.123(2) Debye [69] very well. To calculate the dipole
+moment of CO accurately is a difﬁcult problem. It isvery low, SCF calculations even provide incorrect
+polarity (the corret one, as obtained from correlatedcalculations is C
+/C0Oþ) and small basis sets are not
+applicable. We are delighted that the OVOS techniqueperforms very well in this demanding application.
+4. Conclusions
+The optimization of the reduced virtual orbital space for
+calculations of molecular properties [1, 2] is a promisingmethod for reducing the computer time for demandingcoupled cluster calculations. We have suggested newfunctionals and methods for the optimization of theorbital rotation within the virtual space. Methods areeffective and have been tested for CCSD and CCSD(T)
+calculations of reaction energies, spectroscopic con-
+stants and the dipole moment of selected molecules.Comparison of results obtained with the full and withthe reduced virtual space has revealed that satisfactoryaccuracy can be preserved with considerable savings ofthe computer time. It is shown that the virtual space forCCSD and the triples electron correlation contributionscan be reduced down to 50% of the original virtual
+space, or even more, which means a saving of computer
+time by an order of magnitude. We have found thefollowing.
+(1) The linearized optimization functionals are the
+most efﬁcient techniques for obtaining the reduced
+space of the virtual orbitals. The energy or the waveTable 7. CCSD and triples (T) correlation contribution to the COadipole moment, /C22(au), using aug-cc-pVDZ and aug-cc-pVQZ
+basis sets. 1s orbitals of C and O are frozen. MP2, CCSD and triples contributions are calculated in the full and the OVOS virtual
+space, respectively. CCSD results are presented as plain (CCSDðOVOS Þ) and the full space MP2 corrected contributions
+ðCCSDðOVOS Þ
+2 Þ, see deﬁnitions in equations (28) and (29).
+%o f #o f
+MP2(OVOS)X2 CCSD(OVOS)CCSDðOVOS Þ
+2 (T) virt. o. virt. o.
+aug-cc-pVDZ
+(100.00) 39 /C00.218 0.079 /C00.140 /C00.140 /C00.017
+(82.05) 32 /C00.217 0.079 /C00.138 /C00.140 /C00.017
+(64.10) 25 /C00.214 0.079 /C00.135 /C00.140 /C00.017
+(61.54) 24 /C00.217 0.079 /C00.138 /C00.140 /C00.017
+(48.72) 19 /C00.215 0.077 /C00.138 /C00.141 /C00.018
+(41.03) 16 /C00.210 0.078 /C00.132 /C00.140 /C00.016
+aug-cc-pVQZ
+(100.00) 154 /C00.212 0.085 /C00.127 /C00.127 /C00.023
+(80.39) 123 /C00.210 0.084 /C00.126 /C00.128 /C00.023
+(69.93) 107 /C00.212 0.085 /C00.128 /C00.128 /C00.023
+(58.17) 89 /C00.213 0.085 /C00.128 /C00.127 /C00.023
+(50.33) 77 /C00.207 0.083 /C00.124 /C00.129 /C00.022
+(42.48) 65 /C00.207 0.084 /C00.124 /C00.129 /C00.023
+(31.37) 48 /C00.211 0.083 /C00.129 /C00.130 /C00.023
+aEquilibrium bond length, Re¼112:88 pm [52].
+Table 8. CCSD(T) dipole moment, /C22(au), of the CO
+molecule using cc-pVXZ and aug-cc-pVXZ basis sets,
+X¼D, T, Q, 5. 1s orbitals of C and O are frozen.
+Full and /C2550% reduced optimized virtual orbital space
+calculations. OVOS results correspond to CCSD(T)ðOVOS Þ
+2 ,
+see equations (28) and (29).
+XSCFCCSD(T) CCSD(T)ðOVOS Þ
+2
+100% /C2550%
+XZ/aug-XZ XZ/aug-XZ XZ/aug-XZ
+D 0.091/0.102 /C00.087/ /C00.056 /C00.068/ /C00.058
+T 0.096/0.105 /C00.066/ /C00.050 /C00.064/ /C00.052
+Q 0.104/0.104 /C00.050/ /C00.046 /C00.051/ /C00.048
+5 0.104/0.104 /C00.046/ /C00.046 /C00.047/ /C00.046
+(Q5) /C00.042/ /C00.046 /C00.043/ /C00.045Optimized virtual orbitals for correlated calculations 2155
+
+--- PAGE 16 ---
+function overlap functionals can be constructed.
+The latter one is preferred.
+(2) CCSD electron correlation contribution is less
+sensitive to the reduction of the virtual space thanis the contribution from triples.
+(3) The OVOS technique is more efﬁcient and reliable
+with large basis sets.
+(4) The pattern of the basis set dependence of
+molecular properties is preserved when the virtualspace is reduced by the OVOS technique. Thisallows extrapolation to the complete basis set limit.
+Acknowledgements
+We acknowledge the help of Mgr. Milan Uhla ´r for the
+geometry optimization of alkanes molecules. The sup-
+port of the Slovak Grant Agency (Contract No. 1/0115/03) is gratefully acknowledged.
+This paper is dedicated to Professor Rodney Bartlett
+on the occasion of his 60th birthday, in appreciation ofhis outstanding contribution to the ﬁeld of theoreticaland computational chemistry. One of us (MU) cordiallyappreciates the very nice, friendly and fruitful atmo-
+sphere during his stays at QTP while working in Rod’s
+group.
+References
+[1] L. Adamowicz, R.J. Bartlett. J. chem. Phys. ,86, 6314
+(1987).
+[2] L. Adamowicz, R.J. Bartlett, A.J. Sadlej. J. chem. Phys. ,
+88, 5749 (1988).
+[3] C. Sosa, J. Geertsen, G.W. Trucks, R.J. Bartlett,
+J.A. Franz. Chem. Phys. Lett. ,159, 148 (1989).
+[4] J. C ˇı´zˇek.J. chem. Phys. ,45, 4256 (1966).
+[5] G.D. Purvis, R.J. Bartlett. J. chem. Phys. ,76, 1910 (1982).
+[6] R.J. Bartlett. In Modern Electronic Structure Theory ,
+Part II, D.R. Yarkony (Ed.), pp. 1047, World Scientiﬁc,
+Singapore (1995).
+[7] M. Urban, I. C ˇernus ˇa´k, V. Kello ¨.I n Methods in
+Computational Chemistry , S. Wilson (Ed.), p. 117,
+Plenum Press, New York (1987).
+[8] J. Paldus, X. Li. Adv. Chem. Phys. ,110, 1 (1999).
+[9] T.J. Lee, G. Scuseria. In Quantum Mechanical Electronic
+Structure Calculations with Chemical Accuracy ,
+S.R. Langhoff (Ed.), p. 47, Kluwer AcademicPublishers, Dordrecht (1995).
+[10] J. Gauss. In Encyclopedia of Computational Chemistry ,
+P. von Rague ´Schleyer (Ed.), pp. 615–636, John Wiley &
+Sons, Chichester (1998).
+[11] T. Helgaker, P. Jørgensen, J. Olsen. Molecular Electronic-
+Structure Theory , John Wiley & Sons, Chichester (2000).
+[12] K. Raghavachari, G.W. Trucks, J.A. Pople, M. Head-
+Gordon. Chem. Phys. Lett. ,157, 479 (1989).
+[13] J.D. Watts, J. Gauss, R.J. Bartlett. Chem. Phys. Lett. ,
+200, 1 (1992).[14] M. Urban, J. Noga, S.J. Cole, R.J. Bartlett. J. chem.
+Phys. ,83, 4041 (1985).
+[15] L. Adamowicz. J. phys. Chem. ,93, 1780 (1989).
+[16] W. Klopper, J. Noga, H. Koch, T. Helgaker. Theor.
+Chem. Acc. ,97, 164 (1997).
+[17] H. Jørgen, Aa Jensen, P. Jørgensen, H. Agren, J. Olsen.
+J. chem. Phys. ,88, 3834 (1988).
+[18] J. Wasilewski. Int. J. quantum Chem. ,39, 649 (1991);
+J. Wasilewski, S. Zelek, M. Wierzbowska. Int. J. quantum
+Chem. ,60, 1027 (1996).
+[19] P. Pulay, S. Saebø. Theor. Chim. Acta ,69, 367 (1986);
+J.W. Boughton, P. Pulay. J. comput. Chem. ,14, 736
+(1993).
+[20] W.D. Laidig, G.D. Purvis, R.J. Bartlett. J. phys. Chem. ,
+89, 2161 (1985).
+[21] M. Schu ¨tz, G. Hetzer, H.-J. Werner. J. chem. Phys. ,111,
+5691 (1999).
+[22] M. Schu ¨tz, H.-J. Werner. J. chem. Phys. ,114, 661 (2001).
+[23] T. Korona, K. Pﬂu ¨ger, H.-J. Werner. Phys. Chem. Chem.
+Phys. ,6, 2059 (2004).
+[24] H. Koch, A. Sa ´nches de Mera ´s.J. chem. Phys. ,113, 508
+(2000).
+[25] H. Koch, A. Sa ´nches de Mera ´s, T.B. Pedersen. J. chem.
+Phys. ,118, 9481 (2003).
+[26] P. Constans, G.E. Scuseria. Collect. Czech. Chem.
+Commun. ,68, 357 (2003).
+[27] P. Constans, P.Y. Ayala, G.E. Scuseria. J. chem. Phys. ,
+113, 10451 (2000).
+[28] J. Noga, R.J. Bartlett. J. chem. Phys. ,86, 7041 (1987).
+[29] S.A. Kucharski, R.J. Bartlett. J. chem. Phys. ,97, 4282
+(1992).
+[30] S. Kucharski, M. Kolaski, R.J. Bartlett. J. chem. Phys. ,
+114, 692 (2001).
+[31] M. Musial, S.A. Kucharski, R.J. Bartlett. J. chem. Phys. ,
+116, 4382 (2002).
+[32] X. Li, J. Paldus. J. chem. Phys. ,107, 6257 (1997).
+[33] P. Piecuch, S.A. Kucharski, R.J. Bartlett. J. chem. Phys. ,
+110, 6103 (1998).
+[34] M. Noojien. J. chem. Phys. ,111, 10815 (1999).
+[35] M. Urban, P. Neogra ´dy, I. Hubac ˇ.I nRecent Advances in
+Coupled-Cluster Methods , Vol. 3, R.J. Bartlett (Ed.),
+pp. 275–306, World Scientiﬁc, Singapore (1997).
+[36] E.A. Hylleraas. Z. Phys. ,54, 347 (1929).
+[37] L. Adamowicz. Int. J. quantum Chem. Symp. ,25,7 1
+(1991).
+[38] T.H. Dunning Jr, K.A. Peterson. J. chem. Phys. ,113,
+7799 (2000).
+[39] P. Jurec ˇka, P. Hobza. Chem. Phys. Lett. ,365, 89 (2002).
+[40] L.A. Curtiss, K. Raghavachari, P.C. Redfern,
+V. Rassolov, J.A. Pople. J. chem. Phys. ,109, 7764 (1998).
+[41] K. Andersson, M. Barysz, A. Bernhardsson,
+M.R.A. Blomberg, D.L. Cooper, T. Fleig,
+M.P. Fu ¨lscher, C. de Graaf, B.A. Hess, G. Karlstro ¨n,
+R. Lindh, P.-A. Malmqvist, P. Neogra ´dy, J. Olsen,
+B.O. Roos, A.J. Sadlej, M. Schu ¨tz, B. Schimmelpfennig,
+L. Seijo, L. Serrano-Andre ´s, P.E.M. Siegbahn, J. Sta ˚ring,
+T. Thorsteinsson, V. Veryazov, P.O. Widmark.
+MOLCAS, Version 5, Lund University, Sweden (2000).
+[42] A.J. Sadlej. Collect. Czech. Chem. Commun. ,53, 1995
+(1988).
+[43] T.H. Dunning Jr, K.A. Peterson. In Encyclopedia of
+Computational Chemistry , P. Von Rague Schleyer (Ed.),
+John Wiley & Sons, Chichester (1998).2156 P. Neogra ´dyet al.
+
+--- PAGE 17 ---
+[44] D.E. Woon, T.H. Dunning Jr. J. chem. Phys. ,100, 2975
+(1994).
+[45] M. Urban, R.J. Bartlett. J. Am. chem. Soc. ,110, 4926
+(1988).
+[46] T. van Mourik, G.J. Harris, O.L. Polyansky, J. Tennyson,
+A.G. Csa ´sa´r, P.J. Knowles. J. chem. Phys. ,115, 3706
+(2001).
+[47] W. Klopper, T. Helgaker. Theor. Chem. Acc. ,99, 265
+(1998).
+[48] A. Halkier, T. Helgaker, P. Jørgensen, W. Klopper,
+H. Koch, J. Olsen, A.K. Wilson. Chem. Phys. Lett. ,286,
+243 (1998).
+[49] K.A. Peterson, R.A. Kendall, T.H. Dunning Jr. J. chem.
+Phys. ,99, 9790 (1993).
+[50] F. Pawlowski, A. Halkier, P. Jørgensen, K.L. Bak,
+T. Helgaker, W. Klopper. J. chem. Phys. ,118, 2539
+(2003).
+[51] J. Pittner, J. S ˇmydke, P. C ˇa´rsky, I. Hubac ˇ.J. molec.
+Struct. (THEOCHEM) ,547, 239 (2001).
+[52] K.P. Huber, G.H. Herzberg. Constants of Diatomic
+Molecules , Van Nostrand-Reinhold, New York (1979).
+[53] B.A. Flowers, P.G. Szalay, J.F. Stanton, M. Kallay,
+J. Gauss, A.G. Csaszar. J. phys. Chem. ,108, 3195 (2004).
+[54] T.A. Ruden, T. Helgaker, P. Jørgensen, J. Olsen. Chem.
+Phys. Lett. ,371, 62 (2003).
+[55] M. Kallay, J. Gauss. J. chem. Phys. ,120, 6841 (2004).[56] J. Ma ´sˇik, and I. Hubac ˇ.I nQuantum Systems in Chemistry
+and Physics: Trends in Methods and Applications ,
+R. McWeeny, J. Maruani, Y.G. Smeyers, S. Wilson
+(Eds), pp. 282–308, Kluwer Academic, Dordrecht (1997).
+[57] L. Adamowicz, W.D. Laidig, R.J. Bartlett. Int. J.
+quantum Chem. ,18, 245 (1984).
+[58] N.C. Handy, H.F. Schaefer. J. chem. Phys. ,81, 5031
+(1984).
+[59] A.C. Scheiner, G.E. Scuseria, J.E. Rice, T.J. Lee, H.F.
+Schaefer. J. chem. Phys. ,87, 5361 (1987).
+[60] J. Gauss, J.E. Stanton. J. chem. Phys. ,116, 1773 (2002).
+[61] P. Jørgensen, T. Helgaker. J. chem. Phys. ,89, 1560 (1988).
+[62] I. C ˇernus ˇa´k, G.H.F. Diercksen, A.J. Sadlej. Phys. Rev.
+A,33, 814.
+[63] G. Maroulis, 1998, J. chem. Phys. ,108, 5432 (1986).
+[64] M. Urban, P. Neogra ´dy, J. Raab, G.H.F. Diercksen.
+Collect. Czech. Chem. Commun. ,63, 1409 (1998).
+[65] M. Medved ˇ, M. Urban, V. Kello ¨, V., G.H.F. Diercksen.
+J. molec. Struc. (THEOCHEM) ,547, 219 (2001).
+[66] A. Halkier, H. Koch, O. Christiansen, P. Jørgensen,
+T. Helgaker. J. chem. Phys. ,107, 849 (1997).
+[67] K.L. Bak, J. Gauss, T. Helgaker, P. Jørgensen, J. Olsen.
+Chem. Phys. Lett. ,319, 563 (2000).
+[68] M. Medved ˇ, M. Urban, J. Noga. Theor. Chem. Acc. ,98,
+75 (1997).
+[69] J.S. Muenter. J. molec. Spectrosc. ,55, 490 (1975).Optimized virtual orbitals for correlated calculations 2157
