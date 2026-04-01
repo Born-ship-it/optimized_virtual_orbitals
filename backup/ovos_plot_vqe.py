@@ -413,13 +413,13 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
                         marker=marker[method],
                         label=f"{method_labels[method]} (25% virt. orbs) Points")
 
-    # plt.xlim(0.7, 2.0)
-    plt.xlim(2.5, 6.0)     # Li2
+    plt.xlim(0.7, 2.0)
+    # plt.xlim(2.5, 6.0)     # Li2
     # plt.ylim(-76,-75.6)
-    plt.ylim(-14.88, -14.80) # Li2
-    # plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
-    # plt.xticks(np.arange(0.7, 2.1, 0.2))
-    # plt.yticks(np.arange(-100.0, -99.8, 0.05))
+    # plt.ylim(-14.88, -14.80) # Li2
+    plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
+    plt.xticks(np.arange(0.7, 2.1, 0.2))
+    plt.yticks(np.arange(-100.0, -99.8, 0.05))
     plt.xlabel("Interatomic Distance (Angstrom)", fontsize=12)
     plt.ylabel("Energy (Hartree)", fontsize=12)
     plt.title(f"Zoomed Potential Energy Surface for {molecule} ({basis})", fontsize=14)
@@ -443,7 +443,7 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     
 
 if True:
-    molecule = "Li2"
+    molecule = "HF"
     basis = "6-31G"
     method = "OVOS" # Placeholder for getting dist and seed list
 
@@ -460,7 +460,7 @@ if True:
         dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
         print(f"Dist list for {molecule} {basis} method {method} num_opt_virtual_orbital {num_opt_virtual_orbital}: {dist_list}")
         if False:
-            dist_list_save = [round(dist,4) for dist in np.arange(0.7, 1.80, 0.025)] # Override dist list with a fixed list of dist for better comparison between different num_opt_virtual_orbitals, and also to make sure we have the same dist for all num_opt_virtual_orbitals, which is important for the plot
+            dist_list_save = [round(dist,4) for dist in np.arange(0.7, 2.025, 0.025)] # Override dist list with a fixed list of dist for better comparison between different num_opt_virtual_orbitals, and also to make sure we have the same dist for all num_opt_virtual_orbitals, which is important for the plot
                 # Find the numbers  of dist_list that are np.isclose to the dist_list_save and only keep those in dist_list
             dist_list = [float(dist) for dist in dist_list if any(np.isclose(float(dist), d, atol=0.0001) for d in dist_list_save)]
             # Save dist_list

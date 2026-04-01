@@ -1,0 +1,25 @@
+
+Running VQE with OVOS optimization for HF w. bond length 0.7 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule HF with basis 6-31G and bond length 0.7 Angstrom.
+Number of electrons: 10, Number of orbitals: 11
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 4 active virtual orbitals (out of 6 total virtual orbitals).
+
+Optimization finished. Final MP2 energy = -99.99811132626274 Hartree. (ΔE_corr = -0.11249663805440523 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+OVOS optimized energy = -106.699838 Hartree @ iterations 165.
+
+Calculating UHF reference for comparison...
+UHF energy = -106.689749 Hartree @ iterations 98.
+
+Calculating UMP2 natural orbitals for comparison...
+UMP2 natural orbitals are unrestricted (UHF-like).
+✗ ERROR in seed 21: name 'frozen_orbs_idx' is not defined
+Traceback (most recent call last):
+  File "/mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/ovos/ovos_vqe_uups.py", line 436, in VQE_OVOS
+    ump2_no_obj = mp.UMP2(mf_ump2_no, frozen=frozen_orbs_idx).run()
+                                             ^^^^^^^^^^^^^^^
+NameError: name 'frozen_orbs_idx' is not defined

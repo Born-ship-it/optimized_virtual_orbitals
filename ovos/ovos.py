@@ -22,6 +22,8 @@ import pyscf
 from pyscf import ao2mo
 
 # Limit OpenBLAS threads to avoid oversubscription in parallel runs
+os.environ['NUMBA_THREADING_LAYER'] = 'omp'  # Use OpenMP (thread-safe)
+os.environ['NUMBA_NUM_THREADS'] = '1'
 os.environ['OPENBLAS_NUM_THREADS'] = '1'
 os.environ['OMP_NUM_THREADS'] = '1'
 
@@ -68,8 +70,8 @@ class OVOS:
                  init_orbs="RHF", verbose=1,
                  max_iter=1000, conv_energy=1e-8, conv_grad=1e-4,
                  keep_track_max=50,
-                 lambda_init=1e-4, lambda_max=1e4,
-                 trust_radius=0.3, hessian_reg=1e-8):
+                 lambda_init=1e-3, lambda_max=1e3,
+                 trust_radius=5, hessian_reg=1e-8):
 
         self.verbose = verbose
         self.mol = mol
@@ -474,10 +476,18 @@ class OVOS:
     def _newton_step(self, G: np.ndarray, H: np.ndarray,
                      iteration: int) -> np.ndarray:
         """
-        Solve H·R = -G with adaptive Levenberg‑Marquardt damping.
+        Solve H·R = -G with adaptive Levenberg‑Marquardt  damping and
+        oscillation detection to prevent limit-cycle behavior.
         """
         g_vec = G.flatten()
         dim = len(g_vec)
+        grad_norm = np.linalg.norm(g_vec)
+
+        # Track oscillation history (add to __init__)
+        if not hasattr(self, '_step_history'):
+            self._step_history = []
+        if not hasattr(self, '_oscillation_damping_boost'):
+            self._oscillation_damping_boost = 1.0
 
         if iteration <= 5:
             # Pure Newton with fallback
@@ -487,30 +497,61 @@ class OVOS:
                 H_reg = H + self.hessian_reg * np.eye(dim)
                 R = np.linalg.solve(H_reg, -g_vec)
         else:
-            # Adaptive Levenberg‑Marquardt
-            lambda_lm = self.lambda_init
+            # Adaptive Levenberg‑Marquardt with oscillation detection
+        
+            # Detect oscillation: if last 3 steps alternated sign, boost damping
+            if len(self._step_history) >= 3:
+                recent_dE = self._step_history[-3:]
+                signs = [np.sign(dE) for dE in recent_dE]
+                # Pattern: [+, -, +] or [-, +, -] indicates oscillation
+                if signs[0] * signs[1] < 0 and signs[1] * signs[2] < 0:
+                    self._oscillation_damping_boost *= 1.5
+                    if self.verbose:
+                        self._print(f"    WARNING: Oscillation detected! Boosting damping: "
+                                f"λ_boost = {self._oscillation_damping_boost:.3f}")
+            
+            # Shrink trust radius more aggressively near convergence
+            trust_rad_factor = max(0.05, 1.0 / (1.0 + 0.2 * iteration))
+            trust_rad_effective = self.trust_radius * trust_rad_factor
+        
+                # Start with higher damping if oscillating
+            lambda_lm = (self.lambda_init * self._oscillation_damping_boost * 
+                        max(0.1, 1.0 / (1.0 + 0.1 * iteration)))
+            lambda_max = self.lambda_max * max(0.1, 1.0 / (1.0 + 0.1 * iteration))
+        
+
             best_R = None
             best_norm = np.inf
-            for _ in range(20):
+
+            for _ in range(50):
                 try:
                     H_reg = H + lambda_lm * np.eye(dim)
                     R_trial = np.linalg.solve(H_reg, -g_vec)
                 except np.linalg.LinAlgError:
-                    lambda_lm *= 2
+                    lambda_lm *= 2.0
                     continue
 
                 step_norm = np.linalg.norm(R_trial)
-                if step_norm < self.trust_radius:
+                # Acceptance criterion: step must be small enough
+                if step_norm < trust_rad_effective:
                     # Accept step and reduce lambda for next time
                     best_R = R_trial
-                    self.lambda_init = max(lambda_lm / 2, 1e-12)
+                    # More conservative: reduce lambda by smaller factor
+                    self.lambda_init = max(lambda_lm / 1.2, 1e-12)
+                    # Gradually reduce oscillation boost
+                    self._oscillation_damping_boost = max(1.0, 
+                        self._oscillation_damping_boost * 0.95)
                     break
                 else:
+                    # Keep track of best step (but don't accept yet)
                     if step_norm < best_norm:
                         best_norm = step_norm
                         best_R = R_trial
-                    lambda_lm *= 2
-                    if lambda_lm > self.lambda_max:
+                    
+                    # More aggressive damping increase
+                    lambda_lm *= 2.0
+                        
+                    if lambda_lm > lambda_max: 
                         break
 
             if best_R is None:
@@ -520,7 +561,8 @@ class OVOS:
                     best_R = - (self.trust_radius / g_norm) * g_vec
                 else:
                     best_R = np.zeros_like(g_vec)
-            R = best_R
+            
+            R = best_R if best_R is not None else np.zeros_like(g_vec)
 
         return R
 
@@ -586,6 +628,13 @@ class OVOS:
             assert np.allclose(t_abij, t_abij.transpose(1, 0, 3, 2), atol=1e-10), \
                 "t_abij antisymmetry broken"
             E_corr = self._mp2_energy(fock_spin, t_abij, eri_as)
+            
+            # Track energy difference for oscillation detection
+            if iter_count > 1:
+                dE = E_corr - energy_hist[-1]
+                self._step_history.append(dE)
+                if len(self._step_history) > 10:
+                    self._step_history.pop(0)
 
             energy_hist.append(E_corr)
             iter_hist.append(iter_count)
@@ -633,7 +682,7 @@ class OVOS:
                         if self.verbose:
                             self._print(f"OVOS converged after {iter_count} iterations")
                         # Trim the extra tracked steps
-                        trim = self.keep_track_max
+                        trim = self.keep_track_max - 1
                         energy_hist = energy_hist[:-trim]
                         iter_hist = iter_hist[:-trim]
                         mo_hist = mo_hist[:-trim]
@@ -687,12 +736,12 @@ class OVOS:
         # Select best result (lowest energy)
         best_idx = int(np.argmin(energy_hist))
         result = [
+            energy_hist[best_idx],
             energy_hist[:best_idx+1],
-            energy_hist,
             iter_hist[:best_idx+1],
             mo_hist[best_idx],
             fock_hist[best_idx],
-            stop_reasons[:best_idx+1],
+            stop_reasons[best_idx],
         ]
         return result
 
@@ -739,4 +788,4 @@ if __name__ == "__main__":
     )
     E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
 
-    print("\nOptimization finished. Final MP2 energy =", E_corr)
+    print("\nOptimization finished. Final MP2 energy =", E_corr, "Hartree (Stopping reason:", stop_reason, ")")

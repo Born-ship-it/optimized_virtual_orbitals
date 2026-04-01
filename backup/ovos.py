@@ -633,7 +633,7 @@ class OVOS:
                         if self.verbose:
                             self._print(f"OVOS converged after {iter_count} iterations")
                         # Trim the extra tracked steps
-                        trim = self.keep_track_max
+                        trim = self.keep_track_max + 1
                         energy_hist = energy_hist[:-trim]
                         iter_hist = iter_hist[:-trim]
                         mo_hist = mo_hist[:-trim]
@@ -688,7 +688,7 @@ class OVOS:
         best_idx = int(np.argmin(energy_hist))
         result = [
             energy_hist[:best_idx+1],
-            energy_hist,
+            energy_hist[:best_idx+1],
             iter_hist[:best_idx+1],
             mo_hist[best_idx],
             fock_hist[best_idx],

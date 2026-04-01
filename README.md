@@ -2,6 +2,13 @@
 
 Implementation of the Optimized Virtual Orbital Space (OVOS) method for reducing computational complexity in correlated electronic structure calculations.
 
+## Defence Guidelines
+- Your supervisor determines how long your Master's thesis defence should be. A Master's thesis defence lasts between 60 and 90 minutes.
+- You begin the defence with a presentation lasting 15-45 minutes.
+- No preparation time is allowed for the oral defence.
+- Your defence is public. The doors may be closed for some of the defence if it involves confidential information from a company, for example.
+- You can choose to do the oral defence online, if you and your supervisor agree on it.
+
 ## Overview
 
 This package implements the OVOS algorithm based on the seminal work by Adamowicz and Bartlett (1987). The method optimizes a reduced virtual orbital space to minimize the second-order correlation energy (MP2), enabling efficient high-level quantum chemistry calculations.
