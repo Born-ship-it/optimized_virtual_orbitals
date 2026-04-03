@@ -291,13 +291,13 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
                 init_orbs="RHF",
                 verbose=1,
                 max_iter=500,
-                conv_energy=1e-8,
+                conv_energy=1e-16,
                 conv_grad=1e-4,
                 keep_track_max=50
             )
                 # Run OVOS
             E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
-            E_corr = E_corr[-1]  # Final correlation energy
+            E_corr = E_corr  # Final correlation energy
             E_tot = E_corr + mf.e_tot
             log_print(f"\nOptimization finished. Final MP2 energy = {E_tot} Hartree. (ΔE_corr = {E_corr} Hartree)")
             # Check if mo_coeffs are unrestricted or restricted
@@ -413,39 +413,30 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
             log_print()
             log_print("Calculating UMP2 natural orbitals for comparison...")
                 # UMP2 natural orbitals for comparison
-            mf_ump2 = scf.UHF(mol).run()
-            # fs_orbs = mf_ump2.mo_coeff[0].shape[1]
-            # active_orbs = num_electrons//2 + num_opt_virtual_orbs
-            # log_print(f"Total number of orbitals: {fs_orbs}, Active orbitals: {active_orbs} (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.")
-            # frozen_orbs = fs_orbs - active_orbs
-            # frozen_orbs_idx = list(range(active_orbs, fs_orbs))  # Freeze the highest-energy virtual orbitals
-            # log_print(f"Freezing {frozen_orbs} orbitals (indices {frozen_orbs_idx}) for UMP2 natural orbital calculation.")
-
+            mf_ump2 = mol.UHF(verbose=0).run()
             ump2_obj = mp.UMP2(mf_ump2).run()
-            mp2_no_coeff = mcscf.addons.make_natural_orbitals(ump2_obj)[1]
-            
+            noons, mp2_no_coeff = mcscf.addons.make_natural_orbitals(ump2_obj)
+
+                # Energies for reference
+            uhf_energy = mf_ump2.e_tot
+            ump2_energy = ump2_obj.e_tot
+
+            # Convert to full spin-orbital basis by duplicating alpha and beta orbitals
+                # If rhf-like, just duplicate the same orbitals for alpha and beta
+            if isinstance(mp2_no_coeff, np.ndarray) and mp2_no_coeff.ndim == 2:
+                # Restricted case: duplicate the same orbitals for alpha and beta
+                mp2_no_coeff = [mp2_no_coeff, mp2_no_coeff.copy()]
+            elif isinstance(mp2_no_coeff, (list, tuple)) and len(mp2_no_coeff) == 2:
+                # Already unrestricted, so we can use the alpha and beta orbitals as they are
+                pass
+            else:
+                raise ValueError("Unexpected case for UMP2 natural orbitals: neither RHF-like nor UHF-like. Please check the orbitals.")
+
             # check if mp2_no_coeff are unrestricted or restricted
             if np.isclose(mp2_no_coeff[0], mp2_no_coeff[1], atol=1e-12).all():
                 log_print("UMP2 natural orbitals are restricted (RHF-like).")
             else:
                 log_print("UMP2 natural orbitals are unrestricted (UHF-like).")
-            
-            # Energy of UMP2 natural orbital reference
-            mf_ump2_no = scf.UHF(mol)
-            mf_ump2_no.kernel(mo_coeff=mp2_no_coeff)
-            ump2_no_obj = mp.UMP2(mf_ump2_no).run()
-
-            # Fair comparison
-            uhf_energy = mf_ump2.e_tot          # No freezing
-            mp2_energy = ump2_obj.e_tot         # With frozen
-            mp2_no_energy = ump2_no_obj.e_tot   # With frozen
-            corr_diff = ump2_no_obj.e_corr - ump2_obj.e_corr
-                # Summary of reference energies
-            log_print(f"UHF energy: {uhf_energy:.6f} Hartree")
-            log_print(f"UMP2 energy (original): {mp2_energy:.6f} Hartree, correlation: {ump2_obj.e_corr:.6f} Hartree")
-            log_print(f"UMP2 energy (natural orbitals): {mp2_no_energy:.6f} Hartree, correlation: {ump2_no_obj.e_corr:.6f} Hartree")
-            log_print(f"Correlation energy difference: {corr_diff:.6f} Hartree")
-            log_print()
 
             #     # Initialize for UPS wave function with UMP2 natural orbitals
             WF_ump2_no = UnrestrictedWaveFunctionUPS(
@@ -481,8 +472,8 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
                     "oo": oo,
                     "mo": mp2_no_coeff,
                     "uhf_energy": uhf_energy,
-                    "ump2_energy": mp2_energy,
-                    "ump2_no_energy": mp2_no_energy,
+                    "ump2_energy": ump2_energy,
+                    "ump2_no_energy": E_ump2_no_hist[0],
                     "iterations": iter_ump2_no_opt,
                     "final_energy": E_ump2_no_opt,
                     "iter_energies": E_ump2_no_hist,
@@ -578,8 +569,7 @@ def run_hf_vqe():
         # Varying the bond length around the equilibrium geometry:
             # 'H 0 0 0; F 0 0 0.917'
     
-    # dist_list = np.arange(0.7, 2.025, 0.025)  # From 0.7 to 2.0 Angstrom in steps of 0.025
-    dist_list = [0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9]  # Trail
+    dist_list = np.arange(0.7, 2.025, 0.025)  # From 0.7 to 2.0 Angstrom in steps of 0.05 for faster testing
     dist_list = [round(d, 3) for d in dist_list]  # Round to 4 decimals for cleaner output
     
     # Make the files for HF if they don't exist
@@ -617,7 +607,7 @@ def run_hf_vqe():
         if not os.path.exists(name_nuc_rep):
             with open(name_nuc_rep, "w") as f:
                 f.write(f"{nuc_rep_energy:.6f}\n")
-            print(f"Nuclear repulsion energy for {atom_str} at dist {dist} saved to {name_nuc_rep}.")
+            print(f"Nuclear repulsion energy for {atom} at dist {dist} saved to {name_nuc_rep}.")
             skip_nuc_rep_calculation = False
         else:
             skip_nuc_rep_calculation = True
@@ -649,7 +639,7 @@ def run_hf_vqe():
             if not os.path.exists(name_hf):
                 with open(name_hf, "w") as f:
                     f.write(f"{hf_energy:.6f}\n")
-                print(f"HF reference energy for {atom_str} at dist {dist} saved to {name_hf}.")
+                print(f"HF reference energy for {atom} at dist {dist} saved to {name_hf}.")
                 skip_hf_calculation = False
             else:
                 skip_hf_calculation = True
@@ -658,7 +648,7 @@ def run_hf_vqe():
 
     # Run the VQE optimizations for HF for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    # seed = 9
+    # seed_list = [9]
     seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
     # 10: [42, 123, 14, 10, 20, 21, 101, 404, 9, 13]
     # 30: ['9', '10', '101', '109', '119', '123', '129', '13', '139', '14', '149', '159', '169', '179', '189', '19', '199', '20', '21', '29', '39', '404', '42', '49', '59', '69', '79', '8', '89', '9', '99']
@@ -1285,8 +1275,7 @@ if __name__ == "__main__":
 
     if True:
         num_cores = os.cpu_count()
-        # Use 80% of cores to leave headroom for OS/PySCF background tasks
-        num_workers = 10 #max(1, int(num_cores * 0.8))
+        num_workers = 10
         
         print(f"\nSystem: {num_cores} cores available")
         print(f"Starting {num_workers} parallel VQE workers...")

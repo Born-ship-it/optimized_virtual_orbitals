@@ -1,28 +1,28 @@
 
-Running VQE with OVOS optimization for HF w. bond length 0.7 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
-Built molecule HF with basis 6-31G and bond length 0.7 Angstrom.
+Running VQE with OVOS optimization for HF w. bond length 0.75 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule HF with basis 6-31G and bond length 0.75 Angstrom.
 Number of electrons: 10, Number of orbitals: 11
 Initial MO coefficients are restricted (RHF-like).
 Optimizing 4 active virtual orbitals (out of 6 total virtual orbitals).
 
-Optimization finished. Final MP2 energy = -99.99811132940086 Hartree. (ΔE_corr = -0.11249664119252638 Hartree)
+Optimization finished. Final MP2 energy = -100.04833629145652 Hartree. (ΔE_corr = -0.11537132490369048 Hartree)
 OVOS optimized orbitals are unrestricted (UHF-like).
 
 
 Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
-OVOS optimized energy = -106.697922 Hartree @ iterations 163.
+OVOS optimized energy = -106.293014 Hartree @ iterations 186.
 
 Calculating UHF reference for comparison...
-UHF energy = -106.689749 Hartree @ iterations 76.
+UHF energy = -106.283664 Hartree @ iterations 85.
 
 Calculating UMP2 natural orbitals for comparison...
 UMP2 natural orbitals are unrestricted (UHF-like).
-UHF energy: -99.885615 Hartree
-UMP2 energy (original): -100.002032 Hartree, correlation: -0.116417 Hartree
-UMP2 energy (natural orbitals): -100.002032 Hartree, correlation: -0.116417 Hartree
+UHF energy: -99.932965 Hartree
+UMP2 energy (original): -100.052343 Hartree, correlation: -0.119378 Hartree
+UMP2 energy (natural orbitals): -100.052343 Hartree, correlation: -0.119378 Hartree
 Correlation energy difference: 0.000000 Hartree
 
-✗ ERROR in seed 13: The input array must be at least two-dimensional
+✗ ERROR in seed 123: The input array must be at least two-dimensional
 Traceback (most recent call last):
   File "/mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/ovos/ovos_vqe_uups.py", line 464, in VQE_OVOS
     stats_ump2_no_opt = run_ucc_and_get_stats(WF_ump2_no, "BFGS", oo, atol)

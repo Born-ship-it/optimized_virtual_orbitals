@@ -618,6 +618,8 @@ class OVOS:
         while iter_count < self.max_iter:
             iter_count += 1
 
+            prev_mo_coeffs = mo_coeffs
+
             if self.verbose:
                 self._print()
                 self._print(f"#### OVOS Iteration {iter_count} ####")
@@ -667,10 +669,10 @@ class OVOS:
                     flag = "(energy increased!)" if self.dE > 0 else ""
                     self._print(f"            ΔE = {self.dE:.2e}  ‖grad‖ = {grad_norm:.2e}  {flag}")
                 
-                if (dE < self.conv_energy and grad_norm < self.conv_grad) or dE < 1e-12:
+                if (dE < self.conv_energy and grad_norm < self.conv_grad):
                     stop_reasons.append("Convergence")
                     start_counting = True
-                elif dE > 1e-12:
+                else:
                     stop_reasons.append("Non‑converged")
                     start_counting = False
                     keep_track = 0
@@ -682,7 +684,7 @@ class OVOS:
                         if self.verbose:
                             self._print(f"OVOS converged after {iter_count} iterations")
                         # Trim the extra tracked steps
-                        trim = self.keep_track_max - 1
+                        trim = self.keep_track_max 
                         energy_hist = energy_hist[:-trim]
                         iter_hist = iter_hist[:-trim]
                         mo_hist = mo_hist[:-trim]
@@ -732,16 +734,22 @@ class OVOS:
             else:
                 self._print("Final orbitals are unrestricted.")
             self._print(f"Total iterations: {iter_count}")
+            # Difference in prev_mo_coeffs vs final mo_coeffs
+            mo_diff_a = np.linalg.norm(mo_coeffs[0] - prev_mo_coeffs[0])
+            mo_diff_b = np.linalg.norm(mo_coeffs[1] - prev_mo_coeffs[1])
+            self._print(f"Change in MO coefficients (Frobenius norm): "
+                    f"alpha: {mo_diff_a:.2e}, beta: {mo_diff_b:.2e}")
+            self._print(f"Stopping reason: {stop_reasons[-1]}")
 
         # Select best result (lowest energy)
-        best_idx = int(np.argmin(energy_hist))
+        best_idx = int(np.argmin(energy_hist)) 
         result = [
             energy_hist[best_idx],
             energy_hist[:best_idx+1],
             iter_hist[:best_idx+1],
             mo_hist[best_idx],
             fock_hist[best_idx],
-            stop_reasons[best_idx],
+            stop_reasons[best_idx]
         ]
         return result
 
