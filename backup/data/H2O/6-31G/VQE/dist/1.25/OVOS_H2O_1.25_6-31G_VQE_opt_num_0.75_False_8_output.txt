@@ -5,31 +5,24 @@ Number of electrons: 10, Number of orbitals: 13
 Initial MO coefficients are restricted (RHF-like).
 Optimizing 6 active virtual orbitals (out of 8 total virtual orbitals).
 
-Optimization finished. Final MP2 energy = -76.04148540109776 Hartree. (ΔE_corr = -0.1542440625155108 Hartree)
+Optimization finished. Final MP2 energy = -76.04151723475478 Hartree. (ΔE_corr = -0.15423700569002805 Hartree)
 OVOS optimized orbitals are unrestricted (UHF-like).
 
 
 Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
-OVOS optimized energy = -82.942327 Hartree @ iterations 180.
+OVOS optimized energy = -82.942823 Hartree @ iterations 169.
 
 Calculating UHF reference for comparison...
-UHF energy = -82.936706 Hartree @ iterations 185.
+UHF energy = -82.937198 Hartree @ iterations 191.
 
 Calculating UMP2 natural orbitals for comparison...
-Total number of orbitals: 13, Active orbitals: 11 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
-Freezing 2 orbitals (indices [11, 12]) for UMP2 natural orbital calculation.
-UMP2 natural orbitals are unrestricted (UHF-like).
-UHF energy: -75.887241 Hartree
-UMP2 energy (original): -76.001415 Hartree, correlation: -0.114173 Hartree
-UMP2 energy (natural orbitals): -76.001415 Hartree, correlation: -0.114173 Hartree
-Correlation energy difference: 0.000000 Hartree
-
-UHF natural orbital energy = -82.936706 Hartree @ iterations 180.
+UMP2 natural orbitals are restricted (RHF-like).
+UHF natural orbital energy = -82.964593 Hartree @ iterations 117.
 
 Summary of results:
-Molecule: O 0.0000 0.0000 0.1173; H 0.0000 0.9882 -0.6481; H 0.0000 -0.9882 -0.6481 with basis set 6-31G for a total of 10 electrons and 13 orbitals.
-OVOS correlation energy: -76.041485 Hartree (Active unocc. orbitals: 6)
-OVOS energy: -82.942327 Hartree  @ iterations 180 (Eval. func. 196, grad. 196
-UHF energy: -82.936706 Hartree  @ iterations 185 (Eval. func. 198, grad. 198
-UMP2 natural orbital energy: -82.936706 Hartree  @ iterations 180 (Eval. func. 191, grad. 191
+Molecule: O 0.0000 0.0000 0.1173; H 0.0000 0.9881 -0.6481; H 0.0000 -0.9881 -0.6481 with basis set 6-31G for a total of 10 electrons and 13 orbitals.
+OVOS correlation energy: -76.041517 Hartree (Active unocc. orbitals: 6)
+OVOS energy: -82.942823 Hartree  @ iterations 169 (Eval. func. 177, grad. 177
+UHF energy: -82.937198 Hartree  @ iterations 191 (Eval. func. 205, grad. 205
+UMP2 natural orbital energy: -82.964593 Hartree  @ iterations 117 (Eval. func. 131, grad. 131
 ✓ Completed. Output saved to backup/data/H2O/6-31G/VQE/dist/1.25/OVOS_H2O_1.25_6-31G_VQE_opt_num_0.75_False_8_output.txt

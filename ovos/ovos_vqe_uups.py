@@ -706,11 +706,11 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
     print(f"Equilibrium H-O-H angle: {angle_deg:.2f} degrees")
         # Now we can vary the O-H bond length while keeping the angle fixed by scaling the H coordinates accordingly
             # Try 10 different bond length variations around the equilibrium geometry, e.g. from 0.75 to 1.25 times the equilibrium bond length
-    bond_length_set = [1.8, 1.825, 1.85, 1.875, 1.9, 1.925, 1.95, 1.975, 2.0]
+    bond_length_set = np.arange(0.7, 2.025, 0.025)
             # Figure out the procentages we need to get the bond_length_set values
     bond_length_variations = [bl / bond_lengths[0] for bl in bond_length_set]
-                # Round off to 5 decimals
-    bond_length_variations = [round(blv, 4) for blv in bond_length_variations]
+                # Round off to 3 decimals
+    bond_length_variations = [round(blv, 3) for blv in bond_length_variations]
 
     dist_list_h2o = []
             # Assert that the angle is the same for all variations
@@ -762,7 +762,7 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
 
     for i, atom_str in enumerate(dist_list_h2o):
         dist = dist_list_h2o_bond_lengths[i]
-        dist = round(dist, 4)
+        dist = round(dist, 3)
         # Make the VQE folders for dist if they don't exist
         if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/dist/{dist}"):
             os.makedirs(f"backup/data/{atom}/{basis}/VQE/dist/{dist}")
@@ -773,7 +773,7 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
     # Make the nuclear repulsion energy files for H2O if they don't exist
     for i, atom_str in enumerate(dist_list_h2o):
         dist = dist_list_h2o_bond_lengths[i]
-        dist = round(dist, 4)
+        dist = round(dist, 3)
         # set up molecule
         mol = gto.Mole()
         mol.atom = atom_str
@@ -803,7 +803,7 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
     # Make the UHF/RHF reference energy files for H2O if they don't exist
     for i, atom_str in enumerate(dist_list_h2o):
         dist = dist_list_h2o_bond_lengths[i]
-        dist = round(dist, 4)
+        dist = round(dist, 3)
         for hf in ["UHF", "RHF"]:
             # set up molecule
             mol = gto.Mole()
@@ -836,13 +836,13 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
 
     # Run the VQE optimizations for H2O for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    # seed = 9
-    seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
+    seed_list = [21, 101, 404, 13]
+    # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
 
     args_list = []
     for i, atom_str in enumerate(dist_list_h2o):
         dist = dist_list_h2o_bond_lengths[i]
-        dist = round(dist, 4)
+        dist = round(dist, 3)
         for basis in [basis_lst[0]]:
             for num_opt_virtual_orbs in [0.75]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
                 for oo in [oo_lst[1]]: # True, False
@@ -865,7 +865,7 @@ def run_co_vqe():
             # which we can vary around the equilibrium bond length of 1.128 Angstrom.
     dist_list = np.arange(0.7, 2.025, 0.025).round(3).tolist()  # From 0.7 to 2.0 in steps of 0.025
         # Trial dist list
-    dist_list = [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
+    # dist_list = [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
     
     print("\nGenerated CO geometries with varying C-O bond lengths:")
     for dist in dist_list:
@@ -951,7 +951,7 @@ def run_co_vqe():
 
     # Run the VQE optimizations for CO for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    seed_list = [9] # Trial seed, verify...
+    seed_list = [8] # Trial seed, verify...
     # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
 
     args_list = []

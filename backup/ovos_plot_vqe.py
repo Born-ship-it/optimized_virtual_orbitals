@@ -417,9 +417,9 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     # plt.xlim(2.5, 6.0)     # Li2
     # plt.ylim(-76,-75.6)
     # plt.ylim(-14.88, -14.80) # Li2
-    plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
+    # plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
     plt.xticks(np.arange(0.7, 2.1, 0.2))
-    plt.yticks(np.arange(-100.0, -99.8, 0.05))
+    # plt.yticks(np.arange(-100.0, -99.8, 0.05))
     plt.xlabel("Interatomic Distance (Angstrom)", fontsize=12)
     plt.ylabel("Energy (Hartree)", fontsize=12)
     plt.title(f"Zoomed Potential Energy Surface for {molecule} ({basis})", fontsize=14)
@@ -443,7 +443,7 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     
 
 if True:
-    molecule = "HF"
+    molecule = "H2O"
     basis = "6-31G"
     method = "OVOS" # Placeholder for getting dist and seed list
 
