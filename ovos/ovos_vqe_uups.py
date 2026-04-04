@@ -648,8 +648,8 @@ def run_hf_vqe():
 
     # Run the VQE optimizations for HF for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    # seed_list = [9]
-    seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
+    seed_list = [8]
+    # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
     # 10: [42, 123, 14, 10, 20, 21, 101, 404, 9, 13]
     # 30: ['9', '10', '101', '109', '119', '123', '129', '13', '139', '14', '149', '159', '169', '179', '189', '19', '199', '20', '21', '29', '39', '404', '42', '49', '59', '69', '79', '8', '89', '9', '99']
 
@@ -1271,7 +1271,11 @@ def run_single(args):
 # Run
 if __name__ == "__main__":
     # Molecule: HF, H2O, CO, NH3, Li2
-    args_list = run_hf_vqe()
+    # args_list = run_hf_vqe()
+    args_list = run_h2o_vqe()
+    # args_list = run_co_vqe()
+    # args_list = run_nh3_vqe()
+    # args_list = run_li2_vqe()
 
     if True:
         num_cores = os.cpu_count()

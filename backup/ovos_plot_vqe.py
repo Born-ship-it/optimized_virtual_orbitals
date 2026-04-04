@@ -468,7 +468,7 @@ if True:
         print(f"Dist list for {molecule} {basis} method {method}: {dist_list}")
             # For each dist, get seeds list and make VQE results file for that dist
         if len(dist_list) < 5:
-            seeds_lst = [9] # Only seed 9
+            seeds_lst = [8] # Only seed 9
         else:
             seeds_lst = gather_seeds_lst(molecule, basis, method, dist_list[0], num_opt_virtual_orbital) # Get seeds list from the first dist, assuming it's the same for all dists
         
