@@ -1,0 +1,21 @@
+\babel@toc {english}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Software packages used in this work.}}{13}{table.caption.9}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Molecular geometries and electronic structure parameters used in this work.}}{14}{table.caption.10}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {6.1}{\ignorespaces Validation of the OVOS implementation against PySCF \lstinline [language=Python]|mp.MP2|. Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the 6--31G basis for this validation.}}{16}{table.caption.11}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces Summary of OVOS results for HF in the 6--31G basis at each $N'_{\rm act.unocc}$.}}{18}{table.caption.12}%
+\contentsline {table}{\numberline {6.3}{\ignorespaces Comparison of energy recovery for H\textsubscript {2}O across different basis sets at a fixed number of active unoccupied orbitals $N'_{\rm act.unocc}$.}}{20}{table.caption.18}%
+\contentsline {table}{\numberline {6.4}{\ignorespaces Comparison of energy recovery for H\textsubscript {2}O across different basis sets at a fixed absolute number of active unoccupied orbitals $N'_{\rm act.unocc}$.}}{21}{table.caption.19}%
+\contentsline {table}{\numberline {6.5}{\ignorespaces Comparison of OVOS correlation energies for CH\textsubscript {2} with values from Adamowicz \& Bartlett \cite {Adamowicz1987}. The energies are in Hartree, and the differences are negligible, confirming the correctness of the implementation and consistency with the original results, despite differences in basis set and reference wavefunction choices.}}{22}{table.caption.20}%
+\contentsline {table}{\numberline {6.6}{\ignorespaces Profiling of OVOS algorithm steps for [molecule]/[basis] with $N'_{\rm act.unocc} = ...$. The integral transformation and Hessian assembly are identified as the bottlenecks, with their respective theoretical scalings.}}{23}{table.caption.21}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {A.1}{\ignorespaces Summary of two-electron integral notation used in this thesis.}}{31}{table.caption.24}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
