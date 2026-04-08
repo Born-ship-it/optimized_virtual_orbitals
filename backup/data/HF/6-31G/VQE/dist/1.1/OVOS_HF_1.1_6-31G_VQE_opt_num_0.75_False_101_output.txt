@@ -10,7 +10,7 @@ OVOS optimized orbitals are unrestricted (UHF-like).
 
 
 Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
-OVOS optimized energy = -104.300021 Hartree @ iterations 138.
+OVOS optimized energy = -104.29972 Hartree @ iterations 165.
 
 Calculating UHF reference for comparison...
 UHF energy = -104.288953 Hartree @ iterations 10.
@@ -22,7 +22,7 @@ UHF natural orbital energy = -104.321217 Hartree @ iterations 209.
 Summary of results:
 Molecule: H 0 0 0; F 0 0 1.1 with basis set 6-31G for a total of 10 electrons and 11 orbitals.
 OVOS correlation energy: -100.091673 Hartree (Active unocc. orbitals: 4)
-OVOS energy: -104.300021 Hartree  @ iterations 138 (Eval. func. 155, grad. 155
+OVOS energy: -104.299720 Hartree  @ iterations 165 (Eval. func. 190, grad. 190
 UHF energy: -104.288953 Hartree  @ iterations 10 (Eval. func. 15, grad. 15
 UMP2 natural orbital energy: -104.321217 Hartree  @ iterations 209 (Eval. func. 239, grad. 239
 ✓ Completed. Output saved to backup/data/HF/6-31G/VQE/dist/1.1/OVOS_HF_1.1_6-31G_VQE_opt_num_0.75_False_101_output.txt

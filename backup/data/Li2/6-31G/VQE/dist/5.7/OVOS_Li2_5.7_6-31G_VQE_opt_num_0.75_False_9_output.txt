@@ -5,31 +5,24 @@ Number of electrons: 6, Number of orbitals: 18
 Initial MO coefficients are restricted (RHF-like).
 Optimizing 11 active virtual orbitals (out of 15 total virtual orbitals).
 
-Optimization finished. Final MP2 energy = -14.838812210450078 Hartree. (ΔE_corr = -0.026740237813918575 Hartree)
+Optimization finished. Final MP2 energy = -14.83888186960247 Hartree. (ΔE_corr = -0.02680989696631157 Hartree)
 OVOS optimized orbitals are unrestricted (UHF-like).
 
 
 Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
-OVOS optimized energy = -15.689654 Hartree @ iterations 91.
+OVOS optimized energy = -15.690591 Hartree @ iterations 100.
 
 Calculating UHF reference for comparison...
 UHF energy = -15.689838 Hartree @ iterations 278.
 
 Calculating UMP2 natural orbitals for comparison...
-Total number of orbitals: 18, Active orbitals: 14 (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.
-Freezing 4 orbitals (indices [14, 15, 16, 17]) for UMP2 natural orbital calculation.
-UMP2 natural orbitals are unrestricted (UHF-like).
-UHF energy: -14.812072 Hartree
-UMP2 energy (original): -14.836780 Hartree, correlation: -0.024708 Hartree
-UMP2 energy (natural orbitals): -14.836780 Hartree, correlation: -0.024708 Hartree
-Correlation energy difference: 0.000000 Hartree
-
-UHF natural orbital energy = -15.689838 Hartree @ iterations 282.
+UMP2 natural orbitals are restricted (RHF-like).
+UHF natural orbital energy = -15.696432 Hartree @ iterations 205.
 
 Summary of results:
 Molecule: Li 0 0 0; Li 0 0 5.700 with basis set 6-31G for a total of 6 electrons and 18 orbitals.
-OVOS correlation energy: -14.838812 Hartree (Active unocc. orbitals: 11)
-OVOS energy: -15.689654 Hartree  @ iterations 91 (Eval. func. 96, grad. 96
+OVOS correlation energy: -14.838882 Hartree (Active unocc. orbitals: 11)
+OVOS energy: -15.690591 Hartree  @ iterations 100 (Eval. func. 106, grad. 106
 UHF energy: -15.689838 Hartree  @ iterations 278 (Eval. func. 309, grad. 309
-UMP2 natural orbital energy: -15.689838 Hartree  @ iterations 282 (Eval. func. 318, grad. 318
+UMP2 natural orbital energy: -15.696432 Hartree  @ iterations 205 (Eval. func. 230, grad. 230
 ✓ Completed. Output saved to backup/data/Li2/6-31G/VQE/dist/5.7/OVOS_Li2_5.7_6-31G_VQE_opt_num_0.75_False_9_output.txt

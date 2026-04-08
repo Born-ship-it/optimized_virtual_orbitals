@@ -5,7 +5,7 @@ Number of electrons: 14, Number of orbitals: 18
 Initial MO coefficients are restricted (RHF-like).
 Optimizing 8 active virtual orbitals (out of 11 total virtual orbitals).
 
-Optimization finished. Final MP2 energy = -112.19833198847039 Hartree. (ΔE_corr = -0.14921154630433753 Hartree)
+Optimization finished. Final MP2 energy = -112.1983319944272 Hartree. (ΔE_corr = -0.1492115522611633 Hartree)
 OVOS optimized orbitals are unrestricted (UHF-like).
 
 

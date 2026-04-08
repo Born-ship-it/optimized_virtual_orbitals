@@ -218,7 +218,7 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     dist_list = dist_list_[-1]
     if len(dist_list) > 1:
         dist_list_25 = dist_list_[0]
-        print(dist_list_25)
+        # print(dist_list_25)
 
     methods = ["OVOS", "UHF", "UMP2"]
     method_labels = {"OVOS": "OVOS (75%)", "UHF": "UHF", "UMP2": "UMP2 Nat. Orbs"}
@@ -321,8 +321,8 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
         data_by_method_for_plotting[method]['rhf_ref_energies'] = rhf_ref_energies
         data_by_method_for_plotting[method]['UHF reference'] = uhf_ref_energies
 
-        print(f"Length of distances_sorted for method {method}: {len(distances_sorted)}")
-        print(f"Length of energies_sorted for method {method}: {len(energies_sorted)}")
+        # print(f"Length of distances_sorted for method {method}: {len(distances_sorted)}")
+        # print(f"Length of energies_sorted for method {method}: {len(energies_sorted)}")
 
 
     # Get the data from the other num_opt_virtual_orbitals if there are multiple and plot them as well, but with different different color as it is also OVOS
@@ -413,12 +413,12 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
                         marker=marker[method],
                         label=f"{method_labels[method]} (25% virt. orbs) Points")
 
-    plt.xlim(0.7, 2.0)
-    # plt.xlim(2.5, 6.0)     # Li2
+    # plt.xlim(0.7, 2.0)
+    plt.xlim(2.5, 6.0)     # Li2
     # plt.ylim(-76,-75.6)
-    # plt.ylim(-14.88, -14.80) # Li2
+    plt.ylim(-14.885, -14.80) # Li2
     # plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
-    plt.xticks(np.arange(0.7, 2.1, 0.2))
+    # plt.xticks(np.arange(0.7, 2.1, 0.2))
     # plt.yticks(np.arange(-100.0, -99.8, 0.05))
     plt.xlabel("Interatomic Distance (Angstrom)", fontsize=12)
     plt.ylabel("Energy (Hartree)", fontsize=12)
@@ -430,20 +430,60 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     # Print the MO type for each method and dist
     for method in methods:
         print(f"MO type for method {method}:")
-        for dist in data_by_method[method]['distances']:
-            mo_type = mo_type_by_method_and_dist[method].get(str(dist), "unknown")
-            print(f"  Dist {dist}: MO type = {mo_type}")
-
+        # gather list for printing ranges of dist with the same MO type
+        mo_type_ranges = {}
+        for dist, mo_type in mo_type_by_method_and_dist[method].items():
+            if mo_type not in mo_type_ranges:
+                mo_type_ranges[mo_type] = []
+            mo_type_ranges[mo_type].append(float(dist))
+        for mo_type, dist_values in mo_type_ranges.items():
+            dist_values_sorted = sorted(dist_values)
+            print(f"  MO type {mo_type} for distances: {dist_values_sorted[0]} to {dist_values_sorted[-1]} Angstrom")
 
     # Save the plot
     output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_dist_results_zoom.png"
     plt.savefig(output_path, dpi=300)
     print(f"Zoomed VQE dist results plot saved to {output_path}")
 
+
+
+
+
+def print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbitals):
+    # Get the final energy of OVOS and UMP2 for the given molecule, basis, dist, and num_opt_virtual_orbitals,
+    # and print the correlation energy (E_corr = E_final - E_RHF_reference) for both methods for comparison
+    # See it as a sanity check by comparing the correlation energy of OVOS and UMP2, and see if they are in the same ballpark, which can indicate if OVOS is capturing a similar amount of correlation energy as UMP2
+
+        # Get the final energy of OVOS and UMP2 for the given molecule, basis, dist, and num_opt_virtual_orbitals
+    file_name_ovos = f"backup/data/{molecule}/{basis}/VQE/OVOS/{dist}/UPS_OVOS_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_9.json"
+            #  "E_corr_OVOS" in file
+    file_name_ump2 = f"backup/data/{molecule}/{basis}/VQE/UMP2/{dist}/UPS_UMP2_NO_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_9.json"
+            #  E_corr_ump2 = "ump2_energy" - "uhf_energy", where "" is in file
+    try:
+        with open(file_name_ovos, 'r') as f:
+            data_ovos = json.load(f)
+            E_corr_OVOS = data_ovos["E_corr_OVOS"] 
+    except FileNotFoundError:
+        print(f"Warning: OVOS file not found {file_name_ovos}")
+        E_corr_OVOS = None
+
+    try:        
+        with open(file_name_ump2, 'r') as f:
+            data_ump2 = json.load(f)
+            E_corr_UMP2 = data_ump2["ump2_energy"] - data_ump2["uhf_energy"]
+    except FileNotFoundError:
+        print(f"Warning: UMP2 file not found {file_name_ump2}")
+        E_corr_UMP2 = None
+
+    print(f"[{dist}] Correlation energy for OVOS: {E_corr_OVOS:.4f} Hartree, UMP2: {E_corr_UMP2:.4f} Hartree, Ratio: {E_corr_OVOS / E_corr_UMP2 if E_corr_OVOS is not None and E_corr_UMP2 is not None and E_corr_UMP2 != 0 else 'undefined':.4f}")
     
 
+
+
+
+
 if True:
-    molecule = "H2O"
+    molecule = "Li2"
     basis = "6-31G"
     method = "OVOS" # Placeholder for getting dist and seed list
 
@@ -459,16 +499,16 @@ if True:
     for num_opt_virtual_orbital in num_opt_virtual_orbitals:
         dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
         print(f"Dist list for {molecule} {basis} method {method} num_opt_virtual_orbital {num_opt_virtual_orbital}: {dist_list}")
-        if False:
-            dist_list_save = [round(dist,4) for dist in np.arange(0.7, 2.025, 0.025)] # Override dist list with a fixed list of dist for better comparison between different num_opt_virtual_orbitals, and also to make sure we have the same dist for all num_opt_virtual_orbitals, which is important for the plot
-                # Find the numbers  of dist_list that are np.isclose to the dist_list_save and only keep those in dist_list
-            dist_list = [float(dist) for dist in dist_list if any(np.isclose(float(dist), d, atol=0.0001) for d in dist_list_save)]
+
+            # If the molecule is Li2, we only want to the range above 2.5 Angstrom, so we can filter the dist_list to only include dist that are above 2.5 Angstrom, and we can use this filtered dist_list for the rest of the code
+        if molecule == "Li2":
+            dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
+
             # Save dist_list
         dist_list_save.append(dist_list)
-        print(f"Dist list for {molecule} {basis} method {method}: {dist_list}")
             # For each dist, get seeds list and make VQE results file for that dist
         if len(dist_list) < 5:
-            seeds_lst = [8] # Only seed 9
+            seeds_lst = [9] # Only seed 9 or 8
         else:
             seeds_lst = gather_seeds_lst(molecule, basis, method, dist_list[0], num_opt_virtual_orbital) # Get seeds list from the first dist, assuming it's the same for all dists
         
@@ -480,6 +520,10 @@ if True:
 
         # Get the dist list again for full file generation
         make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual_orbital)
+
+        # Check the correlation energy of OVOS vs. UMP2 for this molecule, basis, dist, and num_opt_virtual_orbitals as a sanity check
+        for dist in dist_list:
+            print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbital)
 
     plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals)
 

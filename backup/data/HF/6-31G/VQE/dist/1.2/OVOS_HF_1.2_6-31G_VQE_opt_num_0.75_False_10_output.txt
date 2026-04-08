@@ -5,12 +5,12 @@ Number of electrons: 10, Number of orbitals: 11
 Initial MO coefficients are restricted (RHF-like).
 Optimizing 4 active virtual orbitals (out of 6 total virtual orbitals).
 
-Optimization finished. Final MP2 energy = -100.07162354540422 Hartree. (ΔE_corr = -0.13662906272018885 Hartree)
+Optimization finished. Final MP2 energy = -100.07162354540422 Hartree. (ΔE_corr = -0.1366290627201888 Hartree)
 OVOS optimized orbitals are unrestricted (UHF-like).
 
 
 Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
-OVOS optimized energy = -103.911788 Hartree @ iterations 129.
+OVOS optimized energy = -103.914609 Hartree @ iterations 287.
 
 Calculating UHF reference for comparison...
 UHF energy = -103.9044 Hartree @ iterations 89.
@@ -22,7 +22,7 @@ UHF natural orbital energy = -103.942024 Hartree @ iterations 193.
 Summary of results:
 Molecule: H 0 0 0; F 0 0 1.2 with basis set 6-31G for a total of 10 electrons and 11 orbitals.
 OVOS correlation energy: -100.071624 Hartree (Active unocc. orbitals: 4)
-OVOS energy: -103.911788 Hartree  @ iterations 129 (Eval. func. 137, grad. 137
+OVOS energy: -103.914609 Hartree  @ iterations 287 (Eval. func. 333, grad. 333
 UHF energy: -103.904400 Hartree  @ iterations 89 (Eval. func. 91, grad. 91
 UMP2 natural orbital energy: -103.942024 Hartree  @ iterations 193 (Eval. func. 230, grad. 230
 ✓ Completed. Output saved to backup/data/HF/6-31G/VQE/dist/1.2/OVOS_HF_1.2_6-31G_VQE_opt_num_0.75_False_10_output.txt

@@ -4,9 +4,3 @@ Built molecule CO with basis 6-31G and bond length 1.1 Angstrom.
 Number of electrons: 14, Number of orbitals: 18
 Initial MO coefficients are restricted (RHF-like).
 Optimizing 8 active virtual orbitals (out of 11 total virtual orbitals).
-
-Optimization finished. Final MP2 energy = -112.86631066720031 Hartree. (ΔE_corr = -0.2015323405068408 Hartree)
-OVOS optimized orbitals are restricted (RHF-like).
-
-
-Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...

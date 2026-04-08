@@ -290,8 +290,8 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
                 mo_coeff=mo_coeffs,
                 init_orbs="RHF",
                 verbose=1,
-                max_iter=500,
-                conv_energy=1e-16,
+                max_iter=1000,
+                conv_energy=1e-15,
                 conv_grad=1e-4,
                 keep_track_max=50
             )
@@ -648,10 +648,12 @@ def run_hf_vqe():
 
     # Run the VQE optimizations for HF for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    seed_list = [8]
-    # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
+    # seed_list = [8]
+    seed_list = [149, 159, 169, 179, 189, 19, 199, 20, 21, 29]
     # 10: [42, 123, 14, 10, 20, 21, 101, 404, 9, 13]
-    # 30: ['9', '10', '101', '109', '119', '123', '129', '13', '139', '14', '149', '159', '169', '179', '189', '19', '199', '20', '21', '29', '39', '404', '42', '49', '59', '69', '79', '8', '89', '9', '99']
+    # 20: [9, 10, 101, 109, 119, 123, 129, 13, 139, 14], 
+    # 30: [149, 159, 169, 179, 189, 19, 199, 20, 21, 29], 
+    # 40: ['39', '404', '42', '49', '59', '69', '79', '8', '89', '9', '99']
 
     args_list = []
     for dist in dist_list:
@@ -863,9 +865,9 @@ def run_co_vqe():
         # A diatomic molecule,
             # so the dist will be the bond length between C and O,
             # which we can vary around the equilibrium bond length of 1.128 Angstrom.
-    dist_list = np.arange(0.7, 2.025, 0.025).round(3).tolist()  # From 0.7 to 2.0 in steps of 0.025
+    # dist_list = np.arange(0.7, 2.025, 0.025).round(3).tolist()  # From 0.7 to 2.0 in steps of 0.025
         # Trial dist list
-    # dist_list = [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
+    dist_list = [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
     
     print("\nGenerated CO geometries with varying C-O bond lengths:")
     for dist in dist_list:
@@ -879,7 +881,6 @@ def run_co_vqe():
     basis = basis_lst[0]
 
     for dist in dist_list:
-        dist = round(dist, 3)
         # Make the VQE folders for dist if they don't exist
         if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/dist/{dist}"):
             os.makedirs(f"backup/data/{atom}/{basis}/VQE/dist/{dist}")
@@ -951,7 +952,7 @@ def run_co_vqe():
 
     # Run the VQE optimizations for CO for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    seed_list = [8] # Trial seed, verify...
+    seed_list = [9] # Trial seed, verify...
     # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
 
     args_list = []
@@ -1046,7 +1047,7 @@ def run_nh3_vqe():
         atom_str = f"N {N_coords[0]:.3f} {N_coords[1]:.3f} {N_coords[2]:.3f}; "
         atom_str += f"H {new_H_coords[0][0]:.3f} {new_H_coords[0][1]:.3f} {new_H_coords[0][2]:.3f}; "
         atom_str += f"H {new_H_coords[1][0]:.3f} {new_H_coords[1][1]:.3f} {new_H_coords[1][2]:.3f}; "
-        atom_str += f"H {new_H_coords[2][0]:.3f} {new_H_coords[2][1]:.3 f} {new_H_coords[2][2]:.3f}"
+        atom_str += f"H {new_H_coords[2][0]:.3f} {new_H_coords[2][1]:.3f} {new_H_coords[2][2]:.3f}"
         dist_list_nh3.append(atom_str)
         print(f"Variation {variation*100:.0f}%: {atom_str} with angles {angle_1_deg_new:.2f}, {angle_2_deg_new:.2f}, {angle_3_deg_new:.2f} degrees")
 
@@ -1170,7 +1171,6 @@ def run_li2_vqe():
     basis = basis_lst[0]
 
     for dist in dist_list:
-        dist = round(dist, 3)
         # Make the VQE folders for dist if they don't exist
         if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/dist/{dist}"):
             os.makedirs(f"backup/data/{atom}/{basis}/VQE/dist/{dist}")
@@ -1272,10 +1272,10 @@ def run_single(args):
 if __name__ == "__main__":
     # Molecule: HF, H2O, CO, NH3, Li2
     # args_list = run_hf_vqe()
-    args_list = run_h2o_vqe()
-    # args_list = run_co_vqe()
+    # args_list = run_h2o_vqe()
+    # args_list = run_co_vqe()  # RAM exploded, even when running 1...
     # args_list = run_nh3_vqe()
-    # args_list = run_li2_vqe()
+    args_list = run_li2_vqe()
 
     if True:
         num_cores = os.cpu_count()

@@ -1,0 +1,28 @@
+
+Running VQE with OVOS optimization for NH3 w. bond length 1.0 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule NH3 with basis 6-31G and bond length 1.0 Angstrom.
+Number of electrons: 10, Number of orbitals: 15
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 7 active virtual orbitals (out of 10 total virtual orbitals).
+
+Optimization finished. Final MP2 energy = -56.25345497143463 Hartree. (ΔE_corr = -0.11102676520159448 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+OVOS optimized energy = -68.542724 Hartree @ iterations 114.
+
+Calculating UHF reference for comparison...
+UHF energy = -68.534805 Hartree @ iterations 290.
+
+Calculating UMP2 natural orbitals for comparison...
+UMP2 natural orbitals are restricted (RHF-like).
+UHF natural orbital energy = -68.543549 Hartree @ iterations 204.
+
+Summary of results:
+Molecule: N 0.000 0.000 0.000; H 0.000 0.000 1.000; H 0.000 0.924 -0.259; H 0.000 -0.924 -0.259 with basis set 6-31G for a total of 10 electrons and 15 orbitals.
+OVOS correlation energy: -56.253455 Hartree (Active unocc. orbitals: 7)
+OVOS energy: -68.542724 Hartree  @ iterations 114 (Eval. func. 136, grad. 136
+UHF energy: -68.534805 Hartree  @ iterations 290 (Eval. func. 327, grad. 327
+UMP2 natural orbital energy: -68.543549 Hartree  @ iterations 204 (Eval. func. 235, grad. 235
+✓ Completed. Output saved to backup/data/NH3/6-31G/VQE/dist/1.0/OVOS_NH3_1.0_6-31G_VQE_opt_num_0.75_False_9_output.txt

@@ -474,16 +474,27 @@ class OVOS:
     # Newton step solver with trust region / Levenberg‑Marquardt
     # -------------------------------------------------------------------------
     def _newton_step(self, G: np.ndarray, H: np.ndarray,
-                     iteration: int) -> np.ndarray:
+                 iteration: int, detect_oscillation: bool = True) -> np.ndarray:
         """
-        Solve H·R = -G with adaptive Levenberg‑Marquardt  damping and
-        oscillation detection to prevent limit-cycle behavior.
+        Solve H·R = -G with adaptive Levenberg‑Marquardt damping and
+        optional oscillation detection to prevent limit-cycle behavior.
+
+        Parameters
+        ----------
+        G : np.ndarray
+            Gradient vector
+        H : np.ndarray
+            Hessian matrix
+        iteration : int
+            Current iteration number
+        detect_oscillation : bool, optional
+            Enable oscillation detection and damping boost. Default: True
         """
         g_vec = G.flatten()
         dim = len(g_vec)
         grad_norm = np.linalg.norm(g_vec)
 
-        # Track oscillation history (add to __init__)
+        # Track oscillation history
         if not hasattr(self, '_step_history'):
             self._step_history = []
         if not hasattr(self, '_oscillation_damping_boost'):
@@ -497,10 +508,10 @@ class OVOS:
                 H_reg = H + self.hessian_reg * np.eye(dim)
                 R = np.linalg.solve(H_reg, -g_vec)
         else:
-            # Adaptive Levenberg‑Marquardt with oscillation detection
+            # Adaptive Levenberg‑Marquardt with optional oscillation detection
         
-            # Detect oscillation: if last 3 steps alternated sign, boost damping
-            if len(self._step_history) >= 3:
+            # Detect oscillation if enabled
+            if detect_oscillation and len(self._step_history) >= 3:
                 recent_dE = self._step_history[-3:]
                 signs = [np.sign(dE) for dE in recent_dE]
                 # Pattern: [+, -, +] or [-, +, -] indicates oscillation
@@ -509,16 +520,20 @@ class OVOS:
                     if self.verbose:
                         self._print(f"    WARNING: Oscillation detected! Boosting damping: "
                                 f"λ_boost = {self._oscillation_damping_boost:.3f}")
+            elif not detect_oscillation:
+                # Reset oscillation boost if detection is disabled
+                self._oscillation_damping_boost = 1.0
             
             # Shrink trust radius more aggressively near convergence
             trust_rad_factor = max(0.05, 1.0 / (1.0 + 0.2 * iteration))
             trust_rad_effective = self.trust_radius * trust_rad_factor
         
-                # Start with higher damping if oscillating
-            lambda_lm = (self.lambda_init * self._oscillation_damping_boost * 
+            # Start with higher damping if oscillating (only if detection enabled)
+            damping_multiplier = (self._oscillation_damping_boost if detect_oscillation 
+                                else 1.0)
+            lambda_lm = (self.lambda_init * damping_multiplier * 
                         max(0.1, 1.0 / (1.0 + 0.1 * iteration)))
             lambda_max = self.lambda_max * max(0.1, 1.0 / (1.0 + 0.1 * iteration))
-        
 
             best_R = None
             best_norm = np.inf
@@ -538,9 +553,10 @@ class OVOS:
                     best_R = R_trial
                     # More conservative: reduce lambda by smaller factor
                     self.lambda_init = max(lambda_lm / 1.2, 1e-12)
-                    # Gradually reduce oscillation boost
-                    self._oscillation_damping_boost = max(1.0, 
-                        self._oscillation_damping_boost * 0.95)
+                    # Gradually reduce oscillation boost (if detection enabled)
+                    if detect_oscillation:
+                        self._oscillation_damping_boost = max(1.0, 
+                            self._oscillation_damping_boost * 0.95)
                     break
                 else:
                     # Keep track of best step (but don't accept yet)
@@ -700,7 +716,7 @@ class OVOS:
             H = self._hessian(t_abij, eri_as, D_ab, fock_spin)
 
             # Solve Newton step
-            R_vec = self._newton_step(G, H, iter_count)
+            R_vec = self._newton_step(G, H, iter_count, detect_oscillation=False)
 
             # Apply rotation
             mo_coeffs, fock_spin = self._rotate_orbitals(mo_coeffs, fock_spin, R_vec)
