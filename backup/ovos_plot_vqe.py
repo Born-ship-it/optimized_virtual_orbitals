@@ -147,6 +147,7 @@ def make_vqe_dist_results_file(molecule, basis, dist, seeds_lst, num_opt_virtual
     for method in ["OVOS", "UHF", "UMP2"]:
         energies = []
         energies_initial = []
+        mo_type_by_seed = []
         for seed in seeds_lst:
             if method == "UMP2":
                 method_name = "UMP2_NO"
@@ -155,13 +156,15 @@ def make_vqe_dist_results_file(molecule, basis, dist, seeds_lst, num_opt_virtual
             filename = f"backup/data/{molecule}/{basis}/VQE/{method}/{dist}/UPS_{method_name}_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_{seed}.json"
             with open(filename, 'r') as f:
                 result = json.load(f)
-                energies.append(result['final_energy'])
-                energies_initial.append(result['iter_energies'][0])
+                energies.append(result['final_energy'])                 # Final energy
+                energies_initial.append(result['iter_energies'][0])     # Initial energy
+                mo_type_by_seed.append(check_vqe_mo_restricted_or_unrestricted(filename))
+                # MO_type = ...
 
         # Get index of the lowest energy
             # Save the lowest energy and initial energy for this method and dist in the data dictionary
         energy_min = min(energies)
-        data[method] = [energies_initial[energies.index(energy_min)], energy_min]
+        data[method] = [energies_initial[energies.index(energy_min)], energy_min, mo_type_by_seed[energies.index(energy_min)]]  # Save the initial energy, lowest energy, and MO type for this method and dist in the data dictionary
 
     file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbitals}.json"
     if not os.path.exists(f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/"):
@@ -171,241 +174,42 @@ def make_vqe_dist_results_file(molecule, basis, dist, seeds_lst, num_opt_virtual
 
     # print(f"VQE results write to {file_name} for dist {dist}: {data}")
 
-def plot_vqe_results(molecule, basis, dist_list):
-    # Plot the VQE results for each dist and method
-    # We can use the data from the VQE results file we generated in the previous function
-    # The file is like: "backup/data/HF/6-31G/VQE/VQE_HF_6-31G_results.json"
-    file_name = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_results.json"
-    with open(file_name, 'r') as f:
-        data = json.load(f)
+def check_vqe_mo_restricted_or_unrestricted(filename):
+    # Check if the resulting MOs in the filename is of type, by getting the 
+        # Alpha and beta MOs, are the same or different? 
+        # "mo": [
+        #           [
+        #              [ ...
+        #              ],
+        #              ...
+        #              [ ...
+        #              ]
+        #           ], # Alpha MOs
+        #           [
+        #              [ ...
+        #              ],
+        #              ...
+        #              [ ...
+        #              ]
+        #           ] # Beta MOs
+        #       ]
 
-    methods = ["OVOS", "UHF", "UMP2"]
-    color = ['blue', 'purple', 'green']
-    marker = ['D', 'X', 'P']
+    # Open file and load json data
+    with open(filename, 'r') as f:
+        data = json.load(f) 
 
-    # Make figure
-    plt.figure(figsize=(10, 6))
+    # Get the MOs from the data
+    mo_alpha = data['mo'][0]  # Alpha MOs
+    mo_beta = data['mo'][1]   # Beta MOs
 
-    for method in methods:
-        energies = [data[method][dist] for dist in dist_list]
-        plt.plot(dist_list, energies, label=method, color=color[methods.index(method)], marker=marker[methods.index(method)], linestyle='-')
-
-    plt.xlabel("Dist")
-    plt.ylabel("Energy")
-    plt.title(f"VQE Results for {molecule} {basis}")
-    plt.suptitle("Potential Energy Surface")
-    plt.legend()
-    
-    # Save the plot
-    plt.savefig(f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_results.png")
-
-def plot_vqe_dist_results(molecule, basis, dist_list):
-    # Plot the VQE results for the dist we have already generated
-    # Use make_vqe_dist_results_file to generate the results file for the dist we have already generated
-    # The file is like: "backup/data/HF/6-31G/VQE/"dist"/VQE_HF_6-31G_"dist"_results.json
-    # dist_list = gather_dist_lst(molecule, basis, "OVOS")
-        # Except the last one, which might not be done...
-    # dist_list = dist_list[:-1]
-
-    # Make figure
-    fig, ax = plt.subplots(figsize=(10, 6))
-    
-    methods = ["OVOS", "UHF", "UMP2"]
-    method_labels = {"OVOS": "OVOS (75%)", "UHF": "UHF", "UMP2": "UMP2 Nat. Orbs"}
-    colors = {'OVOS': 'blue', 'UHF': 'purple', 'UMP2': 'green'}
-    marker = {'OVOS':'D', 'UHF': 'X', 'UMP2': 'P'}
-    
-    # Convert dist_list strings to floats for proper numeric plotting
-    dist_list_float = [float(d) for d in dist_list]
-    
-    # Collect data organized by method
-    data_by_method = {method: {'distances': [], 'energies': [], 'initial energies': [], 'UHF reference': [], 'RHF reference': [], 'nuclear repulsion': []} for method in methods}
-    
-    for dist in dist_list:
-        file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results.json"
-        try:
-            with open(file_name, 'r') as f:
-                data = json.load(f)
-            
-            for method in methods:
-                if method in data:
-                    initial_energy, final_energy = data[method][0], data[method][1]
-                    data_by_method[method]['distances'].append(float(dist))
-                    data_by_method[method]['energies'].append(final_energy)
-                    data_by_method[method]['initial energies'].append(initial_energy)
-                else:
-                    print(f"Warning: Method {method} not found in data for dist {dist}")
-        except FileNotFoundError:
-            print(f"Warning: File not found {file_name}")
-            continue
-
-        file_name_uhf_ref = f"backup/data/{molecule}/6-31G/VQE/UHF/{dist}/UHF_{molecule}_6-31G_{dist}_reference_energy.txt"
-        try:
-            with open(file_name_uhf_ref, 'r') as f:
-                uhf_reference_energy = float(f.read().strip())
-                data_by_method['UHF']['UHF reference'].append(uhf_reference_energy)
-        except FileNotFoundError:
-            print(f"Warning: UHF reference energy file not found {file_name_uhf_ref}")
-            data_by_method['UHF']['UHF reference'].append(None)  # Append None if reference energy is missing
-    
-        file_name_rhf_ref = f"backup/data/{molecule}/6-31G/VQE/UHF/{dist}/RHF_{molecule}_6-31G_{dist}_reference_energy.txt"
-        try:
-            with open(file_name_rhf_ref, 'r') as f:
-                rhf_reference_energy = float(f.read().strip())
-                data_by_method['UHF']['RHF reference'].append(rhf_reference_energy)
-        except FileNotFoundError:
-            print(f"Warning: RHF reference energy file not found {file_name_rhf_ref}")
-            data_by_method['UHF']['RHF reference'].append(None)  # Append None if reference energy is missing
-
-        file_name_nuclear_repulsion = f"backup/data/{molecule}/6-31G/VQE/UHF/{dist}/nuclear_repulsion_{molecule}_6-31G_{dist}_energy.txt"
-        try:
-            with open(file_name_nuclear_repulsion, 'r') as f:
-                nuclear_repulsion_energy = float(f.read().strip())
-                data_by_method['UHF']['nuclear repulsion'].append(nuclear_repulsion_energy)
-        except FileNotFoundError:
-            print(f"Warning: Nuclear repulsion energy file not found {file_name_nuclear_repulsion}")
-            data_by_method['UHF']['nuclear repulsion'].append(None)  # Append None if nuclear repulsion energy is missing
-    
-    # Plot each method as a continuous line (no markers)
-    data_by_method_for_plotting = {method: {'distances': [], "final_energies": [], "rhf_ref_energies": []} for method in methods}
-    for method in methods:
-        distances = data_by_method[method]['distances']
-        energies = data_by_method[method]['energies']
-        init_energies = data_by_method[method]['initial energies']
-        uhf_ref_energies = data_by_method['UHF']['UHF reference']
-        rhf_ref_energies = data_by_method['UHF']['RHF reference']
-        nuclear_repulsion_energy = data_by_method['UHF']['nuclear repulsion']
-
-        # Sort by distance for proper line connection
-        sorted_data = sorted(zip(distances, energies, init_energies, uhf_ref_energies, rhf_ref_energies, nuclear_repulsion_energy))
-        distances_sorted = [d[0] for d in sorted_data]
-        energies_sorted = [e[1] for e in sorted_data]
-        init_energies_sorted = [e[2] for e in sorted_data]
-        uhf_ref_energies = [f[3] for f in sorted_data]
-        rhf_ref_energies = [g[4] for g in sorted_data]
-        nuclear_repulsion_energy = [n[5] for n in sorted_data]
-
-        # Add a invisble point for zero distance if not already present
-        if 0.0 not in distances_sorted and any(d < 0 for d in distances_sorted):
-            print(f"Adding zero distance point for method {method} since negative distances are present but zero is missing.")
-            # Insert after the negative distances and before the positive distances
-            insert_index = next((i for i, d in enumerate(distances_sorted) if d > 0), len(distances_sorted))
-            distances_sorted.insert(insert_index, 0.0)
-            energies_sorted.insert(insert_index, energies_sorted[insert_index])  # Use the energy of the
-            init_energies_sorted.insert(insert_index, init_energies_sorted[insert_index])  # Use the initial energy of the same point
-            uhf_ref_energies.insert(insert_index, uhf_ref_energies[insert_index])  # Use the UHF reference energy of the same point
-            rhf_ref_energies.insert(insert_index, rhf_ref_energies[insert_index])  # Use the RHF reference energy of the same point
-            nuclear_repulsion_energy.insert(insert_index, nuclear_repulsion_energy[insert_index])  # Use the nuclear repulsion energy of the same point
-        
-        # Add nuclear repulsion energy to the energies_sorted
-        energies_sorted = [e + n if e is not None and n is not None else e for e, n in zip(energies_sorted, nuclear_repulsion_energy)]
-            # Add to energies_method for later 
-        data_by_method_for_plotting[method]['distances'] = distances_sorted
-        data_by_method_for_plotting[method]['final_energies'] = energies_sorted
-        data_by_method_for_plotting[method]['rhf_ref_energies'] = rhf_ref_energies
-        data_by_method_for_plotting[method]['UHF reference'] = uhf_ref_energies
-
-        print(f"Length of distances_sorted for method {method}: {len(distances_sorted)}")
-        print(f"Length of energies_sorted for method {method}: {len(energies_sorted)}")
-
-        # Plot final energies as a continuous line
-        ax.plot(distances_sorted, energies_sorted, 
-               label=method_labels[method],
-               color=colors[method],
-               linestyle='-',
-               linewidth = 2)
-        # # Plot initial energies as a dashed line
-        # ax.plot(distances_sorted, init_energies_sorted,
-        #        label=f"{method_labels[method]} Initial",
-        #        color=colors[method],
-        #        linestyle='--',
-        #        linewidth=1.5)
-        
-
-        if method == 'UHF':
-            # # Also plot the UHF reference energies as a dashed line
-            # if any(uhf_ref_energies):
-            #     ax.plot(distances_sorted, uhf_ref_energies, 
-            #            label="UHF Reference", 
-            #            color=colors[method], 
-            #            linestyle='--', 
-            #            linewidth=1.5)
-            # Also plot the RHF reference energies as a dotted line
-            if any(rhf_ref_energies):
-                ax.plot(distances_sorted, rhf_ref_energies, 
-                       label="RHF Reference", 
-                       color="red", 
-                       linestyle='--', 
-                       linewidth=1.5)
-
-    # # Set custom ticks at 0.5 Å intervals
-    custom_ticks = np.arange(-0.5, 3.5, 0.5)
-    # custom_ticks = np.arange(0.7, 1.4, 0.1)
-    matching_ticks = [tick for tick in custom_ticks 
-                     if any(np.isclose(tick, d, atol=0.01) for d in distances_sorted)]
-    ax.set_xticks(matching_ticks)
-    
-    # print(rhf_ref_energies)
-
-    # Set axis limits to span full range
-    min_custom_ticks = min(matching_ticks) if matching_ticks else min(distances_sorted)
-    max_custom_ticks = max(matching_ticks) if matching_ticks else max(distances_sorted)
-    ax.set_xlim(min(custom_ticks), max(custom_ticks))
-    ax.set_ylim(min(energies_sorted) - 5, max(energies_sorted))  # Adjust y-axis limits based on energy range, with some padding
-        # For matching the custom ticks, we can set the xlim to be a bit wider than the range of the custom ticks
-    # ax.set_xlim(0.7, 1.3)
-    # ax.set_ylim(-100.0, -99.8) # RHF
-    # ax.set_ylim(-102.5, -102.0) # UHF
-        
-    
-    # Labels and formatting
-    ax.set_xlabel("Interatomic Distance (Angstrom)", fontsize=12)
-    ax.set_ylabel("Energy (Hartree)", fontsize=12)
-    ax.set_title(f"Potential Energy Surface for {molecule} ({basis})", fontsize=14)
-    ax.grid(True, alpha=0.3)
-    ax.legend(loc="upper left", fontsize=10)
-
-    plt.tight_layout()
-    
-    # Save the plot
-    output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_dist_results.png"
-    plt.savefig(output_path, dpi=300)
-    print(f"VQE dist results plot saved to {output_path}")
-    
-    # Add a zoomed inset for the region around the equilibrium bond length (e.g., 0.7 to 1.3 Angstrom)
-    inset_ax = ax.inset_axes([0.5, 0.5, 0.47, 0.47])  # [x0, y0, width, height]
-    for method in methods:
-        inset_ax.plot(data_by_method_for_plotting[method]['distances'], 
-                data_by_method_for_plotting[method]['final_energies'],
-                label=method_labels[method],
-                color=colors[method],
-                linestyle='-',
-                linewidth = 2)
-
-    inset_ax.plot(data_by_method_for_plotting['UHF']['distances'], 
-                data_by_method_for_plotting['UHF']['rhf_ref_energies'],
-                label="RHF Reference",
-                color="red",
-                linestyle='--',
-                linewidth=1.5)
-
-    inset_ax.set_xlim(0.7, 2)
-    inset_ax.set_ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
-    inset_ax.set_yticks(np.arange(-100.0, -99.8, 0.05))
-    inset_ax.set_xticks(np.arange(0.7, 2.1, 0.2))
-    inset_ax.grid(True, alpha=0.3)
-
-        # Add gray in main plot between the two insets to indicate the zoomed area
-    ax.axvspan(0.6, 2, color='gray', alpha=0.1, zorder=0)
-    inset_ax.axvspan(0.6, 2, color='gray', alpha=0.1, zorder=0)
-    inset_ax.axvspan(0.6, 2, color='gray', alpha=0.1, zorder=0)
-
-    plt.tight_layout()
-    
-    # Save the plot
-    output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_dist_results_w_zoom.png"
-    plt.savefig(output_path, dpi=300)
-    print(f"VQE dist results plot saved to {output_path}")
+    # Check if the alpha and beta MOs are the same or different
+    if mo_alpha == mo_beta:
+        # print(f"The MOs in the file {filename} are restricted (same for alpha and beta).")
+        return "restricted"
+    else:
+        # print(f"The MOs in the file {filename} are unrestricted (different for alpha and beta).")
+        return "unrestricted"
+                
 
 def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals):    
     # Make sure num_opt_virtual_orbitals is at least a list of one element, which is the number of optimal virtual orbitals for the OVOS method, and we can use it to get the dist_list for the correct number of optimal virtual orbitals
@@ -414,7 +218,7 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     dist_list = dist_list_[-1]
     if len(dist_list) > 1:
         dist_list_25 = dist_list_[0]
-        print(dist_list_25)
+        # print(dist_list_25)
 
     methods = ["OVOS", "UHF", "UMP2"]
     method_labels = {"OVOS": "OVOS (75%)", "UHF": "UHF", "UMP2": "UMP2 Nat. Orbs"}
@@ -427,6 +231,9 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     # Collect data organized by method
     data_by_method = {method: {'distances': [], 'energies': [], 'initial energies': [], 'UHF reference': [], 'RHF reference': [], 'nuclear repulsion': []} for method in methods}
     
+    # Collect if the MOs are restricted or unrestricted for each dist and method, and print it out
+    mo_type_by_method_and_dist = {method: {} for method in methods}
+
     for dist in dist_list:
         num_opt_virtual_orbital = num_opt_virtual_orbitals[-1]
         file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbital}.json"
@@ -440,6 +247,7 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
                     data_by_method[method]['distances'].append(float(dist))
                     data_by_method[method]['energies'].append(final_energy)
                     data_by_method[method]['initial energies'].append(initial_energy)
+                    mo_type_by_method_and_dist[method][dist] = data[method][2]  # Save the MO type for this method and dist
                     # print(f"Data for method {method} at dist {dist}: initial energy = {initial_energy}, final energy = {final_energy}")
                 else:
                     print(f"Warning: Method {method} not found in data for dist {dist}")
@@ -473,7 +281,7 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
         except FileNotFoundError:
             print(f"Warning: Nuclear repulsion energy file not found {file_name_nuclear_repulsion}")
             data_by_method['UHF']['nuclear repulsion'].append(None)  # Append None if nuclear repulsion energy is missing
-    
+
     # Redo the data collection for plotting to ensure it's sorted by distance and includes the nuclear repulsion energy in the final energies
     data_by_method_for_plotting = {method: {'distances': [], "final_energies": [], "rhf_ref_energies": []} for method in methods}
     for method in methods:
@@ -513,8 +321,8 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
         data_by_method_for_plotting[method]['rhf_ref_energies'] = rhf_ref_energies
         data_by_method_for_plotting[method]['UHF reference'] = uhf_ref_energies
 
-        print(f"Length of distances_sorted for method {method}: {len(distances_sorted)}")
-        print(f"Length of energies_sorted for method {method}: {len(energies_sorted)}")
+        # print(f"Length of distances_sorted for method {method}: {len(distances_sorted)}")
+        # print(f"Length of energies_sorted for method {method}: {len(energies_sorted)}")
 
 
     # Get the data from the other num_opt_virtual_orbitals if there are multiple and plot them as well, but with different different color as it is also OVOS
@@ -605,10 +413,13 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
                         marker=marker[method],
                         label=f"{method_labels[method]} (25% virt. orbs) Points")
 
-    plt.xlim(0.7, 2)
-    plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
-    plt.xticks(np.arange(0.7, 2.1, 0.2))
-    plt.yticks(np.arange(-100.0, -99.8, 0.05))
+    # plt.xlim(0.7, 2.0)
+    plt.xlim(2.5, 6.0)     # Li2
+    # plt.ylim(-76,-75.6)
+    plt.ylim(-14.885, -14.80) # Li2
+    # plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
+    # plt.xticks(np.arange(0.7, 2.1, 0.2))
+    # plt.yticks(np.arange(-100.0, -99.8, 0.05))
     plt.xlabel("Interatomic Distance (Angstrom)", fontsize=12)
     plt.ylabel("Energy (Hartree)", fontsize=12)
     plt.title(f"Zoomed Potential Energy Surface for {molecule} ({basis})", fontsize=14)
@@ -616,37 +427,88 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     plt.legend(loc="upper left", fontsize=10)
     plt.tight_layout()
 
-
+    # Print the MO type for each method and dist
+    for method in methods:
+        print(f"MO type for method {method}:")
+        # gather list for printing ranges of dist with the same MO type
+        mo_type_ranges = {}
+        for dist, mo_type in mo_type_by_method_and_dist[method].items():
+            if mo_type not in mo_type_ranges:
+                mo_type_ranges[mo_type] = []
+            mo_type_ranges[mo_type].append(float(dist))
+        for mo_type, dist_values in mo_type_ranges.items():
+            dist_values_sorted = sorted(dist_values)
+            print(f"  MO type {mo_type} for distances: {dist_values_sorted[0]} to {dist_values_sorted[-1]} Angstrom")
 
     # Save the plot
     output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_dist_results_zoom.png"
     plt.savefig(output_path, dpi=300)
     print(f"Zoomed VQE dist results plot saved to {output_path}")
 
+
+
+
+
+def print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbitals):
+    # Get the final energy of OVOS and UMP2 for the given molecule, basis, dist, and num_opt_virtual_orbitals,
+    # and print the correlation energy (E_corr = E_final - E_RHF_reference) for both methods for comparison
+    # See it as a sanity check by comparing the correlation energy of OVOS and UMP2, and see if they are in the same ballpark, which can indicate if OVOS is capturing a similar amount of correlation energy as UMP2
+
+        # Get the final energy of OVOS and UMP2 for the given molecule, basis, dist, and num_opt_virtual_orbitals
+    file_name_ovos = f"backup/data/{molecule}/{basis}/VQE/OVOS/{dist}/UPS_OVOS_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_9.json"
+            #  "E_corr_OVOS" in file
+    file_name_ump2 = f"backup/data/{molecule}/{basis}/VQE/UMP2/{dist}/UPS_UMP2_NO_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_9.json"
+            #  E_corr_ump2 = "ump2_energy" - "uhf_energy", where "" is in file
+    try:
+        with open(file_name_ovos, 'r') as f:
+            data_ovos = json.load(f)
+            E_corr_OVOS = data_ovos["E_corr_OVOS"] 
+    except FileNotFoundError:
+        print(f"Warning: OVOS file not found {file_name_ovos}")
+        E_corr_OVOS = None
+
+    try:        
+        with open(file_name_ump2, 'r') as f:
+            data_ump2 = json.load(f)
+            E_corr_UMP2 = data_ump2["ump2_energy"] - data_ump2["uhf_energy"]
+    except FileNotFoundError:
+        print(f"Warning: UMP2 file not found {file_name_ump2}")
+        E_corr_UMP2 = None
+
+    print(f"[{dist}] Correlation energy for OVOS: {E_corr_OVOS:.4f} Hartree, UMP2: {E_corr_UMP2:.4f} Hartree, Ratio: {E_corr_OVOS / E_corr_UMP2 if E_corr_OVOS is not None and E_corr_UMP2 is not None and E_corr_UMP2 != 0 else 'undefined':.4f}")
     
 
+
+
+
+
 if True:
-    # Run HF 6-31G VQE results file generation
-    molecule = "HF"
+    molecule = "Li2"
     basis = "6-31G"
     method = "OVOS" # Placeholder for getting dist and seed list
 
         # Get dist list from the folder
     # dist_list = gather_dist_lst(molecule, basis, method)
-    dist_list = np.arange(0.7, 2.025, 0.025).round(5).tolist()
+    dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
         # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
     num_opt_virtual_orbitals = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0])
             # Set dist list with negatives floats first and then positive floats, and sorted by absolute value
+    
     # dist_list = sorted(dist_list, key=lambda x: abs(4.0-float(x)))[::-1]
     dist_list_save = []
     for num_opt_virtual_orbital in num_opt_virtual_orbitals:
         dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
+        print(f"Dist list for {molecule} {basis} method {method} num_opt_virtual_orbital {num_opt_virtual_orbital}: {dist_list}")
+
+            # If the molecule is Li2, we only want to the range above 2.5 Angstrom, so we can filter the dist_list to only include dist that are above 2.5 Angstrom, and we can use this filtered dist_list for the rest of the code
+        if molecule == "Li2":
+            dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
+
             # Save dist_list
         dist_list_save.append(dist_list)
-        print(f"Dist list for {molecule} {basis} method {method}: {dist_list}")
             # For each dist, get seeds list and make VQE results file for that dist
-        if len(dist_list) < 30:
-            seeds_lst = [9] # Only seed 9
+        if len(dist_list) < 5:
+            seeds_lst = [9] # Only seed 9 or 8
         else:
             seeds_lst = gather_seeds_lst(molecule, basis, method, dist_list[0], num_opt_virtual_orbital) # Get seeds list from the first dist, assuming it's the same for all dists
         
@@ -658,6 +520,10 @@ if True:
 
         # Get the dist list again for full file generation
         make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual_orbital)
+
+        # Check the correlation energy of OVOS vs. UMP2 for this molecule, basis, dist, and num_opt_virtual_orbitals as a sanity check
+        for dist in dist_list:
+            print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbital)
 
     plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals)
 

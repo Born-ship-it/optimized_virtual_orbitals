@@ -8,8 +8,22 @@ Test are done on molecules:
 - NH3
 """
 
+# Limit OpenBLAS threads to avoid oversubscription in parallel runs
+import os
+os.environ['NUMBA_THREADING_LAYER'] = 'omp'  # Use OpenMP (thread-safe)
+os.environ['NUMBA_NUM_THREADS'] = '1'
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+os.environ['OMP_NUM_THREADS'] = '1'
+
+# Force python to reload module
+import importlib
+
 # Import OVOS
 from ovos import OVOS
+# importlib.reload(ovos)
+from ovos import OVOS
+
+# Import PySCF
 from pyscf import gto, scf
 
 def test_ovos_rhf_CO():
@@ -49,7 +63,7 @@ def test_ovos_rhf_CO():
     )
     E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
 
-    print("\nOptimization finished. Final MP2 energy =", E_corr)
+    print("\nOptimization finished. Final MP2 energy =", E_corr, "Hartree (Stopping reason:", stop_reason, ")")
 
 
 def test_ovos_rhf_H2O():
@@ -89,12 +103,12 @@ def test_ovos_rhf_H2O():
     )
     E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
 
-    print("\nOptimization finished. Final MP2 energy =", E_corr)
+    print("\nOptimization finished. Final MP2 energy =", E_corr, "Hartree (Stopping reason:", stop_reason, ")")
     
 def test_ovos_rhf_HF():
     # Hydrogen fluoride molecule, minimal basis
     mol = gto.Mole()
-    mol.atom = 'H 0 0 0; F 0 0 0.917'
+    mol.atom = 'H 0 0 0; F 0 0 2.0'
     mol.basis = '6-31G'
     mol.unit = 'Angstrom'
     mol.spin = 0
@@ -117,7 +131,7 @@ def test_ovos_rhf_HF():
         mol=mol,
         scf=mf,
         Fao=Fao,
-        num_opt_virtual_orbs=2,      # active virtual spin‑orbitals
+        num_opt_virtual_orbs=6,      # active virtual spin‑orbitals
         mo_coeff=mo_coeffs,
         init_orbs="RHF",
         verbose=1,
@@ -128,7 +142,7 @@ def test_ovos_rhf_HF():
     )
     E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
 
-    print("\nOptimization finished. Final MP2 energy =", E_corr)
+    print("\nOptimization finished. Final MP2 energy =", E_corr, "Hartree (Stopping reason:", stop_reason, ")")
 
 def test_ovos_rhf_NH3():
     # Ammonia molecule, minimal basis
@@ -167,4 +181,11 @@ def test_ovos_rhf_NH3():
     )
     E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
 
-    print("\nOptimization finished. Final MP2 energy =", E_corr)
+    print("\nOptimization finished. Final MP2 energy =", E_corr, "Hartree (Stopping reason:", stop_reason, ")")
+
+
+if __name__ == "__main__":
+    # test_ovos_rhf_CO()
+    # test_ovos_rhf_H2O()
+    test_ovos_rhf_HF()
+    # test_ovos_rhf_NH3()

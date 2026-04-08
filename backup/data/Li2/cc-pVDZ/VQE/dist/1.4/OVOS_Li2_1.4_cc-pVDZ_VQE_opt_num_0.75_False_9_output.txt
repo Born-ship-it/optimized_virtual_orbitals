@@ -1,0 +1,6 @@
+
+Running VQE with OVOS optimization for Li2 w. bond length 1.4 in basis cc-pVDZ with 75% active virtual orbitals and orbital opt. = False...
+Built molecule Li2 with basis cc-pVDZ and bond length 1.4 Angstrom.
+Number of electrons: 6, Number of orbitals: 28
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 18 active virtual orbitals (out of 25 total virtual orbitals).

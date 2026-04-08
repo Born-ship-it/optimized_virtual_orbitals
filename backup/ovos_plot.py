@@ -6,6 +6,11 @@ CTRL+SHIFT+P, select 'WSL: Reopen Folder in WSL'
 """
 
 import os
+# Limit OpenBLAS threads to avoid oversubscription in parallel runs
+os.environ['NUMBA_THREADING_LAYER'] = 'omp'  # Use OpenMP (thread-safe)
+os.environ['NUMBA_NUM_THREADS'] = '1'
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+os.environ['OMP_NUM_THREADS'] = '1'
 
 import matplotlib as mpl		
 import matplotlib.pyplot as plt

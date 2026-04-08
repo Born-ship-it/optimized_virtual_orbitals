@@ -1,6 +1,13 @@
 """
 Try OVOS with VQE and see if it can find the ground state energy of a molecule.
 """
+# Set Numba to use TBB threading (thread-safe) BEFORE importing SlowQuant
+import os
+os.environ['NUMBA_THREADING_LAYER'] = 'omp'  # Use OpenMP (thread-safe)
+os.environ['NUMBA_NUM_THREADS'] = '1'
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+os.environ['OMP_NUM_THREADS'] = '1'
+
     # Math and general imports
 import numpy as np
 import time
@@ -8,14 +15,57 @@ import time
 import slowquant.SlowQuant as sq
 from slowquant.unitary_coupled_cluster.unrestricted_ups_wavefunction import UnrestrictedWaveFunctionUPS
     # Pyscf imports
-from pyscf import gto, scf, mp
+from pyscf import gto, scf, mp, mcscf
     # OVOS imports
 from ovos import OVOS
     # Json
 import json
     # Other imports
-from multiprocessing import Pool
-import os
+import logging
+
+# Global logger instance
+_current_logger = None
+
+def set_logger(logger):
+    """Set the global logger for print wrapper"""
+    global _current_logger
+    _current_logger = logger
+
+def log_print(*args, **kwargs):
+    """Wrapper that routes print() to logger.info() or terminal"""
+    if _current_logger is not None:
+        msg = " ".join(str(a) for a in args)
+        _current_logger.info(msg)
+    else:
+        # Fallback to regular print if no logger set
+        print(*args, **kwargs)
+
+# Replace built-in print in VQE_OVOS scope
+def setup_logging_in_function(seed, dist, molecule, basis, num_opt_virtual_orbs, oo):
+    """Setup logger and return log_print wrapper for use inside VQE_OVOS"""
+    logger = logging.getLogger(f"VQE_{seed}_{dist}")
+    logger.handlers.clear()
+    logger.setLevel(logging.DEBUG)
+    
+    # Create output file path
+    name_out = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/OVOS_{molecule}_{dist}_{basis}_VQE_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}_output.txt"
+    os.makedirs(os.path.dirname(name_out), exist_ok=True)
+    
+    # File handler
+    file_handler = logging.FileHandler(name_out, mode='w')
+    file_handler.setLevel(logging.DEBUG)
+    file_formatter = logging.Formatter('%(message)s')
+    file_handler.setFormatter(file_formatter)
+    logger.addHandler(file_handler)
+    
+    # Console handler with prefix
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_formatter = logging.Formatter(f'[Seed {seed}@{dist:.4f}] %(message)s')
+    console_handler.setFormatter(console_formatter)
+    logger.addHandler(console_handler)
+    
+    return logger, name_out
 
 
 # # Qiskit
@@ -174,23 +224,24 @@ def run_ucc_and_get_stats(wf, str_, orbital_optimization, atol=1e-6):
 
 
 
-def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
-    molecule = str(atom.split()[0])  # Get the first element symbol for naming
-    if molecule == "H":
-        molecule = "HF" # "HF"
-    elif molecule == "C":
-        molecule = "CO"
-    elif molecule == "N":
-        molecule = "NH3"
-    elif molecule == "O":
-        molecule = "H2O"
+def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
+    # name_out = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/OVOS_{molecule}_{dist}_{basis}_VQE_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}_output.txt"
+    # if not os.path.exists(os.path.dirname(name_out)):
+    #     os.makedirs(os.path.dirname(name_out))
 
-    name_out = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/OVOS_{molecule}_{dist}_{basis}_VQE_opt_num_{num_opt_virtual_orbs}_{oo}_output.txt"
-    if not os.path.exists(os.path.dirname(name_out)):
-        os.makedirs(os.path.dirname(name_out))
-    with open(name_out, "w") as f:
-        sys.stdout = Dee(sys.__stdout__, f)
-        try:
+    # with open(name_out, "w") as f:
+    #     # sys.stdout = Dee(sys.__stdout__, f)
+    #     original_stdout = sys.stdout
+
+        # Setup logging
+    logger, name_out = setup_logging_in_function(seed, dist, molecule, basis, num_opt_virtual_orbs, oo)
+    set_logger(logger)
+
+
+    if True:  # Just capture to list and write at the end to avoid issues with multiprocessing
+        try:    
+            log_print(f"\nRunning VQE with OVOS optimization for {molecule} w. bond length {dist} in basis {basis} with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
+
             # Water molecule, minimal basis
             mol = gto.Mole()
             mol.atom = atom
@@ -201,14 +252,17 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
             mol.symmetry = False
             mol.verbose = 0
             mol.build()
+            log_print(f"Built molecule {molecule} with basis {basis} and bond length {dist} Angstrom.")
                 # Get one- and two-electron integrals
             h_core = mol.intor("int1e_kin") + mol.intor("int1e_nuc")
+            # print("Calculated one-electron integrals (kinetic + nuclear).")
             g_eri = mol.intor("int2e")
+            # print("Calculated two-electron integrals.")
 
                 # Number of electrons and orbitals
             num_electrons = mol.nelectron
             num_orbitals = mol.nao_nr() 
-            print(f"Number of electrons: {num_electrons}, Number of orbitals: {num_orbitals}")
+            log_print(f"Number of electrons: {num_electrons}, Number of orbitals: {num_orbitals}")
 
             # Create OVOS object and run
                 # RHF reference for OVOS
@@ -221,13 +275,13 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
             mo_coeffs = [mf.mo_coeff, mf.mo_coeff]
                     # Check if mo_coeffs are unrestricted or restricted
             if np.isclose(mo_coeffs[0], mo_coeffs[1], atol=1e-12).all():
-                print("Initial MO coefficients are restricted (RHF-like).")
+                log_print("Initial MO coefficients are restricted (RHF-like).")
             else:
-                print("Initial MO coefficients are unrestricted (UHF-like).")
+                log_print("Initial MO coefficients are unrestricted (UHF-like).")
 
                 # Set up OVOS
             num_opt_virtual_orbs = int(num_opt_virtual_orbs * (num_orbitals - num_electrons//2))  # Convert fraction to actual number of orbitals
-            print(f"Optimizing {num_opt_virtual_orbs} active virtual orbitals (out of {num_orbitals - num_electrons//2} total virtual orbitals).")
+            log_print(f"Optimizing {num_opt_virtual_orbs} active virtual orbitals (out of {num_orbitals - num_electrons//2} total virtual orbitals).")
             ovos = OVOS(
                 mol=mol,
                 scf=mf,
@@ -236,26 +290,29 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                 mo_coeff=mo_coeffs,
                 init_orbs="RHF",
                 verbose=1,
-                max_iter=500,
-                conv_energy=1e-8,
+                max_iter=1000,
+                conv_energy=1e-15,
                 conv_grad=1e-4,
                 keep_track_max=50
             )
                 # Run OVOS
             E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
-            E_corr = E_corr[-1]  # Final correlation energy
+            E_corr = E_corr  # Final correlation energy
             E_tot = E_corr + mf.e_tot
-            print(f"\nOptimization finished. Final MP2 energy = {E_tot} Hartree. (ΔE_corr = {E_corr} Hartree)")
+            log_print(f"\nOptimization finished. Final MP2 energy = {E_tot} Hartree. (ΔE_corr = {E_corr} Hartree)")
             # Check if mo_coeffs are unrestricted or restricted
             if np.isclose(E_corr_mo[0], E_corr_mo[1], atol=1e-12).all():
-                print("OVOS optimized orbitals are restricted (RHF-like).")
+                log_print("OVOS optimized orbitals are restricted (RHF-like).")
             else:
-                print("OVOS optimized orbitals are unrestricted (UHF-like).")
-            print()
+                log_print("OVOS optimized orbitals are unrestricted (UHF-like).")
+            log_print()
+
+            # # Kill for debug here
+            # assert False, "Debug stop after OVOS optimization to check results before proceeding to VQE optimizations with different references. Remove this line to run the full script."
 
             # SlowQuant
-            print()
-            print("Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...")
+            log_print()
+            log_print("Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...")
                 # Initialize for UPS wave function with OVOS-optimized orbitals
             WF_ovos = UnrestrictedWaveFunctionUPS(
                 mol.nelectron,
@@ -282,7 +339,7 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                     # Get optimized energy
             E_ovos_opt = stats_ovos_opt['final_energy']
             E_ovos_hist = stats_ovos_opt['iter_energies']
-            print(f"OVOS optimized energy = {E_ovos_opt} Hartree @ iterations {iter_ovos_opt}.")
+            log_print(f"OVOS optimized energy = {E_ovos_opt} Hartree @ iterations {iter_ovos_opt}.")
 
                 # Save w. OVOS-optimized orbitals for later comparison
             file_out_ovos = f"backup/data/{molecule}/{basis}/VQE/OVOS/{dist}/UPS_OVOS_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}.json"
@@ -304,12 +361,11 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
 
 
             # Compare with UHF reference
-            print()
-            print("Calculating UHF reference for comparison...")
+            log_print()
+            log_print("Calculating UHF reference for comparison...")
                 # UHF reference for comparison
             mf_uhf = scf.UHF(mol)
             mf_uhf.verbose = 0
-            mf_uhf.frozen = list(range(num_electrons//2 + num_opt_virtual_orbs, num_orbitals))  # Freeze the same virtual orbitals as in OVOS optimization for a fair comparison
             mf_uhf.kernel()
 
             #     # Initualize for UPS wave function with UHF orbitals
@@ -333,7 +389,7 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                     # Get optimized energy
             E_uhf_opt = stats_uhf_opt['final_energy']
             E_uhf_hist = stats_uhf_opt['iter_energies']
-            print(f"UHF energy = {E_uhf_opt} Hartree @ iterations {iter_uhf_opt}.")
+            log_print(f"UHF energy = {E_uhf_opt} Hartree @ iterations {iter_uhf_opt}.")
 
                 # Save w. UHF orbitals for later comparison
             file_out_uhf = f"backup/data/{molecule}/{basis}/VQE/UHF/{dist}/UPS_UHF_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}.json"
@@ -354,42 +410,33 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
 
 
             # Compare with UMP2 natural orbital reference
-            print()
-            print("Calculating UMP2 natural orbitals for comparison...")
+            log_print()
+            log_print("Calculating UMP2 natural orbitals for comparison...")
                 # UMP2 natural orbitals for comparison
-            mf_ump2 = scf.UHF(mol).run()
-            fs_orbs = mf_ump2.mo_coeff[0].shape[1]
-            active_orbs = num_electrons//2 + num_opt_virtual_orbs
-            print(f"Total number of orbitals: {fs_orbs}, Active orbitals: {active_orbs} (occupied + active virtual), Freezing the rest for UMP2 natural orbital calculation.")
-            frozen_orbs = fs_orbs - active_orbs
-            frozen_orbs_idx = list(range(active_orbs, fs_orbs))  # Freeze the highest-energy virtual orbitals
-            print(f"Freezing {frozen_orbs} orbitals (indices {frozen_orbs_idx}) for UMP2 natural orbital calculation.")
+            mf_ump2 = mol.UHF(verbose=0).run()
+            ump2_obj = mp.UMP2(mf_ump2).run()
+            noons, mp2_no_coeff = mcscf.addons.make_natural_orbitals(ump2_obj)
 
-            ump2_obj = mp.UMP2(mf_ump2, frozen=frozen_orbs_idx).run()
-            mp2_no_coeff = ump2_obj.make_fno()[1]
-            
+                # Energies for reference
+            uhf_energy = mf_ump2.e_tot
+            ump2_energy = ump2_obj.e_tot
+
+            # Convert to full spin-orbital basis by duplicating alpha and beta orbitals
+                # If rhf-like, just duplicate the same orbitals for alpha and beta
+            if isinstance(mp2_no_coeff, np.ndarray) and mp2_no_coeff.ndim == 2:
+                # Restricted case: duplicate the same orbitals for alpha and beta
+                mp2_no_coeff = [mp2_no_coeff, mp2_no_coeff.copy()]
+            elif isinstance(mp2_no_coeff, (list, tuple)) and len(mp2_no_coeff) == 2:
+                # Already unrestricted, so we can use the alpha and beta orbitals as they are
+                pass
+            else:
+                raise ValueError("Unexpected case for UMP2 natural orbitals: neither RHF-like nor UHF-like. Please check the orbitals.")
+
             # check if mp2_no_coeff are unrestricted or restricted
             if np.isclose(mp2_no_coeff[0], mp2_no_coeff[1], atol=1e-12).all():
-                print("UMP2 natural orbitals are restricted (RHF-like).")
+                log_print("UMP2 natural orbitals are restricted (RHF-like).")
             else:
-                print("UMP2 natural orbitals are unrestricted (UHF-like).")
-            
-            # Energy of UMP2 natural orbital reference
-            mf_ump2_no = scf.UHF(mol)
-            mf_ump2_no.kernel(mo_coeff=mp2_no_coeff)
-            ump2_no_obj = mp.UMP2(mf_ump2_no, frozen=frozen_orbs_idx).run()
-
-            # Fair comparison
-            uhf_energy = mf_ump2.e_tot          # No freezing
-            mp2_energy = ump2_obj.e_tot         # With frozen
-            mp2_no_energy = ump2_no_obj.e_tot   # With frozen
-            corr_diff = ump2_no_obj.e_corr - ump2_obj.e_corr
-                # Summary of reference energies
-            print(f"UHF energy: {uhf_energy:.6f} Hartree")
-            print(f"UMP2 energy (original): {mp2_energy:.6f} Hartree, correlation: {ump2_obj.e_corr:.6f} Hartree")
-            print(f"UMP2 energy (natural orbitals): {mp2_no_energy:.6f} Hartree, correlation: {ump2_no_obj.e_corr:.6f} Hartree")
-            print(f"Correlation energy difference: {corr_diff:.6f} Hartree")
-            print()
+                log_print("UMP2 natural orbitals are unrestricted (UHF-like).")
 
             #     # Initialize for UPS wave function with UMP2 natural orbitals
             WF_ump2_no = UnrestrictedWaveFunctionUPS(
@@ -412,7 +459,7 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                     # Get optimized energy
             E_ump2_no_opt = stats_ump2_no_opt['final_energy']
             E_ump2_no_hist = stats_ump2_no_opt['iter_energies']
-            print(f"UHF natural orbital energy = {E_ump2_no_opt} Hartree @ iterations {iter_ump2_no_opt}.")
+            log_print(f"UHF natural orbital energy = {E_ump2_no_opt} Hartree @ iterations {iter_ump2_no_opt}.")
 
                 # Save w. UMP2 natural orbitals for later comparison
             file_out_ump2_no = f"backup/data/{molecule}/{basis}/VQE/UMP2/{dist}/UPS_UMP2_NO_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}.json"
@@ -425,8 +472,8 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                     "oo": oo,
                     "mo": mp2_no_coeff,
                     "uhf_energy": uhf_energy,
-                    "ump2_energy": mp2_energy,
-                    "ump2_no_energy": mp2_no_energy,
+                    "ump2_energy": ump2_energy,
+                    "ump2_no_energy": E_ump2_no_hist[0],
                     "iterations": iter_ump2_no_opt,
                     "final_energy": E_ump2_no_opt,
                     "iter_energies": E_ump2_no_hist,
@@ -435,12 +482,12 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                 }, f, indent=4, default=lambda x: x.tolist() if isinstance(x, np.ndarray) else x)
 
             # Summary of results
-            print("\nSummary of results:")
-            print(f"Molecule: {atom} with basis set {basis} for a total of {num_electrons} electrons and {num_orbitals} orbitals.")
-            print(f"OVOS correlation energy: {E_tot:.6f} Hartree (Active unocc. orbitals: {num_opt_virtual_orbs})")
-            print(f"OVOS energy: {E_ovos_opt:.6f} Hartree  @ iterations {iter_ovos_opt} (Eval. func. {eval_ovos_opt[0]}, grad. {eval_ovos_opt[0]}")
-            print(f"UHF energy: {E_uhf_opt:.6f} Hartree  @ iterations {iter_uhf_opt} (Eval. func. {eval_uhf_opt[0]}, grad. {eval_uhf_opt[0]}")
-            print(f"UMP2 natural orbital energy: {E_ump2_no_opt:.6f} Hartree  @ iterations {iter_ump2_no_opt} (Eval. func. {eval_ump2_no_opt[0]}, grad. {eval_ump2_no_opt[0]}")
+            log_print("\nSummary of results:")
+            log_print(f"Molecule: {atom} with basis set {basis} for a total of {num_electrons} electrons and {num_orbitals} orbitals.")
+            log_print(f"OVOS correlation energy: {E_tot:.6f} Hartree (Active unocc. orbitals: {num_opt_virtual_orbs})")
+            log_print(f"OVOS energy: {E_ovos_opt:.6f} Hartree  @ iterations {iter_ovos_opt} (Eval. func. {eval_ovos_opt[0]}, grad. {eval_ovos_opt[0]}")
+            log_print(f"UHF energy: {E_uhf_opt:.6f} Hartree  @ iterations {iter_uhf_opt} (Eval. func. {eval_uhf_opt[0]}, grad. {eval_uhf_opt[0]}")
+            log_print(f"UMP2 natural orbital energy: {E_ump2_no_opt:.6f} Hartree  @ iterations {iter_ump2_no_opt} (Eval. func. {eval_ump2_no_opt[0]}, grad. {eval_ump2_no_opt[0]}")
 
             data_out = {
                 "molecule": atom,
@@ -461,32 +508,32 @@ def VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed):
                 "iter_ump2_no_opt": iter_ump2_no_opt,
                 "eval_ump2_no_opt": eval_ump2_no_opt,
             }
-
+        
+            # At end:
+            log_print(f"✓ Completed. Output saved to {name_out}")
+        
             return data_out
+        
+        # finally:
+        except Exception as e:
+            logger.error(f"✗ ERROR in seed {seed}: {e}", exc_info=True)
+            raise
         finally:
-            sys.stdout = sys.__stdout__
+            set_logger(None)  # Clear logger reference
 
 
 # Define the molecule
-    # HF, CO, NH3, H2O
-atom_1 = "H 0 0 0; F 0 0 0.917" # HF bond length 0.917 Angstrom
-atom_2 = "N 0 0 0; H 0 0 1.012; H 0 0.935 -0.262; H 0 -0.935 -0.262" # NH3 equilibrium geometry	
-atom_3 = "O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692;"  # H2O equilibrium geometry
-atom_4 = "Li 0 0 0; H 0 0 1.595" # LiH bond length 1.595 Angstrom
-atom_5 = "C 0 0 0; O 0 0 1.128" # CO bond length 1.128 Angstrom
+    # HF, CO, NH3, H2O, Li2
+# atom_1 = "H 0 0 0; F 0 0 0.917" # HF bond length 0.917 Angstrom
+# atom_2 = "N 0 0 0; H 0 0 1.012; H 0 0.935 -0.262; H 0 -0.935 -0.262" # NH3 equilibrium geometry	
+# atom_3 = "O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692;"  # H2O equilibrium geometry
+# atom_4 = "Li 0 0 0; Li 0 0 2.673" # Li2 bond length 2.673 Angstrom
+# atom_5 = "C 0 0 0; O 0 0 1.128" # CO bond length 1.128 Angstrom
 
     # Lst
-atoms_lst = [atom_1, atom_2, atom_3, atom_4, atom_5]
 basis_lst = ["6-31G", "cc-pVDZ"] # "6-31G", "cc-pVDZ"
 num_opt_virtual_orbs_lst = [0.75]
 oo_lst = [True, False]
-
-
-def run_single_seed(args):
-    """Wrapper function for multiprocessing - takes tuple of arguments"""
-    atom, basis, dist, num_opt_virtual_orbs, oo, seed = args
-    return VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed)
-
 
 # Verify:
 # def verify_pes_energy(atom_string, basis, dist, final_energy):
@@ -517,256 +564,742 @@ def run_single_seed(args):
 
 
 # HF
-    # Rounds of dist:
-        # ['0.7', '0.8', '0.9', '1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '2.0']
-        # ['0.725', '0.75', '0.775', '0.825', '0.85', '0.875', '0.925', '0.95', '0.975', '1.025', '1.05', '1.075', '1.125', '1.15', '1.175', '1.225', '1.25', '1.275', '1.325', '1.35', '1.375', '1.425', '1.45', '1.475', '1.525', '1.55', '1.575', '1.625', '1.65', '1.675', '1.725', '1.75', '1.775', '1.825', '1.85', '1.875', '1.925', '1.95', '1.975']
-        # Together:
-                # [0.7, 0.725, 0.75, 0.775, 0.8, 0.825, 0.85, 0.875, 0.9, 0.925, 0.95, 0.975, 1.0, 1.025, 1.05, 1.075, 1.1, 1.125, 1.15, 1.175, 1.2, 1.225, 1.25, 1.275, 1.3, 1.325, 1.35, 1.375, 1.4, 1.425, 1.45, 1.475, 1.5, 1.525, 1.55, 1.575, 1.6, 1.625, 1.65, 1.675, 1.7, 1.725, 1.75, 1.775, 1.8, 1.825, 1.85, 1.875, 1.9, 1.925, 1.95, 1.975, 2.0]
-            # With length 53, from 0.7 to 2.0 in steps of 0.025
-    # Intterupted at 1.375, missing 1.4 and onwards, so I will start from 1.375 to 2.0 in steps of 0.025 to fill in the rest of the data for HF
-HF_list_full = np.arange(1.4, 2.025, 0.025).round(5).tolist()
+def run_hf_vqe():
+    # Let us explore the dist list we need for HF
+        # Varying the bond length around the equilibrium geometry:
+            # 'H 0 0 0; F 0 0 0.917'
     
-if False:
-    for dist in HF_list_full:
-        dist = round(dist, 5)
+    dist_list = np.arange(0.7, 2.025, 0.025)  # From 0.7 to 2.0 Angstrom in steps of 0.05 for faster testing
+    dist_list = [round(d, 3) for d in dist_list]  # Round to 4 decimals for cleaner output
+    
+    # Make the files for HF if they don't exist
+    atom = "HF"
+    molecule = "HF"
+    basis_lst = ["6-31G", "cc-pVDZ"]
+    basis = basis_lst[0]
+
+    for dist in dist_list:
         # Make the VQE folders for dist if they don't exist
-        if not os.path.exists(f"backup/data/HF/6-31G/VQE/dist/{dist}"):
-            os.makedirs(f"backup/data/HF/6-31G/VQE/dist/{dist}")
+        if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/dist/{dist}"):
+            os.makedirs(f"backup/data/{atom}/{basis}/VQE/dist/{dist}")
         for method in ["OVOS", "UHF", "UMP2"]:
-            if not os.path.exists(f"backup/data/HF/6-31G/VQE/{method}/{dist}"):
-                os.makedirs(f"backup/data/HF/6-31G/VQE/{method}/{dist}")
+            if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}"):
+                os.makedirs(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}")
 
-    # Rounds of seeds:
-        # [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
-        # [9, 19, 29, 39, 49, 59, 69, 79, 89, 99, 109, 119, 129, 139, 149, 159, 169, 179, 189, 199]
-HF_list_full_seeds = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99, 109, 119, 129, 139, 149, 159, 169, 179, 189, 199]
-if False:
-    for dist in HF_list_full:
-        dist = round(dist, 5)
-        for atom in [f"H 0 0 0; F 0 0 {dist:.5f}"]: 
-            for basis in [basis_lst[0]]:
-                for num_opt_virtual_orbs in [0.25]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
-                    for oo in [oo_lst[1]]: # True, False
-                        print(f"\nRunning VQE with OVOS optimization for {atom} in basis {basis} with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
-                        # To ensure reproducibility, set random seed for SlowQuant optimizations
-                            # Prepare arguments for each seed
-                        seeds = HF_list_full_seeds
-                        args_list = [(atom, basis, dist, num_opt_virtual_orbs, oo, seed) for seed in seeds]
+    # Make the nuclear repulsion energy files for HF if they don't exist
+    for dist in dist_list:
+        # set up molecule
+        mol = gto.Mole()
+        mol.atom = f"H 0 0 0; F 0 0 {dist}"
+        mol.basis = basis_lst[0]
+        mol.unit = 'Angstrom'
+        mol.spin = 0
+        mol.charge = 0
+        mol.symmetry = False
+        mol.verbose = 0
+        mol.build()
+        
+        # Get nuclear repulsion energy  
+        nuc_rep_energy = mol.energy_nuc()
 
-                        # Run in parallel with one process per core
-                        num_cores = len(seeds) if len(seeds) < 11 else  10  # Use all available cores
-                        with Pool(processes=num_cores) as pool:
-                            pool.map(run_single_seed, args_list)
-                        # Every seed wil run before moving a dist forward...
+        # Save nuclear repulsion energy for later comparison
+        name_nuc_rep = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/nuclear_repulsion_{molecule}_{basis_lst[0]}_{dist}_energy.txt"
+        if not os.path.exists(name_nuc_rep):
+            with open(name_nuc_rep, "w") as f:
+                f.write(f"{nuc_rep_energy:.6f}\n")
+            print(f"Nuclear repulsion energy for {atom} at dist {dist} saved to {name_nuc_rep}.")
+            skip_nuc_rep_calculation = False
+        else:
+            skip_nuc_rep_calculation = True
+    if skip_nuc_rep_calculation == True:       
+        print(f"Nuclear repulsion energy files already exists for {molecule} skipping calculation.")
 
-# Rewrite to one seed but make Pool over an amount of dist variations instead of seeds, to get the rest of the HF data for all dist variations for one seed (e.g. 9) to verify in plots, and then I can run the rest of the seeds in parallel over dist variations once I verify the data looks correct for one seed.
-if True:
-    # Set seed
-    seed = 9
-    # Make args list for all dist variations for one seed
+    # Make the UHF/RHF reference energy files for HF if they don't exist
+    for dist in dist_list:
+        for hf in ["UHF", "RHF"]:
+            # set up molecule
+            mol = gto.Mole()
+            mol.atom = f"H 0 0 0; F 0 0 {dist}"
+            mol.basis = basis_lst[0]
+            mol.unit = 'Angstrom'
+            mol.spin = 0
+            mol.charge = 0
+            mol.symmetry = False
+            mol.verbose = 0
+            mol.build()
+            
+            # Get reference energies  
+            if hf == "UHF":
+                hf_energy = mol.UHF().run().e_tot
+            else:
+                hf_energy = mol.RHF().run().e_tot
+
+            # Save HF reference energy for later comparison
+            name_hf = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/{hf}_{molecule}_{basis_lst[0]}_{dist}_reference_energy.txt"
+            if not os.path.exists(name_hf):
+                with open(name_hf, "w") as f:
+                    f.write(f"{hf_energy:.6f}\n")
+                print(f"HF reference energy for {atom} at dist {dist} saved to {name_hf}.")
+                skip_hf_calculation = False
+            else:
+                skip_hf_calculation = True
+    if skip_hf_calculation == True:
+        print(f"HF reference energy file already exists for {molecule}, skipping calculation.")
+
+    # Run the VQE optimizations for HF for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
+    oo_lst = [True, False]
+    # seed_list = [8]
+    seed_list = [149, 159, 169, 179, 189, 19, 199, 20, 21, 29]
+    # 10: [42, 123, 14, 10, 20, 21, 101, 404, 9, 13]
+    # 20: [9, 10, 101, 109, 119, 123, 129, 13, 139, 14], 
+    # 30: [149, 159, 169, 179, 189, 19, 199, 20, 21, 29], 
+    # 40: ['39', '404', '42', '49', '59', '69', '79', '8', '89', '9', '99']
+
     args_list = []
-    for dist in [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]: # HF_list_full: # [0.7, 0.725, 0.75, 0.775, 0.8, 0.825, 0.85, 0.875, 0.9, 0.925, 0.95, 0.975, 1.0, 1.025, 1.05, 1.075, 1.1, 1.125, 1.15, 1.175, 1.2, 1.225, 1.25, 1.275, 1.3, 1.325, 1.35, 1.375, 1.4, 1.425, 1.45, 1.475, 1.5, 1.525, 1.55, 1.575, 1.6, 1.625, 1.65, 1.675, 1.7, 1.725, 1.75, 1.775, 1.8, 1.825, 1.85, 1.875, 1.9, 1.925, 1.95, 1.975]:
-        dist = round(dist, 5)
-        for atom in [f"H 0 0 0; F 0 0 {dist:.5f}"]: 
-            for basis in [basis_lst[0]]:
-                for num_opt_virtual_orbs in [0.25]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
-                    for oo in [oo_lst[1]]: # True, False
-                        args_list.append((atom, basis, dist, num_opt_virtual_orbs, oo, seed))
-
-    # Run in parallel with one process per core
-    num_cores = len(args_list) if len(args_list) < 11 else 10  # Use all available cores
-    with Pool(processes=num_cores) as pool:
-        pool.map(run_single_seed, args_list)
-
-# Rewrite to 10 seeds for one dist variation (e.g. 1.375) to verify the variability across seeds for one dist variation, and then I can run the rest of the dist variations in parallel over seeds once I verify the data looks correct for one dist variation.
-if True:
-    # Set dist
-    dist = 1.375
-    dist = round(dist, 5)
-    # Make args list for all seeds for one dist variation
-    args_list = []
-    for atom in [f"H 0 0 0; F 0 0 {dist:.5f}"]: 
+    for dist in dist_list:
+        atom_str = f"H 0 0 0; F 0 0 {dist}"
         for basis in [basis_lst[0]]:
             for num_opt_virtual_orbs in [0.75]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
                 for oo in [oo_lst[1]]: # True, False
-                    for seed in [9, 19, 29, 39, 49, 59, 69, 79, 89, 99]:  # Run each configuration with different random seeds to assess variability
-                        args_list.append((atom, basis, dist, num_opt_virtual_orbs, oo, seed))
+                    for seed in seed_list:
+                        print(f"{dist:.3f} Å: {seed:3d}, Prep. VQE runs for H-F bond length {dist:.3f} Å, with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
+                        # Args for each run: atom string, basis, dist, num_opt_virtual_orbs, oo, seed
+                            # atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed = args
+                        args_list.append((atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed))
 
-    # Run in parallel with one process per core
-    num_cores = len(args_list) if len(args_list) < 11 else 10  # Use all available cores
-    with Pool(processes=num_cores) as pool:
-        pool.map(run_single_seed, args_list)
-                        
-
-# Run and get the UHF data for all atom dist variations to verify in plots
-if False:
-    for dist in HF_list_full:
-        dist = round(dist, 5)
-        for atom in [f"H 0 0 0; F 0 0 {dist}"]: 
-            for basis in [basis_lst[0]]:
-                for hf in ["UHF", "RHF"]:
-                    print(f"\nRunning UHF for {atom} in basis {basis} at dist {dist}...")
-                    # set up molecule
-                    mol = gto.Mole()
-                    mol.atom = atom     # f"H 0 0 0; F 0 0 {dist}"
-                    mol.basis = basis
-                    mol.unit = 'Angstrom'
-                    mol.spin = 0
-                    mol.charge = 0
-                    mol.symmetry = False
-                    mol.verbose = 0
-                    mol.build()
-                    
-                    # Get reference energies  
-                    if hf == "UHF":
-                        hf_energy = mol.UHF().run().e_tot
-                    else:
-                        hf_energy = mol.RHF().run().e_tot
-
-                    # Save HF reference energy for later comparison
-                    name_hf = f"backup/data/HF/6-31G/VQE/UHF/{dist}/{hf}_HF_{basis}_{dist}_reference_energy.txt"
-                    with open(name_hf, "w") as f:
-                        f.write(f"{hf_energy:.6f}\n")
-                    print(f"HF reference energy for {atom} at dist {dist} saved to {name_hf}.")
-
-# Run and get nuclear repulsion energies for all atom dist variations to verify plots
-if False:
-    for dist in HF_list_full:
-        dist = round(dist, 5)
-        for atom in [f"H 0 0 0; F 0 0 {dist}"]: 
-            for basis in [basis_lst[0]]:
-                print(f"\nCalculating nuclear repulsion energy for {atom} in basis {basis} at dist {dist}...")
-                # set up molecule
-                mol = gto.Mole()
-                mol.atom = atom     # f"H 0 0 0; F 0 0 {dist}"
-                mol.basis = basis
-                mol.unit = 'Angstrom'
-                mol.spin = 0
-                mol.charge = 0
-                mol.symmetry = False
-                mol.verbose = 0
-                mol.build()
-                
-                # Get nuclear repulsion energy  
-                nuc_rep_energy = mol.energy_nuc()
-
-                # Save nuclear repulsion energy for later comparison
-                name_nuc_rep = f"backup/data/HF/6-31G/VQE/UHF/{dist}/nuclear_repulsion_HF_{basis}_{dist}_energy.txt"
-                with open(name_nuc_rep, "w") as f:
-                    f.write(f"{nuc_rep_energy:.6f}\n")
-                print(f"Nuclear repulsion energy for {atom} at dist {dist} saved to {name_nuc_rep}.")
+                        # For debug try without parallelization first to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
+                        # VQE_OVOS(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed)
+    return args_list
 
 
+# H2O
+def run_h2o_vqe(): # - at: 1.8501... start from here next time
+    # Let us explore the dist list we need for H2O
+        # Keeping the angle the same and varying the O-H bond length around the equilibrium geometry:
+            # 'O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692'
+
+    # Meaning we will have to calculate the bond length to make sure the angle is the same and only the bond length is varied
+        # Find angle from equilibrium geometry
+    str_equi = 'O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692'
+        # Get coordinates
+    coords = []
+    for line in str_equi.split(";"):
+        parts = line.strip().split()
+        element = parts[0]
+        x, y, z = map(float, parts[1:])
+        coords.append((element, x, y, z))
+        # print(f"Element: {element}, Coordinates: ({x}, {y}, {z})")
+        # Calculate bond length O-H
+    O_coords = [x for x in coords if x[0] == "O"][0][1:]  # Get O coordinates
+    H_coords = [x for x in coords if x[0] == "H"]  # Get H coordinates
+    bond_lengths = [] # Equilibrium O-H bond lengths
+    for H in H_coords:
+        bond_length = np.sqrt((O_coords[0] - H[1])**2 + (O_coords[1] - H[2])**2 + (O_coords[2] - H[3])**2)
+        bond_lengths.append(bond_length)
+    # print(f"Equilibrium O-H bond lengths: {bond_lengths}")
+        # Find angle H-O-H
+    H1_coords = H_coords[0][1:]
+    H2_coords = H_coords[1][1:]
+    vector_OH1 = np.array(H1_coords) - np.array(O_coords)
+    vector_OH2 = np.array(H2_coords) - np.array(O_coords)
+    cos_angle = np.dot(vector_OH1, vector_OH2) / (np.linalg.norm(vector_OH1) * np.linalg.norm(vector_OH2))
+    angle_rad = np.arccos(cos_angle)
+    angle_deg = np.degrees(angle_rad)
+    print(f"Equilibrium H-O-H angle: {angle_deg:.2f} degrees")
+        # Now we can vary the O-H bond length while keeping the angle fixed by scaling the H coordinates accordingly
+            # Try 10 different bond length variations around the equilibrium geometry, e.g. from 0.75 to 1.25 times the equilibrium bond length
+    bond_length_set = np.arange(0.7, 2.025, 0.025)
+            # Figure out the procentages we need to get the bond_length_set values
+    bond_length_variations = [bl / bond_lengths[0] for bl in bond_length_set]
+                # Round off to 3 decimals
+    bond_length_variations = [round(blv, 3) for blv in bond_length_variations]
+
+    dist_list_h2o = []
+            # Assert that the angle is the same for all variations
+    for variation in bond_length_variations:
+        new_H_coords = []
+        for H in H_coords:
+            vector_OH = np.array(H[1:]) - np.array(O_coords)
+            new_vector_OH = vector_OH * variation  # Scale the vector to change the bond length
+            new_H_coord = np.array(O_coords) + new_vector_OH  # Get new H coordinates
+            new_H_coords.append(new_H_coord)
+        # Check angle is the same
+        vector_OH1_new = new_H_coords[0] - np.array(O_coords)
+        vector_OH2_new = new_H_coords[1] - np.array(O_coords)
+        cos_angle_new = np.dot(vector_OH1_new, vector_OH2_new) / (np.linalg.norm(vector_OH1_new) * np.linalg.norm(vector_OH2_new))
+        angle_rad_new = np.arccos(cos_angle_new)
+        angle_deg_new = np.degrees(angle_rad_new)
+        assert np.isclose(angle_deg, angle_deg_new, atol=1e-5), f"Angle changed for variation {variation}: {angle_deg} vs {angle_deg_new}"
+        # Create new atom string for this variation
+        atom_str = f"O {O_coords[0]:.4f} {O_coords[1]:.4f} {O_coords[2]:.4f}; "
+        atom_str += f"H {new_H_coords[0][0]:.4f} {new_H_coords[0][1]:.4f} {new_H_coords[0][2]:.4f}; "
+        atom_str += f"H {new_H_coords[1][0]:.4f} {new_H_coords[1][1]:.4f} {new_H_coords[1][2]:.4f}"
+        dist_list_h2o.append(atom_str)
+        # print(f"Variation {variation*100:.0f}%: {atom_str} with angle {angle_deg_new:.2f} degrees")
+    
+    # Get me a list of the translated bond length O-H for each variation to use as dist in the file names for H2O
+    dist_list_h2o_bond_lengths = []
+    for atom_str in dist_list_h2o:
+        coords = []
+        for line in atom_str.split(";"):
+            parts = line.strip().split()
+            element = parts[0]
+            x, y, z = map(float, parts[1:])
+            coords.append((element, x, y, z))
+        O_coords = [x for x in coords if x[0] == "O"][0][1:]  # Get O coordinates
+        H_coords = [x for x in coords if x[0] == "H"]  # Get H coordinates
+        bond_length = np.sqrt((O_coords[0] - H_coords[0][1])**2 + (O_coords[1] - H_coords[0][2])**2 + (O_coords[2] - H_coords[0][3])**2)
+        dist_list_h2o_bond_lengths.append(bond_length)
+
+    print("\nGenerated H2O geometries with varying O-H bond lengths while keeping the H-O-H angle fixed:")
+    for i, atom_str in enumerate(dist_list_h2o):
+        print(f"Variation {i+1:2d}: {atom_str} | O-H bond length = {dist_list_h2o_bond_lengths[i]:.4f} Å")
 
 
+    # Make the files for H2O if they don't exist
+    atom = "H2O"
+    molecule = "H2O"
+    basis_lst = ["6-31G", "cc-pVDZ"]
+    basis = basis_lst[0]
 
-
-# HH
-HH_dist = np.arange(0.5, 3.1, 0.1)  # Total num points: 26
-if False:
-    for dist in HH_dist: # Total num points: 36
-        # Set dist to 2 decimal places for consistent naming and to avoid floating point issues in file names
+    for i, atom_str in enumerate(dist_list_h2o):
+        dist = dist_list_h2o_bond_lengths[i]
         dist = round(dist, 3)
         # Make the VQE folders for dist if they don't exist
-        if not os.path.exists(f"backup/data/HH/6-31G/VQE/dist/{dist}"):
-            os.makedirs(f"backup/data/HH/6-31G/VQE/dist/{dist}")
+        if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/dist/{dist}"):
+            os.makedirs(f"backup/data/{atom}/{basis}/VQE/dist/{dist}")
         for method in ["OVOS", "UHF", "UMP2"]:
-            if not os.path.exists(f"backup/data/HH/6-31G/VQE/{method}/{dist}"):
-                os.makedirs(f"backup/data/HH/6-31G/VQE/{method}/{dist}")
-
-if False:
-    for dist in HH_dist:
+            if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}"):
+                os.makedirs(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}")
+    
+    # Make the nuclear repulsion energy files for H2O if they don't exist
+    for i, atom_str in enumerate(dist_list_h2o):
+        dist = dist_list_h2o_bond_lengths[i]
         dist = round(dist, 3)
-        for atom in [f"H 0 0 0; H 0 0 {dist:.5f}"]: 
-            for basis in [basis_lst[0]]:
-                for num_opt_virtual_orbs in [num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
-                    for oo in [oo_lst[1]]: # True, False
-                        print(f"\nRunning VQE with OVOS optimization for {atom} in basis {basis} with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
-                                # To ensure reproducibility, set random seed for SlowQuant optimizations
-                        # for seed in [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]:  # Run each configuration with different random seeds to assess variability
-                        #     VQE_OVOS(atom, basis, dist, num_opt_virtual_orbs, oo, seed)
+        # set up molecule
+        mol = gto.Mole()
+        mol.atom = atom_str
+        mol.basis = basis_lst[0]
+        mol.unit = 'Angstrom'
+        mol.spin = 0
+        mol.charge = 0
+        mol.symmetry = False
+        mol.verbose = 0
+        mol.build()
+        
+        # Get nuclear repulsion energy  
+        nuc_rep_energy = mol.energy_nuc()
 
-                        # Prepare arguments for each seed
-                        seeds = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
-                        args_list = [(atom, basis, dist, num_opt_virtual_orbs, oo, seed) for seed in seeds]
+        # Save nuclear repulsion energy for later comparison
+        name_nuc_rep = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/nuclear_repulsion_{molecule}_{basis_lst[0]}_{dist}_energy.txt"
+        if not os.path.exists(name_nuc_rep):
+            with open(name_nuc_rep, "w") as f:
+                f.write(f"{nuc_rep_energy:.6f}\n")
+            print(f"Nuclear repulsion energy for {atom_str} at dist {dist} saved to {name_nuc_rep}.")
+            skip_nuc_rep_calculation = False
+        else:
+            skip_nuc_rep_calculation = True
+    if skip_nuc_rep_calculation == True:       
+        print(f"Nuclear repulsion energy files already exists for {molecule} skipping calculation.")
 
-                        # Run in parallel with one process per core
-                        num_cores = len(seeds) if len(seeds) < 11 else int(len(seeds)/2)  # Use all available cores
-                        with Pool(processes=num_cores) as pool:
-                            pool.map(run_single_seed, args_list)
-                        # Everything seed wil run before moving a dist forward...
-
-                        
-
-# Run and get the UHF data for all atom dist variations to verify in plots
-if False:
-    for dist in HH_dist:
+    # Make the UHF/RHF reference energy files for H2O if they don't exist
+    for i, atom_str in enumerate(dist_list_h2o):
+        dist = dist_list_h2o_bond_lengths[i]
         dist = round(dist, 3)
-        for atom in [f"H 0 0 0; H 0 0 {dist}"]: 
-            for basis in [basis_lst[0]]:
-                for hf in ["RHF", "UHF"]:
-                    print(f"\nRunning {hf} for {atom} in basis {basis} at dist {dist}...")
-                    # set up molecule
-                    mol = gto.Mole()
-                    mol.atom = atom     # f"H 0 0 0; H 0 0 {dist}"
-                    mol.basis = basis
-                    mol.unit = 'Angstrom'
-                    mol.spin = 0
-                    mol.charge = 0
-                    mol.symmetry = False
-                    mol.verbose = 0
-                    mol.build()
-                    
-                    # Get reference energies  
-                    if hf == "RHF":
-                        hf_energy = mol.RHF().run().e_tot
-                    else:
-                        hf_energy = mol.UHF().run().e_tot
+        for hf in ["UHF", "RHF"]:
+            # set up molecule
+            mol = gto.Mole()
+            mol.atom = atom_str
+            mol.basis = basis_lst[0]
+            mol.unit = 'Angstrom'
+            mol.spin = 0
+            mol.charge = 0
+            mol.symmetry = False
+            mol.verbose = 0
+            mol.build()
+            
+            # Get reference energies  
+            if hf == "UHF":
+                hf_energy = mol.UHF().run().e_tot
+            else:
+                hf_energy = mol.RHF().run().e_tot
 
-                    # Save HF reference energy for later comparison
-                    name_hf = f"backup/data/HH/6-31G/VQE/UHF/{dist}/{hf}_HH_{basis}_{dist}_reference_energy.txt"
-                    with open(name_hf, "w") as f:
-                        f.write(f"{hf_energy:.6f}\n")
-                    print(f"HF reference energy for {atom} at dist {dist} saved to {name_hf}.")
+            # Save HF reference energy for later comparison
+            name_hf = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/{hf}_{molecule}_{basis_lst[0]}_{dist}_reference_energy.txt"
+            if not os.path.exists(name_hf):
+                with open(name_hf, "w") as f:
+                    f.write(f"{hf_energy:.6f}\n")
+                print(f"HF reference energy for {atom_str} at dist {dist} saved to {name_hf}.")
+                skip_hf_calculation = False
+            else:
+                skip_hf_calculation = True
+    if skip_hf_calculation == True:
+        print(f"HF reference energy file already exists for {molecule}, skipping calculation.")
 
-# Run and get nuclear repulsion energies for all atom dist variations to verify plots
-if False:
-    for dist in HH_dist:
+    # Run the VQE optimizations for H2O for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
+    oo_lst = [True, False]
+    seed_list = [21, 101, 404, 13]
+    # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
+
+    args_list = []
+    for i, atom_str in enumerate(dist_list_h2o):
+        dist = dist_list_h2o_bond_lengths[i]
         dist = round(dist, 3)
-        for atom in [f"H 0 0 0; H 0 0 {dist}"]: 
-            for basis in [basis_lst[0]]:
-                print(f"\nCalculating nuclear repulsion energy for {atom} in basis {basis} at dist {dist}...")
-                # set up molecule
-                mol = gto.Mole()
-                mol.atom = atom     # f"H 0 0 0; H 0 0 {dist}"
-                mol.basis = basis
-                mol.unit = 'Angstrom'
-                mol.spin = 0
-                mol.charge = 0
-                mol.symmetry = False
-                mol.verbose = 0
-                mol.build()
-                
-                # Get nuclear repulsion energy  
-                nuc_rep_energy = mol.energy_nuc()
+        for basis in [basis_lst[0]]:
+            for num_opt_virtual_orbs in [0.75]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
+                for oo in [oo_lst[1]]: # True, False
+                    for seed in seed_list:
+                        print(f"{i+1:2d} / {len(dist_list_h2o)}: {seed:3d}, Prep. VQE runs for O-H bond length {dist:.4f} Å, with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
+                        # Args for each run: atom string, basis, dist, num_opt_virtual_orbs, oo, seed
+                            # atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed = args
+                        args_list.append((atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed))
 
-                # Save nuclear repulsion energy for later comparison
-                name_nuc_rep = f"backup/data/HH/6-31G/VQE/UHF/{dist}/nuclear_repulsion_HH_{basis}_{dist}_energy.txt"
-                with open(name_nuc_rep, "w") as f:
-                    f.write(f"{nuc_rep_energy:.6f}\n")
-                print(f"Nuclear repulsion energy for {atom} at dist {dist} saved to {name_nuc_rep}.")
+                        # For debug try without parallelization first to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
+                        # VQE_OVOS(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed)
+    return args_list
 
 
+# CO
+def run_co_vqe():
+    # Let us explore the dist list we need for CO: 'C 0 0 0; O 0 0 1.128'
+        # A diatomic molecule,
+            # so the dist will be the bond length between C and O,
+            # which we can vary around the equilibrium bond length of 1.128 Angstrom.
+    # dist_list = np.arange(0.7, 2.025, 0.025).round(3).tolist()  # From 0.7 to 2.0 in steps of 0.025
+        # Trial dist list
+    dist_list = [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
+    
+    print("\nGenerated CO geometries with varying C-O bond lengths:")
+    for dist in dist_list:
+        atom_str = f"C 0 0 0; O 0 0 {dist:.3f}"
+        print(f"Bond length {dist:.3f} Å: {atom_str}")
+
+    # Make the files for CO if they don't exist
+    atom = "CO"
+    molecule = "CO"
+    basis_lst = ["6-31G", "cc-pVDZ"]
+    basis = basis_lst[0]
+
+    for dist in dist_list:
+        # Make the VQE folders for dist if they don't exist
+        if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/dist/{dist}"):
+            os.makedirs(f"backup/data/{atom}/{basis}/VQE/dist/{dist}")
+        for method in ["OVOS", "UHF", "UMP2"]:
+            if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}"):
+                os.makedirs(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}")
+
+    # Make the nuclear repulsion energy files for CO if they don't exist
+    for dist in dist_list:
+        atom_str = f"C 0 0 0; O 0 0 {dist:.3f}"
+        # set up molecule
+        mol = gto.Mole()
+        mol.atom = atom_str
+        mol.basis = basis_lst[0]
+        mol.unit = 'Angstrom'
+        mol.spin = 0
+        mol.charge = 0
+        mol.symmetry = False
+        mol.verbose = 0
+        mol.build()
+        
+        # Get nuclear repulsion energy  
+        nuc_rep_energy = mol.energy_nuc()
+
+        # Save nuclear repulsion energy for later comparison
+        name_nuc_rep = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/nuclear_repulsion_{molecule}_{basis}_{dist}_energy.txt"
+        if not os.path.exists(name_nuc_rep):
+            with open(name_nuc_rep, "w") as f:
+                f.write(f"{nuc_rep_energy:.6f}\n")
+            print(f"Nuclear repulsion energy for {atom_str} at dist {dist} saved to {name_nuc_rep}.")
+            skip_nuc_rep_calculation = False
+        else:
+            skip_nuc_rep_calculation = True
+    if skip_nuc_rep_calculation == True:
+        print(f"Nuclear repulsion energy files already exists for {molecule} skipping calculation.")
+
+    # Make the UHF/RHF reference energy files for CO if they don't exist
+    for dist in dist_list:
+        atom_str = f"C 0 0 0; O 0 0 {dist:.3f}"
+        for hf in ["UHF", "RHF"]:
+            # set up molecule
+            mol = gto.Mole()
+            mol.atom = atom_str
+            mol.basis = basis_lst[0]
+            mol.unit = 'Angstrom'
+            mol.spin = 0
+            mol.charge = 0
+            mol.symmetry = False
+            mol.verbose = 0
+            mol.build()
+            
+            # Get reference energies  
+            if hf == "UHF":
+                hf_energy = mol.UHF().run().e_tot
+            else:
+                hf_energy = mol.RHF().run().e_tot
+
+            # Save HF reference energy for later comparison
+            name_hf = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/{hf}_{molecule}_{basis}_{dist}_reference_energy.txt"
+            if not os.path.exists(name_hf):
+                with open(name_hf, "w") as f:
+                    f.write(f"{hf_energy:.6f}\n")
+                print(f"HF reference energy for {atom_str} at dist {dist} saved to {name_hf}.")
+                skip_hf_calculation = False
+            else:
+                skip_hf_calculation = True
+    if skip_hf_calculation == True:
+        print(f"HF reference energy file already exists for {molecule}, skipping calculation.")
+
+    # Run the VQE optimizations for CO for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
+    oo_lst = [True, False]
+    seed_list = [9] # Trial seed, verify...
+    # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
+
+    args_list = []
+    for dist in dist_list:
+        atom_str = f"C 0 0 0; O 0 0 {dist:.3f}"
+        for basis in [basis_lst[0]]:
+            for num_opt_virtual_orbs in [0.75]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
+                for oo in [oo_lst[1]]: # True, False
+                    for seed in seed_list:
+                        print(f"{dist:.3f} Å: {seed:3d}, Prep. VQE runs for C-O bond length {dist:.3f} Å, with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
+                        # Args for each run: atom string, basis, dist, num_opt_virtual_orbs, oo, seed
+                            # atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed = args
+                        args_list.append((atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed))
+
+                        # For debug try without parallelization first to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
+                        # VQE_OVOS(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed)
+    return args_list
+
+
+# NH3
+def run_nh3_vqe():
+    # Let us explore the dist list we need for NH3: 'N 0 0 0; H 0 0 1.012; H 0 0.935 -0.262; H 0 -0.935 -0.262'
+        # We can vary the N-H bond length around the equilibrium geometry while keeping the H-N-H angles fixed.
+        # We can calculate the N-H bond length and H-N-H angle from the equilibrium geometry
+        # Then we can vary the N-H bond length while keeping the H-N-H angles fixed by scaling the H coordinates accordingly, similar to what we did for H2O.
+    
+    # Get equilibrium geometry coordinates
+    str_equi = 'N 0 0 0; H 0 0 1.012; H 0 0.935 -0.262; H 0 -0.935 -0.262'
+    coords = []
+    for line in str_equi.split(";"):
+        parts = line.strip().split()
+        element = parts[0]
+        x, y, z = map(float, parts[1:])
+        coords.append((element, x, y, z))
+    N_coords = [x for x in coords if x[0] == "N"][0][1:]  # Get N coordinates
+    H_coords = [x for x in coords if x[0] == "H"]  # Get H coordinates
+    bond_lengths = [] # Equilibrium N-H bond lengths
+    for H in H_coords:
+        bond_length = np.sqrt((N_coords[0] - H[1])**2 + (N_coords[1] - H[2])**2 + (N_coords[2] - H[3])**2)
+        bond_lengths.append(bond_length)
+    H1_coords = H_coords[0][1:]
+    H2_coords = H_coords[1][1:]
+    H3_coords = H_coords[2][1:]
+    vector_NH1 = np.array(H1_coords) - np.array(N_coords)
+    vector_NH2 = np.array(H2_coords) - np.array(N_coords)
+    vector_NH3 = np.array(H3_coords) - np.array(N_coords)
+    cos_angle_1 = np.dot(vector_NH1, vector_NH2) / (np.linalg.norm(vector_NH1) * np.linalg.norm(vector_NH2))
+    cos_angle_2 = np.dot(vector_NH1, vector_NH3) / (np.linalg.norm(vector_NH1) * np.linalg.norm(vector_NH3))
+    cos_angle_3 = np.dot(vector_NH2, vector_NH3) / (np.linalg.norm(vector_NH2) * np.linalg.norm(vector_NH3))
+    angle_1_rad = np.arccos(cos_angle_1)
+    angle_2_rad = np.arccos(cos_angle_2)
+    angle_3_rad = np.arccos(cos_angle_3)
+    angle_1_deg = np.degrees(angle_1_rad)
+    angle_2_deg = np.degrees(angle_2_rad)
+    angle_3_deg = np.degrees(angle_3_rad)
+    print(f"Equilibrium N-H bond lengths: {bond_lengths}")
+    print(f"Equilibrium H-N-H angles: {angle_1_deg:.2f}, {angle_2_deg:.2f}, {angle_3_deg:.2f} degrees")
+
+    # Now we can vary the N-H bond length while keeping the angles fixed by scaling to the following bond length variations around the equilibrium geometry, e.g. from 0.75 to 1.25 times the equilibrium bond length
+    bond_length_set = [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
+        # Figure out the procentages we need to get the bond_length_set values
+    bond_length_variations = [bl / bond_lengths[0] for bl in bond_length_set]
+        # Round off to 3 decimals
+    bond_length_variations = [round(blv, 3) for blv in bond_length_variations]
+
+    dist_list_nh3 = []
+        # Assert that the angles are the same for all variations
+    for variation in bond_length_variations:
+        new_H_coords = []
+        for H in H_coords:
+            vector_NH = np.array(H[1:]) - np.array(N_coords)
+            new_vector_NH = vector_NH * variation  # Scale the vector to change the bond length
+            new_H_coord = np.array(N_coords) + new_vector_NH  # Get new H coordinates
+            new_H_coords.append(new_H_coord)
+        # Check angles are the same
+        vector_NH1_new = new_H_coords[0] - np.array(N_coords)
+        vector_NH2_new = new_H_coords[1] - np.array(N_coords)
+        vector_NH3_new = new_H_coords[2] - np.array(N_coords)
+        cos_angle_1_new = np.dot(vector_NH1_new, vector_NH2_new) / (np.linalg.norm(vector_NH1_new) * np.linalg.norm(vector_NH2_new))
+        cos_angle_2_new = np.dot(vector_NH1_new, vector_NH3_new) / (np.linalg.norm(vector_NH1_new) * np.linalg.norm(vector_NH3_new))
+        cos_angle_3_new = np.dot(vector_NH2_new, vector_NH3_new) / (np.linalg.norm(vector_NH2_new) * np.linalg.norm(vector_NH3_new))
+        angle_1_rad_new = np.arccos(cos_angle_1_new)
+        angle_2_rad_new = np.arccos(cos_angle_2_new)
+        angle_3_rad_new = np.arccos(cos_angle_3_new)
+        angle_1_deg_new = np.degrees(angle_1_rad_new)
+        angle_2_deg_new = np.degrees(angle_2_rad_new)
+        angle_3_deg_new = np.degrees(angle_3_rad_new)
+        assert np.isclose(angle_1_deg, angle_1_deg_new, atol=1e-5), f"Angle 1 changed for variation {variation}: {angle_1_deg} vs {angle_1_deg_new}"
+        assert np.isclose(angle_2_deg, angle_2_deg_new, atol=1e-5), f"Angle 2 changed for variation {variation}: {angle_2_deg} vs {angle_2_deg_new}"
+        assert np.isclose(angle_3_deg, angle_3_deg_new, atol=1e-5), f"Angle 3 changed for variation {variation}: {angle_3_deg} vs {angle_3_deg_new}"
+        # Create new atom string for this variation
+        atom_str = f"N {N_coords[0]:.3f} {N_coords[1]:.3f} {N_coords[2]:.3f}; "
+        atom_str += f"H {new_H_coords[0][0]:.3f} {new_H_coords[0][1]:.3f} {new_H_coords[0][2]:.3f}; "
+        atom_str += f"H {new_H_coords[1][0]:.3f} {new_H_coords[1][1]:.3f} {new_H_coords[1][2]:.3f}; "
+        atom_str += f"H {new_H_coords[2][0]:.3f} {new_H_coords[2][1]:.3f} {new_H_coords[2][2]:.3f}"
+        dist_list_nh3.append(atom_str)
+        print(f"Variation {variation*100:.0f}%: {atom_str} with angles {angle_1_deg_new:.2f}, {angle_2_deg_new:.2f}, {angle_3_deg_new:.2f} degrees")
+
+    # Make the files for NH3 if they don't exist
+    atom = "NH3"
+    molecule = "NH3"
+    basis_lst = ["6-31G", "cc-pVDZ"]
+    basis = basis_lst[0]
+
+    for i, atom_str in enumerate(dist_list_nh3):
+        dist = bond_length_set[i]
+        # Make the VQE folders for dist if they don't exist
+        if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/dist/{dist}"):
+            os.makedirs(f"backup/data/{atom}/{basis}/VQE/dist/{dist}")
+        for method in ["OVOS", "UHF", "UMP2"]:
+            if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}"):
+                os.makedirs(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}")
+
+    # Make the nuclear repulsion energy files for NH3 if they don't exist
+    for i, atom_str in enumerate(dist_list_nh3):
+        dist = bond_length_set[i]
+        # set up molecule
+        mol = gto.Mole()
+        mol.atom = atom_str
+        mol.basis = basis_lst[0]
+        mol.unit = 'Angstrom'
+        mol.spin = 0
+        mol.charge = 0
+        mol.symmetry = False
+        mol.verbose = 0
+        mol.build()
+        
+        # Get nuclear repulsion energy  
+        nuc_rep_energy = mol.energy_nuc()
+
+        # Save nuclear repulsion energy for later comparison
+        name_nuc_rep = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/nuclear_repulsion_{molecule}_{basis}_{dist}_energy.txt"
+        if not os.path.exists(name_nuc_rep):
+            with open(name_nuc_rep, "w") as f:
+                f.write(f"{nuc_rep_energy:.6f}\n")
+            print(f"Nuclear repulsion energy for {atom_str} at dist {dist} saved to {name_nuc_rep}.")
+            skip_nuc_rep_calculation = False
+        else:
+            skip_nuc_rep_calculation = True
+    if skip_nuc_rep_calculation == True:
+        print(f"Nuclear repulsion energy files already exists for {molecule} skipping calculation.")
+
+    # Make the UHF/RHF reference energy files for NH3 if they don't exist
+    for i, atom_str in enumerate(dist_list_nh3):
+        dist = bond_length_set[i]
+        for hf in ["UHF", "RHF"]:
+            # set up molecule
+            mol = gto.Mole()
+            mol.atom = atom_str
+            mol.basis = basis_lst[0]
+            mol.unit = 'Angstrom'
+            mol.spin = 0
+            mol.charge = 0
+            mol.symmetry = False
+            mol.verbose = 0
+            mol.build()
+            
+            # Get reference energies  
+            if hf == "UHF":
+                hf_energy = mol.UHF().run().e_tot
+            else:
+                hf_energy = mol.RHF().run().e_tot
+
+            # Save HF reference energy for later comparison
+            name_hf = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/{hf}_{molecule}_{basis}_{dist}_reference_energy.txt"
+            if not os.path.exists(name_hf):
+                with open(name_hf, "w") as f:
+                    f.write(f"{hf_energy:.6f}\n")
+                print(f"HF reference energy for {atom_str} at dist {dist} saved to {name_hf}.")
+                skip_hf_calculation = False
+            else:
+                skip_hf_calculation = True
+    if skip_hf_calculation == True:
+        print(f"HF reference energy file already exists for {molecule}, skipping calculation.")
+
+    # Run the VQE optimizations for NH3 for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
+    oo_lst = [True, False]
+    seed_list = [9] # Trial seed, verify...
+    # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
+
+    args_list = []
+    for i, atom_str in enumerate(dist_list_nh3):
+        dist = bond_length_set[i]
+        for basis in [basis_lst[0]]:
+            for num_opt_virtual_orbs in [0.75]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
+                for oo in [oo_lst[1]]: # True, False
+                    for seed in seed_list:
+                        print(f"{i+1:2d} / {len(dist_list_nh3)}: {seed:3d}, Prep. VQE runs for N-H bond length {dist:.3f} Å, with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
+                        # Args for each run: atom string, basis, dist, num_opt_virtual_orbs, oo, seed
+                            # atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed = args
+                        args_list.append((atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed))
+
+                        # For debug try without parallelization first to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
+                        # VQE_OVOS(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed)
+    return args_list
+
+
+# Li2
+def run_li2_vqe():
+    # Let us explore the dist list we need for Li2: "Li .0 .0 .0; H .0 .0 1.595"
+        # A diatomic molecule,
+            # so the dist will be the bond length between the two Li atoms,
+            # which we can vary around the equilibrium bond length of 1.6 Angstrom.
+    
+    # Trial dist list
+    dist_list = np.arange(2.5, 6.1, 0.1).round(1).tolist()  # Trial
+    print("\nGenerated Li2 geometries with varying Li-Li bond lengths:")
+    for dist in dist_list:
+        atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
+        print(f"Bond length {dist:.3f} Å: {atom_str}")
+    
+    # Make the files for Li2 if they don't exist
+    atom = "Li2"
+    molecule = "Li2"
+    basis_lst = ["6-31G", "cc-pVDZ"]
+    basis = basis_lst[0]
+
+    for dist in dist_list:
+        # Make the VQE folders for dist if they don't exist
+        if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/dist/{dist}"):
+            os.makedirs(f"backup/data/{atom}/{basis}/VQE/dist/{dist}")
+        for method in ["OVOS", "UHF", "UMP2"]:
+            if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}"):
+                os.makedirs(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}")
+
+    # Make the nuclear repulsion energy files for Li2 if they don't exist
+    for dist in dist_list:
+        atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
+        # set up molecule
+        mol = gto.Mole()
+        mol.atom = atom_str
+        mol.basis = basis_lst[0]
+        mol.unit = 'Angstrom'
+        mol.spin = 0
+        mol.charge = 0
+        mol.symmetry = False
+        mol.verbose = 0
+        mol.build()
+        
+        # Get nuclear repulsion energy  
+        nuc_rep_energy = mol.energy_nuc()
+
+        # Save nuclear repulsion energy for later comparison
+        name_nuc_rep = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/nuclear_repulsion_{molecule}_{basis}_{dist}_energy.txt"
+        if not os.path.exists(name_nuc_rep):
+            with open(name_nuc_rep, "w") as f:
+                f.write(f"{nuc_rep_energy:.6f}\n")
+            print(f"Nuclear repulsion energy for {atom_str} at dist {dist} saved to {name_nuc_rep}.")
+            skip_nuc_rep_calculation = False
+        else:
+            skip_nuc_rep_calculation = True
+    if skip_nuc_rep_calculation == True:
+        print(f"Nuclear repulsion energy files already exists for {molecule} skipping calculation.")
+
+    # Make the UHF/RHF reference energy files for Li2 if they don't exist
+    for dist in dist_list:
+        atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
+        for hf in ["UHF", "RHF"]:
+            # set up molecule
+            mol = gto.Mole()
+            mol.atom = atom_str
+            mol.basis = basis_lst[0]
+            mol.unit = 'Angstrom'
+            mol.spin = 0
+            mol.charge = 0
+            mol.symmetry = False
+            mol.verbose = 0
+            mol.build()
+            
+            # Get reference energies  
+            if hf == "UHF":
+                hf_energy = mol.UHF().run().e_tot
+            else:
+                hf_energy = mol.RHF().run().e_tot
+
+            # Save HF reference energy for later comparison
+            name_hf = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/{hf}_{molecule}_{basis}_{dist}_reference_energy.txt"
+            if not os.path.exists(name_hf):
+                with open(name_hf, "w") as f:
+                    f.write(f"{hf_energy:.6f}\n")
+                print(f"HF reference energy for {atom_str} at dist {dist} saved to {name_hf}.")
+                skip_hf_calculation = False
+            else:
+                skip_hf_calculation = True
+    if skip_hf_calculation == True:
+        print(f"HF reference energy file already exists for {molecule}, skipping calculation.")
+
+    # Run the VQE optimizations for Li2 for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
+    oo_lst = [True, False]
+    seed_list = [9] # Trial seed, verify...
+    # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
+
+    args_list = []
+    for dist in dist_list:
+        atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
+        for basis in [basis_lst[0]]:
+            for num_opt_virtual_orbs in [0.75]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
+                for oo in [oo_lst[1]]: # True, False
+                    for seed in seed_list:
+                        print(f"{dist:.3f} Å: {seed:3d}, Prep. VQE runs for Li-Li bond length {dist:.3f} Å, with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
+                        # Args for each run: atom string, basis, dist, num_opt_virtual_orbs, oo, seed
+                            # atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed = args
+                        args_list.append((atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed))
+
+                        # For debug try without parallelization first to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
+                        # VQE_OVOS(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed)
+    return args_list
+    
+
+
+def run_single(args):
+    """Wrapper function for multiprocessing.dummy.Pool"""
+    atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed = args
+    return VQE_OVOS(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed)
+
+# Run
+if __name__ == "__main__":
+    # Molecule: HF, H2O, CO, NH3, Li2
+    # args_list = run_hf_vqe()
+    # args_list = run_h2o_vqe()
+    # args_list = run_co_vqe()  # RAM exploded, even when running 1...
+    # args_list = run_nh3_vqe()
+    args_list = run_li2_vqe()
+
+    if True:
+        num_cores = os.cpu_count()
+        num_workers = 10
+        
+        print(f"\nSystem: {num_cores} cores available")
+        print(f"Starting {num_workers} parallel VQE workers...")
+        print(f"Each worker runs on its own CPU core (process-based, no GIL)\n")
+        
+        # True multiprocessing - each worker = separate Python process
+        from concurrent.futures import ProcessPoolExecutor
+        with ProcessPoolExecutor(max_workers=num_workers) as executor:
+            results = list(executor.map(run_single, args_list))
+        
+        print(f"✓ Completed {len(results)} VQE runs")
+        print(f"Performance: ~{len(args_list)/num_workers:.1f} runs per core on average")
+    
+    if False:
+        # Run in serial
+        for args in args_list:
+            run_single(args)
 
 
 
-
-
-
-
-
-
-# CO, NH3, H2O ...
 
 
 
