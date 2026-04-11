@@ -68,6 +68,8 @@
 %     Jensen, Cramer.
 % ---------------------------------------------------------------
 
+This chapter provides the necessary theoretical background for understanding the electronic structure problem, Hartree-Fock theory, molecular orbital integrals, Møller-Plesset perturbation theory, and the spin-orbital formalism. It also introduces the orbital space partitioning and index notation conventions that are used consistently throughout this thesis. Finally, it briefly discusses the relevance of orbital space in the context of quantum computing algorithms for chemistry. Each section builds on the previous ones to establish a solid foundation for the development of the OVOS method in Chapter 3.
+
 \section{The Electronic Structure Problem}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 2.1]
@@ -101,6 +103,29 @@
 %    the mean-field starting point whose residual correlation energy
 %    forms the target of the OVOS method developed in this thesis."
 % ---------------------------------------------------------------
+
+The electronic structure problem is the task of solving the non-relativistic, time-independent Schrödinger equation for a system of N electrons moving in the electrostatic potential of M fixed nuclei, reflecting the Born-Oppenheimer approximation %Add as a footnote: "The Born-Oppenheimer approximation assumes that the nuclei are stationary due to their much larger mass compared to electrons, allowing the electronic and nuclear motions to be separated."
+. The electronic structure problem is at the heart of quantum chemistry, typically expressed as: 
+\[\hat{H}_{el} \Psi(\mathbf{r}_1, \mathbf{r}_2, \ldots, \mathbf{r}_N) = E \Psi(\mathbf{r}_1, \mathbf{r}_2, \ldots, \mathbf{r}_N)\]
+where \(\hat{H}_{el}\) is the electronic Hamiltonian, \(\Psi\) is the many-electron wavefunction, and \(E\) is the electronic energy. The electronic Hamiltonian can be written as:
+\[\hat{H}_{el} = \sum_{i=1}^N \left( -\frac{1}{2} \nabla_i^2 - \sum_{A=1}^M \frac{Z_A}{|\mathbf{r}_i - \mathbf{R}_A|} \right) + \sum_{i<j} \frac{1}{|\mathbf{r}_i - \mathbf{r}_j|}\]
+where the first term represents the kinetic energy of the electrons, the second term is the nuclear attraction, and the third term is the electron-electron repulsion.
+
+The electron-electron repulsion term couples all electrons together, making the exact solution of the Schrödinger equation computationally intractable for all but the smallest systems. This motivates the development of approximate methods that can capture the essential physics of electron correlation while remaining computationally feasible.
+
+Hartree-Fock theory provides a mean-field approximation to the electronic structure problem. The residual correlation energy, defined as \(E_{corr} = E_{exact} - E_{HF}\), quantifies the error of the Hartree-Fock approximation, accurately capturing only a fraction of the total correlation energy.
+
+% Figure: Potential energy curve for H₂ showing HF, MP2, and FCI results. This illustrates the failure of HF near dissociation and the importance of correlation.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/Placeholder.png} % Replace with actual figure file
+    \caption{Potential energy curves for $H_2$ illustrating the failure of HF near dissociation and the importance of electron correlation.}
+    \label{fig:h2_pes}
+\end{figure}
+
+For small molecules, the correlation energy can on the order of tenths of a Hartree, and can be critical for accurately describing chemical phenomena such as bond dissociation and the properties of open-shell molecules. The following section introduces Hartree-Fock theory in more detail, setting the stage for the post-Hartree-Fock methods that are the focus of this thesis.
+
 
 \section{Hartree-Fock Theory}
 % ---------------------------------------------------------------
@@ -136,10 +161,24 @@
 % [LEAD-IN TO §2.3]
 %   "The HF procedure expressed in an AO basis requires evaluation of
 %    one- and two-electron integrals, which are introduced in the
-%    following section along with the notation conventions used
+%    following section along with the notation conventions used 
 %    throughout this work."
 % ---------------------------------------------------------------
+
+Hartree-Fock (HF) theory approximates the N-electron wavefunction as a single Slater determinant of N orthonormal spin-orbitals, treating electron-electron repulsion in a mean-field sense. Despite its simplicity, HF underpins virtually all post-HF correlated methods.
+
+Slater determinants are described by the Pauli exclusion principle, ensuring that no two electrons can occupy the same quantum state. This antisymmetry is crucial for accurately describing fermionic systems. The variational principle leads to the Fock equations, which can be expressed in matrix form as the Roothaan-Hall equations: \(FC = SC\epsilon\), where \(F\) is the Fock matrix, \(S\) is the overlap matrix, \(C\) is the coefficient matrix for the molecular orbitals, and \(\epsilon\) is the diagonal matrix of orbital energies. The Fock matrix incorporates the Coulomb ($J$) and exchange ($K$) operators, which represent the overage electron-electron repulsion and the antisymmetry of the wavefunction, respectively. It is this equation that is solved iteratively in the self-consistent field (SCF) procedure, often accelerated by techniques that expedite convergence, like DIIS. %Footnote: "DIIS (Direct Inversion in the Iterative Subspace) is a common method for accelerating SCF convergence by extrapolating from previous iterations."
+The variational principle ensures that the HF energy is an upper bound to the exact ground state energy, write explicitly: \(E_{HF} = \langle \Phi_{HF} | \hat{H} | \Phi_{HF} \rangle \geq E_{exact}\). Which allows us to define that the correlation energy is negative: \(E_{corr} = E_{exact} - E_{HF} < 0\). The resulting orbital energies $\epsilon_p$ provide insight into the electronic structure, with occupied orbitals typically having negative energies and virtual orbitals having positive energies, as per Koopmans' theorem. %\cite{Koopmans1934}. 
+
+% Figure: Canonical MO energy level diagram for a small molecule, showing the occupied and virtual orbitals.
+
 \subsection{Restricted and Unrestricted Formalism}
+
+HF varying in its treatment of spin leads to two different formalisms: Restricted Hatree-Fock (RHF) and Unrestricted Hartree-Fock (UHF). Spin orbitals are constructed from spatial orbitals and spin functions, \[\chi_p(\mathbf{r}, \sigma) = \phi_p(\mathbf{r}) \alpha(\sigma) \quad \text{or} \quad \chi_p(\mathbf{r}, \sigma) = \phi_p(\mathbf{r}) \beta(\sigma)\]
+where $\alpha$ and $\beta$ are the spin functions for spin-up and spin-down electrons, respectively. 
+RHF assumes that each spatial orbital, $\phi_p$, is doubly occupied by electrons of opposite spin, making it suitable for closed-shell systems. Translating to spin-orbital language, this means that the same spatial orbital is used for both $\alpha$ and $\beta$ electrons, leading to a single set of molecular orbitals. RHF keeps the total spin of the system fixed, ensuring that the wavefunction is an eigenfunction of the total spin operator $\hat{S}^2$. However, RHF fails to describe open-shell systems and bond dissociation correctly, as it cannot capture the correct spin symmetry in these cases.
+In contrast, UHF allows for different spatial orbitals for $\alpha$ and $\beta$ spins, making it applicable to open-shell systems. UHF allows for spin deviation from pure spin states, leading to spin contamination where the expectation value of the total spin operator $\langle \hat{S}^2 \rangle$ deviates from the expected value for a pure spin state. In bond breaking scenarios, UHF can provide a qualitatively correct description of the dissociation process, while RHF failes to capture the correct physics. For this reason, UHF is used throughout this thesis for generality, as it can handle both closed-shell and open-shell systems effectively.
+
 
 \section{Molecular Orbital Integrals}
 % ---------------------------------------------------------------
@@ -183,9 +222,18 @@
 %    the first-order amplitude equations that are the computational
 %    core of the OVOS iteration."
 % ---------------------------------------------------------------
+
+
+
 \subsection{One-Electron Integrals}
+
+
 \subsection{Two-Electron Integrals}
+
+
 \subsection{Integral Notation: Chemists' vs.\ Physicists' Conventions}
+
+
 
 \section{Møller-Plesset Perturbation Theory}
 \label{sec:mp2}
