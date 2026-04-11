@@ -563,7 +563,7 @@ oo_lst = [True, False]
 # verify_pes_energy("H 0 0 0; F 0 0 -0.5", basis_lst[0], -0.5, -108.812036)  # HF equilibrium geometry energy from OVOS MP2
 
 
-# HF
+# HF - DONE, 30
 def run_hf_vqe():
     # Let us explore the dist list we need for HF
         # Varying the bond length around the equilibrium geometry:
@@ -672,7 +672,7 @@ def run_hf_vqe():
     return args_list
 
 
-# H2O
+# H2O - 
 def run_h2o_vqe(): # - at: 1.8501... start from here next time
     # Let us explore the dist list we need for H2O
         # Keeping the angle the same and varying the O-H bond length around the equilibrium geometry:
@@ -708,7 +708,7 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
     print(f"Equilibrium H-O-H angle: {angle_deg:.2f} degrees")
         # Now we can vary the O-H bond length while keeping the angle fixed by scaling the H coordinates accordingly
             # Try 10 different bond length variations around the equilibrium geometry, e.g. from 0.75 to 1.25 times the equilibrium bond length
-    bond_length_set = np.arange(0.7, 2.025, 0.025)
+    bond_length_set = [1.775] # np.arange(1.8, 2.025, 0.025)
             # Figure out the procentages we need to get the bond_length_set values
     bond_length_variations = [bl / bond_lengths[0] for bl in bond_length_set]
                 # Round off to 3 decimals
@@ -838,9 +838,11 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
 
     # Run the VQE optimizations for H2O for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    seed_list = [21, 101, 404, 13]
-    # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
-
+    seed_list = [10, 14] # 8
+    # seed_list = [42, 123, 14, 10, 20]
+    # 10: [42, 123, 14, 10, 20] Done: [21, 101, 404, 8, 13]
+    # 20: [9, 10, 101, 109, 119, 123, 129, 13, 139, 14], 
+    # 30: [149, 159, 169, 179, 189, 19, 199, 20, 21, 29], 
     args_list = []
     for i, atom_str in enumerate(dist_list_h2o):
         dist = dist_list_h2o_bond_lengths[i]
@@ -1272,10 +1274,10 @@ def run_single(args):
 if __name__ == "__main__":
     # Molecule: HF, H2O, CO, NH3, Li2
     # args_list = run_hf_vqe()
-    # args_list = run_h2o_vqe()
+    args_list = run_h2o_vqe()
     # args_list = run_co_vqe()  # RAM exploded, even when running 1...
     # args_list = run_nh3_vqe()
-    args_list = run_li2_vqe()
+    # args_list = run_li2_vqe()
 
     if True:
         num_cores = os.cpu_count()

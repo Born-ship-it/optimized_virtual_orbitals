@@ -1,0 +1,28 @@
+
+Running VQE with OVOS optimization for H2O w. bond length 1.6 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule H2O with basis 6-31G and bond length 1.6 Angstrom.
+Number of electrons: 10, Number of orbitals: 13
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 6 active virtual orbitals (out of 8 total virtual orbitals).
+
+Optimization finished. Final MP2 energy = -75.91459570057326 Hartree. (ΔE_corr = -0.19555078708845797 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+OVOS optimized energy = -81.28033 Hartree @ iterations 211.
+
+Calculating UHF reference for comparison...
+UHF energy = -81.270602 Hartree @ iterations 243.
+
+Calculating UMP2 natural orbitals for comparison...
+UMP2 natural orbitals are restricted (RHF-like).
+UHF natural orbital energy = -81.281071 Hartree @ iterations 520.
+
+Summary of results:
+Molecule: O 0.0000 0.0000 0.1173; H 0.0000 1.2653 -0.8627; H 0.0000 -1.2653 -0.8627 with basis set 6-31G for a total of 10 electrons and 13 orbitals.
+OVOS correlation energy: -75.914596 Hartree (Active unocc. orbitals: 6)
+OVOS energy: -81.280330 Hartree  @ iterations 211 (Eval. func. 236, grad. 236
+UHF energy: -81.270602 Hartree  @ iterations 243 (Eval. func. 260, grad. 260
+UMP2 natural orbital energy: -81.281071 Hartree  @ iterations 520 (Eval. func. 604, grad. 604
+✓ Completed. Output saved to backup/data/H2O/6-31G/VQE/dist/1.6/OVOS_H2O_1.6_6-31G_VQE_opt_num_0.75_False_14_output.txt
