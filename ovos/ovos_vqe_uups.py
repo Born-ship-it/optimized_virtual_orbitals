@@ -1160,7 +1160,7 @@ def run_li2_vqe():
             # which we can vary around the equilibrium bond length of 1.6 Angstrom.
     
     # Trial dist list
-    dist_list = np.arange(2.5, 6.1, 0.1).round(1).tolist()  # Trial
+    dist_list = [3.7] # np.arange(3.8, 6.1, 0.1).round(1).tolist()  # Trial
     print("\nGenerated Li2 geometries with varying Li-Li bond lengths:")
     for dist in dist_list:
         atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
@@ -1244,7 +1244,7 @@ def run_li2_vqe():
 
     # Run the VQE optimizations for Li2 for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    seed_list = [9] # Trial seed, verify...
+    seed_list = [13] # [9] # Trial seed, verify...
     # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
 
     args_list = []
@@ -1274,10 +1274,10 @@ def run_single(args):
 if __name__ == "__main__":
     # Molecule: HF, H2O, CO, NH3, Li2
     # args_list = run_hf_vqe()
-    args_list = run_h2o_vqe()
+    # args_list = run_h2o_vqe()
     # args_list = run_co_vqe()  # RAM exploded, even when running 1...
     # args_list = run_nh3_vqe()
-    # args_list = run_li2_vqe()
+    args_list = run_li2_vqe()
 
     if True:
         num_cores = os.cpu_count()

@@ -124,7 +124,8 @@ def make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual
                         energies.append(result['final_energy'])
                         energies_initial.append(result['iter_energies'][0])
                 energy_min = min(energies)
-                method_data[dist] = [energies_initial[energies.index(energy_min)], energy_min]
+                seed_min = seeds_lst[energies.index(energy_min)]
+                method_data[dist] = [energies_initial[energies.index(energy_min)], energy_min, seed_min]  # Save the initial energy, lowest energy, and seed for this method and dist in the method_data dictionary
             data[method] = method_data
         
         file_name = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_results_{num_opt_virtual_orbital}.json"
@@ -154,17 +155,21 @@ def make_vqe_dist_results_file(molecule, basis, dist, seeds_lst, num_opt_virtual
             else:
                 method_name = method
             filename = f"backup/data/{molecule}/{basis}/VQE/{method}/{dist}/UPS_{method_name}_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_{seed}.json"
-            with open(filename, 'r') as f:
-                result = json.load(f)
-                energies.append(result['final_energy'])                 # Final energy
-                energies_initial.append(result['iter_energies'][0])     # Initial energy
-                mo_type_by_seed.append(check_vqe_mo_restricted_or_unrestricted(filename))
-                # MO_type = ...
+            try:
+                with open(filename, 'r') as f:
+                    result = json.load(f)
+                    energies.append(result['final_energy'])                 # Final energy
+                    energies_initial.append(result['iter_energies'][0])     # Initial energy
+                    mo_type_by_seed.append(check_vqe_mo_restricted_or_unrestricted(filename))
+                    # MO_type = ...
+            except FileNotFoundError:
+                print(f"Warning: VQE result file not found {filename} for method {method}, dist {dist}, seed {seed}")
 
         # Get index of the lowest energy
             # Save the lowest energy and initial energy for this method and dist in the data dictionary
         energy_min = min(energies)
-        data[method] = [energies_initial[energies.index(energy_min)], energy_min, mo_type_by_seed[energies.index(energy_min)]]  # Save the initial energy, lowest energy, and MO type for this method and dist in the data dictionary
+        seed_min = seeds_lst[energies.index(energy_min)]
+        data[method] = [energies_initial[energies.index(energy_min)], energy_min, mo_type_by_seed[energies.index(energy_min)], seed_min]  # Save the initial energy, lowest energy, and MO type for this method and dist in the data dictionary
 
     file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbitals}.json"
     if not os.path.exists(f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/"):
@@ -451,41 +456,82 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
 
 
 
-def print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbitals):
+def print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbitals, seeds_lst):
     # Get the final energy of OVOS and UMP2 for the given molecule, basis, dist, and num_opt_virtual_orbitals,
     # and print the correlation energy (E_corr = E_final - E_RHF_reference) for both methods for comparison
     # See it as a sanity check by comparing the correlation energy of OVOS and UMP2, and see if they are in the same ballpark, which can indicate if OVOS is capturing a similar amount of correlation energy as UMP2
 
-        # Get the final energy of OVOS and UMP2 for the given molecule, basis, dist, and num_opt_virtual_orbitals
-    file_name_ovos = f"backup/data/{molecule}/{basis}/VQE/OVOS/{dist}/UPS_OVOS_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_8.json"
-            #  "E_corr_OVOS" in file
-    file_name_ump2 = f"backup/data/{molecule}/{basis}/VQE/UMP2/{dist}/UPS_UMP2_NO_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_8.json"
-            #  E_corr_ump2 = "ump2_energy" - "uhf_energy", where "" is in file
+    # Get seed from molecule/basis/dist/VQE_molecule_basis_dist_resutls_num_opt_virtual_orbitals.json file, which is the seed that gives the lowest final energy for OVOS for this molecule, basis, dist, and num_opt_virtual_orbitals
+    # open the file
+    file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbitals}.json"
+        # e.g
+        # {
+        #     "OVOS": [
+        #         -104.447912318759,
+        #         -104.751277,
+        #         "unrestricted",
+        #         "20"
+        #     ],
+        #     "UHF": [
+        #         -104.7247836893968,
+        #         -104.740794,
+        #         "unrestricted",
+        #         "10"
+        #     ],
+        #     "UMP2": [
+        #         -104.73767243374019,
+        #         -104.767248,
+        #         "restricted",
+        #         "10"
+        #     ]
+        # }
     try:
-        with open(file_name_ovos, 'r') as f:
-            data_ovos = json.load(f)
-            E_corr_OVOS = data_ovos["E_corr_OVOS"] 
+        with open(file_name, 'r') as f:
+            data = json.load(f)
+            seed_ovos = data["OVOS"][3]  # Get the seed for OVOS that gives the lowest final energy
+            seed_ump2 = data["UMP2"][3]  # Get the seed for UMP2 that gives the lowest final energy
+            
     except FileNotFoundError:
-        print(f"Warning: OVOS file not found {file_name_ovos}")
-        E_corr_OVOS = None
+        print(f"Warning: VQE dist results file not found {file_name}")
+        seed_ovos = None
+        seed_ump2 = None
 
-    try:        
-        with open(file_name_ump2, 'r') as f:
-            data_ump2 = json.load(f)
-            E_corr_UMP2 = data_ump2["ump2_energy"] - data_ump2["uhf_energy"]
-    except FileNotFoundError:
-        print(f"Warning: UMP2 file not found {file_name_ump2}")
-        E_corr_UMP2 = None
+    # Get the final E_corr energies for OVOS and UMP2 using the seeds
+    corresponding_E_corr_OVOS = None
+    corresponding_E_corr_UMP2 = None
+    if seed_ovos is not None:
+        filename_OVOS = f"backup/data/{molecule}/{basis}/VQE/OVOS/{dist}/UPS_OVOS_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_{seed_ovos}.json"
+        filename_UMP2 = f"backup/data/{molecule}/{basis}/VQE/UMP2/{dist}/UPS_UMP2_NO_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_{seed_ump2}.json"
+        try:
+            with open(filename_OVOS, 'r') as f:
+                result_OVOS = json.load(f)
+                corresponding_E_corr_OVOS = result_OVOS['E_corr_OVOS']
+        except FileNotFoundError:
+            print(f"Warning: OVOS VQE result file not found {filename_OVOS}")
+            corresponding_E_corr_OVOS = None
+        try:
+            with open(filename_UMP2, 'r') as f:
+                result_UMP2 = json.load(f)
+                E_UHF = result_UMP2['uhf_energy']
+                E_UMP2 = result_UMP2['ump2_energy']
+                E_UMP2_NO = result_UMP2['ump2_no_energy']
+                corresponding_E_corr_UMP2 = E_UMP2 - E_UHF  # Correlation energy for UMP2 is the difference between UMP2 energy and UHF reference energy
+        except FileNotFoundError:
+            print(f"Warning: UMP2 VQE result file not found {filename_UMP2}")
+            corresponding_E_corr_UMP2 = None
 
-    print(f"[{float(dist):.3f}] Correlation energy for OVOS: {E_corr_OVOS:.4f} Hartree, UMP2: {E_corr_UMP2:.4f} Hartree, Ratio: {E_corr_OVOS / E_corr_UMP2 if E_corr_OVOS is not None and E_corr_UMP2 is not None and E_corr_UMP2 != 0 else 'undefined':.4f}")
-    
+    ratio = None
+    if corresponding_E_corr_OVOS is not None and corresponding_E_corr_UMP2 is not None and corresponding_E_corr_UMP2 != 0:
+        ratio = corresponding_E_corr_OVOS / corresponding_E_corr_UMP2
+
+    print(f"[{float(dist):.3f} Å] E_corr, OVOS: {corresponding_E_corr_OVOS:6.2f} Hartree ({seed_ovos:>3}), UMP2: {corresponding_E_corr_UMP2:6.2f} Hartree ({seed_ump2:>3}), Ratio: {ratio:.2f}" if ratio is not None else f"[{float(dist):.3f} Angstrom] Correlation energy for OVOS: {corresponding_E_corr_OVOS}, UMP2: {corresponding_E_corr_UMP2}, Ratio: undefined (UMP2 correlation energy is zero or missing)")    
 
 
 
 
 
 if True:
-    molecule = "H2O"
+    molecule = "Li2"
     basis = "6-31G"
     method = "OVOS" # Placeholder for getting dist and seed list
 
@@ -525,7 +571,7 @@ if True:
 
         # Check the correlation energy of OVOS vs. UMP2 for this molecule, basis, dist, and num_opt_virtual_orbitals as a sanity check
         for dist in dist_list:
-            print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbital)
+            print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbital, seeds_lst)
 
     plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals)
 
