@@ -413,13 +413,15 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
                         marker=marker[method],
                         label=f"{method_labels[method]} (25% virt. orbs) Points")
 
-    # plt.xlim(0.7, 2.0)
-    plt.xlim(2.5, 6.0)     # Li2
-    # plt.ylim(-76,-75.6)
-    plt.ylim(-14.885, -14.80) # Li2
-    # plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
-    # plt.xticks(np.arange(0.7, 2.1, 0.2))
-    # plt.yticks(np.arange(-100.0, -99.8, 0.05))
+    if molecule == "Li2":
+        plt.xlim(2.5, 6.0)     # Li2
+        plt.ylim(-14.885, -14.80) # Li2
+    else:
+        plt.xlim(0.7, 2.0)
+        plt.xticks(np.arange(0.7, 2.1, 0.2))
+        # plt.ylim(-76,-75.6)
+        # plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
+        # plt.yticks(np.arange(-100.0, -99.8, 0.05))
     plt.xlabel("Interatomic Distance (Angstrom)", fontsize=12)
     plt.ylabel("Energy (Hartree)", fontsize=12)
     plt.title(f"Zoomed Potential Energy Surface for {molecule} ({basis})", fontsize=14)
@@ -455,9 +457,9 @@ def print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbitals):
     # See it as a sanity check by comparing the correlation energy of OVOS and UMP2, and see if they are in the same ballpark, which can indicate if OVOS is capturing a similar amount of correlation energy as UMP2
 
         # Get the final energy of OVOS and UMP2 for the given molecule, basis, dist, and num_opt_virtual_orbitals
-    file_name_ovos = f"backup/data/{molecule}/{basis}/VQE/OVOS/{dist}/UPS_OVOS_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_9.json"
+    file_name_ovos = f"backup/data/{molecule}/{basis}/VQE/OVOS/{dist}/UPS_OVOS_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_8.json"
             #  "E_corr_OVOS" in file
-    file_name_ump2 = f"backup/data/{molecule}/{basis}/VQE/UMP2/{dist}/UPS_UMP2_NO_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_9.json"
+    file_name_ump2 = f"backup/data/{molecule}/{basis}/VQE/UMP2/{dist}/UPS_UMP2_NO_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_8.json"
             #  E_corr_ump2 = "ump2_energy" - "uhf_energy", where "" is in file
     try:
         with open(file_name_ovos, 'r') as f:
@@ -475,7 +477,7 @@ def print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbitals):
         print(f"Warning: UMP2 file not found {file_name_ump2}")
         E_corr_UMP2 = None
 
-    print(f"[{dist}] Correlation energy for OVOS: {E_corr_OVOS:.4f} Hartree, UMP2: {E_corr_UMP2:.4f} Hartree, Ratio: {E_corr_OVOS / E_corr_UMP2 if E_corr_OVOS is not None and E_corr_UMP2 is not None and E_corr_UMP2 != 0 else 'undefined':.4f}")
+    print(f"[{float(dist):.3f}] Correlation energy for OVOS: {E_corr_OVOS:.4f} Hartree, UMP2: {E_corr_UMP2:.4f} Hartree, Ratio: {E_corr_OVOS / E_corr_UMP2 if E_corr_OVOS is not None and E_corr_UMP2 is not None and E_corr_UMP2 != 0 else 'undefined':.4f}")
     
 
 
@@ -483,7 +485,7 @@ def print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbitals):
 
 
 if True:
-    molecule = "Li2"
+    molecule = "H2O"
     basis = "6-31G"
     method = "OVOS" # Placeholder for getting dist and seed list
 

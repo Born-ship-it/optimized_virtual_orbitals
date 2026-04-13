@@ -1,0 +1,6 @@
+
+Running VQE with OVOS optimization for H2O w. bond length 0.775 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule H2O with basis 6-31G and bond length 0.775 Angstrom.
+Number of electrons: 10, Number of orbitals: 13
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 6 active virtual orbitals (out of 8 total virtual orbitals).
