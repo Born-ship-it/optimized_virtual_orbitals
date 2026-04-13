@@ -6,12 +6,19 @@
 
 \section{Notation and Integral Conventions}
 \label{sec:notation}
+
+% [CROSS-REFERENCE MARKER] SECTION §3.0 – Notation and Integral Conventions:
+% ADD: "For a comprehensive treatment of molecular orbital integrals, index conventions,
+% and spin-orbital formalism, see Background Chapter~\ref{ch:background}, Sections~\ref{sec:notation_background}
+% through~\ref{sec:spin_orbital}. The present section assumes familiarity with those definitions
+% and focuses specifically on the notation required for OVOS derivations."
+
 % ---------------------------------------------------------------
 % [SECTION INTRO – 3.0 PRELIMINARIES]
 %   "To ensure clarity and consistency throughout this chapter,
 %    we establish the notation and integral conventions used in all
 %    OVOS derivations. This adopts the physicists' antisymmetrised
-%    notation unless otherwise specified."
+%    notation unless otherLewise specified."
 %
 % [WHAT TO COVER]
 %   - Integral notation: <ab||ij> (antisymmetrised physicists')
@@ -29,6 +36,11 @@
 %         \cite{Jensen2014} \S 2+ (physics vs chemistry notation)
 %         \cite{Adamowicz1987_OVOS} (state OVOS convention)
 % ---------------------------------------------------------------
+
+We establish the following specific notation and conventions for OVOS, for consistency with the original Adamowicz & Bartlett paper (Note for a comprehensive treatment of which see Background Chapter~\ref{ch:background}, Sections~\ref{sec:notation_background} through~\ref{sec:spin_orbital}), for derivations and presentation results:
+
+For integral notation, we distinguish between the antisymmetrised physicists' notation $\langle ab\|ij\rangle$ and the non-antisymmetrised chemists' notation $\langle ab|ij\rangle$. 
+
 \subsection{Index Ordering and Orbital Partitioning}
 \subsection{Integral Notation: Antisymmetrised vs Non-antisymmetrised}
 \subsection{Fock Matrix and Orbital Energy Definitions}
@@ -83,6 +95,13 @@
 %         eigenvalues? (Saddle points, near-degenerate orbitals.)
 %
 %  3.5  Newton-Raphson Orbital Optimisation
+%       [CROSS-REFERENCE MARKER] – NEWTON-RAPHSON SECTION §3.5:
+%       ADD AT START: "The Newton-Raphson optimization strategy employed here builds on the
+%       optimization concepts discussed in Background Chapter~\ref{ch:background},
+%       Section~\ref{sec:optimization_strategies}, where Newton's method, trust-region methods,
+%       and Levenberg-Marquardt damping are contrasted. This section applies those techniques
+%       specifically to the OVOS orbital rotation problem using the J₂ gradient and Hessian."
+%       ---
 %       - Newton step: ΔR = −H⁻¹ G (first-order NR).
 %       - Connection to augmented Hessian / level-shift techniques.
 %       - Convergence criterion and convergence rate (quadratic near minimum).
@@ -94,6 +113,14 @@
 %       - Why this is more numerically stable than direct truncation.
 %
 %  3.7  Orbital Canonicalisation
+%       [CROSS-REFERENCE MARKER] – CANONICALIZATION SECTION §3.7:
+%       ADD AT START: "Canonicalization of the active virtual orbital block is discussed briefly in
+%       Background Chapter~\ref{ch:background}, Section~\ref{sec:canonicalization}, where the general
+%       principle that canonical orbitals (diagonalized Fock matrix) simplify perturbation theory
+%       denominators is established. This section focuses on why canonicalization of the *active*
+%       virtual block specifically is necessary after orbital optimization and how it impacts
+%       the convergence and interpretation of subsequent correlation calculations."
+%       ---
 %       - After rotation, the Fock matrix in the active space may not be
 %         diagonal. Diagonalise the active-active Fock block to obtain
 %         canonical orbitals.
@@ -185,6 +212,14 @@
 % ---------------------------------------------------------------
 
 \section{Orbital Rotation Parameterisation}
+
+% [CROSS-REFERENCE MARKER] SECTION §3.2 – Orbital Rotations:
+% ADD: "The mathematical formalism of unitary orbital rotations (U = exp(R)) is introduced in
+% Background Chapter~\ref{ch:background}, Section~\ref{sec:orbital_rotations_background}, where
+% the derivation of how orbital coefficients transform and how the Fock matrix changes is presented.
+% The present section extends that framework specifically to the active-inactive orbital rotation block
+% required for OVOS optimization."
+
 % ---------------------------------------------------------------
 % [SECTION INTRO – 3.2]
 %   "Orbital rotations are parameterised via an antisymmetric matrix

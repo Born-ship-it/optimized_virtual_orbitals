@@ -504,6 +504,14 @@ INPUT ./figures/Placeholder.png
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmbx12.tfm
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmr6.tfm
+INPUT ./figures/Placeholder.png
+INPUT ./figures/Placeholder.png
+INPUT ./figures/Placeholder.png
+INPUT ./figures/Placeholder.png
+INPUT ./figures/Placeholder.png
+INPUT ./figures/Placeholder.png
+INPUT ./figures/Placeholder.png
+INPUT ./figures/Placeholder.png
 INPUT ./chapters/theory.tex
 INPUT ./chapters/theory.tex
 INPUT ./chapters/theory.tex
@@ -606,9 +614,11 @@ INPUT main.aux
 INPUT ./main.out
 INPUT ./main.out
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx12.pfb
+INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx8.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmex10.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi12.pfb
+INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi6.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmmi8.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr10.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr12.pfb
@@ -616,6 +626,7 @@ INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr6.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmr8.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmri12.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy10.pfb
+INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy6.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmsy8.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtk10.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtt10.pfb
