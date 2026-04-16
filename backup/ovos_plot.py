@@ -18,6 +18,9 @@ import numpy as np
 import json
 
 
+
+
+
 def plot_OVOS_convergence(atom, basis):
 
         # Set optimization RLE
@@ -717,9 +720,9 @@ def plot_OVOS_convergence(atom, basis):
             print("Plot saved to branch/images/vorb/.png standard")
 
 # # Example usage:   
-for basis in ["6-31G"]:         # Do: "6-31G", "cc-pVDZ"
-    for atom in ["H2O", "CO", "HF", "NH3"]:                   # Do: "CO", "H2O", "HF", "NH3"    
-        plot_OVOS_convergence(atom, basis)
+# for basis in ["6-31G"]:         # Do: "6-31G", "cc-pVDZ"
+#     for atom in ["H2O", "CO", "HF", "NH3"]:                   # Do: "CO", "H2O", "HF", "NH3"    
+#         plot_OVOS_convergence(atom, basis)
 
 
 def plot_OVOS_convergence_iterations(atom, basis, n_vir_orb, start_guess):

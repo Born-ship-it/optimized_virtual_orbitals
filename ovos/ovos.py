@@ -21,6 +21,11 @@ import scipy.linalg
 import pyscf
 from pyscf import ao2mo
 
+# Module metadata
+import time
+_LOAD_TIME = time.time()
+_MODULE_VERSION = "dev_build"
+
 # Limit OpenBLAS threads to avoid oversubscription in parallel runs
 os.environ['NUMBA_THREADING_LAYER'] = 'omp'  # Use OpenMP (thread-safe)
 os.environ['NUMBA_NUM_THREADS'] = '1'
@@ -88,6 +93,7 @@ class OVOS:
         self.max_iter = max_iter
         self.conv_energy = conv_energy
         self.conv_grad = conv_grad
+        self.t1_conv = conv_grad
         self.keep_track_max = keep_track_max
 
         # Optimization parameters
@@ -470,99 +476,471 @@ class OVOS:
                            np.sort(np.linalg.eigvalsh(fock_spin)), atol=1e-8)
         return mo_canon, fock_canon
 
+    # 
     # -------------------------------------------------------------------------
-    # Newton step solver with trust region / Levenberg‑Marquardt
+    # Initial T1 amplitudes and norm
+    # ------------------------------------------------------------------------
+    def _mp1_t1_amplitudes(self, fock_diag: np.ndarray, eri_as: np.ndarray) -> np.ndarray:
+        """
+        Compute MP1 T1 amplitudes t_i^a = -<a||i> / (f_aa - f_ii).
+        T1 should vanish at Brueckner orbitals.
+        
+        Parameters
+        ----------
+        fock_diag : np.ndarray
+            Diagonal of spin-orbital Fock matrix
+        eri_as : np.ndarray
+            Antisymmetrized ERIs in spin-orbital basis
+        
+        Returns
+        -------
+        t_1 : np.ndarray
+            Shape (nvir_act, nocc_act)
+        """
+        occ_idx = self.active_occ_indices
+        vir_idx = self.active_inocc_indices
+        
+        if len(vir_idx) == 0 or len(occ_idx) == 0:
+            return np.zeros((0, 0))
+        
+        eps_occ = fock_diag[occ_idx]
+        eps_vir = fock_diag[vir_idx]
+        nvir_act = len(vir_idx)
+        nocc_act = len(occ_idx)
+        
+        # Denominator: f_aa - f_ii, shape (nvir_act, nocc_act)
+        denom = eps_vir[:, None] - eps_occ[None, :]
+        
+        # Extract active subspace: (nvir_act, nvir_act, nocc_act, nocc_act)
+        eri_active = eri_as[:nvir_act, :nvir_act, :nocc_act, :nocc_act]
+        
+        # Extract diagonal elements: a=b, i=j -> shape (nvir_act, nocc_act)
+        t1_numerator = np.einsum('aaic->ai', eri_active)
+        
+        # T1 amplitudes: t_i^a = -<a||i> / (f_aa - f_ii)
+        # Add small epsilon to avoid division by zero
+        t1 = -t1_numerator / (denom + 1e-14)
+        t1[np.abs(denom) < 1e-10] = 0.0  # Canonical orbitals have f_aa >> f_ii
+        
+        return t1
+
+    def _t1_norm(self, t1: np.ndarray) -> float:
+        """Compute Frobenius norm of T1 amplitudes."""
+        return np.linalg.norm(t1.flatten())
+
+    # -------------------------------------------------------------------------
+    # Block-diagonal RLE approximation and regularization
+    # -------------------------------------------------------------------------
+
+    def _apply_block_diagonal_rle(self, H: np.ndarray, apply_regularization: bool = True) -> np.ndarray:
+        """
+        Apply block-diagonal RLE (Reduced Linear Equation) approximation to the Hessian.
+        
+        Per Adamowicz & Bartlett (1987): only keep diagonal blocks H_{ea,eb}
+        where each block corresponds to rotations of ALL active orbitals (a,b) 
+        against ONE inactive orbital (e).
+        
+        Block size: (len_active, len_active) for each inactive orbital.
+        
+        Parameters
+        ----------
+        H : np.ndarray
+            Full Hessian matrix, shape (nvir_act * ninact, nvir_act * ninact)
+        apply_regularization : bool, optional
+            If True, regularize ill-conditioned blocks to ensure invertibility.
+            Default: True
+        
+        Returns
+        -------
+        H_block_diag : np.ndarray
+            Block-diagonal approximation of H, same shape as input.
+            Off-diagonal blocks (e ≠ f) are zeroed out.
+        """
+        nvir_act = len(self.active_inocc_indices)
+        ninact = len(self.inactive_indices)
+        
+        if ninact == 0 or H.size == 0:
+            return H.copy()
+        
+        block_size = nvir_act
+        H_block_diag = np.zeros_like(H)
+        
+        # Store diagnostics
+        regularization_applied = []
+        block_eigvals = []
+        
+        # Process each diagonal block (one per inactive orbital)
+        for e_idx in range(ninact):
+            start = e_idx * block_size
+            end = (e_idx + 1) * block_size
+            
+            H_block_orig = H[start:end, start:end].copy()
+            H_block = H_block_orig.copy()
+            
+            # Compute eigenvalue properties for diagnostics
+            eigvals = np.linalg.eigvalsh(H_block_orig)
+            min_eig = np.min(eigvals)
+            max_eig_abs = np.max(np.abs(eigvals))
+            det_val = np.linalg.det(H_block_orig)
+            cond_H = np.linalg.cond(H_block_orig) if H_block_orig.size > 0 else np.inf
+            
+            block_eigvals.append((e_idx, min_eig, max_eig_abs, cond_H))
+            
+            H_block_diag[start:end, start:end] = H_block
+        
+        # ===== REGULARIZE THE FULL BLOCK-DIAGONAL MATRIX (IF NEEDED) =====
+        if apply_regularization:
+            eigvals_full = np.linalg.eigvalsh(H_block_diag)
+            min_eig_full = np.min(eigvals_full)
+            det_val_full = np.linalg.det(H_block_diag)
+            cond_H_full = np.linalg.cond(H_block_diag) if H_block_diag.size > 0 else np.inf
+            
+            needs_regularization = (
+                np.abs(det_val_full) < 1e-14 or          # Near-singular
+                min_eig_full < -1e-10 or                 # Negative eigenvalue
+                cond_H_full > 1e4                        # Ill-conditioned (relaxed from 1e6)
+            )
+            
+            if needs_regularization:
+                H_block_diag, reg_shift = self._regularize_full_matrix(H_block_diag)
+                if self.verbose and reg_shift > 0:
+                    self._print(f"        [RLE] Full matrix regularized with λ = {reg_shift:.2e} "
+                            f"(cond was {cond_H_full:.2e})")
+        
+        # Store diagnostics for optional inspection
+        self._rle_diagnostics = {
+            'block_eigvals': block_eigvals,
+            'regularization_applied': regularization_applied,
+            'num_blocks': ninact
+        }
+        
+        return H_block_diag
+
+    def _regularize_full_matrix(self, H_full: np.ndarray) -> Tuple[np.ndarray, float]:
+        """
+        Regularize the FULL block-diagonal matrix (not individual blocks).
+        
+        Applies Tikhonov regularization (shift by λI) to the complete matrix to ensure
+        it has acceptable conditioning and invertibility as a whole.
+        
+        Parameters
+        ----------
+        H_full : np.ndarray
+            Full block-diagonal Hessian matrix, shape (dim, dim)
+        
+        Returns
+        -------
+        H_reg : np.ndarray
+            Regularized matrix
+        shift_applied : float
+            Magnitude of the shift applied (λ value). Returns 0.0 if no shift needed.
+        """
+        if H_full.size == 0:
+            return H_full, 0.0
+        
+        eigvals = np.linalg.eigvalsh(H_full)
+        min_eig = np.min(eigvals)
+        max_eig_abs = np.max(np.abs(eigvals))
+        H_norm = np.linalg.norm(H_full, 2)
+        det_val = np.linalg.det(H_full)
+        cond_H = np.linalg.cond(H_full)
+        
+        # Check if matrix is already acceptable
+        if (np.abs(det_val) > 1e-14 and
+            min_eig > -1e-12 and
+            cond_H < 1e4):
+            if self.verbose:
+                self._print(f"        [RLE] Full matrix well-conditioned (cond={cond_H:.2e}), no shift needed")
+            return H_full, 0.0
+        
+        # If matrix is all zeros, cannot regularize
+        if H_norm < 1e-14:
+            if self.verbose:
+                self._print(f"        [RLE] Full matrix is zero, skipping regularization")
+            return H_full, 0.0
+        
+        H_reg = None
+        shift_applied = 0.0
+        max_shift_exponent = 14
+        
+        # Determine starting exponent
+        start_exp = int(np.floor(np.log10(H_norm))) - 6 if H_norm > 0 else -12
+        
+        # Try increasingly larger shifts
+        for exp in range(start_exp, max_shift_exponent + 1):
+            shift_scale = 10.0 ** exp
+            lambda_reg = shift_scale * H_norm  # Scale by spectral norm instead of max element
+            H_try = H_full + lambda_reg * np.eye(H_full.shape[0])
+            
+            eigvals_try = np.linalg.eigvalsh(H_try)
+            min_eig_try = np.min(eigvals_try)
+            det_try = np.linalg.det(H_try)
+            cond_H_try = np.linalg.cond(H_try)
+            
+            # Acceptance criteria
+            if (np.abs(det_try) > 1e-14 and
+                min_eig_try > -1e-12 and
+                cond_H_try < 1e4):
+                
+                H_reg = H_try
+                shift_applied = lambda_reg
+                if self.verbose:
+                    self._print(f"        [RLE] Full matrix regularized: λ = {lambda_reg:.2e}, "
+                            f"cond(H) = {cond_H_try:.2e}")
+                break
+        
+        if H_reg is None:
+            # Fallback: use large shift
+            if self.verbose:
+                self._print(f"        [RLE] Full matrix regularization failed. Using large shift.")
+            shift_scale = 10.0 ** (max_shift_exponent - 1)
+            lambda_reg = shift_scale * H_norm
+            H_reg = H_full + lambda_reg * np.eye(H_full.shape[0])
+            shift_applied = lambda_reg
+        
+        return H_reg, shift_applied
+
+    def _regularize_block(self, H_block: np.ndarray, block_size: int) -> Tuple[np.ndarray, float]:
+        """
+        Regularize a single Hessian block to ensure good conditioning and invertibility.
+        
+        Applies Tikhonov regularization (shift by λI) to make eigenvalues positive
+        and condition number acceptable.
+        
+        Parameters
+        ----------
+        H_block : np.ndarray
+            Original block matrix, shape (block_size, block_size)
+        block_size : int
+            Size of the block (for context)
+        
+        Returns
+        -------
+        H_block_reg : np.ndarray
+            Regularized block matrix
+        shift_applied : float
+            Magnitude of the shift applied (λ value)
+        """
+        eigvals = np.linalg.eigvalsh(H_block)
+        min_eig = np.min(eigvals)
+        H_max = np.max(np.abs(H_block))
+        
+        # If block is all zeros, cannot regularize
+        if H_max < 1e-14:
+            if self.verbose:
+                self._print(f"        [RLE] Block all-zero, skipping regularization")
+            return H_block, 0.0
+        
+        # Check if already acceptable
+        det_val = np.linalg.det(H_block)
+        cond_H = np.linalg.cond(H_block)
+        if (np.abs(det_val) > 1e-14 and
+            min_eig > -1e-12 and
+            cond_H < 1e4):
+            return H_block, 0.0
+
+        shift_applied = 0.0
+        H_block_reg = None
+        
+        # Try increasingly larger shifts until we achieve:
+        # 1. Non-zero determinant
+        # 2. All positive eigenvalues
+        # 3. Acceptable condition number
+        max_shift_exponent = 14  # Safety cap: λ ≤ 10^14 * ||H_block||
+        
+        # Initialization:
+        H_norm = np.linalg.norm(H_block, 2)
+        if H_norm > 0:
+            start_exp = int(np.floor(np.log10(H_norm))) - 6  # Start a couple orders below norm
+        else:
+            start_exp = -12  # If norm is zero, start with very small shifts
+
+        for exp in range(start_exp, max_shift_exponent + 1):
+            shift_scale = 10.0 ** exp
+            lambda_reg = shift_scale * H_max
+            H_try = H_block + lambda_reg * np.eye(block_size)
+            
+            eigvals_try = np.linalg.eigvalsh(H_try)
+            min_eig_try = np.min(eigvals_try)
+            det_try = np.linalg.det(H_try)
+            cond_H_try = np.linalg.cond(H_try)
+            
+            # Acceptance criteria
+            if (np.abs(det_try) > 1e-14 and       # Non-singular
+                min_eig_try > -1e-12 and             # All positive eigenvalues
+                cond_H_try < 1e4):                # Well-conditioned
+                
+                H_block_reg = H_try
+                shift_applied = lambda_reg
+                break
+        
+        if H_block_reg is None:
+            # Fallback: use the last attempted shift (best effort)
+            if self.verbose:
+                self._print(f"        [RLE] Regularization failed (tried up to 10^{max_shift_exponent} * ||H||). Using last attempt.")
+            shift_scale = 10.0 ** (max_shift_exponent - 1)
+            lambda_reg = shift_scale * H_max
+            H_block_reg = H_block + lambda_reg * np.eye(block_size)
+            shift_applied = lambda_reg
+        
+        return H_block_reg, shift_applied
+
+    def _check_hessian_positive_definiteness(self, H: np.ndarray, iteration: int) -> Tuple[bool, dict]:
+        """
+        Check if Hessian is positive-definite and return diagnostics.
+        
+        Parameters
+        ----------
+        H : np.ndarray
+            Hessian matrix, shape (n_active_virt * n_inactive_virt, ...)
+        iteration : int
+            Current iteration number (for logging)
+        
+        Returns
+        -------
+        is_positive_definite : bool
+            True if all eigenvalues > tolerance
+        diagnostics : dict
+            Dictionary with eigenvalue statistics
+        """
+        try:
+            # Compute eigenvalues of symmetric matrix
+            eigs = np.linalg.eigvalsh(H)  # Returns sorted eigenvalues (ascending)
+            
+            # Define tolerance for "positive"
+            eig_tol = 1e-8
+            
+            # Diagnostics dictionary
+            diags = {
+                'min_eigenvalue': float(np.min(eigs)),
+                'max_eigenvalue': float(np.max(eigs)),
+                'mean_eigenvalue': float(np.mean(eigs)),
+                'num_negative': int(np.sum(eigs < -eig_tol)),
+                'num_near_zero': int(np.sum(np.abs(eigs) < eig_tol)),
+                'num_positive': int(np.sum(eigs > eig_tol)),
+                'condition_number': float(np.linalg.cond(H)),
+                'trace': float(np.trace(H)),
+                'determinant': float(np.linalg.det(H))
+            }
+            
+            is_pd = np.all(eigs > eig_tol)
+            
+            if self.verbose:
+                self._print(f"\n    === Hessian Analysis (Iteration {iteration}) ===")
+                self._print(f"    Min eigenvalue:     {diags['min_eigenvalue']:+.4e}")
+                self._print(f"    Max eigenvalue:     {diags['max_eigenvalue']:+.4e}")
+                self._print(f"    Mean eigenvalue:    {diags['mean_eigenvalue']:+.4e}")
+                self._print(f"    Condition number:   {diags['condition_number']:.4e}")
+                self._print(f"    Negative (< -1e-8): {diags['num_negative']} eigenvalues")
+                self._print(f"    Near zero (-1e-8 to +1e-8): {diags['num_near_zero']} eigenvalues")
+                self._print(f"    Positive (> +1e-8): {diags['num_positive']} eigenvalues")
+                self._print(f"    Status: {'✓ POSITIVE DEFINITE' if is_pd else '✗ NON-POSITIVE DEFINITE'}")
+            
+            return is_pd, diags
+        
+        except Exception as e:
+            if self.verbose:
+                self._print(f"    ⚠️  Error computing Hessian eigenvalues: {e}")
+            return False, {'error': str(e)}
+
+    # -------------------------------------------------------------------------
+    # Newton step solver 
     # -------------------------------------------------------------------------
     def _newton_step(self, G: np.ndarray, H: np.ndarray,
                  iteration: int, start_counting: bool) -> np.ndarray:
         """
-        Solve H·R = -G with adaptive Levenberg‑Marquardt damping and trust region control.
-
+        Solve H·R = -G using block-diagonal RLE approximation with adaptive regularization.
+        
+        Strategy:
+        1. Apply block-diagonal RLE to extract only diagonal blocks (cheaper, structured)
+        2. Regularize the full block-diagonal matrix for invertibility
+        3. Solve with pure Newton; fallback to damping if solve fails
+        
         Parameters
         ----------
         G : np.ndarray
-            Gradient vector
+            Gradient vector, shape (nvir_act * ninact,)
         H : np.ndarray
-            Hessian matrix
+            Full Hessian matrix, shape (nvir_act * ninact, nvir_act * ninact)
         iteration : int
-            Current iteration number
+            Current iteration number (for diagnostics)
+        start_counting : bool
+            Whether we're in the convergence-tracking phase (unused here, kept for interface)
+        
+        Returns
+        -------
+        R : np.ndarray
+            Orbital rotation step vector, same shape as G
         """
         g_vec = G.flatten()
         dim = len(g_vec)
         grad_norm = np.linalg.norm(g_vec)
 
+        # ===== APPLY BLOCK-DIAGONAL RLE APPROXIMATION =====
+        # Use block-diagonal approximation for better conditioning
+        H_block = self._apply_block_diagonal_rle(H, apply_regularization=False)
+        
+        if self.verbose:
+            cond_H_orig = np.linalg.cond(H) if H.size > 0 else np.inf
+            cond_H_block = np.linalg.cond(H_block) if H_block.size > 0 else np.inf
+            eigvals_orig = np.linalg.eigvalsh(H)
+            eigvals_block = np.linalg.eigvalsh(H_block)
+            n_neg_orig = np.sum(eigvals_orig < -1e-10)
+            n_neg_block = np.sum(eigvals_block < -1e-10)
+            
+            self._print(f"        [RLE] Cond(H): {cond_H_orig:.2e} → {cond_H_block:.2e}, "
+                       f"Neg eigvals: {n_neg_orig} → {n_neg_block}")
+        
+        H = H_block
+        
+        # # ===== CHECK HESSIAN PROPERTIES =====
+        # is_pd, h_diags = self._check_hessian_positive_definiteness(H, iteration)
+
+        # if not is_pd:
+        #     if self.verbose:
+        #         self._print(f"\n    ⚠️  WARNING: Hessian is NON-POSITIVE-DEFINITE!")
+        #         self._print(f"        This means the current point is NOT a minimum.")
+        #         self._print(f"        Newton step may ascend the energy surface.")
+        #         self._print(f"        Will use damped Newton or steepest descent.\n")
+        #     assert is_pd, "Hessian must be positive-definite for pure Newton step. Check diagnostics."
+
         # Track oscillation history
         if not hasattr(self, '_step_history'):
             self._step_history = []
+        if not hasattr(self, '_grad_norm_history'):
+            self._grad_norm_history = []
         if not hasattr(self, '_damping_boost'):
             self._damping_boost = 1.0
 
-        if iteration <= 5:
-            # Pure Newton with fallback
-            try:
-                R = np.linalg.solve(H, -g_vec)
-            except np.linalg.LinAlgError:
-                H_reg = H + self.hessian_reg * np.eye(dim)
-                R = np.linalg.solve(H_reg, -g_vec)
-        else:
-            # Adaptive Levenberg‑Marquardt
-            
-            # Shrink trust radius more aggressively near convergence
-            # if iteration < 300 or start_counting:
-            trust_rad_factor = max(0.05, 1.0 / (1.0 + 0.2 * iteration))
-            # else:
-            #     # For every 100 after 300 scale down by an additional factor
-            #     additional_factor = 0.5 ** ((iteration - 300) // 100)
-            trust_rad_factor = 1.0 / (1.0 + 0.2 * iteration) # * additional_factor
-            trust_rad_effective = self.trust_radius * trust_rad_factor
-        
-            lambda_lm = (self.lambda_init * 
-                        max(0.1, 1.0 / (1.0 + 0.1 * iteration)))
-            lambda_max = self.lambda_max * max(0.1, 1.0 / (1.0 + 0.1 * iteration))
+        self._grad_norm_history.append(grad_norm)
+        if len(self._grad_norm_history) > 20:
+            self._grad_norm_history.pop(0)
 
-            best_R = None
-            best_norm = np.inf
+        # ===== ADAPTIVE DAMPING BASED ON GRADIENT NORM =====
+        try: 
+            # Pure Newton 
+            R = np.linalg.solve(H, -g_vec)
+            step_norm = np.linalg.norm(R)
 
-            for _ in range(50):
+        except np.linalg.LinAlgError:
+            # Fallback: add damping
+            self._print(f"        [RLE] Hessian solve failed at iteration {iteration}. Applying damping.")
+            lambda_lm = self.lambda_init
+            for attempt in range(10):
                 try:
-                    H_reg = H + lambda_lm * np.eye(dim)
-                    R_trial = np.linalg.solve(H_reg, -g_vec)
-                except np.linalg.LinAlgError:
-                    lambda_lm *= 2.0
-                    continue
-
-                step_norm = np.linalg.norm(R_trial)
-                # Acceptance criterion: step must be small enough
-                if step_norm < trust_rad_effective:
-                    # Accept step and reduce lambda for next time
-                    best_R = R_trial
-                    # More conservative: reduce lambda by smaller factor
-                    self.lambda_init = max(lambda_lm / 1.2, 1e-12)
+                    H_reg = H_block + lambda_lm * np.eye(dim)
+                    R = np.linalg.solve(H_reg, -g_vec)
+                    step_norm = np.linalg.norm(R)
                     break
-                else:
-                    # Keep track of best step (but don't accept yet)
-                    if step_norm < best_norm:
-                        best_norm = step_norm
-                        best_R = R_trial
-                    
-                    # More aggressive damping increase
-                    lambda_lm *= 2.0
-                        
-                    if lambda_lm > lambda_max: 
-                        break
-
-            if best_R is None:
-                # Ultimate fallback: steepest descent scaled to trust radius
-                g_norm = np.linalg.norm(g_vec)
-                if g_norm > 0:
-                    best_R = - (self.trust_radius / g_norm) * g_vec
-                else:
-                    best_R = np.zeros_like(g_vec)
-            
-            R = best_R if best_R is not None else np.zeros_like(g_vec)
+                except np.linalg.LinAlgError:
+                    lambda_lm *= 10.0
+            else:
+                # Ultimate fallback
+                scale = self.trust_radius / (grad_norm + 1e-14)
+                return -scale * g_vec
 
         return R
-
+                
     # -------------------------------------------------------------------------
     # Main driver
     # -------------------------------------------------------------------------
@@ -628,7 +1006,21 @@ class OVOS:
                 "t_abij antisymmetry broken"
             E_corr = self._mp2_energy(fock_spin, t_abij, eri_as)
             
-            # Track energy difference for oscillation detection
+            # Compute T1 norm amplitudes
+            t1_abij = self._mp1_t1_amplitudes(self.eps, eri_as)
+            t1_norm = self._t1_norm(t1_abij)
+
+            # Track T1 norm history
+            if not hasattr(self, '_t1_norm_history'):
+                self._t1_norm_history = []
+            self._t1_norm_history.append(t1_norm)
+
+            # if self.verbose:
+            #     nact = len(self.active_inocc_indices)
+            #     ntot = nact + len(self.inactive_indices)
+                # self._print(f"    [{nact}/{ntot}]: MP2 energy = {E_corr:.12f}, T1 norm = {t1_norm:.2e}")
+
+            # Track energy difference, ...
             if iter_count > 1:
                 dE = E_corr - energy_hist[-1]
                 self._step_history.append(dE)
@@ -664,9 +1056,9 @@ class OVOS:
 
                 if self.verbose and dgrad is not None:
                     flag = "(energy increased!)" if self.dE > 0 else ""
-                    self._print(f"            ΔE = {self.dE:.2e}  ‖grad‖ = {grad_norm:.2e}  {flag}")
+                    self._print(f"            ΔE = {self.dE:.2e}  ‖grad‖ = {grad_norm:.2e}  ‖T1‖ = {t1_norm:.2e} {flag}")
                 
-                if (dE < self.conv_energy and grad_norm < self.conv_grad):
+                if (dE < self.conv_energy and grad_norm < self.conv_grad and t1_norm < self.t1_conv):
                     stop_reasons.append("Convergence")
                     start_counting = True
                 else:
@@ -676,12 +1068,13 @@ class OVOS:
 
                 if start_counting: # (dE < self.conv_energy and grad_norm < self.conv_grad) or dE < 1e-12:
                     keep_track += 1
-                    print(f"Keep track: {keep_track}/{self.keep_track_max}")
+                    if self.verbose:
+                        self._print(f"Keep track: {keep_track}/{self.keep_track_max}")
                     if keep_track >= self.keep_track_max:
                         if self.verbose:
                             self._print(f"OVOS converged after {iter_count} iterations")
                         # Trim the extra tracked steps
-                        trim = self.keep_track_max 
+                        trim = self.keep_track_max - 1
                         energy_hist = energy_hist[:-trim]
                         iter_hist = iter_hist[:-trim]
                         mo_hist = mo_hist[:-trim]
@@ -692,9 +1085,15 @@ class OVOS:
                 else:
                     keep_track = 0
 
+            # Compute gradient and Hessian for Newton step
             D_ab = self._compute_density(t_abij)
             G = self._gradient(t_abij, eri_as, D_ab, fock_spin)
             H = self._hessian(t_abij, eri_as, D_ab, fock_spin)
+
+            # Store current energy for use in _newton_step
+            self.current_energy = E_corr
+            self.fock_spin = fock_spin
+            self.mo_coeffs = mo_coeffs
 
             # Solve Newton step
             R_vec = self._newton_step(G, H, iter_count, start_counting)
@@ -748,6 +1147,10 @@ class OVOS:
             fock_hist[best_idx],
             stop_reasons[best_idx]
         ]
+
+        # if stop_reasons[best_idx] != "Initial":
+        #     self._print(f"Final ||grad|| = {grad_norm:.2e}, ||T1|| = {t1_norm:.2e}")
+
         return result
 
 
