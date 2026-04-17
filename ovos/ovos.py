@@ -116,11 +116,14 @@ class OVOS:
         self.nelec = mol.nelec[0] + mol.nelec[1]
 
         # Index lists for subspaces
+            # Occupied: 0 to nelec-1 (active)
         self.active_occ_indices = list(range(self.nelec))
+            # Active virtual: next num_opt_virtual_orbs after occupied
         self.active_inocc_indices = list(range(
             self.active_occ_indices[-1] + 1,
             self.nelec + self.num_opt_virtual_orbs
         ))
+            # Inactive virtual: the rest of the virtual orbitals
         self.virtual_inocc_indices = list(range(
             self.active_inocc_indices[-1] + 1,
             self.tot_num_spin_orbs
@@ -399,84 +402,187 @@ class OVOS:
     # Orbital rotation and canonicalization
     # -------------------------------------------------------------------------
     def _rotate_orbitals(self, mo_coeffs: List[np.ndarray],
-                         fock_spin: np.ndarray,
-                         R_vec: np.ndarray) -> Tuple[List[np.ndarray], np.ndarray]:
+                        fock_spin: np.ndarray,
+                        R_vec: np.ndarray) -> Tuple[List[np.ndarray], np.ndarray]:
         """
-        Apply rotation R_vec (active‑inactive mixings) to MO coefficients and Fock.
-        R_vec is a flat array of length nvir * ninact.
+        Apply orbital rotation U = exp(R) where R is antisymmetric.
+        
+        Rotation only affects VIRTUAL orbitals (active + inactive).
+        Occupied orbitals are never rotated.
+        
+        Key: Build R with correct absolute indexing so occupied block stays as identity.
         """
-        nvir = len(self.active_inocc_indices)
-        ninact = len(self.inactive_indices)
-        # R is a vector of length nvir*ninact, reshape to matrix form for orbital rotations
-        R_2d = R_vec.reshape(nvir, ninact)
-			# Matrix: nvir+ninact x nvir+ninact
-        R_full = np.zeros((nvir+ninact, nvir+ninact), dtype=np.float64)
-			# Fill the anti-symmetric R_matrix with R_2d and its negative transpose
-        for i, a in enumerate(np.arange(nvir)): # Local indices for active virtuals
-            for j, e in enumerate(np.arange(ninact) + nvir): # Local indices for inactive orbitals
-                R_ae = R_2d[i, j]
-                R_full[e, a] = R_ae 			# Note the order of indices for correct placement
-                R_full[a, e] = -R_ae			# Ensure anti-symmetry
+        n_occ = len(self.active_occ_indices)       # Occupied spin-orbitals
+        nvir_act = len(self.active_inocc_indices)  # Active virtual spin-orbitals
+        ninact = len(self.inactive_indices)        # Inactive virtual spin-orbitals
+        n_spin = n_occ + nvir_act + ninact         # Total spin-orbitals
+        
+        # Reshape R_vec into local matrix form: R_local[a, e]
+        R_local = R_vec.reshape(nvir_act, ninact)
+        
+        # ===== BUILD FULL ANTISYMMETRIC R MATRIX IN SPIN-ORBITAL SPACE =====
+        # Occupied block (0:n_occ, 0:n_occ) stays ZERO (identity under exp)
+        # Virtual block (n_occ:n_spin, n_occ:n_spin) contains the rotation
+        R_full = np.zeros((n_spin, n_spin), dtype=np.float64)
+        
+        # Fill active-inactive coupling in the VIRTUAL SUBSPACE
+        for a in range(nvir_act):
+            for e in range(ninact):
+                # Absolute spin-orbital indices
+                abs_a = n_occ + a                           # Active virtual position
+                abs_e = n_occ + nvir_act + e               # Inactive virtual position
+                
+                # Antisymmetric placement
+                R_ae = R_local[a, e]
+                R_full[abs_e, abs_a] =  R_ae
+                R_full[abs_a, abs_e] = -R_ae
+        
+        # Verify antisymmetry
+        assert np.allclose(R_full, -R_full.T, atol=1e-12), \
+            f"R matrix not antisymmetric! Max violation: {np.max(np.abs(R_full + R_full.T))}"
+        
+        # ===== GENERATE UNITARY U = exp(R) =====
+        U_spin = scipy.linalg.expm(R_full)
+        
+        # Verify unitarity
+        assert np.allclose(U_spin.T @ U_spin, np.eye(n_spin), atol=1e-6), \
+            "U†U ≠ I: Unitary transformation broken!"
+        assert np.allclose(U_spin @ U_spin.T, np.eye(n_spin), atol=1e-6), \
+            "UU† ≠ I: Unitary transformation broken!"
+        
+        # ===== VERIFY OCCUPIED BLOCK IS IDENTITY =====
+        U_occ = U_spin[:n_occ, :n_occ]
+        assert np.allclose(U_occ, np.eye(n_occ), atol=1e-6), \
+            f"Occupied block not identity! Max deviation: {np.max(np.abs(U_occ - np.eye(n_occ)))}"
+        
+        # ===== APPLY UNITARY TO MO COEFFICIENTS =====
+        # For unrestricted formalism, apply U separately to alpha and beta
+        # U_spin has block structure: [U_alpha_block  at even indices]
+        #                             [U_beta_block   at odd indices]
+        U_alpha = U_spin[0::2, 0::2]
+        U_beta = U_spin[1::2, 1::2]
+        
+        mo_rot = [
+            mo_coeffs[0] @ U_alpha,
+            mo_coeffs[1] @ U_beta
+        ]
+        
+        # ===== TRANSFORM FOCK MATRIX =====
+        fock_rot = U_spin.T @ fock_spin @ U_spin
+        
+        # Verify Hermiticity
+        assert np.allclose(fock_rot, fock_rot.conj().T, atol=1e-8), \
+            "Rotated Fock not Hermitian!"
+        
+        # ===== VERIFY OCCUPIED-VIRTUAL DECOUPLING =====
+        # After rotation with identity in occupied block, 
+        # occ-virt should remain zero
+        n_occ_spin = n_occ
+        n_virt_spin = n_spin - n_occ_spin
+        
+        occ_virt_block = fock_rot[:n_occ_spin, n_occ_spin:]
+        occ_virt_norm = np.linalg.norm(occ_virt_block)
+        
+        assert occ_virt_norm < 1e-5, \
+            f"ERROR: Occupied-virtual coupling appeared after rotation! Norm: {occ_virt_norm:.2e}\n" \
+            f"This indicates the unitary was not applied correctly or R had occupied elements."
+        
+        return mo_rot, fock_rot, U_spin
 
-        U_sub = scipy.linalg.expm(R_full)
 
-        n_occ = len(self.active_occ_indices)
-        n_full = len(self.full_indices)
-        U_full = np.eye(n_full)
-        U_full[n_occ:, n_occ:] = U_sub
 
-        # Extract spatial rotations for alpha and beta
-        U_alpha = U_full[0::2, 0::2]
-        U_beta = U_full[1::2, 1::2]
 
-        mo_rot = [mo_coeffs[0] @ U_alpha, mo_coeffs[1] @ U_beta]
-        fock_rot = U_full.T @ fock_spin @ U_full
-
-        # Sanity checks
-        assert np.allclose(U_full.T @ U_full, np.eye(n_full), atol=1e-6), "Unitary broken"
-        assert np.allclose(fock_rot, fock_rot.T, atol=1e-8), "Rotated Fock not Hermitian"
-
-        return mo_rot, fock_rot
 
     def _canonicalize_active(self, mo_coeffs: List[np.ndarray],
-                              fock_spin: np.ndarray) -> Tuple[List[np.ndarray], np.ndarray]:
+                            fock_spin: np.ndarray,
+                            U_applied) -> Tuple[List[np.ndarray], np.ndarray]:
         """
-        Diagonalize the active‑virtual block of the Fock matrix to restore
-        a canonical representation. This does not change the energy.
+        Canonicalize ONLY the ACTIVE VIRTUAL BLOCK after orbital rotation.
+        
+        Does NOT touch inactive orbitals or reorder them—this preserves the
+        active-inactive separation that the gradient/Hessian optimization assumes.
+        
+        Inactive orbitals remain in their original order (or untouched).
+        Only the ACTIVE virtuals are diagonalized to restore canonical form
+        within that subspace.
         """
-        nocc_a, nocc_b = self.mol.nelec
-        nact_spatial = self.num_opt_virtual_orbs // 2
-
-        # Build full spin transformation that diagonalizes active virtual blocks
+        n_occ_a, n_occ_b = self.mol.nelec
+        nact_spatial = self.num_opt_virtual_orbs // 2  # Active virtual count
+        
+        # Build full spin transformation
         U_alpha_full = np.eye(fock_spin.shape[0] // 2)
         U_beta_full = np.eye(fock_spin.shape[0] // 2)
-
-        # Alpha active block
-        sl_a = slice(nocc_a, nocc_a + nact_spatial)
+        
+        # ===== ALPHA: Canonicalize ACTIVE virtual block only =====
+        sl_a = slice(n_occ_a, n_occ_a + nact_spatial)
         if nact_spatial > 0:
-            _, eigvecs = np.linalg.eigh(fock_spin[0::2, 0::2][sl_a, sl_a])
-            U_alpha_full[sl_a, sl_a] = eigvecs
-
-        # Beta active block
-        sl_b = slice(nocc_b, nocc_b + nact_spatial)
+            # Extract ONLY the active-active block from alpha Fock
+            fock_alpha_spatial = fock_spin[0::2, 0::2]
+            F_alpha_active = fock_alpha_spatial[sl_a, sl_a]
+            
+            # Diagonalize ONLY active-active (leaves active-inactive coupling as-is)
+            evals_alpha_active, evecs_alpha_active = np.linalg.eigh(F_alpha_active)
+            U_alpha_full[sl_a, sl_a] = evecs_alpha_active
+            
+            # if self.verbose:
+            #     self._print(f"        [Canon Active] Alpha active virtuals: "
+            #             f"min={evals_alpha_active[0]:+.6f}, max={evals_alpha_active[-1]:+.6f}")
+        
+        # ===== BETA: Canonicalize ACTIVE virtual block only =====
+        sl_b = slice(n_occ_b, n_occ_b + nact_spatial)
         if nact_spatial > 0:
-            _, eigvecs = np.linalg.eigh(fock_spin[1::2, 1::2][sl_b, sl_b])
-            U_beta_full[sl_b, sl_b] = eigvecs
+            # Extract ONLY the active-active block from beta Fock
+            fock_beta_spatial = fock_spin[1::2, 1::2]
+            F_beta_active = fock_beta_spatial[sl_b, sl_b]
+            
+            # Diagonalize ONLY active-active (leaves active-inactive coupling as-is)
+            evals_beta_active, evecs_beta_active = np.linalg.eigh(F_beta_active)
+            U_beta_full[sl_b, sl_b] = evecs_beta_active
+            
+            # if self.verbose:
+            #     self._print(f"        [Canon Active] Beta active virtuals: "
+            #             f"min={evals_beta_active[0]:+.6f}, max={evals_beta_active[-1]:+.6f}")
+        
+        # ===== BUILD SPIN-ORBITAL TRANSFORMATION =====
+        U_canon_spin = np.zeros_like(fock_spin)
+        U_canon_spin[0::2, 0::2] = U_alpha_full
+        U_canon_spin[1::2, 1::2] = U_beta_full
+        
+        # ===== APPLY CANONICALIZATION =====
+        mo_canon = [
+            mo_coeffs[0] @ U_alpha_full,
+            mo_coeffs[1] @ U_beta_full
+        ]
+        
+        fock_canon = U_canon_spin.T @ fock_spin @ U_canon_spin
+        
+        # ===== VERIFICATION =====
+        # Active blocks should now be diagonal
+        if nact_spatial > 0:
+            F_alpha_active_canon = fock_canon[0::2, 0::2][sl_a, sl_a]
+            F_beta_active_canon = fock_canon[1::2, 1::2][sl_b, sl_b]
+            
+            off_diag_alpha = np.linalg.norm(F_alpha_active_canon - np.diag(np.diag(F_alpha_active_canon)))
+            off_diag_beta = np.linalg.norm(F_beta_active_canon - np.diag(np.diag(F_beta_active_canon)))
+            
+            assert off_diag_alpha < 1e-6, \
+                f"Alpha active block not diagonal (norm={off_diag_alpha:.2e})"
+            assert off_diag_beta < 1e-6, \
+                f"Beta active block not diagonal (norm={off_diag_beta:.2e})"
+        
+        # Eigenvalues must be preserved
+        evals_before = np.sort(np.linalg.eigvalsh(fock_spin))
+        evals_after = np.sort(np.linalg.eigvalsh(fock_canon))
+        assert np.allclose(evals_before, evals_after, atol=1e-8), \
+            "Canonicalization changed eigenvalues!"
+        
+        # Extract all orbital energies for diagnostics
+        evals_alpha_all = np.diag(fock_canon)[0::2]
+        evals_beta_all = np.diag(fock_canon)[1::2]
+        
+        return mo_canon, fock_canon, [evals_alpha_all, evals_beta_all]
 
-        # Build spin transformation
-        U_spin = np.zeros_like(fock_spin)
-        U_spin[0::2, 0::2] = U_alpha_full
-        U_spin[1::2, 1::2] = U_beta_full
 
-        mo_canon = [mo_coeffs[0] @ U_alpha_full, mo_coeffs[1] @ U_beta_full]
-        fock_canon = U_spin.T @ fock_spin @ U_spin
-
-        # Eigenvalues must remain unchanged (unitary transformation)
-        assert np.allclose(np.sort(np.linalg.eigvalsh(fock_canon)),
-                           np.sort(np.linalg.eigvalsh(fock_spin)), atol=1e-8)
-        return mo_canon, fock_canon
-
-    # 
     # -------------------------------------------------------------------------
     # Initial T1 amplitudes and norm
     # ------------------------------------------------------------------------
@@ -531,7 +637,6 @@ class OVOS:
     # -------------------------------------------------------------------------
     # Block-diagonal RLE approximation and regularization
     # -------------------------------------------------------------------------
-
     def _apply_block_diagonal_rle(self, H: np.ndarray, apply_regularization: bool = True) -> np.ndarray:
         """
         Apply block-diagonal RLE (Reduced Linear Equation) approximation to the Hessian.
@@ -585,27 +690,11 @@ class OVOS:
             cond_H = np.linalg.cond(H_block_orig) if H_block_orig.size > 0 else np.inf
             
             block_eigvals.append((e_idx, min_eig, max_eig_abs, cond_H))
+
+            # Inverse block
+            # H_block = np.linalg.inv(H_block_orig) if H_block_orig.size > 0 else np.zeros_like(H_block_orig)
             
             H_block_diag[start:end, start:end] = H_block
-        
-        # ===== REGULARIZE THE FULL BLOCK-DIAGONAL MATRIX (IF NEEDED) =====
-        if apply_regularization:
-            eigvals_full = np.linalg.eigvalsh(H_block_diag)
-            min_eig_full = np.min(eigvals_full)
-            det_val_full = np.linalg.det(H_block_diag)
-            cond_H_full = np.linalg.cond(H_block_diag) if H_block_diag.size > 0 else np.inf
-            
-            needs_regularization = (
-                np.abs(det_val_full) < 1e-14 or          # Near-singular
-                min_eig_full < -1e-10 or                 # Negative eigenvalue
-                cond_H_full > 1e4                        # Ill-conditioned (relaxed from 1e6)
-            )
-            
-            if needs_regularization:
-                H_block_diag, reg_shift = self._regularize_full_matrix(H_block_diag)
-                if self.verbose and reg_shift > 0:
-                    self._print(f"        [RLE] Full matrix regularized with λ = {reg_shift:.2e} "
-                            f"(cond was {cond_H_full:.2e})")
         
         # Store diagnostics for optional inspection
         self._rle_diagnostics = {
@@ -615,233 +704,6 @@ class OVOS:
         }
         
         return H_block_diag
-
-    def _regularize_full_matrix(self, H_full: np.ndarray) -> Tuple[np.ndarray, float]:
-        """
-        Regularize the FULL block-diagonal matrix (not individual blocks).
-        
-        Applies Tikhonov regularization (shift by λI) to the complete matrix to ensure
-        it has acceptable conditioning and invertibility as a whole.
-        
-        Parameters
-        ----------
-        H_full : np.ndarray
-            Full block-diagonal Hessian matrix, shape (dim, dim)
-        
-        Returns
-        -------
-        H_reg : np.ndarray
-            Regularized matrix
-        shift_applied : float
-            Magnitude of the shift applied (λ value). Returns 0.0 if no shift needed.
-        """
-        if H_full.size == 0:
-            return H_full, 0.0
-        
-        eigvals = np.linalg.eigvalsh(H_full)
-        min_eig = np.min(eigvals)
-        max_eig_abs = np.max(np.abs(eigvals))
-        H_norm = np.linalg.norm(H_full, 2)
-        det_val = np.linalg.det(H_full)
-        cond_H = np.linalg.cond(H_full)
-        
-        # Check if matrix is already acceptable
-        if (np.abs(det_val) > 1e-14 and
-            min_eig > -1e-12 and
-            cond_H < 1e4):
-            if self.verbose:
-                self._print(f"        [RLE] Full matrix well-conditioned (cond={cond_H:.2e}), no shift needed")
-            return H_full, 0.0
-        
-        # If matrix is all zeros, cannot regularize
-        if H_norm < 1e-14:
-            if self.verbose:
-                self._print(f"        [RLE] Full matrix is zero, skipping regularization")
-            return H_full, 0.0
-        
-        H_reg = None
-        shift_applied = 0.0
-        max_shift_exponent = 14
-        
-        # Determine starting exponent
-        start_exp = int(np.floor(np.log10(H_norm))) - 6 if H_norm > 0 else -12
-        
-        # Try increasingly larger shifts
-        for exp in range(start_exp, max_shift_exponent + 1):
-            shift_scale = 10.0 ** exp
-            lambda_reg = shift_scale * H_norm  # Scale by spectral norm instead of max element
-            H_try = H_full + lambda_reg * np.eye(H_full.shape[0])
-            
-            eigvals_try = np.linalg.eigvalsh(H_try)
-            min_eig_try = np.min(eigvals_try)
-            det_try = np.linalg.det(H_try)
-            cond_H_try = np.linalg.cond(H_try)
-            
-            # Acceptance criteria
-            if (np.abs(det_try) > 1e-14 and
-                min_eig_try > -1e-12 and
-                cond_H_try < 1e4):
-                
-                H_reg = H_try
-                shift_applied = lambda_reg
-                if self.verbose:
-                    self._print(f"        [RLE] Full matrix regularized: λ = {lambda_reg:.2e}, "
-                            f"cond(H) = {cond_H_try:.2e}")
-                break
-        
-        if H_reg is None:
-            # Fallback: use large shift
-            if self.verbose:
-                self._print(f"        [RLE] Full matrix regularization failed. Using large shift.")
-            shift_scale = 10.0 ** (max_shift_exponent - 1)
-            lambda_reg = shift_scale * H_norm
-            H_reg = H_full + lambda_reg * np.eye(H_full.shape[0])
-            shift_applied = lambda_reg
-        
-        return H_reg, shift_applied
-
-    def _regularize_block(self, H_block: np.ndarray, block_size: int) -> Tuple[np.ndarray, float]:
-        """
-        Regularize a single Hessian block to ensure good conditioning and invertibility.
-        
-        Applies Tikhonov regularization (shift by λI) to make eigenvalues positive
-        and condition number acceptable.
-        
-        Parameters
-        ----------
-        H_block : np.ndarray
-            Original block matrix, shape (block_size, block_size)
-        block_size : int
-            Size of the block (for context)
-        
-        Returns
-        -------
-        H_block_reg : np.ndarray
-            Regularized block matrix
-        shift_applied : float
-            Magnitude of the shift applied (λ value)
-        """
-        eigvals = np.linalg.eigvalsh(H_block)
-        min_eig = np.min(eigvals)
-        H_max = np.max(np.abs(H_block))
-        
-        # If block is all zeros, cannot regularize
-        if H_max < 1e-14:
-            if self.verbose:
-                self._print(f"        [RLE] Block all-zero, skipping regularization")
-            return H_block, 0.0
-        
-        # Check if already acceptable
-        det_val = np.linalg.det(H_block)
-        cond_H = np.linalg.cond(H_block)
-        if (np.abs(det_val) > 1e-14 and
-            min_eig > -1e-12 and
-            cond_H < 1e4):
-            return H_block, 0.0
-
-        shift_applied = 0.0
-        H_block_reg = None
-        
-        # Try increasingly larger shifts until we achieve:
-        # 1. Non-zero determinant
-        # 2. All positive eigenvalues
-        # 3. Acceptable condition number
-        max_shift_exponent = 14  # Safety cap: λ ≤ 10^14 * ||H_block||
-        
-        # Initialization:
-        H_norm = np.linalg.norm(H_block, 2)
-        if H_norm > 0:
-            start_exp = int(np.floor(np.log10(H_norm))) - 6  # Start a couple orders below norm
-        else:
-            start_exp = -12  # If norm is zero, start with very small shifts
-
-        for exp in range(start_exp, max_shift_exponent + 1):
-            shift_scale = 10.0 ** exp
-            lambda_reg = shift_scale * H_max
-            H_try = H_block + lambda_reg * np.eye(block_size)
-            
-            eigvals_try = np.linalg.eigvalsh(H_try)
-            min_eig_try = np.min(eigvals_try)
-            det_try = np.linalg.det(H_try)
-            cond_H_try = np.linalg.cond(H_try)
-            
-            # Acceptance criteria
-            if (np.abs(det_try) > 1e-14 and       # Non-singular
-                min_eig_try > -1e-12 and             # All positive eigenvalues
-                cond_H_try < 1e4):                # Well-conditioned
-                
-                H_block_reg = H_try
-                shift_applied = lambda_reg
-                break
-        
-        if H_block_reg is None:
-            # Fallback: use the last attempted shift (best effort)
-            if self.verbose:
-                self._print(f"        [RLE] Regularization failed (tried up to 10^{max_shift_exponent} * ||H||). Using last attempt.")
-            shift_scale = 10.0 ** (max_shift_exponent - 1)
-            lambda_reg = shift_scale * H_max
-            H_block_reg = H_block + lambda_reg * np.eye(block_size)
-            shift_applied = lambda_reg
-        
-        return H_block_reg, shift_applied
-
-    def _check_hessian_positive_definiteness(self, H: np.ndarray, iteration: int) -> Tuple[bool, dict]:
-        """
-        Check if Hessian is positive-definite and return diagnostics.
-        
-        Parameters
-        ----------
-        H : np.ndarray
-            Hessian matrix, shape (n_active_virt * n_inactive_virt, ...)
-        iteration : int
-            Current iteration number (for logging)
-        
-        Returns
-        -------
-        is_positive_definite : bool
-            True if all eigenvalues > tolerance
-        diagnostics : dict
-            Dictionary with eigenvalue statistics
-        """
-        try:
-            # Compute eigenvalues of symmetric matrix
-            eigs = np.linalg.eigvalsh(H)  # Returns sorted eigenvalues (ascending)
-            
-            # Define tolerance for "positive"
-            eig_tol = 1e-8
-            
-            # Diagnostics dictionary
-            diags = {
-                'min_eigenvalue': float(np.min(eigs)),
-                'max_eigenvalue': float(np.max(eigs)),
-                'mean_eigenvalue': float(np.mean(eigs)),
-                'num_negative': int(np.sum(eigs < -eig_tol)),
-                'num_near_zero': int(np.sum(np.abs(eigs) < eig_tol)),
-                'num_positive': int(np.sum(eigs > eig_tol)),
-                'condition_number': float(np.linalg.cond(H)),
-                'trace': float(np.trace(H)),
-                'determinant': float(np.linalg.det(H))
-            }
-            
-            is_pd = np.all(eigs > eig_tol)
-            
-            if self.verbose:
-                self._print(f"\n    === Hessian Analysis (Iteration {iteration}) ===")
-                self._print(f"    Min eigenvalue:     {diags['min_eigenvalue']:+.4e}")
-                self._print(f"    Max eigenvalue:     {diags['max_eigenvalue']:+.4e}")
-                self._print(f"    Mean eigenvalue:    {diags['mean_eigenvalue']:+.4e}")
-                self._print(f"    Condition number:   {diags['condition_number']:.4e}")
-                self._print(f"    Negative (< -1e-8): {diags['num_negative']} eigenvalues")
-                self._print(f"    Near zero (-1e-8 to +1e-8): {diags['num_near_zero']} eigenvalues")
-                self._print(f"    Positive (> +1e-8): {diags['num_positive']} eigenvalues")
-                self._print(f"    Status: {'✓ POSITIVE DEFINITE' if is_pd else '✗ NON-POSITIVE DEFINITE'}")
-            
-            return is_pd, diags
-        
-        except Exception as e:
-            if self.verbose:
-                self._print(f"    ⚠️  Error computing Hessian eigenvalues: {e}")
-            return False, {'error': str(e)}
 
     # -------------------------------------------------------------------------
     # Newton step solver 
@@ -878,35 +740,23 @@ class OVOS:
 
         # ===== APPLY BLOCK-DIAGONAL RLE APPROXIMATION =====
         # Use block-diagonal approximation for better conditioning
+            # Returns the inversed block-diagonal matrix
         H_block = self._apply_block_diagonal_rle(H, apply_regularization=False)
         
-        if self.verbose:
-            cond_H_orig = np.linalg.cond(H) if H.size > 0 else np.inf
-            cond_H_block = np.linalg.cond(H_block) if H_block.size > 0 else np.inf
-            eigvals_orig = np.linalg.eigvalsh(H)
-            eigvals_block = np.linalg.eigvalsh(H_block)
-            n_neg_orig = np.sum(eigvals_orig < -1e-10)
-            n_neg_block = np.sum(eigvals_block < -1e-10)
-            
-            self._print(f"        [RLE] Cond(H): {cond_H_orig:.2e} → {cond_H_block:.2e}, "
-                       f"Neg eigvals: {n_neg_orig} → {n_neg_block}")
+        cond_H_orig = np.linalg.cond(H) if H.size > 0 else np.inf
+        cond_H_block = np.linalg.cond(H_block) if H_block.size > 0 else np.inf
+        eigvals_orig = np.linalg.eigvalsh(H)
+        eigvals_block = np.linalg.eigvalsh(H_block)
+        n_neg_orig = np.sum(eigvals_orig < -1e-10)
+        n_neg_block = np.sum(eigvals_block < -1e-10)
+
+        # if self.verbose:
+        #     self._print(f"        [RLE] Cond(H): {cond_H_orig:.2e} → {cond_H_block:.2e}, "
+        #                f"Neg eigvals: {n_neg_orig} → {n_neg_block}")
         
         H = H_block
         
-        # # ===== CHECK HESSIAN PROPERTIES =====
-        # is_pd, h_diags = self._check_hessian_positive_definiteness(H, iteration)
-
-        # if not is_pd:
-        #     if self.verbose:
-        #         self._print(f"\n    ⚠️  WARNING: Hessian is NON-POSITIVE-DEFINITE!")
-        #         self._print(f"        This means the current point is NOT a minimum.")
-        #         self._print(f"        Newton step may ascend the energy surface.")
-        #         self._print(f"        Will use damped Newton or steepest descent.\n")
-        #     assert is_pd, "Hessian must be positive-definite for pure Newton step. Check diagnostics."
-
         # Track oscillation history
-        if not hasattr(self, '_step_history'):
-            self._step_history = []
         if not hasattr(self, '_grad_norm_history'):
             self._grad_norm_history = []
         if not hasattr(self, '_damping_boost'):
@@ -920,6 +770,7 @@ class OVOS:
         try: 
             # Pure Newton 
             R = np.linalg.solve(H, -g_vec)
+            # R = H @ (-g_vec)
             step_norm = np.linalg.norm(R)
 
         except np.linalg.LinAlgError:
@@ -930,6 +781,7 @@ class OVOS:
                 try:
                     H_reg = H_block + lambda_lm * np.eye(dim)
                     R = np.linalg.solve(H_reg, -g_vec)
+                    # R = H_reg @ (-g_vec)
                     step_norm = np.linalg.norm(R)
                     break
                 except np.linalg.LinAlgError:
@@ -1021,6 +873,8 @@ class OVOS:
                 # self._print(f"    [{nact}/{ntot}]: MP2 energy = {E_corr:.12f}, T1 norm = {t1_norm:.2e}")
 
             # Track energy difference, ...
+            if not hasattr(self, '_step_history'):
+                self._step_history = []
             if iter_count > 1:
                 dE = E_corr - energy_hist[-1]
                 self._step_history.append(dE)
@@ -1069,10 +923,10 @@ class OVOS:
                 if start_counting: # (dE < self.conv_energy and grad_norm < self.conv_grad) or dE < 1e-12:
                     keep_track += 1
                     if self.verbose:
-                        self._print(f"Keep track: {keep_track}/{self.keep_track_max}")
-                    if keep_track >= self.keep_track_max:
+                        self._print(f"    Keep track: {keep_track}/{self.keep_track_max}")
+                    if keep_track >= self.keep_track_max and iter_count > 100:
                         if self.verbose:
-                            self._print(f"OVOS converged after {iter_count} iterations")
+                            self._print(f"OVOS converged after {iter_count-keep_track} iterations")
                         # Trim the extra tracked steps
                         trim = self.keep_track_max - 1
                         energy_hist = energy_hist[:-trim]
@@ -1099,10 +953,10 @@ class OVOS:
             R_vec = self._newton_step(G, H, iter_count, start_counting)
 
             # Apply rotation
-            mo_coeffs, fock_spin = self._rotate_orbitals(mo_coeffs, fock_spin, R_vec)
+            mo_coeffs, fock_spin, U_spin = self._rotate_orbitals(mo_coeffs, fock_spin, R_vec)
 
             # Re‑canonicalize the active virtual block
-            mo_coeffs, fock_spin = self._canonicalize_active(mo_coeffs, fock_spin)
+            mo_coeffs, fock_spin, evals = self._canonicalize_active(mo_coeffs, fock_spin, U_spin)
 
             # Update diagonal elements for next MP1 denominator (approximate, but ok)
             self.eps = np.diag(fock_spin)
@@ -1113,7 +967,7 @@ class OVOS:
                 break
 
         # --- Summary ---
-        if converged and self.verbose:
+        if self.verbose:
             self._print()
             self._print("#### OVOS Summary ####")
             self._print(f"Initial MP2 energy: {energy_hist[0]:.12f} Ha")
@@ -1129,7 +983,7 @@ class OVOS:
                 self._print("Final orbitals are effectively restricted.")
             else:
                 self._print("Final orbitals are unrestricted.")
-            self._print(f"Total iterations: {iter_count}")
+            self._print(f"Total iterations: {iter_count-keep_track} (converged: {converged})")
             # Difference in prev_mo_coeffs vs final mo_coeffs
             mo_diff_a = np.linalg.norm(mo_coeffs[0] - prev_mo_coeffs[0])
             mo_diff_b = np.linalg.norm(mo_coeffs[1] - prev_mo_coeffs[1])

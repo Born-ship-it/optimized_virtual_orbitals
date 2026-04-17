@@ -415,6 +415,8 @@ def mol_data(molecule, basis, method="RHF", num_random_attempts=10):
     
     else:
         raise ValueError(f"Unknown method: {method}. Choose 'RHF' or 'random'.")
+
+
 def run_ovos_for_virtual_orbs(molecule, basis, method, num_opt_virtual_orbs):
     """
     Run OVOS for a single virtual orbital count.
@@ -447,7 +449,7 @@ def run_ovos_for_virtual_orbs(molecule, basis, method, num_opt_virtual_orbs):
         num_opt_virtual_orbs=2*num_opt_virtual_orbs,
         mo_coeff=mo_coeffs,
         init_orbs="RHF",
-        verbose=1, max_iter=1000,
+        verbose=0, max_iter=1000,
         conv_energy=1e-8, conv_grad=1e-6,
         keep_track_max=50
     )
@@ -591,7 +593,7 @@ def ovos_object(molecule, basis, method="RHF"):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     output_file = output_dir / f"lst_MP2_OVOS_virt_orbs_{method}.json"
-    # if output_file.exists() and method != "random":
+    # if output_file.exists():
     #     print(f"⚠️  Output file already exists at {output_file}, skipping OVOS run to avoid overwriting.\n")
     #     return
 
@@ -751,8 +753,10 @@ def ovos_object(molecule, basis, method="RHF"):
                                     best_iter = iter_count
 
                                 keep_count = 0  # Reset keep count if we find a new best result
-                            elif completed_count >= 100:
-                                keep_count += 1  # Increment keep count if we do not find a better result
+                            elif completed_count >= 500:
+                                # If we are at full space, we want to do all attempts to get a good distribution of results, so we won't stop early
+                                if num_opt_virtual_orbs < (num_orbitals - num_electrons // 2):
+                                    keep_count += 1  # Increment keep count if we do not find a better result
                             
                             final_energy_diff = final_energy - rhf_threshold if rhf_threshold is not None else None
                             energy_diff_str = "True" if final_energy_diff is not None and final_energy_diff < 0 else "False"
@@ -793,10 +797,17 @@ def ovos_object(molecule, basis, method="RHF"):
 
             # ===== PREV METHOD (sequential with warm-start) =====
             elif method == "prev":
+                if num_opt_virtual_orbs == 1:
+                    # Start with RHF orbitals for the first virtual orbital count
+                    mo_coeffs_warmstart = [mf.mo_coeff, mf.mo_coeff]
+                else:
+                    mo_coeffs_warmstart = mo_coeffs  # Use last converged orbitals as warm start for next run
+
+                # Run OVOS with warmstart initialization
                 ovos = OVOS(
                     mol=mol, scf=mf, Fao=Fao,
                     num_opt_virtual_orbs=2*num_opt_virtual_orbs,
-                    mo_coeff=mo_coeffs,
+                    mo_coeff=mo_coeffs_warmstart,
                     init_orbs="RHF",
                     verbose=0, max_iter=1000,
                     conv_energy=1e-8, conv_grad=1e-6,
@@ -804,7 +815,7 @@ def ovos_object(molecule, basis, method="RHF"):
                 )
 
                 E_corr, E_corr_hist, E_corr_iter, E_corr_mo, _, stop_reason = ovos.run(
-                    mo_coeffs, fock_spin=None
+                    mo_coeffs_warmstart, fock_spin=None
                 )
 
                 print(f"[{num_opt_virtual_orbs:>2}/{num_orbitals-num_electrons//2}] "
@@ -865,11 +876,11 @@ def save_molecule_reference_data(molecule, basis):
         molecule_str = "Li2"
     elif molecule == "C .0 .0 .0; O .0 .0 1.128":
         molecule_str = "CO"
-    elif molecule == "O .0 .0 .0; H .0 .0 0.958; H .0 .0 -0.958":
+    elif molecule == "O .0 .0  0.1173; H .0 0.7572 -0.4692; H .0 -0.7572 -0.4692":
         molecule_str = "H2O"
     elif molecule == "H .0 .0 .0; F .0 .0 0.917":
         molecule_str = "HF"
-    elif molecule == "N .0 .0 .0; H .0 .0 .0; H .0 .0 0.94; H .0 .0 -0.94":
+    elif molecule == "N .0 .0 .0; H .0 .0 1.012; H .0 0.926 -0.239; H .0 -0.926 -0.239":
         molecule_str = "NH3"
     
     geom = molecule
@@ -981,7 +992,7 @@ def save_molecule_reference_data(molecule, basis):
     
     # === FCI Correlation Energy (only for small systems) ===
     FCI_e_corr = None
-    if basis == "6-31G" and molecule in ["HF", "H2O", "Li2"]:
+    if basis == "6-31G" and molecule in ["HF", "H2O"]:
         print("Computing FCI (Full Configuration Interaction)...")
         try:
             cisolver = pyscf.fci.FCI(mol, rhf.mo_coeff)
@@ -1022,7 +1033,7 @@ if __name__ == "__main__":
         "Li .0 .0 .0; Li .0 .0 2.673",  # Li2 molecule
         "H .0 .0 .0; F .0 .0 0.917",  # HF molecule
         "C .0 .0 .0; O .0 .0 1.128",    # CO molecule
-        "O .0 .0  0.1173; H .0 0.7572 -0.4692; H .0 -0.7572 -0.4692;",  # H2O equilibrium geometry
+        "O .0 .0  0.1173; H .0 0.7572 -0.4692; H .0 -0.7572 -0.4692",  # H2O equilibrium geometry
         "N .0 .0 .0; H .0 .0 1.012; H .0 0.926 -0.239; H .0 -0.926 -0.239"  # NH3 molecule
     ]
     basis_sets = [
@@ -1038,21 +1049,20 @@ if __name__ == "__main__":
     # ovos_object(molecules[0], basis_sets[0], methods[0])  # Run for Li2 with 6-31G using "prev" method
 
     # Debug run
-        # A single run for number of optimized virtual orbitals = 5 for Li2 with 6-31G using "RHF" method
-        # This will test the OVOS workflow and data saving without running the full set of calculations
-    # run_ovos_for_virtual_orbs(molecules[2], basis_sets[0], method="RHF", num_opt_virtual_orbs=5)
+    # run_ovos_for_virtual_orbs(molecules[2], basis_sets[0], method="RHF", num_opt_virtual_orbs=6)
+    
+    if True:
+        for basis in basis_sets[0:1]: 
+            for molecule in molecules[1:2]:  # Start with HF molecule for testing
+                for method in methods:
+                    ovos_object(molecule, basis, method)
 
-    for molecule in molecules[3:4]:     
-        for basis in basis_sets[0:1]:   # Only run for 6-31G basis to save time
-            for method in methods:
-                ovos_object(molecule, basis, method)
+                try:
+                    save_molecule_reference_data(molecule, basis)
+                except Exception as e:
+                    print(f"❌ Failed for {molecule}/{basis}: {e}\n")
 
-            try:
-                save_molecule_reference_data(molecule, basis)
-            except Exception as e:
-                print(f"❌ Failed for {molecule}/{basis}: {e}\n")
-
-            # After running ovos_object(), plot the results
-            plot_OVOS_convergence_from_data(molecule, basis, methods=["RHF", "prev", "random"])
+                # After running ovos_object(), plot the results
+                plot_OVOS_convergence_from_data(molecule, basis, methods=["RHF", "prev", "random"])
 
 
