@@ -1,5 +1,13 @@
 """
 Try OVOS with VQE and see if it can find the ground state energy of a molecule.
+
+
+Notes for future:
+- check if resulting method deviates in molecular orbitals coefficients between each other and how far from reference MP2 and OO-MP2
+    - Find a way to visualize MO coefficients, and their differences, in a way that is not just a huge table of numbers (e.g., heatmap, or difference plot)
+    - Use this to comment on MO coefficients used as initial state for VQE -> is there a noticeable difference from "RHF" to not use it as a starting point for VQE? 
+    
+
 """
 
 # Module metadata - for reload verification
@@ -83,17 +91,9 @@ def plot_OVOS_convergence_from_data(molecule, basis, methods=None):
     """
     
     # Get molecule name for file paths
-    molecule_name = molecule.split()[0]
-    if molecule_name == "Li" and "Li" in molecule.split(";")[1]:
-        molecule_name = "Li2"
-    elif molecule_name == "C" and "O" in molecule.split(";")[1]:
-        molecule_name = "CO"
-    elif molecule_name == "O" and "H" in molecule.split(";")[1]:
-        molecule_name = "H2O"
-    elif molecule_name == "H" and "F" in molecule.split(";")[1]:
-        molecule_name = "HF"
-    elif molecule_name == "N" and "H" in molecule.split(";")[1]:
-        molecule_name = "NH3"
+    molecule_name = get_molecule_name(molecule)
+
+    print(f"\nPlotting OVOS convergence from data for {molecule_name}/{basis} for methods: {methods}\n")
     
     # Data directory
     data_dir = project_root / "backup" / "data" / molecule_name / basis / "OVOS"
@@ -324,8 +324,613 @@ def plot_OVOS_convergence_from_data(molecule, basis, methods=None):
     plt.close()
 
 
+# Plot convergence behaviour for each number of optimized virtual orbitals using saved data
+    # Make a plot for each optimized virtual orbital count, showing the convergence history for each method (RHF, prev, random) on the same plot for direct comparison
+def plot_OVOS_convergence_histories(molecule, basis, methods=None):
+    """
+    Plot OVOS convergence histories for each number of optimized virtual orbitals.
+    """
+
+    # Get data
+    molecule_name = get_molecule_name(molecule)
+
+    print(f"\nPlotting OVOS convergence histories for {molecule_name}/{basis} for methods: {methods}\n")
+
+    # Make plot
+        # For each number of optimized virtual orbitals,
+            # create a new plot that is saved to its new file
+    project_root = Path(__file__).parent.parent
+    data_dir = project_root / "backup" / "data" / molecule_name / basis / "OVOS"
+
+        # Define markers for each method
+    marker_style = {
+        'RHF': ('D'),
+        'prev': ('s'),
+        'random': ('^')
+    }
+
+         # gather each method in the same plot for each number of opt. virt. orb.
+    
+    MP2_energies_per_iteration = {}
+
+    if methods is None:
+        methods = ["RHF", "prev", "random"]
+    for method in methods:
+        json_file = data_dir / f"lst_MP2_OVOS_virt_orbs_{method}.json"
+        if json_file.exists():
+            with open(json_file, "r") as f:
+                conv_data = json.load(f)
+            print(f"✅ Loaded {method} data from {json_file}")
+        else:
+            print(f"⚠️  {method} data not found at {json_file}")
+            continue
+        
+        for num_virt_orbs, energies in zip(conv_data[1], conv_data[0]):
+            # Skip the full space point (num_virt_orbs = full_space_size - num_electrons//2) since it doesn't have a convergence history
+            if num_virt_orbs == conv_data[1][-1]:
+                continue
+
+            # # Need to remove the last 50 points as these were just the "keep track" history and not the actual convergence history
+            # energies = energies[:-50] if len(energies) > 50 else energies
+
+            if num_virt_orbs not in MP2_energies_per_iteration:
+                MP2_energies_per_iteration[num_virt_orbs] = {}
+            MP2_energies_per_iteration[num_virt_orbs][method] = energies
+        
+    # Color map for different virtual orbitals
+        # Get data for molecule by file backup/data/{molecule_name}/{basis}/OVOS/molecule_data.json
+    molecule_data_file = data_dir / "molecule_data.json"
+    if molecule_data_file.exists():
+        with open(molecule_data_file, "r") as f:
+            molecule_data = json.load(f)
+        num_electrons = molecule_data.get("num_electrons", None)
+        full_space_size = molecule_data.get("full_space_size", None)
+    
+    active_space_size = full_space_size - num_electrons // 2 + 1
+    colors = plt.cm.hsv(np.linspace(0, 1, active_space_size))
+        
+        # Plot each number of optimized virtual orbitals in a separate plot
+    for num_virt_orbs, method_energies in MP2_energies_per_iteration.items():
+        plt.figure(figsize=(8, 5))
+
+        # Make a list of widths for each line based on the number of iterations to converge, so that lines that took more iterations are thicker
+        iterations_to_converge = [len(method_energies[method]) for method in method_energies]
+        width_lst = [2, 3.5, 5]
+            # sort methods by number of iterations to converge so that the method that converged the fastest is plotted on top
+        methods_sorted = sorted(method_energies.keys(), key=lambda m: len(method_energies[m]))
+
+        # For lowest energy
+        min_energies = 0
+
+                # Add markers and color dependent on the method and number of virtual orbitals
+        for method in methods_sorted:
+            energies = method_energies[method]
+                # Update lowest energy of methods
+            min_energies = min(min_energies, min(energies))
+
+            # Marker
+            marker = marker_style.get(method, 'o')
+
+            # Color based on the number of virtual orbitals, with a gradient from blue (few virtual orbitals) to red (many virtual orbitals)
+            color = colors[num_virt_orbs//2 - 1] if num_virt_orbs//2 - 1 < len(colors) else colors[-1]
+            
+            # First and last points with markers, and the rest with a see-through line to show the convergence path
+            plt.scatter(1, energies[0], marker=marker, color=color, alpha=0.5)
+            plt.scatter(len(energies), energies[-1], marker=marker, color=color)
+
+            # See through line connecting the points to show the convergence path, with the same color as the points but more transparent
+            plt.plot(range(1, len(energies) + 1), energies, color=color, alpha=0.25, linewidth=width_lst[methods_sorted.index(method)])
+
+        # Not sorted methods for legend
+        for method in method_energies.keys():
+            # Marker
+            marker = marker_style.get(method, 'o')
+
+            # Legend for markers
+            plt.scatter([], [], marker=marker, color='black', label=f'Start Guess: {method}')
+
+        # Reference line 
+            # Plottet if final MP2 corr energy is within 90% of the full space MP2 corr energy
+        final_MP2_energy = min_energies
+        E_corr_MP2 = molecule_data.get("MP2_e_corr", None)
+            # for full space MP2 correlation energy
+        plt.axhline(E_corr_MP2, color='red', linestyle='--', label='Full Space MP2', linewidth=2, alpha=0.75)
+            # for full space OO-MP2 correlation energy
+        E_corr_OOMP2 = molecule_data.get("OOMP2_e_corr", None)
+        plt.axhline(E_corr_OOMP2, color='blue', linestyle='--', label='Full Space OO-MP2', linewidth=2, alpha=0.75)
+
+        # Title and labels
+        plt.title(f'OVOS Convergence History: {molecule_name}/{basis}, {num_virt_orbs} Optimized Virtual Orbitals')
+        plt.xlabel('Iteration')
+        plt.ylabel('Correlation Energy [Hartree]')
+
+        # Set x-axis to start from 0
+        plt.xlim(0, None)
+
+        # Grid and Legend
+        plt.grid()
+        plt.legend()
+        
+        # Save figure
+        output_dir = project_root / "backup" / "images" / molecule_name / basis / "convergence_histories"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        output_file = output_dir / f"ovos_convergence_history_{molecule_name}_{basis}_{num_virt_orbs}_virt_orbs.png"
+        plt.savefig(output_file, dpi=150)
+        print(f"✅ Plot saved to: {output_file}")
+        plt.close()
+        
+
+# Plot MO coefficient heat-maps for the initial and final orbitals of OVOS, and their differences, for a given molecule, basis set, and method (RHF, prev, random)
+def plot_OVOS_MO_coefficients(molecule, basis, method="RHF"):
+    """
+    Plot MO coefficient heatmaps for initial and final orbitals of OVOS, and their differences.
+    
+    Parameters
+    ----------
+    molecule : str
+        Molecular geometry
+    basis : str
+        Basis set
+    method : str
+        Initialization method ("RHF", "prev", or "random")
+    """
+    # Molecule name for file paths
+    molecule_name = get_molecule_name(molecule)    
+
+    print(f"\nPlotting MO coefficients for {molecule_name}/{basis} with method: {method}\n")
+
+    # Get data from JSON file saved by ovos_object()
+    data_dir = project_root / "backup" / "data" / molecule_name / basis / "OVOS"
+    json_file = data_dir / f"lst_MP2_OVOS_virt_orbs_{method}.json"
+
+    method = np.array(methods) if isinstance(methods, list) else np.array([methods])
+    
+    if not json_file.exists():
+        print(f"⚠️  Data file not found at {json_file}")
+        return
+    
+    with open(json_file, "r") as f:
+        conv_data = json.load(f)
+    print(f"✅ Loaded data from {json_file}")
+
+    # Plot MO coefficient heatmaps for the first and last point of the convergence history, and their difference
+        # For the first and last point, we will plot the MO coefficients for both alpha and beta spin, and their difference
+    for i, num_virt_orbs in enumerate(conv_data[1]):
+        if num_virt_orbs == conv_data[1][-1]:
+            continue  # Skip full space point
+
+        mo_coeffs_initial = conv_data[4][i][0]  # Initial MO coefficients (alpha and beta)
+        mo_coeffs_final = conv_data[4][i][-1]    # Final MO coefficients (alpha and beta)
+
+        # Make sure mo_coeffs_initial and mo_coeffs_final are numpy arrays
+            # Rebuild numpy arrays from lists if needed
+        if isinstance(mo_coeffs_initial, list):
+            mo_coeffs_initial = np.array(mo_coeffs_initial)
+        if isinstance(mo_coeffs_final, list):
+            mo_coeffs_final = np.array(mo_coeffs_final)
+
+        # Plot heatmaps for alpha and beta spin, and their difference
+            # Here i want each plot to have two rows with alpha spin on top and beta spin on the bottom, and three columns with initial, final, and difference
+        fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+        fig.suptitle(f'MO Coefficients: {molecule_name}/{basis}, {num_virt_orbs} Optimized Virtual Orbitals, Method: {method}', fontsize=16)
+        
+            # For which all should share one colorbar, placed on the right hand side of the figure in the middle
+        vmin = min(np.min(mo_coeffs_initial), np.min(mo_coeffs_final))
+        vmax = max(np.max(mo_coeffs_initial), np.max(mo_coeffs_final))
+
+        print()
+        print(f"MO Coefficients for {method} method with {num_virt_orbs} optimized virtual orbitals:")
+        print(mo_coeffs_initial[0])
+
+            # Alpha 
+                # spin initial
+        im0 = axes[0, 0].imshow(mo_coeffs_initial[0], vmin=vmin, vmax=vmax, cmap='viridis')
+        axes[0, 0].set_title('Alpha Spin - Initial')
+                # spin final
+        im1 = axes[0, 1].imshow(mo_coeffs_final[0], vmin=vmin, vmax=vmax, cmap='viridis')
+        axes[0, 1].set_title('Alpha Spin - Final')
+                # spin difference
+        im2 = axes[0, 2].imshow(mo_coeffs_final[0] - mo_coeffs_initial[0], cmap='bwr', vmin=-vmax, vmax=vmax)
+        axes[0, 2].set_title('Alpha Spin - Difference')
+            # Beta
+                # spin initial
+        im3 = axes[1, 0].imshow(mo_coeffs_initial[1], vmin=vmin, vmax=vmax, cmap='viridis')
+        axes[1, 0].set_title('Beta Spin - Initial')
+                # spin final
+        im4 = axes[1, 1].imshow(mo_coeffs_final[1], vmin=vmin, vmax=vmax, cmap='viridis')
+        axes[1, 1].set_title('Beta Spin - Final')
+                # spin difference
+        im5 = axes[1, 2].imshow(mo_coeffs_final[1] - mo_coeffs_initial[1], cmap='bwr', vmin=-vmax, vmax=vmax)
+        axes[1, 2].set_title('Beta Spin - Difference')
+        
+            # Colorbar
+        cbar_ax = fig.add_axes([0.92, 0.15, 0.02, 0.7])  # [left, bottom, width, height]
+        fig.colorbar(im1, cax=cbar_ax)
+                
+            # Save figure
+        output_dir = project_root / "backup" / "images" / molecule_name / basis / "MO_coefficients"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        output_file = output_dir / f"MO_coefficients_{molecule_name}_{basis}_{method}_{num_virt_orbs}_virt_orbs.png"
+        plt.savefig(output_file, dpi=150)
+        print(f"✅ Plot saved to: {output_file}")
+        plt.close()
 
 
+
+# Plot the MO coefficient of all methods vs MP2 for the last point
+def plot_OVOS_MO_coefficient_diff_MP2(molecule, basis):
+    """
+    Plot the difference in MO coefficients between the final OVOS orbitals and the MP2 orbitals for all methods (RHF, prev, random) for the last point of the convergence history.
+    """
+
+    # Molecule name for file paths
+    molecule_name = get_molecule_name(molecule)
+    methods = ["RHF", "prev", "random"]
+
+    print(f"\nPlotting MO coefficient differences vs MP2 for {molecule_name}/{basis} for methods: {methods}\n")
+
+    # Check if the plot already exists for all methods, and if so, skip the calculation and plotting
+    output_dir = project_root / "backup" / "images" / molecule_name / basis / "MO_coefficients_vs_MP2"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    files_exist = [False] * len(methods)
+    for method in methods:
+        output_file = output_dir / f"MO_coefficients_vs_MP2_{molecule_name}_{basis}_{method}.png"
+        if output_file.exists():
+            print(f"✅ Plot already exists for {method} method at {output_file}, skipping calculation and plotting.")
+            files_exist[methods.index(method)] = True
+    if all(files_exist):
+        print("✅ All plots already exist, skipping calculation and plotting.")
+        return
+
+    # Calculate MP2 MO coefficients for the full space
+        # We need to create a molecule and perform an RHF calculation to get the MO coefficients, since MP2 orbitals are the same as RHF orbitals
+    mol = gto.Mole()
+    mol.atom = molecule
+    mol.basis = basis
+    mol.unit = 'Angstrom'
+    mol.spin = 0
+    mol.charge = 0
+    mol.symmetry = False
+    mol.build()
+        # Perform RHF calculation to get MO coefficients (MP2 orbitals are the same as RHF orbitals)
+    mf = scf.RHF(mol)
+    mf.kernel()
+        # Do MP2
+    MP2 = mf.MP2().run()
+    mo_coeffs_MP2 = MP2.mo_coeff  # MO coefficients for MP2 (same as RHF)
+
+    # Find 75% of the virtual orbitals to determine which point in the convergence history to plot
+    num_electrons = mol.nelectron
+    full_space_size = mf.mo_coeff.shape[1]
+    num_virtual_orbitals = full_space_size - num_electrons // 2
+    num_opt_virt_orb = int(num_virtual_orbitals * 0.75)
+
+    # Get data for each method
+    methods = ["RHF", "prev", "random"]
+    mo_coeffs_final = {}
+    for method in methods:
+        data_dir = project_root / "backup" / "data" / molecule_name / basis / "OVOS"
+        json_file = data_dir / f"lst_MP2_OVOS_virt_orbs_{method}.json"
+        
+        if not json_file.exists():
+            print(f"⚠️  Data file not found at {json_file}")
+            continue
+        
+        with open(json_file, "r") as f:
+            conv_data = json.load(f)
+        print(f"✅ Loaded {method} data from {json_file}")
+
+        mo_coeffs_final[method] = conv_data[4][num_opt_virt_orb]  # Final MO coefficients (alpha and beta) for the last point
+
+
+    # Plot the MO coefficients for method beside MP2 for the last point, and their difference
+        # Plot heatmaps for alpha and beta spin, and their difference
+    for method in methods:
+        if method not in mo_coeffs_final:
+            continue
+        
+        mo_coeffs_ovos = np.array(mo_coeffs_final[method])
+        
+        fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+        fig.suptitle(f'MO Coefficients vs MP2: {molecule_name}/{basis}, Method: {method}', fontsize=16)
+        
+        vmin = min(np.min(mo_coeffs_ovos[0]), np.min(mo_coeffs_MP2))
+        vmax = max(np.max(mo_coeffs_ovos[0]), np.max(mo_coeffs_MP2))
+
+        # Alpha spin
+        im0 = axes[0, 0].imshow(mo_coeffs_ovos[0], vmin=vmin, vmax=vmax, cmap='viridis')
+        axes[0, 0].set_title('OVOS Alpha Spin - Final')
+        
+        im1 = axes[0, 1].imshow(mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]], vmin=vmin, vmax=vmax, cmap='viridis')
+        axes[0, 1].set_title('MP2 Alpha Spin')
+        
+        im2 = axes[0, 2].imshow(mo_coeffs_ovos[0] - mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]], cmap='bwr', vmin=-vmax, vmax=vmax)
+        axes[0, 2].set_title('Alpha Spin - OVOS vs MP2')
+
+        # Beta spin
+        im3 = axes[1, 0].imshow(mo_coeffs_ovos[1], vmin=vmin, vmax=vmax, cmap='viridis')
+        axes[1, 0].set_title('OVOS Beta Spin - Final')
+        
+        im4 = axes[1, 1].imshow(mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]], vmin=vmin, vmax=vmax, cmap='viridis')
+        axes[1, 1].set_title('MP2 Beta Spin')
+        
+        im5 = axes[1, 2].imshow(mo_coeffs_ovos[1] - mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]], cmap='bwr', vmin=-vmax, vmax=vmax)
+        axes[1, 2].set_title('Beta Spin - OVOS vs MP2')
+
+        # Colorbar
+        cbar_ax = fig.add_axes([0.92, 0.15, 0.02, 0.7])  # [left, bottom, width, height
+        fig.colorbar(im1, cax=cbar_ax)
+
+        # Save figure
+        output_file = output_dir / f"MO_coefficients_vs_MP2_{molecule_name}_{basis}_{method}.png"
+        plt.savefig(output_file, dpi=150)
+        print(f"✅ Plot saved to: {output_file}")
+        plt.close()
+
+# Plot a 3D surface plot as a heatmap over the surface - illustrating the convergence landscape of OVOS as a function of a optimized virtual orbitals, for a given molecule, basis set, and method (RHF, prev, random)
+    # Axis x: convergence criterion energy 
+    # Axis y: convergence criterion gradient norm
+    # Axis z: value of final correlation energy achieved by OVOS for that point in the convergence landscape
+    # Heatmap color: number of iterations to converge for that point in the convergence landscape (darker colors for more iterations, lighter colors for fewer iterations)
+def plot_OVOS_convergence_landscape(molecule, basis, method="RHF", conv_criteria=None):
+    """
+    Plot a 3D surface plot illustrating the convergence landscape of OVOS as a function of convergence criteria (energy and gradient norm).
+    
+    Parameters
+    ----------
+    molecule : str
+        Molecular geometry
+    basis : str
+        Basis set
+    method : str
+        Initialization method ("RHF", "prev", or "random")
+    """
+    # Molecule name for file paths
+    molecule_name = get_molecule_name(molecule)
+
+    print(f"\nPlotting OVOS convergence landscape for {molecule_name}/{basis}, Method: {method}...\n")
+
+    # Get all the data from JSON file saved in each their own convergence_criteria file
+        # Save hte conv_data for each criteria
+    conv_data = {}
+    loaded_criteria = []
+    missing_criteria = []
+        # Gather all the data for each convergence criteria combinations of conv_energy and conv_grad in conv_criteria
+    for criteria in conv_criteria:
+        conv_energy = criteria["conv_energy"]
+        conv_grad = criteria["conv_grad"]
+            # Convert to scientific notation with 2 decimal places for file path
+        conv_energy = f"{conv_energy:.0e}"
+        conv_grad = f"{conv_grad:.0e}"
+
+        # Cutoff conv criteria values from before a certain threshold for better visualization of the landscape, since the points with very loose conv criteria are not interesting and they make the landscape less clear
+            # If below 1e-4 for energy and 1e-4 for gradient norm, skip the point
+        if float(conv_energy) > 1e-3 or float(conv_grad) > 1e-3:
+            continue
+
+            # If conv_ starts with "5e-", skip
+        if conv_energy.startswith("5e-") or conv_grad.startswith("5e-"):
+            continue
+
+        json_path = project_root / "backup" / "data" / molecule_name / basis / "OVOS" / f"convergence_criteria" / method 
+        json_file = json_path / f"OVOS_convergence_{conv_energy}_{conv_grad}_keep_none.json"
+        if json_file.exists():
+            with open(json_file, "r") as f:
+                conv_data[(conv_energy, conv_grad)] = json.load(f)
+            loaded_criteria.append((conv_energy, conv_grad))
+        else:
+            missing_criteria.append((conv_energy, conv_grad))
+            
+    
+    # Check which criteria were loaded for debugging
+    print(f"Loaded data for convergence criteria combinations (energy, grad):")
+        # If all were loaded, print a success message    
+    if len(loaded_criteria) == len(conv_criteria):
+        print("✅ Successfully loaded data for all convergence criteria combinations.")
+    if len(missing_criteria) > 0:
+        print(f"⚠️  Missing data for convergence criteria combinations (energy, grad): {missing_criteria}\n")
+    
+
+    # Prepare data for 3D surface plot
+        # We will create a grid of energy and gradient norm values, and for each point in the grid, we will find the corresponding final correlation energy and number of iterations to converge from the conv_data
+    energy_values = []
+    grad_norm_values = []
+    final_correlation_energies = []
+    iterations_to_converge = []
+
+    # Delete num_opt_virt_orb variable if it exists, since we will set it from the data and it should be the same for all points in the convergence landscape
+    if 'num_opt_virt_orb' in locals():
+        del num_opt_virt_orb
+
+    for (conv_energy, conv_grad), data in conv_data.items():
+        conv_energy = float(conv_energy)
+        conv_grad = float(conv_grad)
+
+        final_correlation_energy = float(data["E_corr_hist"][-1])
+        iterations = len(data["E_corr_hist"])
+
+        # Set num_opt_virt_orb from file
+            # Do it once as it should be the same for all points in the convergence landscape, since we are only changing the convergence criteria and not the number of optimized virtual orbitals
+        if 'num_opt_virt_orb' not in locals():
+            num_opt_virt_orb = data["num_opt_virt_orbs"]
+
+        energy_values.append(conv_energy)
+        grad_norm_values.append(conv_grad)
+        final_correlation_energies.append(final_correlation_energy)
+        iterations_to_converge.append(iterations)
+
+    # Check max min values for debugging
+    print(f"\nEnergy values range: {min(energy_values):.2e} to {max(energy_values):.2e}")
+    print(f"Gradient norm values range: {min(grad_norm_values):.2e} to {max(grad_norm_values):.2e}")
+    print(f"Final correlation energies range: {min(final_correlation_energies):.2e} to {max(final_correlation_energies):.2e}")
+    print(f"Iterations to converge range: {min(iterations_to_converge)} to {max(iterations_to_converge)}\n")
+
+    # Convert lists to numpy arrays for easier manipulation
+    energy_values = np.array(energy_values)
+    grad_norm_values = np.array(grad_norm_values)
+    final_correlation_energies = np.array(final_correlation_energies)
+    iterations_to_converge = np.array(iterations_to_converge)
+
+    # Transform to log10 scale
+    energy_values = np.log10(energy_values)
+    grad_norm_values = np.log10(grad_norm_values)
+
+        # Create a grid for energy and gradient norm
+    energy_grid, grad_norm_grid = np.meshgrid(np.unique(energy_values), np.unique(grad_norm_values))
+            # Check the shapes of the grids and the values for debugging
+    print(f"Energy grid shape: {energy_grid.shape}, unique energy values: {np.unique(energy_values)}")
+    print(f"Gradient norm grid shape: {grad_norm_grid.shape}, unique gradient norm values: {np.unique(grad_norm_values)}")
+                # Compare to the amount of combinations of convergence criteria we have in conv_data for debugging
+    print(f"Number of unique energy values: {len(np.unique(energy_values))}")
+    print(f"Number of unique gradient norm values: {len(np.unique(grad_norm_values))}")
+    print(f"Number of combinations of convergence criteria in conv_data: {len(conv_data)}\n")
+
+        # Create a grid for final correlation energies and iterations to converge    
+    final_correlation_energy_grid = np.zeros_like(energy_grid)
+    iterations_to_converge_grid = np.zeros_like(energy_grid)
+
+    for i in range(energy_grid.shape[0]):
+        for j in range(energy_grid.shape[1]):
+            energy = energy_grid[i, j]
+            grad_norm = grad_norm_grid[i, j]
+            mask = (energy_values == energy) & (grad_norm_values == grad_norm)
+            if np.any(mask):
+                final_correlation_energy_grid[i, j] = final_correlation_energies[mask][0]
+                iterations_to_converge_grid[i, j] = iterations_to_converge[mask][0]
+            else:
+                final_correlation_energy_grid[i, j] = np.nan
+                iterations_to_converge_grid[i, j] = np.nan
+            
+            # Check the values for debugging
+    print(f"Final correlation energy grid shape: {final_correlation_energy_grid.shape}")
+    print(f"Iterations to converge grid shape: {iterations_to_converge_grid.shape}\n")
+                # Check the range of values of criteria in the grids for debugging
+    print(f"Energy grid values range: {np.nanmin(energy_grid):.2e} to {np.nanmax(energy_grid):.2e}")
+    print(f"Gradient norm grid values range: {np.nanmin(grad_norm_grid):.2e} to {np.nanmax(grad_norm_grid):.2e}")
+    print(f"Final correlation energy grid values range: {np.nanmin(final_correlation_energy_grid):.2e} to {np.nanmax(final_correlation_energy_grid):.2e}")
+    print(f"Iterations to converge grid values range: {np.nanmin(iterations_to_converge_grid)} to {np.nanmax(iterations_to_converge_grid)}\n")
+
+    # Create 3D surface plot
+    fig = plt.figure(figsize=(10, 7))
+    ax = fig.add_subplot(111, projection='3d')
+
+        # Normalize iterations_to_converge_grid to [0, 1] for colormap
+    vmin_iter = np.nanmin(iterations_to_converge_grid)
+    vmax_iter = np.nanmax(iterations_to_converge_grid)
+    norm_iter = plt.Normalize(vmin=vmin_iter, vmax=vmax_iter)
+    colors_surface = plt.cm.viridis(norm_iter(iterations_to_converge_grid))
+    
+    surf = ax.plot_surface(energy_grid, grad_norm_grid, final_correlation_energy_grid, facecolors=colors_surface, rstride=1, cstride=1, linewidth=0, antialiased=False, alpha=0.9, zorder=1)
+
+    # Plot a point for the choosen convergence criteria combinations
+            # conv_energy=1e-8, conv_grad=1e-6
+    chosen_energy = -8
+    chosen_grad = -6
+        # find the corresponding final correlation energy for the chosen convergence criteria from the grid for debugging
+    mask_chosen = (energy_grid == chosen_energy) & (grad_norm_grid == chosen_grad)
+    if np.any(mask_chosen):
+        chosen_final_correlation_energy = final_correlation_energy_grid[mask_chosen][0]
+        print(f"Final correlation energy for chosen convergence criteria: {chosen_final_correlation_energy:.2e} (x,y: {chosen_energy:.2e}, {chosen_grad:.2e})")
+        ax.plot([chosen_energy, chosen_energy], [chosen_grad, chosen_grad], [chosen_final_correlation_energy, chosen_final_correlation_energy], marker='o', markersize=10, color='red', label='Chosen Convergence Criteria', zorder=10)
+    else:
+        print("⚠️  Chosen convergence criteria not found in the grid, skipping plotting the point.")
+
+        # Create a proper colorbar with the normalization
+    sm = plt.cm.ScalarMappable(cmap=plt.cm.viridis, norm=norm_iter)
+    sm.set_array([])
+    cbar = fig.colorbar(sm, ax=ax, shrink=0.5, aspect=5, label='Iterations to Converge')
+    cbar.ax.yaxis.labelpad = 100
+
+        # Check that the axis labels are correct for debugging
+            # Get the values of the axes from surf for debugging
+    # print(f"Energy axis values: {surf._vec[0]}")
+    # print(f"Gradient norm axis values: {surf._vec[1]}")
+    # print(f"Final correlation energy axis values: {surf._vec[2]}\n") 
+
+        # Set labels and title
+    ax.set_xlabel('Convergence Criterion: Energy')
+    ax.set_ylabel('Convergence Criterion: Gradient Norm')
+    ax.set_zlabel('Final Correlation Energy [Hartree]')
+    ax.set_title(f'OVOS Convergence Landscape: {molecule_name}/{basis}, Method: {method}, Optimized Virtual Orbitals: {num_opt_virt_orb}')
+    
+        # Set zlim to the range of final correlation energies for better visualization
+    ax.set_zlim(np.nanmin(final_correlation_energy_grid), #- 0.001 * abs(np.nanmin(final_correlation_energy_grid)),
+                 np.nanmax(final_correlation_energy_grid)) # + 0.001 * abs(np.nanmax(final_correlation_energy_grid)))  # Add 10% padding to the top of the z-axis for better visualization
+
+    # Replace the current ticks on the x and y axis with the original convergence criteria values (not in log scale) for better interpretability
+        # Get the original convergence criteria values from conv_data for debugging
+    original_energy_values = [1e-3, 1e-4, 1e-6, 1e-8, 1e-10, 1e-12]
+    original_grad_norm_values = [1e-3, 1e-4, 1e-6, 1e-8, 1e-10, 1e-12]
+        
+        # Set xlim and ylim to the original values for better interpretability
+    ax.set_xlim(np.log10(min(original_energy_values)), np.log10(max(original_energy_values)))
+    ax.set_ylim(np.log10(min(original_grad_norm_values)), np.log10(max(original_grad_norm_values)))
+        
+        # Set the ticks to the original values
+    ax.set_xticks(np.log10(original_energy_values))
+    ax.set_xticklabels([f"{val:.0e}" for val in original_energy_values])
+    ax.set_yticks(np.log10(original_grad_norm_values))
+    ax.set_yticklabels([f"{val:.0e}" for val in original_grad_norm_values])
+
+        # But make the first ticks label empty for better visualization, since the first ticks are often very close to each other and overlap
+    ax.set_xticklabels([''] + [f"{val:.0e}" for val in original_energy_values[1:]])
+    ax.set_yticklabels([''] + [f"{val:.0e}" for val in original_grad_norm_values[1:]])
+            # Remove the first tick on the x and y axis for better visualization, since the first ticks are often very close to each other and overlap
+    ax.set_xticks(np.log10(original_energy_values[1:]))
+    ax.set_yticks(np.log10(original_grad_norm_values[1:]))
+
+        # invert the x and y axis to have the smallest convergence criteria in the front left corner of the plot for better visualization
+    ax.invert_xaxis()
+    ax.invert_yaxis()
+
+        # Move the z-axis ticks out from the z-axis line for better visibility
+    ax.tick_params(axis='z', pad=10, direction='inout')
+            # Pad the axis labels for better visibility
+    ax.xaxis.labelpad = 12
+    ax.yaxis.labelpad = 12
+    ax.zaxis.labelpad = 20
+            # Rotate the x and y axis tick labels for better visibility
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=135, ha='left')
+    ax.set_yticklabels(ax.get_yticklabels(), rotation=45, ha='right')
+                # Negative pad label ticks for better visibility
+    ax.tick_params(axis='x', pad=-5)
+    ax.tick_params(axis='y', pad=-5)
+
+    plt.tight_layout()
+
+    # Set view angle for better visualization
+    ax.view_init(elev=20, azim=45)
+    
+    # Save figure
+    output_dir = project_root / "backup" / "images" / molecule_name / basis / "convergence_landscape"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_file = output_dir / f"OVOS_convergence_landscape_{molecule_name}_{basis}_{method}.png"
+    plt.savefig(output_file, dpi=150)
+    print(f"✅ Plot saved to: {output_file}")
+    plt.close()
+
+
+
+# ================================================================================================
+# Helper functions for running OVOS and collecting data for different molecules, basis sets, and initialization methods (RHF, random)
+# ================================================================================================
+
+# Helper function to extract molecule name from the geometry string, for use in file paths and plot titles
+def get_molecule_name(molecule):
+    # Get data from JSON file saved by ovos_object()
+    molecule_name = molecule.split()[0]
+    if molecule_name == "Li" and "Li" in molecule.split(";")[1]:
+        molecule_name = "Li2"
+    elif molecule_name == "C" and "O" in molecule.split(";")[1]:
+        molecule_name = "CO"
+    elif molecule_name == "O" and "H" in molecule.split(";")[1]:
+        molecule_name = "H2O"
+    elif molecule_name == "H" and "F" in molecule.split(";")[1]:
+        molecule_name = "HF"
+    elif molecule_name == "N" and "H" in molecule.split(";")[1]:
+        molecule_name = "NH3"
+    
+    return molecule_name
 
 # Setup data collection for OVOS with generic molecule and basis set
 def mol_data(molecule, basis, method="RHF", num_random_attempts=10):
@@ -417,7 +1022,8 @@ def mol_data(molecule, basis, method="RHF", num_random_attempts=10):
         raise ValueError(f"Unknown method: {method}. Choose 'RHF' or 'random'.")
 
 
-def run_ovos_for_virtual_orbs(molecule, basis, method, num_opt_virtual_orbs):
+def run_ovos_for_virtual_orbs(molecule, basis, method, num_opt_virtual_orbs,
+                              conv_energy=1e-8, conv_grad=1e-6, keep_track_max=50):
     """
     Run OVOS for a single virtual orbital count.
     This function is designed to be called in parallel for different num_opt_virtual_orbs values.
@@ -450,8 +1056,8 @@ def run_ovos_for_virtual_orbs(molecule, basis, method, num_opt_virtual_orbs):
         mo_coeff=mo_coeffs,
         init_orbs="RHF",
         verbose=0, max_iter=1000,
-        conv_energy=1e-8, conv_grad=1e-6,
-        keep_track_max=50
+        conv_energy=conv_energy, conv_grad=conv_grad,
+        keep_track_max=keep_track_max
     )
 
     E_corr, E_corr_hist, E_corr_iter, E_corr_mo, _, stop_reason = ovos.run(
@@ -573,19 +1179,11 @@ def ovos_object(molecule, basis, method="RHF"):
         "RHF", "prev", or "random"
     """
     
-    print(f"=== OVOS VQE for {molecule} with {basis} basis (method: {method}) ===\n")
-    
-    molecule_name = molecule.split()[0]
-    if molecule_name == "Li" and "Li" in molecule.split(";")[1]:
-        molecule_name = "Li2"
-    if molecule_name == "C" and "O" in molecule.split(";")[1]:
-        molecule_name = "CO"
-    if molecule_name == "O" and "H" in molecule.split(";")[1]:
-        molecule_name = "H2O"
-    if molecule_name == "H" and "F" in molecule.split(";")[1]:
-        molecule_name = "HF"
-    if molecule_name == "N" and "H" in molecule.split(";")[1]:
-        molecule_name = "NH3"
+    # Get molecule name for file paths and print setup message
+    molecule_name = get_molecule_name(molecule)
+
+    print(f"=== OVOS VQE for {molecule_name} with {basis} basis (method: {method}) ===")
+    print(f"📁 Setting up data collection for {molecule_name} with {basis} basis and method {method}...\n")
 
     # Check if the files exist before running OVOS
         # Path
@@ -593,9 +1191,9 @@ def ovos_object(molecule, basis, method="RHF"):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     output_file = output_dir / f"lst_MP2_OVOS_virt_orbs_{method}.json"
-    # if output_file.exists():
-    #     print(f"⚠️  Output file already exists at {output_file}, skipping OVOS run to avoid overwriting.\n")
-    #     return
+    if output_file.exists() and method != "random":  # For random method we want to overwrite to get new random initializations
+        print(f"⚠️  Output file already exists at {output_file}, skipping OVOS run to avoid overwriting.\n")
+        return
 
     # Get molecule data to determine number of virtual orbitals
     mol, mf, Fao, mo_coeffs, num_electrons, num_orbitals, E_ref, E_corr_MP2 = mol_data(
@@ -843,7 +1441,184 @@ def ovos_object(molecule, basis, method="RHF"):
 
     print(f"✅ Data saved to: {output_file}\n")
 
+# Make of data for different convergence criteria for one method, molecule, and basis set
+def run_ovos_convergence_criteria_single(molecule, basis, method, conv, mol, mf, Fao, mo_coeffs, num_electrons, num_orbitals, E_ref, E_corr_MP2):
+    """
+    Run OVOS for a single set of convergence criteria and collect results.
+    
+    This function is designed to be called in parallel for different convergence criteria.
+    
+    Parameters
+    ----------
+    molecule : str
+        Molecular geometry
+    basis : str
+        Basis set
+    method : str
+        Initialization method ("RHF", "prev", or "random")
+    conv : dict
+        Convergence criteria dictionary, e.g.:
+        {'conv_energy': 1e-8, 'conv_grad': 1e-6, 'keep_track_max': "none"}
+    mol, mf, Fao, mo_coeffs, num_electrons, num_orbitals, E_ref, E_corr_MP2 : precomputed molecule data
+    
+    Returns
+    -------
+    dict
+        Dictionary containing results for this set of convergence criteria
+    """
+    
+    conv_energy = conv['conv_energy']
+    conv_grad = conv['conv_grad']
+    keep_track_max = conv['keep_track_max']
 
+    # Do 75% of the maximum number of virtual orbitals for this molecule/basis set to speed up convergence testing
+    num_opt_virtual_orbs = int(0.75 * (num_orbitals - num_electrons // 2))
+
+    # Create OVOS object and run with specified convergence criteria
+    ovos = OVOS(
+        mol=mol, scf=mf, Fao=Fao,
+        num_opt_virtual_orbs=num_opt_virtual_orbs,
+        mo_coeff=mo_coeffs,
+        init_orbs="RHF",
+        verbose=0, max_iter=1000,
+        conv_energy=conv_energy, conv_grad=conv_grad,
+        keep_track_max=keep_track_max
+    )
+
+    E_corr, E_corr_hist, E_corr_iter, E_corr_mo, _, stop_reason = ovos.run(
+        mo_coeffs, fock_spin=None
+    )
+
+    return {
+        'conv_energy': conv_energy,
+        'conv_grad': conv_grad,
+        'keep_track_max': keep_track_max,
+        'final_energy': E_corr,
+        'E_corr_hist': E_corr_hist,
+        'E_corr_iter': E_corr_iter,
+        'E_corr_mo': E_corr_mo,
+        'stop_reason': stop_reason,
+        'num_opt_virt_orbs': num_opt_virtual_orbs,
+        'E_corr_MP2': E_corr_MP2
+    }
+
+
+def ovos_convergence_criteria(molecule, basis, method, conv_criteria):
+    """
+    Run OVOS for different convergence criteria and collect data.
+    
+    Parameters
+    ----------
+    molecule : str
+        Molecular geometry
+    basis : str
+        Basis set
+    method : str
+        Initialization method ("RHF", "prev", or "random")
+    conv_criteria : list of dict
+        List of convergence criteria dictionaries, e.g.:
+        [
+            {'conv_energy': 1e-6,  'conv_grad': 1e-4, 'keep_track_max': "none"},
+            {'conv_energy': 1e-8,  'conv_grad': 1e-6, 'keep_track_max': "none"},
+            {'conv_energy': 1e-10, 'conv_grad': 1e-8, 'keep_track_max': "none"},
+        ]
+    """
+    # Check if the length of files exist before running OVOS
+    molecule_name = get_molecule_name(molecule)
+
+    print()
+    print(f"=== OVOS Convergence Criteria Testing for {molecule_name} with {basis} basis (method: {method}) ===\n")
+
+
+    output_dir = project_root / "backup" / "data" / molecule_name / basis / "OVOS" / "convergence_criteria" / method
+    output_dir.mkdir(parents=True, exist_ok=True)
+    existing_files = list(output_dir.glob("OVOS_convergence_*.json"))
+    if len(existing_files) == len(conv_criteria):
+        print(f"✅ Found existing files for all {len(conv_criteria)} convergence criteria in {output_dir}. Skipping OVOS runs to avoid overwriting.\n")
+        return
+    else:
+        print(f"📁 Found {len(existing_files)} existing files in {output_dir}, but {len(conv_criteria)} convergence criteria to test. Proceeding with OVOS runs for missing criteria...\n")
+    
+    # I want to parallelize over the different convergence criteria
+        # But do one initial run to get the molecule data and precompute integrals, then pass those to the parallel workers to avoid redundant calculations
+    mol, mf, Fao, mo_coeffs, num_electrons, num_orbitals, E_ref, E_corr_MP2 = mol_data(
+        molecule, basis, method="RHF"
+    )
+
+    # Setup data collection structure
+    results = []
+
+    # Delete the conv_criteria that already have files to avoid overwriting
+    conv_criteria_to_run = []
+    count_missing = 0
+    for conv in conv_criteria:
+        conv_energy_str = f"{conv['conv_energy']:.0e}"
+        conv_grad_str = f"{conv['conv_grad']:.0e}"
+        file_name = f"OVOS_convergence_{conv_energy_str}_{conv_grad_str}_keep_none.json"
+        output_file = output_dir / file_name
+        if output_file.exists() == False:
+            conv_criteria_to_run.append(conv)
+            count_missing += 1
+
+    print(f"📁 {count_missing}/{len(conv_criteria)} convergence criteria do not have existing files and will be run.\n")
+    if count_missing == 0:
+        print("All convergence criteria already have results files. No OVOS runs needed.\n")
+        return
+
+
+    # Run OVOS for each set of convergence criteria in parallel
+    workers = min(len(conv_criteria_to_run), 1)
+    from concurrent.futures import ProcessPoolExecutor
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        futures = {
+            executor.submit(
+                 run_ovos_convergence_criteria_single,
+                molecule, basis, method, conv, mol, mf, Fao, mo_coeffs, num_electrons, num_orbitals, E_ref, E_corr_MP2
+            ): conv for conv in conv_criteria_to_run
+        }
+
+        # Save each result as it completes and check if already exists to avoid overwriting        
+        for future in futures:
+            conv = futures[future]
+            
+            # Keep track of what number out of total runs we are at for better progress monitoring
+            current_run = len(results) + 1
+            total_runs = len(conv_criteria_to_run)
+
+            try:
+                # Check if file already exists for this convergence criteria
+                conv_energy_str = f"{conv['conv_energy']:.0e}"
+                conv_grad_str = f"{conv['conv_grad']:.0e}"
+
+                # Save result to JSON
+                print(f"[{current_run}/{total_runs}] Running OVOS for conv_energy={conv_energy_str}, conv_grad={conv_grad_str}")
+                result = future.result()
+                results.append(result)
+                print(f"  ✅ Final energy: {result['final_energy']:.6f} Ha, "
+                    f"ratio to MP2: {result['final_energy']/result['E_corr_MP2']:.4f}, "
+                    f"iter: {len(result['E_corr_hist'])}, stop reason: {result['stop_reason']}")
+
+                file_name = f"OVOS_convergence_{conv_energy_str}_{conv_grad_str}_keep_none.json"
+                output_file = output_dir / file_name
+
+                with open(output_file, "w") as f:
+                    json.dump(result, f, indent=2, cls=NumpyEncoder)
+                print(f"  ✅ Saved to {output_file}")
+
+            except Exception as e:
+                print(f"  ⚠️  Error processing conv_energy={conv['conv_energy']}, conv_grad={conv['conv_grad']}, keep_track_max=none: {e}")
+
+
+
+              
+
+
+
+
+
+# ================================================================================================
+# Helper function to save reference molecular data (MP2, OOMP2, FCI energies) to JSON for a given molecule and basis set
+# ================================================================================================
 def save_molecule_reference_data(molecule, basis):
     """
     Save reference molecular data (MP2, OOMP2, FCI energies) to JSON.
@@ -1050,19 +1825,54 @@ if __name__ == "__main__":
 
     # Debug run
     # run_ovos_for_virtual_orbs(molecules[2], basis_sets[0], method="RHF", num_opt_virtual_orbs=6)
-    
-    if True:
-        for basis in basis_sets[0:1]: 
-            for molecule in molecules[1:2]:  # Start with HF molecule for testing
-                for method in methods:
-                    ovos_object(molecule, basis, method)
 
-                try:
-                    save_molecule_reference_data(molecule, basis)
-                except Exception as e:
-                    print(f"❌ Failed for {molecule}/{basis}: {e}\n")
+    for basis in basis_sets[0:1]: 
+        for molecule in molecules[0:1]: 
+        # for molecule in molecules[1:4]: # Done: HF, CO, H2O, NH3
+            for method in methods:
+                ovos_object(molecule, basis, method)
 
-                # After running ovos_object(), plot the results
-                plot_OVOS_convergence_from_data(molecule, basis, methods=["RHF", "prev", "random"])
+            try:
+                save_molecule_reference_data(molecule, basis)
+            except Exception as e:
+                print(f"❌ Failed for {molecule}/{basis}: {e}\n")
+
+            # After running ovos_object(), plot the results
+            plot_OVOS_convergence_from_data(molecule, basis, methods=["RHF", "prev", "random"])
+                # Plot convergence histories for all methods on the same plot for comparison
+            plot_OVOS_convergence_histories(molecule, basis, methods=["RHF", "prev", "random"])
+
+            # Plot MO coefficient convergence for all methods
+            plot_OVOS_MO_coefficient_diff_MP2(molecule, basis)
 
 
+    # Test convergence criteria and early stopping for "RHF" method
+            # See if it is possbile converge closer to MP2, for different convergence criteria and early stopping parameters
+        # For a certain molecule, basis, and virtual orbital count
+            # Molecule: HF
+            # Basis: 6-31G
+            # Virtual orbital count: 3 (6 spin-orbitals, 50% of virtual space)
+        # Analyze the convergence history and check how their energies evolve compared to the MP2 reference, and whether the early stopping criterion based on beating RHF is effective in practice.
+            # Criteria
+            # - Convergence in energy    = [1e-4, 1e-6, 1e-8, 1e-10, 1e-12]
+            # - Convergence in gradient  = [1e-2, 1e-4, 1e-6, 1e-8,  1e-10]
+            # - Early stopping parameter = "none" (No early stopping)
+
+    if False:  # Set to True to run convergence criteria testing
+        conv_criteria = []
+        # Do alot of points between 1e-4 and 1e-10 to see the trend
+        for conv_energy in [1e-2, 5e-2, 1e-3, 5e-3, 1e-4, 5e-4, 5e-4, 1e-5, 5e-5, 1e-6, 5e-6, 1e-7, 5e-7, 1e-8, 5e-8, 1e-9, 5e-9, 1e-10, 5e-10, 1e-11, 5e-11, 1e-12]:
+            for conv_grad in [1e-2, 5e-2, 1e-3, 5e-3, 1e-4, 5e-4, 1e-5, 5e-5, 1e-6, 5e-6, 1e-7, 5e-7, 1e-8, 5e-8, 1e-9, 5e-9, 1e-10, 5e-10, 1e-11, 5e-11, 1e-12]:
+                conv_criteria.append({
+                    'conv_energy': conv_energy,
+                    'conv_grad': conv_grad,
+                    'keep_track_max': "none"
+                })
+            # Total of 17x17 = 289 different convergence criteria combinations
+            
+            # For each run, save the convergence history, final energy, and number of iterations to a JSON file with the criteria in the filename for later analysis.
+        for molecule in molecules[1:2]:
+                    # Data
+                ovos_convergence_criteria(molecule, basis_sets[0], method="RHF", conv_criteria=conv_criteria)
+                    # Plot
+                plot_OVOS_convergence_landscape(molecule, basis_sets[0], method="RHF", conv_criteria=conv_criteria)

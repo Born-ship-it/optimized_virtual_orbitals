@@ -923,19 +923,37 @@ class OVOS:
                 if start_counting: # (dE < self.conv_energy and grad_norm < self.conv_grad) or dE < 1e-12:
                     keep_track += 1
                     if self.verbose:
-                        self._print(f"    Keep track: {keep_track}/{self.keep_track_max}")
-                    if keep_track >= self.keep_track_max and iter_count > 100:
-                        if self.verbose:
-                            self._print(f"OVOS converged after {iter_count-keep_track} iterations")
-                        # Trim the extra tracked steps
-                        trim = self.keep_track_max - 1
-                        energy_hist = energy_hist[:-trim]
-                        iter_hist = iter_hist[:-trim]
-                        mo_hist = mo_hist[:-trim]
-                        fock_hist = fock_hist[:-trim]
-                        stop_reasons = stop_reasons[:-trim]
-                        converged = True
-                        break
+                     # Make sure self.keep_track_max is not string
+                        if isinstance(self.keep_track_max, str):
+                            self._print(f"    Keep track: {keep_track}/{self.keep_track_max}")
+                    if isinstance(self.keep_track_max, int):
+                        if keep_track >= self.keep_track_max and iter_count > 100:
+                            if self.verbose:
+                                self._print(f"OVOS converged after {iter_count-keep_track} iterations")
+                            # Trim the extra tracked steps
+                            trim = self.keep_track_max - 1
+                            energy_hist = energy_hist[:-trim]
+                            iter_hist = iter_hist[:-trim]
+                            mo_hist = mo_hist[:-trim]
+                            fock_hist = fock_hist[:-trim]
+                            stop_reasons = stop_reasons[:-trim]
+                            converged = True
+                            break
+                    elif isinstance(self.keep_track_max, str):
+                        if self.keep_track_max.lower() == "none":
+                            # Let it run untill iter_count reaches max_iter, but we are in the converged state
+                            if keep_track >= 1 and iter_count == 1000:
+                                if self.verbose:
+                                    self._print(f"OVOS converged after {iter_count-keep_track} iterations (keep_track_max=None)")
+                                # Trim the extra tracked steps
+                                trim = keep_track - 1
+                                energy_hist = energy_hist[:-trim]
+                                iter_hist = iter_hist[:-trim]
+                                mo_hist = mo_hist[:-trim]
+                                fock_hist = fock_hist[:-trim]
+                                stop_reasons = stop_reasons[:-trim]
+                                converged = True
+                                break
                 else:
                     keep_track = 0
 
