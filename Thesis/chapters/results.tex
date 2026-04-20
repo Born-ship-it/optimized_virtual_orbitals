@@ -176,8 +176,57 @@ The results of the OVOS algorithm for all test molecules in the 6--31G and cc--p
 \subsubsection*{CO}
 ...
 
+% setup template of table and plot 
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{ccccc}
+        \hline
+        $N'_{\rm act.unocc}$ & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & Percentage & $\Delta E_{\rm corr}^{\rm OVOS}$ (Hartree) & Iterations \\ 
+        \hline
+        1    & ...          & ...\%       & ...             & ...       \\
+        ...  & ...          & ...\%       & ...             & ...       \\
+        \hline
+    \end{tabular}
+    \caption{Summary of OVOS results for ... in the ... basis at each $N'_{\rm act.unocc}$.}
+    \label{tab:..._results}
+\end{table}
+
+The table is plotted in Figure~\ref{fig:..._ovos} to show the convergence behaviour of the OVOS algorithm for ... in the ... basis at each $N'_{\rm act.unocc}$.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/Placeholder.png}
+    \caption{Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
+    \label{fig:HF_6-31G_ovos}
+\end{figure}
+
 \subsubsection*{H2O}
 ...
+
+% setup template of table and plot 
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{ccccc}
+        \hline
+        $N'_{\rm act.unocc}$ & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & Percentage & $\Delta E_{\rm corr}^{\rm OVOS}$ (Hartree) & Iterations \\ 
+        \hline
+        1    & ...          & ...\%       & ...             & ...       \\
+        ...  & ...          & ...\%       & ...             & ...       \\
+        \hline
+    \end{tabular}
+    \caption{Summary of OVOS results for ... in the ... basis at each $N'_{\rm act.unocc}$.}
+    \label{tab:..._results}
+\end{table}
+
+The table is plotted in Figure~\ref{fig:..._ovos} to show the convergence behaviour of the OVOS algorithm for ... in the ... basis at each $N'_{\rm act.unocc}$.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/Placeholder.png}
+    \caption{Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
+    \label{fig:HF_6-31G_ovos}
+\end{figure}
+
 
 \subsubsection*{HF}
 The OVOS algorithm results for HF in the 6--31G basis through each $N'_{\rm act.unocc}$ to full space of active unoccupied orbitals are shown in Table~\ref{tab:HF_6-31G_results}. OVOS recovers increasingly more correlation energy $E_{\rm corr}^{\rm OVOS}$ as $N'_{\rm act.unocc}$ increases, with the percentage of correlation energy recovered reaching 100\% at $N'_{\rm act.unocc} = 6$. We mark the difference the OVOS algorithm makes at each $N'_{\rm act.unocc}$ from initial MP2 as $\Delta E_{\rm corr}^{\rm OVOS}$, highlighted in Figure~\ref{fig:HF_6-31G_ovos} as the points for each $N'_{\rm act.unocc}$. The most recovered correlation energy is at $N'_{\rm act.unocc} = 4$ with $\Delta E_{\rm corr}^{\rm OVOS} = -5.49038e-2$. Convergence is achieved in all cases, with iteration counts increasing as $N'_{\rm act.unocc}$ reaches 50\% of the total number of active unoccupied orbitals and decreases thereafter.
@@ -212,6 +261,29 @@ The table is plotted in Figure~\ref{fig:HF_6-31G_ovos} to show the convergence b
 \subsubsection*{NH3}
 ...
 
+% setup template of table and plot 
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{ccccc}
+        \hline
+        $N'_{\rm act.unocc}$ & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & Percentage & $\Delta E_{\rm corr}^{\rm OVOS}$ (Hartree) & Iterations \\ 
+        \hline
+        1    & ...          & ...\%       & ...             & ...       \\
+        ...  & ...          & ...\%       & ...             & ...       \\
+        \hline
+    \end{tabular}
+    \caption{Summary of OVOS results for ... in the ... basis at each $N'_{\rm act.unocc}$.}
+    \label{tab:..._results}
+\end{table}
+
+The table is plotted in Figure~\ref{fig:..._ovos} to show the convergence behaviour of the OVOS algorithm for ... in the ... basis at each $N'_{\rm act.unocc}$.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/Placeholder.png}
+    \caption{Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
+    \label{fig:HF_6-31G_ovos}
+\end{figure}
 
 
 \section{Convergence Behaviour}

@@ -1,0 +1,28 @@
+
+Running VQE with OVOS optimization for Li2 w. bond length 3.7 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
+Built molecule Li2 with basis 6-31G and bond length 3.7 Angstrom.
+Number of electrons: 6, Number of orbitals: 18
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 11 active virtual orbitals (out of 15 total virtual orbitals).
+
+Optimization finished. Final MP2 energy = -14.870315291575134 Hartree. (ΔE_corr = -0.016725152955501053 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
+OVOS optimized energy = -16.153937 Hartree @ iterations 162.
+
+Calculating UHF reference for comparison...
+UHF energy = -16.148728 Hartree @ iterations 52.
+
+Calculating UMP2 natural orbitals for comparison...
+UMP2 natural orbitals are restricted (RHF-like).
+UHF natural orbital energy = -16.161591 Hartree @ iterations 39.
+
+Summary of results:
+Molecule: Li 0 0 0; Li 0 0 3.700 with basis set 6-31G for a total of 6 electrons and 18 orbitals.
+OVOS correlation energy: -14.870315 Hartree (Active unocc. orbitals: 11)
+OVOS energy: -16.153937 Hartree  @ iterations 162 (Eval. func. 179, grad. 179
+UHF energy: -16.148728 Hartree  @ iterations 52 (Eval. func. 64, grad. 64
+UMP2 natural orbital energy: -16.161591 Hartree  @ iterations 39 (Eval. func. 45, grad. 45
+✓ Completed. Output saved to backup/data/Li2/6-31G/VQE/dist/3.7/OVOS_Li2_3.7_6-31G_VQE_opt_num_0.75_False_404_output.txt
