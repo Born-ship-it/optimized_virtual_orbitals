@@ -1865,9 +1865,9 @@ def save_molecule_reference_data(molecule, basis):
 
 if __name__ == "__main__":
     molecules = [
-        "Li .0 .0 .0; Li .0 .0 2.673",  # Li2 molecule
-        "H .0 .0 .0; F .0 .0 0.917",  # HF molecule
-        "C .0 .0 .0; O .0 .0 1.128",    # CO molecule
+        "Li .0 .0 .0; Li .0 .0 2.673",  # Li2 molecule 0:1
+        "H .0 .0 .0; F .0 .0 0.917",  # HF molecule    1:2
+        "C .0 .0 .0; O .0 .0 1.128",    # CO molecule  2:3
         "O .0 .0  0.1173; H .0 0.7572 -0.4692; H .0 -0.7572 -0.4692",  # H2O equilibrium geometry
         "N .0 .0 .0; H .0 .0 1.012; H .0 0.926 -0.239; H .0 -0.926 -0.239"  # NH3 molecule
     ]
@@ -1887,8 +1887,8 @@ if __name__ == "__main__":
     # run_ovos_for_virtual_orbs(molecules[2], basis_sets[0], method="RHF", num_opt_virtual_orbs=6)
 
     for basis in basis_sets[1:2]:   # Done: 6-31G
-        for molecule in molecules[3:4]:  # Do: HF, H2O
-            for method in methods:
+        for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
+            for method in methods[0:2]:
                 ovos_object(molecule, basis, method)
 
             try:
