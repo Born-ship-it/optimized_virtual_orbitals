@@ -580,7 +580,7 @@ def plot_OVOS_MO_coefficient_diff_MP2(molecule, basis):
             files_exist[methods.index(method)] = True
     if all(files_exist):
         print("✅ All plots already exist, skipping calculation and plotting.")
-        return
+        # return
 
     # Calculate MP2 MO coefficients for the full space
         # We need to create a molecule and perform an RHF calculation to get the MO coefficients, since MP2 orbitals are the same as RHF orbitals
@@ -631,41 +631,98 @@ def plot_OVOS_MO_coefficient_diff_MP2(molecule, basis):
         
         mo_coeffs_ovos = np.array(mo_coeffs_final[method])
         
-        fig, axes = plt.subplots(2, 3, figsize=(15, 10))
-        fig.suptitle(f'MO Coefficients vs MP2: {molecule_name}/{basis}, Method: {method}', fontsize=16)
+        # Create GridSpec for better control over layout
+        # 2 rows x 4 columns: [heatmap, heatmap, buffer, heatmap]
+        fig = plt.figure(figsize=(18, 10))
+        gs = fig.add_gridspec(2, 4, right=0.88, hspace=0.1, wspace=0.1, 
+                              width_ratios=[1, 1, 0.2, 1])
         
+        # Create axes for the 8 subplots (2 rows, skipping buffer columns)
+        axes = []
+        for i in range(2):
+            # First two columns (OVOS and MP2)
+            axes.append(fig.add_subplot(gs[i, 0]))
+            axes.append(fig.add_subplot(gs[i, 1]))
+            # Skip buffer column (i, 2)
+            # Last two columns (Difference plots)
+            axes.append(fig.add_subplot(gs[i, 3]))
+
+        # Title
+        fig.suptitle(f'MO Coefficients vs MP2: {molecule_name}/{basis}, Method: {method}, {num_opt_virt_orb} Optimized Orbitals', 
+                     fontsize=24, y=0.98)
+
+        # Determine color scales
         vmin = min(np.min(mo_coeffs_ovos[0]), np.min(mo_coeffs_MP2))
         vmax = max(np.max(mo_coeffs_ovos[0]), np.max(mo_coeffs_MP2))
-
-        # Alpha spin
-        im0 = axes[0, 0].imshow(mo_coeffs_ovos[0], vmin=vmin, vmax=vmax, cmap='viridis')
-        axes[0, 0].set_title('OVOS Alpha Spin - Final')
         
-        im1 = axes[0, 1].imshow(mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]], vmin=vmin, vmax=vmax, cmap='viridis')
-        axes[0, 1].set_title('MP2 Alpha Spin')
-        
-        im2 = axes[0, 2].imshow(mo_coeffs_ovos[0] - mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]], cmap='bwr', vmin=-vmax, vmax=vmax)
-        axes[0, 2].set_title('Alpha Spin - OVOS vs MP2')
+        diff_vmax = max(
+            np.max(np.abs(mo_coeffs_ovos[0] - mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]])),
+            np.max(np.abs(mo_coeffs_ovos[1] - mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]]))
+        )
+        diff_vmin = -diff_vmax
 
-        # Beta spin
-        im3 = axes[1, 0].imshow(mo_coeffs_ovos[1], vmin=vmin, vmax=vmax, cmap='viridis')
-        axes[1, 0].set_title('OVOS Beta Spin - Final')
+        # Alpha spin plots
+        im0 = axes[0].imshow(mo_coeffs_ovos[0], vmin=vmin, vmax=vmax, cmap='viridis')
+        axes[0].set_ylabel('Basis Functions')
         
-        im4 = axes[1, 1].imshow(mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]], vmin=vmin, vmax=vmax, cmap='viridis')
-        axes[1, 1].set_title('MP2 Beta Spin')
+        im1 = axes[1].imshow(mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]], vmin=vmin, vmax=vmax, cmap='viridis')
         
-        im5 = axes[1, 2].imshow(mo_coeffs_ovos[1] - mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]], cmap='bwr', vmin=-vmax, vmax=vmax)
-        axes[1, 2].set_title('Beta Spin - OVOS vs MP2')
+        im2 = axes[2].imshow(mo_coeffs_ovos[0] - mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]], 
+                             cmap='RdBu_r', vmin=diff_vmin, vmax=diff_vmax)
 
-        # Colorbar
-        cbar_ax = fig.add_axes([0.92, 0.15, 0.02, 0.7])  # [left, bottom, width, height
-        fig.colorbar(im1, cax=cbar_ax)
+        # Beta spin plots
+        im3 = axes[3].imshow(mo_coeffs_ovos[1], vmin=vmin, vmax=vmax, cmap='viridis')
+        axes[3].set_ylabel('Basis Functions')
+        
+        im4 = axes[4].imshow(mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]], vmin=vmin, vmax=vmax, cmap='viridis')
+        
+        im5 = axes[5].imshow(mo_coeffs_ovos[1] - mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]], 
+                             cmap='RdBu_r', vmin=diff_vmin, vmax=diff_vmax)
 
+        # Plot a black stripped line in each heatmap to indicate the separation between occupied and virtual orbitals, which is at num_electrons//2
+        num_occupied_orbitals = num_electrons // 2
+        for ax in axes:
+            ax.axvline(num_occupied_orbitals - 0.5, color='black', linestyle='--', linewidth=1)
+
+        # Add x-labels for bottom row
+        for i in [3, 4, 5]:
+            axes[i].set_xlabel('Molecular Orbitals')
+        # Set x-ticks to show every 2nd MO, even, for better readability
+        for ax in [axes[0], axes[1], axes[3], axes[4]]:
+            ax.set_xticks(np.arange(0, mo_coeffs_ovos[0].shape[1], 2))
+                # Check if //2 is less than the number of ticks not skipping every 2nd
+            mo_labels = mo_coeffs_ovos[0].shape[1]//2 if mo_coeffs_ovos[0].shape[1]//2 == len(np.arange(0, mo_coeffs_ovos[0].shape[1], 2)) else mo_coeffs_ovos[0].shape[1]//2 + 1
+            ax.set_xticklabels(np.arange(0, mo_labels, 1))
+            ax.set_yticks(np.arange(0, mo_coeffs_ovos[0].shape[1], 2))
+            ax.set_yticklabels(np.arange(0, mo_labels, 1))
+
+        # Colorbar 1: For viridis (MO coefficients)
+        cbar_ax1 = fig.add_axes([0.59, 0.16, 0.015, 0.7])
+        cbar1 = fig.colorbar(im1, cax=cbar_ax1)
+        cbar1.set_label('MO Coefficient Value', rotation=270, labelpad=20, fontweight='bold')
+
+        # Colorbar 2: For RdBu (differences)
+        cbar_ax2 = fig.add_axes([0.89, 0.16, 0.015, 0.7])
+        cbar2 = fig.colorbar(im2, cax=cbar_ax2)
+        cbar2.set_label('Difference (OVOS - MP2)', rotation=270, labelpad=18, fontweight='bold')
+
+        # Add labels for the coloumns on the top of coloumns for OVOS, MP2 and difference and on the left hand side for alpha and beta spin
+            # Column labels (top)
+        fig.text(0.23, 0.92, 'OVOS Orbitals', ha='center', va='top', fontsize=12, fontweight='bold')
+        fig.text(0.47, 0.92, 'MP2 Orbitals', ha='center', va='top', fontsize=12, fontweight='bold')
+        fig.text(0.78, 0.92, 'Difference (OVOS - MP2)', ha='center', va='top', fontsize=12, fontweight='bold')
+        
+            # Row labels (left side)
+        fig.text(0.085, 0.695, 'Alpha Spin', ha='left', va='center', rotation=90, fontsize=12, fontweight='bold')
+        fig.text(0.085, 0.295, 'Beta Spin', ha='left', va='center', rotation=90, fontsize=12, fontweight='bold')
+        
         # Save figure
         output_file = output_dir / f"MO_coefficients_vs_MP2_{molecule_name}_{basis}_{method}.png"
-        plt.savefig(output_file, dpi=150)
+        plt.savefig(output_file, dpi=150, bbox_inches='tight')
         print(f"✅ Plot saved to: {output_file}")
         plt.close()
+
+
 
 # Plot a 3D surface plot as a heatmap over the surface - illustrating the convergence landscape of OVOS as a function of a optimized virtual orbitals, for a given molecule, basis set, and method (RHF, prev, random)
     # Axis x: convergence criterion energy 
@@ -1140,7 +1197,7 @@ def run_ovos_random_attempt(molecule, basis, num_opt_virtual_orbs, mo_coeffs_tri
         num_opt_virtual_orbs=2*num_opt_virtual_orbs,
         mo_coeff=mo_coeffs_trial,
         init_orbs="RHF",
-        verbose=0, max_iter=1000,
+        verbose=0, max_iter=num_iter_max,
         conv_energy=1e-8, conv_grad=1e-6,
         keep_track_max=50
     )
@@ -1191,7 +1248,7 @@ def ovos_object(molecule, basis, method="RHF"):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     output_file = output_dir / f"lst_MP2_OVOS_virt_orbs_{method}.json"
-    if output_file.exists() and method != "random":  # For random method we want to overwrite to get new random initializations
+    if output_file.exists():  # For random method we want to overwrite to get new random initializations
         print(f"⚠️  Output file already exists at {output_file}, skipping OVOS run to avoid overwriting.\n")
         return
 
@@ -1252,7 +1309,7 @@ def ovos_object(molecule, basis, method="RHF"):
     else:
         # Get molecule data with correct initialization
         if method == "random":
-            num_random_attempts = 1000
+            num_random_attempts = 1000 if basis == "6-31G" else 500  # More attempts for smaller basis sets to get good statistics
             mol, mf, Fao, mo_coeffs_list, num_electrons, num_orbitals, E_ref, E_corr_MP2 = mol_data(
                 molecule, basis, method="random", num_random_attempts=num_random_attempts
             )
@@ -1282,7 +1339,7 @@ def ovos_object(molecule, basis, method="RHF"):
                 rhf_data_file = output_dir / f"lst_MP2_OVOS_virt_orbs_RHF.json"
                 rhf_threshold = None
                 rhf_iter = None
-                num_iter_max = 1000
+                num_iter_max = 1000 if basis == "6-31G" else 500  # Default max iterations for random attempts if no RHF data is available
                 
                 if rhf_data_file.exists():
                     with open(rhf_data_file, "r") as f:
@@ -1339,6 +1396,8 @@ def ovos_object(molecule, basis, method="RHF"):
                             iter_count = result['E_corr_iter'][-1]
                             
                             # Update best result
+                            completed_count_max = 500 if basis == "6-31G" else 250
+
                             if best_energy is None or final_energy <= best_energy:
                                 if best_energy is not None and final_energy == best_energy:
                                     if iter_count < best_iter:
@@ -1351,7 +1410,8 @@ def ovos_object(molecule, basis, method="RHF"):
                                     best_iter = iter_count
 
                                 keep_count = 0  # Reset keep count if we find a new best result
-                            elif completed_count >= 500:
+                                
+                            elif completed_count >= completed_count_max:
                                 # If we are at full space, we want to do all attempts to get a good distribution of results, so we won't stop early
                                 if num_opt_virtual_orbs < (num_orbitals - num_electrons // 2):
                                     keep_count += 1  # Increment keep count if we do not find a better result
@@ -1826,9 +1886,8 @@ if __name__ == "__main__":
     # Debug run
     # run_ovos_for_virtual_orbs(molecules[2], basis_sets[0], method="RHF", num_opt_virtual_orbs=6)
 
-    for basis in basis_sets[0:1]: 
-        for molecule in molecules[0:1]: 
-        # for molecule in molecules[1:4]: # Done: HF, CO, H2O, NH3
+    for basis in basis_sets[1:2]:   # Done: 6-31G
+        for molecule in molecules[3:4]:  # Do: HF, H2O
             for method in methods:
                 ovos_object(molecule, basis, method)
 
