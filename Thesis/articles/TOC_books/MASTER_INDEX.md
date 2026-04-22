@@ -399,3 +399,130 @@
 
 **Last Updated:** March 30, 2026  
 **Scope:** OVOS thesis relevance only (limited to CRITICAL + HIGH tiers)
+
+
+Note:
+
+Taken the second derivative of the Hylleraas functional with respect to the orbital rotation parameters $R_{ae}$ and $R_{fb}$, we arrive at the Hessian matrix:
+\begin{align}
+    H_{ea,fb} &= \frac{\partial^2 J_2}{\partial R_{ae} \partial R_{bf}} \bigg|_{R=0} \\
+\end{align}
+If the gradient captures the slope of the energy landscape, the Hessian captures the curvature, providing information about how the energy changes as we move in different directions in orbital space. 
+
+Deriving the Hessian involves taking the second derivative of the gradient expression, for this expression we need the definitions:
+$$
+t_{ij}^{ac}=\frac{\langle ij||ac\rangle}{\Delta_{ijac}},
+\qquad
+\Delta_{ijac}=\epsilon_i+\epsilon_j-\epsilon_a-\epsilon_c,
+$$
+$$
+\frac{\partial D_{ac}}{\partial R_{bf}} = 
+\sum_{i>j}\sum_d
+\left(
+\frac{\partial t_{ij}^{ad}}{\partial R_{bf}}t_{ij}^{cd}
++
+t_{ij}^{ad}\frac{\partial t_{ij}^{cd}}{\partial R_{bf}}
+\right), \qquad
+\frac{\partial t_{ij}^{ac}}{\partial R_{bf}} = 
+\delta_{cb}
+\left(
+\frac{\langle ij||af\rangle}{\Delta_{ijab}}
++
+\frac{t_{ij}^{ab}f_{bf}}{\Delta_{ijab}}
+\right).
+$$
+$$
+\frac{\partial \langle ij||ec\rangle}{\partial R_{bf}}= 
+\delta_{cb}\langle ij||ef\rangle -
+\delta_{ef}\langle ij||bc\rangle, \qquad
+\frac{\partial f_{ec}}{\partial R_{bf}} =
+\delta_{cb}f_{ef} -
+\delta_{ef}f_{bc}.
+$$
+which allows us to build off the gradient expression, the first term of the gradient gives:
+\begin{align}
+    \frac{\partial}{\partial R_{bf}} \left( 2\sum_{i>j}\sum_b t_{ij}^{ab} \langle ij\|eb\rangle \right) 
+    &= 2\sum_{i>j}\sum_b 
+    \left( 
+        \frac{\partial t_{ij}^{ab}}{\partial R_{bf}}  \langle ij\|eb\rangle 
+        +
+        t_{ij}^{ab} \frac{\partial \langle ij\|eb\rangle}{\partial R_{bf}} 
+    \right) 
+    \\ &= 2\sum_{i>j} \sum_{b} 
+    ( 
+        \frac{\langle ij||af\rangle}{\Delta_{ijab}} \langle ij\|eb\rangle 
+        +
+        \frac{t_{ij}^{ab}f_{bf}}{\Delta_{ijab}} \langle ij\|eb\rangle 
+        \\ &+
+        t_{ij}^{ab} \langle ij\|ef\rangle
+        -
+        t_{ij}^{ab} \langle ij\|bc\rangle \delta_{ef}
+    )
+\end{align}
+by the diagonal nature of the Fock matrix, $f_{pq} = \epsilon_p \delta_{pq}$, for the first term we can write:
+\begin{align}
+    2\sum_{i>j}\sum_b \frac{\langle ij||af\rangle}{\Delta_{ijab}} \langle ij\|eb\rangle = - 2 \sum_b D_{ab} f_{eb} \delta_{bf} = - 2 \sum_b D_{ab} f_{bb} \delta_{ef}
+\end{align}
+and for the second term goes to zero?, the third term is the direct contribution to the Hessian, and the fourth term can be rewritten as:
+\begin{align}
+    - 2\sum_{i>j}\sum_b t_{ij}^{ab} \langle ij\|bc\rangle \delta_{ef} = 2 \sum_b D_{ab} f_{bc} \delta_{ef} = 2 \sum_b D_{ab} f_{bb} \delta_{ef}
+\end{align}
+
+The second term of the gradient gives:
+\begin{align}
+    \frac{\partial}{\partial R_{bf}} \left( 2 \sum_{b} D_{ab} f_{eb} \right) 
+    &= 
+    2 \sum_{b} \left( \frac{\partial D_{ab}}{\partial R_{bf}} f_{eb} + D_{ab} \frac{\partial f_{eb}}{\partial R_{bf}} \right) 
+    \\&=
+    2 \sum_{b} \sum_{i>j} \sum_c 
+    \left(
+        \frac{\partial t_{ij}^{ac}}{\partial R_{bf}}t_{ij}^{bc}
+        +
+        t_{ij}^{ac}\frac{\partial t_{ij}^{bc}}{\partial R_{bf}}
+    \right) f_{eb}
+    +
+    2 D_{ab} 
+    \left( 
+        f_{ef} - \sum_b \delta_{ef}f_{bc} 
+    \right)
+    \\&=
+    2 \sum_{b} \sum_{i>j} \sum_c 
+    % \left(
+    % t_{ij}^{bc}
+    % \left(
+    %     \frac{\langle ij||af\rangle}{\Delta_{ijab}}
+    %     +
+    %     \frac{t_{ij}^{ab}f_{bf}}{\Delta_{ijab}}
+    % \right)
+    % +
+    t_{ij}^{ac}
+    \left(
+        \frac{\langle ij||fc\rangle}{\Delta_{ijbc}}
+        +
+        \frac{t_{ij}^{bc}f_{bf}}{\Delta_{ijbc}}
+    \right) f_{eb}
+    % \right)
+    % \\ &+
+    +
+    2 D_{ab} f_{ef}
+    - 2 D_{ab} \sum_b \delta_{ef}f_{bc} 
+\end{align}
+
+We use the stationary condition $G_{ae} = 0$ to simplify some of the terms:
+\begin{align}
+    2\sum_{i>j} \sum_{b} t_{ij}^{ab} \langle ij\|eb\rangle 
+    = - 2 \sum_{b} D_{ab} f_{eb} = - 2 \sum_{i>j} \sum_{b} \sum_{c} t_{ij}^{ac} t_{ij}^{bc} f_{eb}
+\end{align}
+
+I rewrite some terms
+\begin{align}
+    - 2\sum_{i>j}\sum_b t_{ij}^{ab} \langle ij\|bc\rangle \delta_{ef} = 2 \sum_{b} D_{ab} f_{bc} \delta_{ef}
+    = 2 \sum_{b} D_{ab} f_{bb} \delta_{ef}
+\end{align}
+\begin{align}
+    2 \sum_{b} D_{ab} f_{ef} (1-\delta_{ef}) = 2 \sum_{b} D_{ab} f_{ef} - 2 \sum_{b} D_{ab} f_{ef} \delta_{ef}
+\end{align}
+\begin{align}
+    2 \sum_{i>j} \sum_b \sum_{c}  t_{ij}^{ac} t_{ij}^{bc} f_{eb} \frac{f_{bf}}{\Delta_{ijbc}} = - 2 \sum_{i>j} \sum_b t_{ij}^{ab} \langle ij\|eb\rangle \frac{f_{bf}}{\Delta_{ijbc}}
+\end{align}
+
