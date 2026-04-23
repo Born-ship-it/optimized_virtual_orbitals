@@ -995,67 +995,94 @@ With canonical rotated orbitals, the MP2 energy for the new active space can be 
 %   CITE: \cite{Adamowicz1987_OVOS} Discussion section\n%         \cite{Rolik2011_Cost_Reduction} \S Results [experimental speedup curves]\n%         \cite{Neogrady2011_CC_OVOS} \S Implementation for detailed timing
 % ---------------------------------------------------------------
 
-...
+A central motivation for OVOS is the potential for significant computational speedup by contracting the orbital space to a smaller active orbital set. To quantify this, we analyse the computational cost of each step in the OVOS iteration and compare it to the cost of traditional full-space correlation methods.
 
 \subsection{Per-Iteration Cost of OVOS Optimisation}
 
-...
+Defining the cost of an action, requires introducing the Big O notation, which describes the asymptotic scaling of an algorithm with respect to the size of the input. In the context of OVOS, the relevant input sizes are the number of occupied orbitals ($N_{occ}$), the number of inactive virtual orbitals ($N_{inact}$), the number of optimized orbitals ($N'$), and the number of atomic orbitals ($n$).
+
+The computational cost of one OVOS iteration can be broken down by the steps involved, see Section 4.1 for an algorithm summary, where the cost are:
+\begin{itemize}
+    \item Integral transformation: $O(n^4 + N_{occ}^2 N_{virt}^2)$ for transforming two-electron integrals to the MO basis.
+    \item MP2 amplitude evaluation: $O(N_{occ}^2 N'^2)$ for computing the amplitudes in the active space.
+    \item MP2 energy: $O(N_{occ}^2 N'^4)$ for evaluating the MP2 energy with the active space amplitudes.
+    \item Density matrix $D_{ab}$: $O(N_{occ}^2 N'^3)$ for computing the virtual-virtual density matrix.
+    \item Gradient $G_{ea}$: $O(N_{occ}^2 N' N_{inact})$ for computing the gradient with respect to orbital rotations.
+    \item Hessian $H_{ea,fb}$: $O(N_{occ}^2 N_{inact}^2 N'^2)$ for computing the Hessian in block-diagonal form.
+    \item Block diagonal: $O(N_{inact} N'^2)$ for extracting the block-diagonal part of the Hessian.
+    \item Newton-Raphson step: $O(N_{inact} N'^3)$ inverting the block-diagonal Hessian.
+    \item Orbital rotation: $O((N_{occ}+ N_{inact} + N')^3)$ for computing the unitary rotation matrix via matrix exponential.
+    \item Canonicalisation: $O(N'^3)$ for diagonalising the active Fock block to obtain canonical orbitals.
+\end{itemize}
+Overall, the per-iteration cost is dominated differently for a few cases, summarized in the following table:
+\begin{table}[h]
+    \centering
+    \small
+    \begin{tabular}{c|c|c|c|c}
+        \textbf{Active Space Size} & \textbf{$r = N'/N_{\text{virt}}$} & \textbf{Dominant Step} & \textbf{Cost Scaling} & \textbf{Relative Cost} \\
+        \hline
+        \textbf{Small} & $\sim 0.1$ & Orbital Rotation & $O(N_{\text{virt}}^3)$ & Fastest, but minimal speedup \\
+        \textbf{Medium} & $\sim 0.3$–$0.5$ & Newton Solver* & $O((N_{\text{inact}} N')^3)$ & \textbf{Optimal window} \\
+        \textbf{Large} & $\sim 0.7$–$0.9$ & MP2 Energy & $O(N_{\text{occ}}^2 N'^4)$ & Diminishing returns \\
+        \hline
+    \end{tabular}
+    \caption{Dominant computational steps in OVOS iterations as a function of the active space size $N'$. *MP2 close 2nd.}
+\end{table}
+This reflects the trade-off in OVOS: smaller active spaces reduce the cost of MP2 energy and gradient evaluations but increase the relative cost of orbital rotations and Hessian inversions (number of blocks). Larger active spaces reduce the cost of orbital rotations but increase the cost of MP2 energy evaluations. The optimal window for OVOS is typically in the medium range, where the cost of the Newton step is manageable and the speedup from reduced MP2 evaluations is significant.
+
+Taken the size of the basis set into account, translating to the number of virtual orbitals, the per-iteration cost of OVOS is dominated by the MP2 energy evaluation step, which scales as $O(N_{occ}^2 N'^4)$. However, since $N' < N_{virt}$, this represents a significant reduction compared to the full-space MP2 cost as the basis set size increases, beating out the cost of orbital rotations and Hessian inversions.
 
 \subsection{Comparison: Full Virtual Space vs OVOS-Reduced}
 
-...
+In a traditional full-space MP2 calculation, the cost scales as $O(N_occ^2 N_virt^4)$ due to the need to consider all virtual orbitals in the amplitude calculations
 
-\subsection{Downstream CCSD/CCSD(T) Speedup Factors}
+\subsection{Downstream Speedup Factors}
 
-...
-
+In turn, how well would the reduced active space from OVOS speed up downstream methods like VQE. VQE scaling is dominated by the number of virtual orbitals, as the number of qubits and circuit depth scale with the size of the active space. The cost of VQE with a UtUPS ansatz scales as $O(N_{qubit})$, so the speedup from OVOS is the procentage of lower virtual space size, $O(N_{virt}/N')$. An advantage of OVOS might not be the recovered MP2 energy for a system, but the corresponding reduced virtual orbitals, as a trial state. 
 
 \subsection{Breakeven Analysis and Practical Realisation}
 
-...
-
-
-
+Despite a speedup seeming good, it would come at a cost of recovered correlation energy. The breakeven point for OVOS depends on the desired accuracy in the correlation energy and the size of the system. For small systems with few virtual orbitals, the overhead of OVOS iterations may not be justified, as the full-space MP2 calculation is already manageable. However, for larger systems with many virtual orbitals, OVOS can provide significant speedup while still recovering a substantial fraction of the correlation energy, as will be discussed. The practical breakeven point will differ from performance benchmarks, as it depends on the specific system, basis set, and computational resources available. 
 
 
 % ---------------------------------------------------------------
 
-% ---------------------------------------------------------------
-% NEW SECTION: LIMITATIONS AND SCOPE
-% ---------------------------------------------------------------
-\section{Limitations and Scope of OVOS}
-\label{sec:limitations}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 3.10]
-%   "While OVOS provides significant speedup for correlation methods,
-%    its applicability depends on system characteristics. This section
-%    outlines regimes where OVOS excels and where it may offer
-%    minimal advantage."
-%
-% [WHAT TO COVER]
-%   §Ideal OVOS Regimes (HIGH benefit):
-%   - Large basis sets (N_virt > 50): reduction most impactful
-%   - Multireference / bond-breaking: active space essential
-%   - Higher-order CC (CCSD(T), CC4): quartic scaling dominates
-%   - VQE/NISQ quantum computing: qubit savings critical
-%
-%   §Limited OVOS Benefit:
-%   - Small basis sets (N_v < 30): already manageable
-%   - Single-reference, well-behaved systems: MP2 often accurate
-%   - MP2-only studies: iterations overhead may not be worth it
-%   - Highly diffuse basis: diffuse orbitals cannot be neglected
-%
-%   §Known Issues:
-%   - Negative Hessian eigenvalues near convergence
-%   - Geometry dependence: re-optimize for each structure
-%   - Numerical sensitivity in convergence region
-%
-%   CITE: \cite{Adamowicz1987_OVOS} Applications section\n%         \cite{Rolik2011_Cost_Reduction} Discussion\n%         \cite{Quantum_Computing_Age_QC} VQE applications
-% ---------------------------------------------------------------
-\subsection{Systems Where OVOS Maximises Benefit}
-\subsection{Regimes of Limited Applicability}
-\subsection{Numerical Challenges and Remedies}
-\subsection{Geometry Dependence and Re-Optimisation Strategy}
+% % ---------------------------------------------------------------
+% % NEW SECTION: LIMITATIONS AND SCOPE
+% % ---------------------------------------------------------------
+% \section{Limitations and Scope of OVOS}
+% \label{sec:limitations}
+% % ---------------------------------------------------------------
+% % [SECTION INTRO – 3.10]
+% %   "While OVOS provides significant speedup for correlation methods,
+% %    its applicability depends on system characteristics. This section
+% %    outlines regimes where OVOS excels and where it may offer
+% %    minimal advantage."
+% %
+% % [WHAT TO COVER]
+% %   §Ideal OVOS Regimes (HIGH benefit):
+% %   - Large basis sets (N_virt > 50): reduction most impactful
+% %   - Multireference / bond-breaking: active space essential
+% %   - Higher-order CC (CCSD(T), CC4): quartic scaling dominates
+% %   - VQE/NISQ quantum computing: qubit savings critical
+% %
+% %   §Limited OVOS Benefit:
+% %   - Small basis sets (N_v < 30): already manageable
+% %   - Single-reference, well-behaved systems: MP2 often accurate
+% %   - MP2-only studies: iterations overhead may not be worth it
+% %   - Highly diffuse basis: diffuse orbitals cannot be neglected
+% %
+% %   §Known Issues:
+% %   - Negative Hessian eigenvalues near convergence
+% %   - Geometry dependence: re-optimize for each structure
+% %   - Numerical sensitivity in convergence region
+% %
+% %   CITE: \cite{Adamowicz1987_OVOS} Applications section\n%         \cite{Rolik2011_Cost_Reduction} Discussion\n%         \cite{Quantum_Computing_Age_QC} VQE applications
+% % ---------------------------------------------------------------
+% \subsection{Systems Where OVOS Maximises Benefit}
+% \subsection{Regimes of Limited Applicability}
+% \subsection{Numerical Challenges and Remedies}
+% \subsection{Geometry Dependence and Re-Optimisation Strategy}
 
 % ---------------------------------------------------------------
 
@@ -1085,9 +1112,24 @@ With canonical rotated orbitals, the MP2 energy for the new active space can be 
 %        \cite{Lee2018_OO-MP2} for OO-MP2 and T1 reduction
 %        \cite{Helgaker2000} § 13.0+ for general Brueckner theory
 % ---------------------------------------------------------------
-\subsection{Orbital Stationarity and the Brueckner Condition}
-\subsection{Relationship to Orbital-Optimised MP2}
-\subsection{Expected Reduction of T1 Amplitudes}
+
+OVOS orbitals satisfy a stationarity condition with respect to orbital rotations between the active and inactive virtual spaces. Specifically, at convergence of the OVOS procedure, the gradient of the Hylleraas functional with respect to these rotations vanishes:
+\begin{equation}
+    \frac{\partial J_2}{\partial R_{ae}} = G_{ae} = 0 \quad \forall a,e
+\end{equation}
+This condition implies that the MP2 energy is stationary with respect to orbital rotations that mix the active virtual orbitals (those included in the OVOS optimization) and the inactive virtual orbitals (those excluded from the active space). In the context of orbital-optimized MP2 (OO-MP2), stationarity of the energy with respect to all orbital rotations (including occupied-virtual) leads to the condition that the single-excitation amplitudes $T_1$ vanish, which defines Brueckner orbitals. 
+
+We express the single-excitation amplitudes $T_1$ as the coupling between the reference determinant and singly excited determinants:
+\begin{equation}
+    T_1 = \sum_{i,a} t_i^a |\Phi_i^a\rangle 
+\end{equation}
+where $t_i^a$ are the single-excitation amplitudes, $|\Phi_i^a\rangle$ are the singly excited determinants obtained by replacing an occupied orbital $i$ with a virtual orbital $a$. 
+
+While OVOS does not enforce stationarity with respect to occupied-virtual rotations, it achieves stationarity within the truncated active virtual space, effectively making the OVOS orbitals the Brueckner orbitals of that active space. This connection has important implications for the quality of the reference state and the expected reduction of $T_1$ amplitudes in subsequent correlation treatments. 
+
+% \subsection{Orbital Stationarity and the Brueckner Condition}
+% \subsection{Relationship to Orbital-Optimised MP2}
+% \subsection{Expected Reduction of T1 Amplitudes}
 
 % ---------------------------------------------------------------
 
@@ -1116,6 +1158,84 @@ With canonical rotated orbitals, the MP2 energy for the new active space can be 
 %  CITE: \cite{Quantum_Computing_Age_QC} for VQE background
 %        \cite{deGracia2024_Hamiltonian} for qubit resource calculations
 %        \cite{Lee2018_OO-MP2} for Brueckner / OO-MP2 connection
+%
+
+% def make_natural_orbitals (method_obj):
+%     """Make natural orbitals from a general PySCF method object.
+%     See Eqn. (1) in Keller et al. [DOI:10.1063/1.4922352] for details.
+%  https://watermark02.silverchair.com/244104_1_online.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAABdgwggXUBgkqhkiG9w0BBwagggXFMIIFwQIBADCCBboGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM4bDnI3jwmRZbLEoUAgEQgIIFi0qmVbWxMjWseoh-1MZZJuTxJ51yw2PJEzwvArvqlH6QubH-ozjukb0iaJzkmr6UVtJbd2U6upqH81BGE-OmzuIcpr5zNBASWve39-mTqtIS_Y4lZN4ZZZbSgZj4ji8NdsPtGZZQ-DbqL01EVALTxKrGa7umMmk3VvIA4g2ffFbRx1mHzcHc6fw6bVVI28cZe2RaY-sDsFJRalZVuESvV0vbRnW8zTrSe_aKUKOnIlfA3lF7Mf1X7BRh2bL4IA7541jsQHarM2kTQdM5eVAaCGSWGISuTDO8ziHCcNCFlOuBTu4HRB5NKcH6wUwcvjiTrdCYQa4tSYWsmuQVgc6B-9JcQMluEDi_rqG4UVSf4_fHMA6g0jnfdwDRlwcbd5xhOpkVzClX-aTcZf_JnJOj1ZJ2zA5jCQSayhfeKkWiHeYwJGwjJsx1HNeMApkGaTsusl9S6qWnNM5A3fJzGhppudzehvThHJMwQEXXXzj3EgW48Tony-bd6ehIKeTaH5n9YPR7hCOXUD20Rgii4PvI24MraUnnYylfAmunoV33GleOthnDFiySQEY6Qvoe4m-LH4fvNCKuwnTazG-TPuDs-zBsVaM_SSBO1wLqcvAKtOIdt3dHbDQCrEKrzM-zgh2ZMtu797ilaek5bz2rQ9oqKbTYAAmw1jJqLANDNftShoSAQfVsxMoYHrg4pL6TxTQrfnYXJc8iWm9vHFACOAOe6W_6-1q17m2GKrHqqpLns12WKiVNpjXNLt0NMjtxkHbW-OJ4F9vNVdKesfDB9zKtFmB9FhrGBCS0EvyqLuJd97Vys3QOgEFTxIxyID1kE2vznVSvlC8g7DJP2_65_Zwba9re_OmX79jYxxDthb0LJKX9oSkp1u8-7D5OvwS3iNuhEqMC-Gy4AcoxEkC4EAQk3gFg7AMJ-aN_MqWNR7TWnHxsDDkW9VuEg7vpG__C749cIAALjRB2Y90YXR4HP4zw5vyIT5nCO3DQtRiq2-Z-hn8LJQjc3nxHNOc0O7Dm87bxC0jRkhgLX32UIgp7LVldpeVkxBI_L1Myxzgpdx01oXo9LcFmqvQAF9_KQP3y4C-THGQgL0eLJgfo_Q8SdOyYhADuZ7cjh7QDd4AHho1JvnSmU1Oh0zVZXqHWMuOJqEzTT3v1KrTEkHbmWyz9KoAAOoYRDNwbpQQIQ4R6KB2ohbpmnrfIdyuXdXvPCntJgxZL1HUXwMTC2UzvYEaBxjQ3rqTxkLfu9h-G-KQjoAqwlRwrrq-HyVyNtUtYjuEFKfhuBbjwo5vxHM2YvE0koda-st2cIjd72AUmFhY8hZSrGJEX68X_NZ736zUIJvaek5pIrRimBP8fKiipyxlmSmh0PPAykAjOCCpaWZu5YR7veygnYFk0Tqm20MQihkXVyygjzln8k6hKnj99juu2dnU3kx33VDlV_awWC5duRlVI0cGufg1uMkR3QB2KLLT0GptK99SeRSGlXACm5tONpCr0hEIkjETis1Ixy3MHXa966DItpKA997pYGh74enizQLqwKWXhhA-LKjSmhkHgR6fNHOyUjggmwj_zhcwJMvcmeJyl5Q4jM7xGd9OVABZhNa0EuhHbk-ZwTZaVcpSZwZlkmM2mghoPm5ojB3_ojk8A-4NNHQh1J6hs9Hr2V0wC5CG5S06inSvCCHE0x29WyGJuBqvO-_gW0Lpdb7PpElkrbk8tqpumaPKak1QBfO7ZTFXKRHjBe1DwTzLZq-8tpS6ZBW4uWI7U8fZas5hy6u8ni6ve6HbdAFoLgzfOo76qgtVBK8Zx6LoSOwsHygrZ_nrV0Si-SeCrWZSPbT55Qe8_bsdhcQx2s2g1bEWI3oRYeQZVJrxxxkvpvCXuqrZrvF2AVuApy0KMnZorgS5ujw
+
+%     Args:
+%         method_obj : Any PySCF method that has the function `make_rdm1` with kwarg
+%             `ao_repr`. This object can be a restricted OR unrestricted method.
+
+%     Returns:
+%         noons : A 1-D array of the natural orbital occupations (NOONs).
+
+%         natorbs : A set of natural orbitals made from method_obj.
+%     """
+%     mf = method_obj
+%     if hasattr(method_obj, "_scf"):
+%         mf = method_obj._scf
+%     rdm1 = method_obj.make_rdm1(ao_repr=True)
+%     S = mf.get_ovlp()
+
+%     # Slight difference for restricted vs. unrestriced case
+%     if isinstance(rdm1, tuple):
+%         Dm = rdm1[0]+rdm1[1]
+%     elif isinstance(rdm1, numpy.ndarray):
+%         if numpy.ndim(rdm1) == 3:
+%             Dm = rdm1[0]+rdm1[1]
+%         elif numpy.ndim(rdm1) == 2:
+%             Dm = rdm1
+%         else:
+%             raise ValueError(
+%                 "rdm1 passed to is a numpy array," +
+%                 "but it has the wrong number of dimensions: {}".format(numpy.ndim(rdm1)))
+%     else:
+%         raise ValueError(
+%             "\n\tThe rdm1 generated by method_obj.make_rdm1() was a {}."
+%             "\n\tThis type is not supported, please select a different method and/or "
+%             "open an issue at https://github.com/pyscf/pyscf/issues".format(type(rdm1))
+%         )
+
+%     # Diagonalize the DM in AO (using Eqn. (1) referenced above)
+%     A = reduce(numpy.dot, (S, Dm, S))
+%     w, v = scipy.linalg.eigh(A, b=S)
+
+%     # Flip NOONs (and NOs) since they're in increasing order
+%     noons = numpy.flip(w)
+%     natorbs = numpy.flip(v, axis=1)
+
+%     return noons, natorbs
 % ---------------------------------------------------------------\n\subsection{Reference-State Overlap with the FCI Ground State}
+
+We had VQE as a potential downstream application of OVOS, as the reduced active virtual space directly translates to fewer qubits and shallower circuits. VQE pivots us from classical quantum chemistry to quantum computing, where the quality of the trial state is crucial for convergence and accuracy. This section motivates why OVOS trial states are beneficial for variational quantum algorithms on NISQ devices.
+
+\subsection{Reference-State Overlap}
+
+To quantify the quality of the OVOS orbitals as a trial state for VQE, we can consider the overlap (or fidelity) between the reference state constructed from the OVOS orbitals and the $UMP2$ natural orbitals (UNO). The fidelity $F$ is defined as: 
+\begin{equation}
+    F = |\langle \Phi_{ref} | \Psi_{UNO} \rangle|^2
+\end{equation}
+where $\Phi_{ref}$ is the reference state built from the OVOS orbitals and $\Psi_{UNO}$ is the UMP2 wavefunction expressed in the natural orbital basis. 
+
+Detailing the $UMP2$ natural orbitals, being rooted in UHF orbitals, they are the given by diagonalizing the one-particle density matrix constructed from the UMP2 amplitudes:
+\begin{equation}
+    D_{pq} = \sum_{ijab} t_{ij}^{ab} \langle pq | ij \rangle
+\end{equation}
+where $t_{ij}^{ab}$ are the UMP2 amplitudes and $\langle pq | ij \rangle$ are the two-electron integrals. Diagonalizing $D_{pq}$ yields the natural orbitals:
+\begin{equation}
+    S D_{pq} S C = S C n
+\end{equation}
+where $S$ is the overlap matrix, $C$ are the coefficients of the natural orbitals, and $n$ are the natural orbital occupation numbers. 
+
+The claim is that $F_{\text{OVOS}} \geq F_{\text{HF}}$ because OVOS orbitals are optimized to minimize the MP2 energy, which should yield a reference state that has a higher overlap with the correlated wavefunction compared to the Hartree-Fock orbitals. This improved overlap can lead to faster convergence in VQE, as the initial state is closer to the true ground state, and can also reduce the required circuit depth to achieve a given accuracy.
+
 \subsection{Reduction of T1 Amplitudes and Circuit Depth}
-\subsection{Qubit Resource Savings}
+
+Within VQE the reduction of $T_1$ amplitudes in the OVOS orbitals implies that the single-excitation contributions to the wavefunction are minimized. This has significant implications for the choice of ansatz in VQE, as it allows for the use of simple ansatz dropping single excitations (e.g., UCCD instead of UCCSD), which can significantly reduce the circuit depth and complexity. The reduction in $T_1$ amplitudes might reflect a good approximation to the reference state, which can lead to faster convergence and improved accuracy in VQE calculations.
+
+
+
+

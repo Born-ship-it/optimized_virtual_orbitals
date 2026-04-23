@@ -50,6 +50,7 @@
 \newacro{PySCF}[\AC@hyperlink{PySCF}{PySCF}]{Python-based Simulations of Chemistry Framework}
 \newacro{UCPH}[\AC@hyperlink{UCPH}{UCPH}]{University of Copenhagen}
 \citation{Adamowicz1987}
+\citation{Adamowicz1987}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -57,9 +58,10 @@
 \newlabel{ch:introduction@cref}{{[chapter][1][]1}{[1][1][]1}{}{}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.1}Motivation}{1}{section.1.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {1.2}The Virtual Orbital Space Problem}{1}{section.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}Quantum Computing Context}{1}{section.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {1.4}Objectives}{1}{section.1.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {1.5}Thesis Outline}{1}{section.1.5}\protected@file@percent }
+\citation{Lowdin1955}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Quantum Computing Context}{2}{section.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}Objectives}{2}{section.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.5}Thesis Outline}{2}{section.1.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}Background}{3}{chapter.2}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -149,210 +151,202 @@
 \newlabel{sec:scaling}{{3.8}{25}{Computational Cost and Scaling Analysis}{section.3.8}{}}
 \newlabel{sec:scaling@cref}{{[section][8][3]3.8}{[1][25][]25}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.8.1}Per-Iteration Cost of OVOS Optimisation}{25}{subsection.3.8.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.2}Comparison: Full Virtual Space vs OVOS-Reduced}{25}{subsection.3.8.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.3}Downstream CCSD/CCSD(T) Speedup Factors}{25}{subsection.3.8.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.4}Breakeven Analysis and Practical Realisation}{25}{subsection.3.8.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.9}Limitations and Scope of OVOS}{25}{section.3.9}\protected@file@percent }
-\newlabel{sec:limitations}{{3.9}{25}{Limitations and Scope of OVOS}{section.3.9}{}}
-\newlabel{sec:limitations@cref}{{[section][9][3]3.9}{[1][25][]25}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.9.1}Systems Where OVOS Maximises Benefit}{25}{subsection.3.9.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.9.2}Regimes of Limited Applicability}{25}{subsection.3.9.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.9.3}Numerical Challenges and Remedies}{25}{subsection.3.9.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.9.4}Geometry Dependence and Re-Optimisation Strategy}{25}{subsection.3.9.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.10}OVOS Orbitals as Approximate Brueckner Orbitals}{26}{section.3.10}\protected@file@percent }
-\newlabel{sec:ovos_brueckner}{{3.10}{26}{OVOS Orbitals as Approximate Brueckner Orbitals}{section.3.10}{}}
-\newlabel{sec:ovos_brueckner@cref}{{[section][10][3]3.10}{[1][25][]26}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.10.1}Orbital Stationarity and the Brueckner Condition}{26}{subsection.3.10.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.10.2}Relationship to Orbital-Optimised MP2}{26}{subsection.3.10.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.10.3}Expected Reduction of T1 Amplitudes}{26}{subsection.3.10.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.11}OVOS Molecular Orbitals as a Trial State for VQE}{26}{section.3.11}\protected@file@percent }
-\newlabel{sec:ovos_vqe}{{3.11}{26}{OVOS Molecular Orbitals as a Trial State for VQE}{section.3.11}{}}
-\newlabel{sec:ovos_vqe@cref}{{[section][11][3]3.11}{[1][26][]26}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.11.1}Reduction of T1 Amplitudes and Circuit Depth}{26}{subsection.3.11.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.11.2}Qubit Resource Savings}{26}{subsection.3.11.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Method}{27}{chapter.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Dominant computational steps in OVOS iterations as a function of the active space size $N'$. *MP2 close 2nd.}}{26}{table.caption.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.2}Comparison: Full Virtual Space vs OVOS-Reduced}{26}{subsection.3.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.3}Downstream Speedup Factors}{26}{subsection.3.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.8.4}Breakeven Analysis and Practical Realisation}{26}{subsection.3.8.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.9}OVOS Orbitals as Approximate Brueckner Orbitals}{27}{section.3.9}\protected@file@percent }
+\newlabel{sec:ovos_brueckner}{{3.9}{27}{OVOS Orbitals as Approximate Brueckner Orbitals}{section.3.9}{}}
+\newlabel{sec:ovos_brueckner@cref}{{[section][9][3]3.9}{[1][27][]27}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.10}OVOS Molecular Orbitals as a Trial State for VQE}{27}{section.3.10}\protected@file@percent }
+\newlabel{sec:ovos_vqe}{{3.10}{27}{OVOS Molecular Orbitals as a Trial State for VQE}{section.3.10}{}}
+\newlabel{sec:ovos_vqe@cref}{{[section][10][3]3.10}{[1][27][]27}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.10.1}Reference-State Overlap}{27}{subsection.3.10.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.10.2}Reduction of T1 Amplitudes and Circuit Depth}{28}{subsection.3.10.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Method}{29}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:method}{{4}{27}{Method}{chapter.4}{}}
-\newlabel{ch:method@cref}{{[chapter][4][]4}{[1][27][]27}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Algorithm Overview}{27}{section.4.1}\protected@file@percent }
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces OVOS Iterative Optimisation}}{27}{algorithm.1}\protected@file@percent }
-\newlabel{alg:ovos}{{1}{27}{OVOS Iterative Optimisation}{algorithm.1}{}}
-\newlabel{alg:ovos@cref}{{[algorithm][1][]1}{[1][27][]27}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Integral Transformation}{27}{section.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}AO-to-MO Transformation}{27}{subsection.4.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Spin-Orbital Construction}{27}{subsection.4.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Notation Convention: Chemists' vs.\ Physicists' Integrals}{27}{subsection.4.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Initial Active Space Selection}{27}{section.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}MP1 Amplitudes and MP2 Energy}{27}{section.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Gradient and Hessian Assembly}{27}{section.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Block Structure and Efficient Inversion}{27}{subsection.4.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}Level-Shift Stabilisation}{27}{subsection.4.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.6}Orbital Rotation and Update}{27}{section.4.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.7}Convergence and Iteration Control}{28}{section.4.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.8}Initialisation Strategies}{28}{section.4.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.8.1}Default SCF Initialisation}{28}{subsection.4.8.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.8.2}Warm-Start from Previous Orbital Set}{28}{subsection.4.8.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.8.3}Random Unitary Sampling}{28}{subsection.4.8.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Computational Details}{29}{chapter.5}\protected@file@percent }
+\newlabel{ch:method}{{4}{29}{Method}{chapter.4}{}}
+\newlabel{ch:method@cref}{{[chapter][4][]4}{[1][29][]29}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Algorithm Overview}{29}{section.4.1}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces OVOS Iterative Optimisation}}{29}{algorithm.1}\protected@file@percent }
+\newlabel{alg:ovos}{{1}{29}{OVOS Iterative Optimisation}{algorithm.1}{}}
+\newlabel{alg:ovos@cref}{{[algorithm][1][]1}{[1][29][]29}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Integral Transformation}{29}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}AO-to-MO Transformation}{29}{subsection.4.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Spin-Orbital Construction}{29}{subsection.4.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Notation Convention: Chemists' vs.\ Physicists' Integrals}{29}{subsection.4.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Initial Active Space Selection}{29}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}MP1 Amplitudes and MP2 Energy}{29}{section.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Gradient and Hessian Assembly}{29}{section.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Block Structure and Efficient Inversion}{29}{subsection.4.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}Level-Shift Stabilisation}{29}{subsection.4.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.6}Orbital Rotation and Update}{29}{section.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.7}Convergence and Iteration Control}{30}{section.4.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.8}Initialisation Strategies}{30}{section.4.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.8.1}Default SCF Initialisation}{30}{subsection.4.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.8.2}Warm-Start from Previous Orbital Set}{30}{subsection.4.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.8.3}Random Unitary Sampling}{30}{subsection.4.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Computational Details}{31}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:computational}{{5}{29}{Computational Details}{chapter.5}{}}
-\newlabel{ch:computational@cref}{{[chapter][5][]5}{[1][29][]29}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Software and Libraries}{29}{section.5.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Software packages used in this work.}}{29}{table.caption.12}\protected@file@percent }
-\newlabel{tab:software}{{5.1}{29}{Software packages used in this work}{table.caption.12}{}}
-\newlabel{tab:software@cref}{{[table][1][5]5.1}{[1][29][]29}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}Hardware}{29}{section.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}Molecular Geometries}{30}{section.5.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5.2}{\ignorespaces Molecular geometries and electronic structure parameters used in this work.}}{30}{table.caption.13}\protected@file@percent }
-\newlabel{tab:geometries}{{5.2}{30}{Molecular geometries and electronic structure parameters used in this work}{table.caption.13}{}}
-\newlabel{tab:geometries@cref}{{[table][2][5]5.2}{[1][30][]30}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.4}Basis Sets}{30}{section.5.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.5}Reference SCF Calculations}{30}{section.5.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.6}OVOS Calculation Settings}{30}{section.5.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.7}Data Storage and Reproducibility}{30}{section.5.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Results}{31}{chapter.6}\protected@file@percent }
+\newlabel{ch:computational}{{5}{31}{Computational Details}{chapter.5}{}}
+\newlabel{ch:computational@cref}{{[chapter][5][]5}{[1][31][]31}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Software and Libraries}{31}{section.5.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Software packages used in this work.}}{31}{table.caption.13}\protected@file@percent }
+\newlabel{tab:software}{{5.1}{31}{Software packages used in this work}{table.caption.13}{}}
+\newlabel{tab:software@cref}{{[table][1][5]5.1}{[1][31][]31}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Hardware}{31}{section.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Molecular Geometries}{32}{section.5.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.2}{\ignorespaces Molecular geometries and electronic structure parameters used in this work.}}{32}{table.caption.14}\protected@file@percent }
+\newlabel{tab:geometries}{{5.2}{32}{Molecular geometries and electronic structure parameters used in this work}{table.caption.14}{}}
+\newlabel{tab:geometries@cref}{{[table][2][5]5.2}{[1][32][]32}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}Basis Sets}{32}{section.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.5}Reference SCF Calculations}{32}{section.5.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.6}OVOS Calculation Settings}{32}{section.5.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.7}Data Storage and Reproducibility}{32}{section.5.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Results}{33}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:results}{{6}{31}{Results}{chapter.6}{}}
-\newlabel{ch:results@cref}{{[chapter][6][]6}{[1][31][]31}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}Validation of the Implementation}{31}{section.6.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Validation of the OVOS implementation against PySCF \lstinline [language=Python]|mp.MP2|. Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the 6--31G basis for this validation.}}{32}{table.caption.14}\protected@file@percent }
-\newlabel{tab:validation}{{6.1}{32}{Validation of the OVOS implementation against PySCF \code {mp.MP2}. Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the 6--31G basis for this validation}{table.caption.14}{}}
-\newlabel{tab:validation@cref}{{[table][1][6]6.1}{[1][31][]32}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}Energy Recovery as a Function of Active Virtual Orbital Count}{32}{section.6.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6.2}{\ignorespaces Summary of OVOS results for ... in the ... basis at each $N'_{\rm  act.unocc}$.}}{32}{table.caption.15}\protected@file@percent }
-\newlabel{tab:..._results}{{6.2}{32}{Summary of OVOS results for ... in the ... basis at each $N'_{\rm act.unocc}$}{table.caption.15}{}}
-\newlabel{tab:..._results@cref}{{[table][2][6]6.2}{[1][32][]32}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6.3}{\ignorespaces Summary of OVOS results for ... in the ... basis at each $N'_{\rm  act.unocc}$.}}{32}{table.caption.17}\protected@file@percent }
-\newlabel{tab:..._results}{{6.3}{32}{Summary of OVOS results for ... in the ... basis at each $N'_{\rm act.unocc}$}{table.caption.17}{}}
-\newlabel{tab:..._results@cref}{{[table][3][6]6.3}{[1][32][]32}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm  act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}}{33}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:HF_6-31G_ovos}{{6.1}{33}{Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated}{figure.caption.16}{}}
-\newlabel{fig:HF_6-31G_ovos@cref}{{[figure][1][6]6.1}{[1][32][]33}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.2}{\ignorespaces Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm  act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}}{34}{figure.caption.18}\protected@file@percent }
-\newlabel{fig:HF_6-31G_ovos}{{6.2}{34}{Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated}{figure.caption.18}{}}
-\newlabel{fig:HF_6-31G_ovos@cref}{{[figure][2][6]6.2}{[1][32][]34}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6.4}{\ignorespaces Summary of OVOS results for HF in the 6--31G basis at each $N'_{\rm  act.unocc}$.}}{35}{table.caption.19}\protected@file@percent }
-\newlabel{tab:HF_6-31G_results}{{6.4}{35}{Summary of OVOS results for HF in the 6--31G basis at each $N'_{\rm act.unocc}$}{table.caption.19}{}}
-\newlabel{tab:HF_6-31G_results@cref}{{[table][4][6]6.4}{[1][35][]35}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6.5}{\ignorespaces Summary of OVOS results for ... in the ... basis at each $N'_{\rm  act.unocc}$.}}{35}{table.caption.21}\protected@file@percent }
-\newlabel{tab:..._results}{{6.5}{35}{Summary of OVOS results for ... in the ... basis at each $N'_{\rm act.unocc}$}{table.caption.21}{}}
-\newlabel{tab:..._results@cref}{{[table][5][6]6.5}{[1][35][]35}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.3}Convergence Behaviour}{35}{section.6.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.3}{\ignorespaces Convergence of the MP2 correlation energy for HF in the 6--31G basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm  act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}}{36}{figure.caption.20}\protected@file@percent }
-\newlabel{fig:HF_6-31G_ovos}{{6.3}{36}{Convergence of the MP2 correlation energy for HF in the 6--31G basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated}{figure.caption.20}{}}
-\newlabel{fig:HF_6-31G_ovos@cref}{{[figure][3][6]6.3}{[1][35][]36}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.4}{\ignorespaces Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm  act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}}{37}{figure.caption.22}\protected@file@percent }
-\newlabel{fig:HF_6-31G_ovos}{{6.4}{37}{Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated}{figure.caption.22}{}}
-\newlabel{fig:HF_6-31G_ovos@cref}{{[figure][4][6]6.4}{[1][35][]37}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.5}{\ignorespaces Convergence behavior of the MP2 correlation energy for HF in the 6--31G basis with $N'_{\rm  act.unocc} = 3$ active virtual spin-orbitals. The dashed line marks the convergence threshold of $10^{-8}$~Hartree.}}{38}{figure.caption.23}\protected@file@percent }
-\newlabel{fig:HF_6-31G_convergence}{{6.5}{38}{Convergence behavior of the MP2 correlation energy for HF in the 6--31G basis with $N'_{\rm act.unocc} = 3$ active virtual spin-orbitals. The dashed line marks the convergence threshold of $10^{-8}$~Hartree}{figure.caption.23}{}}
-\newlabel{fig:HF_6-31G_convergence@cref}{{[figure][5][6]6.5}{[1][35][]38}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.4}Effect of Initialization Strategy}{38}{section.6.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.6}{\ignorespaces Comparison of final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis].}}{39}{figure.caption.24}\protected@file@percent }
-\newlabel{fig:init_comparison}{{6.6}{39}{Comparison of final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis]}{figure.caption.24}{}}
-\newlabel{fig:init_comparison@cref}{{[figure][6][6]6.6}{[1][38][]39}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.5}Basis Set Dependence}{39}{section.6.5}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6.6}{\ignorespaces Comparison of energy recovery for H\textsubscript  {2}O across different basis sets at a fixed number of active unoccupied orbitals $N'_{\rm  act.unocc}$.}}{39}{table.caption.27}\protected@file@percent }
-\newlabel{tab:basis_comparison_relative}{{6.6}{39}{Comparison of energy recovery for H\textsubscript {2}O across different basis sets at a fixed number of active unoccupied orbitals $N'_{\rm act.unocc}$}{table.caption.27}{}}
-\newlabel{tab:basis_comparison_relative@cref}{{[table][6][6]6.6}{[1][39][]39}{}{}{}}
+\newlabel{ch:results}{{6}{33}{Results}{chapter.6}{}}
+\newlabel{ch:results@cref}{{[chapter][6][]6}{[1][33][]33}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Validation of the Implementation}{33}{section.6.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.1}{\ignorespaces Validation of the OVOS implementation against PySCF \lstinline [language=Python]|mp.MP2|. Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the 6--31G basis for this validation.}}{34}{table.caption.15}\protected@file@percent }
+\newlabel{tab:validation}{{6.1}{34}{Validation of the OVOS implementation against PySCF \code {mp.MP2}. Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the 6--31G basis for this validation}{table.caption.15}{}}
+\newlabel{tab:validation@cref}{{[table][1][6]6.1}{[1][33][]34}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Energy Recovery as a Function of Active Virtual Orbital Count}{34}{section.6.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.2}{\ignorespaces Summary of OVOS results for ... in the ... basis at each $N'_{\rm  act.unocc}$.}}{34}{table.caption.16}\protected@file@percent }
+\newlabel{tab:..._results}{{6.2}{34}{Summary of OVOS results for ... in the ... basis at each $N'_{\rm act.unocc}$}{table.caption.16}{}}
+\newlabel{tab:..._results@cref}{{[table][2][6]6.2}{[1][34][]34}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6.3}{\ignorespaces Summary of OVOS results for ... in the ... basis at each $N'_{\rm  act.unocc}$.}}{34}{table.caption.18}\protected@file@percent }
+\newlabel{tab:..._results}{{6.3}{34}{Summary of OVOS results for ... in the ... basis at each $N'_{\rm act.unocc}$}{table.caption.18}{}}
+\newlabel{tab:..._results@cref}{{[table][3][6]6.3}{[1][34][]34}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.1}{\ignorespaces Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm  act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}}{35}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:HF_6-31G_ovos}{{6.1}{35}{Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated}{figure.caption.17}{}}
+\newlabel{fig:HF_6-31G_ovos@cref}{{[figure][1][6]6.1}{[1][34][]35}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.2}{\ignorespaces Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm  act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}}{36}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:HF_6-31G_ovos}{{6.2}{36}{Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated}{figure.caption.19}{}}
+\newlabel{fig:HF_6-31G_ovos@cref}{{[figure][2][6]6.2}{[1][34][]36}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6.4}{\ignorespaces Summary of OVOS results for HF in the 6--31G basis at each $N'_{\rm  act.unocc}$.}}{37}{table.caption.20}\protected@file@percent }
+\newlabel{tab:HF_6-31G_results}{{6.4}{37}{Summary of OVOS results for HF in the 6--31G basis at each $N'_{\rm act.unocc}$}{table.caption.20}{}}
+\newlabel{tab:HF_6-31G_results@cref}{{[table][4][6]6.4}{[1][37][]37}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6.5}{\ignorespaces Summary of OVOS results for ... in the ... basis at each $N'_{\rm  act.unocc}$.}}{37}{table.caption.22}\protected@file@percent }
+\newlabel{tab:..._results}{{6.5}{37}{Summary of OVOS results for ... in the ... basis at each $N'_{\rm act.unocc}$}{table.caption.22}{}}
+\newlabel{tab:..._results@cref}{{[table][5][6]6.5}{[1][37][]37}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}Convergence Behaviour}{37}{section.6.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.3}{\ignorespaces Convergence of the MP2 correlation energy for HF in the 6--31G basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm  act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}}{38}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:HF_6-31G_ovos}{{6.3}{38}{Convergence of the MP2 correlation energy for HF in the 6--31G basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated}{figure.caption.21}{}}
+\newlabel{fig:HF_6-31G_ovos@cref}{{[figure][3][6]6.3}{[1][37][]38}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.4}{\ignorespaces Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm  act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}}{39}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:HF_6-31G_ovos}{{6.4}{39}{Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated}{figure.caption.23}{}}
+\newlabel{fig:HF_6-31G_ovos@cref}{{[figure][4][6]6.4}{[1][37][]39}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.5}{\ignorespaces Convergence behavior of the MP2 correlation energy for HF in the 6--31G basis with $N'_{\rm  act.unocc} = 3$ active virtual spin-orbitals. The dashed line marks the convergence threshold of $10^{-8}$~Hartree.}}{40}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:HF_6-31G_convergence}{{6.5}{40}{Convergence behavior of the MP2 correlation energy for HF in the 6--31G basis with $N'_{\rm act.unocc} = 3$ active virtual spin-orbitals. The dashed line marks the convergence threshold of $10^{-8}$~Hartree}{figure.caption.24}{}}
+\newlabel{fig:HF_6-31G_convergence@cref}{{[figure][5][6]6.5}{[1][37][]40}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.4}Effect of Initialization Strategy}{40}{section.6.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.6}{\ignorespaces Comparison of final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis].}}{41}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:init_comparison}{{6.6}{41}{Comparison of final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis]}{figure.caption.25}{}}
+\newlabel{fig:init_comparison@cref}{{[figure][6][6]6.6}{[1][40][]41}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.5}Basis Set Dependence}{41}{section.6.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.6}{\ignorespaces Comparison of energy recovery for H\textsubscript  {2}O across different basis sets at a fixed number of active unoccupied orbitals $N'_{\rm  act.unocc}$.}}{41}{table.caption.28}\protected@file@percent }
+\newlabel{tab:basis_comparison_relative}{{6.6}{41}{Comparison of energy recovery for H\textsubscript {2}O across different basis sets at a fixed number of active unoccupied orbitals $N'_{\rm act.unocc}$}{table.caption.28}{}}
+\newlabel{tab:basis_comparison_relative@cref}{{[table][6][6]6.6}{[1][41][]41}{}{}{}}
 \citation{Adamowicz1987}
 \citation{Adamowicz1987}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.7}{\ignorespaces Final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis]. Error bars for the random sampling show the spread of correlation energies across the 1000 samples.}}{40}{figure.caption.25}\protected@file@percent }
-\newlabel{fig:final_comparison}{{6.7}{40}{Final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis]. Error bars for the random sampling show the spread of correlation energies across the 1000 samples}{figure.caption.25}{}}
-\newlabel{fig:final_comparison@cref}{{[figure][7][6]6.7}{[1][38][]40}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6.7}{\ignorespaces Comparison of energy recovery for H\textsubscript  {2}O across different basis sets at a fixed absolute number of active unoccupied orbitals $N'_{\rm  act.unocc}$.}}{40}{table.caption.28}\protected@file@percent }
-\newlabel{tab:basis_comparison_fix}{{6.7}{40}{Comparison of energy recovery for H\textsubscript {2}O across different basis sets at a fixed absolute number of active unoccupied orbitals $N'_{\rm act.unocc}$}{table.caption.28}{}}
-\newlabel{tab:basis_comparison_fix@cref}{{[table][7][6]6.7}{[1][40][]40}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.6}Comparison with Adamowicz and Bartlett (1987)}{40}{section.6.6}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6.8}{\ignorespaces Basis set dependence of energy recovery for H\textsubscript  {2}O. The energy recovery fraction $\eta $ is plotted against the fraction of active virtual orbitals for three basis sets: 6--31G (blue), cc-pVDZ (orange), and cc-pVTZ (green). The dashed line marks 90\% recovery. A larger basis set, with more virtual orbitals, shifts the curve to the right, indicating that a larger fraction of active virtuals is required to achieve the same $\eta $.}}{41}{figure.caption.26}\protected@file@percent }
-\newlabel{fig:basis_comparison}{{6.8}{41}{Basis set dependence of energy recovery for H\textsubscript {2}O. The energy recovery fraction $\eta $ is plotted against the fraction of active virtual orbitals for three basis sets: 6--31G (blue), cc-pVDZ (orange), and cc-pVTZ (green). The dashed line marks 90\% recovery. A larger basis set, with more virtual orbitals, shifts the curve to the right, indicating that a larger fraction of active virtuals is required to achieve the same $\eta $}{figure.caption.26}{}}
-\newlabel{fig:basis_comparison@cref}{{[figure][8][6]6.8}{[1][39][]41}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.7}Computational Cost}{41}{section.6.7}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6.8}{\ignorespaces Comparison of OVOS correlation energies for CH\textsubscript  {2} with values from Adamowicz \& Bartlett \cite  {Adamowicz1987}. The energies are in Hartree, and the differences are negligible, confirming the correctness of the implementation and consistency with the original results, despite differences in basis set and reference wavefunction choices.}}{42}{table.caption.29}\protected@file@percent }
-\newlabel{tab:comparison_AB}{{6.8}{42}{Comparison of OVOS correlation energies for CH\textsubscript {2} with values from Adamowicz \& Bartlett \cite {Adamowicz1987}. The energies are in Hartree, and the differences are negligible, confirming the correctness of the implementation and consistency with the original results, despite differences in basis set and reference wavefunction choices}{table.caption.29}{}}
-\newlabel{tab:comparison_AB@cref}{{[table][8][6]6.8}{[1][40][]42}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6.9}{\ignorespaces Profiling of OVOS algorithm steps for [molecule]/[basis] with $N'_{\rm  act.unocc} = ...$. The integral transformation and Hessian assembly are identified as the bottlenecks, with their respective theoretical scalings.}}{42}{table.caption.30}\protected@file@percent }
-\newlabel{tab:profiling}{{6.9}{42}{Profiling of OVOS algorithm steps for [molecule]/[basis] with $N'_{\rm act.unocc} = ...$. The integral transformation and Hessian assembly are identified as the bottlenecks, with their respective theoretical scalings}{table.caption.30}{}}
-\newlabel{tab:profiling@cref}{{[table][9][6]6.9}{[1][41][]42}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.8}T1 Amplitudes and the Brueckner Orbital Connection}{42}{section.6.8}\protected@file@percent }
-\newlabel{sec:results_brueckner}{{6.8}{42}{T1 Amplitudes and the Brueckner Orbital Connection}{section.6.8}{}}
-\newlabel{sec:results_brueckner@cref}{{[section][8][6]6.8}{[1][42][]42}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6.9}{\ignorespaces Comparison of the Frobenius norm of the T1 amplitude tensor, $||T1||_F$, for OVOS-optimised orbitals and canonical HF orbitals as a function of the number of active virtual orbitals $N'_{\rm  act.unocc}$ for [molecule]/[basis].}}{43}{figure.caption.31}\protected@file@percent }
-\newlabel{fig:T1_comparison}{{6.9}{43}{Comparison of the Frobenius norm of the T1 amplitude tensor, $||T1||_F$, for OVOS-optimised orbitals and canonical HF orbitals as a function of the number of active virtual orbitals $N'_{\rm act.unocc}$ for [molecule]/[basis]}{figure.caption.31}{}}
-\newlabel{fig:T1_comparison@cref}{{[figure][9][6]6.9}{[1][42][]43}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.9}OVOS Orbitals as a VQE Reference State: Resource Estimates}{43}{section.6.9}\protected@file@percent }
-\newlabel{sec:results_vqe}{{6.9}{43}{OVOS Orbitals as a VQE Reference State: Resource Estimates}{section.6.9}{}}
-\newlabel{sec:results_vqe@cref}{{[section][9][6]6.9}{[1][42][]43}{}{}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {7}Conclusion}{45}{chapter.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.7}{\ignorespaces Final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis]. Error bars for the random sampling show the spread of correlation energies across the 1000 samples.}}{42}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:final_comparison}{{6.7}{42}{Final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis]. Error bars for the random sampling show the spread of correlation energies across the 1000 samples}{figure.caption.26}{}}
+\newlabel{fig:final_comparison@cref}{{[figure][7][6]6.7}{[1][40][]42}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6.7}{\ignorespaces Comparison of energy recovery for H\textsubscript  {2}O across different basis sets at a fixed absolute number of active unoccupied orbitals $N'_{\rm  act.unocc}$.}}{42}{table.caption.29}\protected@file@percent }
+\newlabel{tab:basis_comparison_fix}{{6.7}{42}{Comparison of energy recovery for H\textsubscript {2}O across different basis sets at a fixed absolute number of active unoccupied orbitals $N'_{\rm act.unocc}$}{table.caption.29}{}}
+\newlabel{tab:basis_comparison_fix@cref}{{[table][7][6]6.7}{[1][42][]42}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.6}Comparison with Adamowicz and Bartlett (1987)}{42}{section.6.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6.8}{\ignorespaces Basis set dependence of energy recovery for H\textsubscript  {2}O. The energy recovery fraction $\eta $ is plotted against the fraction of active virtual orbitals for three basis sets: 6--31G (blue), cc-pVDZ (orange), and cc-pVTZ (green). The dashed line marks 90\% recovery. A larger basis set, with more virtual orbitals, shifts the curve to the right, indicating that a larger fraction of active virtuals is required to achieve the same $\eta $.}}{43}{figure.caption.27}\protected@file@percent }
+\newlabel{fig:basis_comparison}{{6.8}{43}{Basis set dependence of energy recovery for H\textsubscript {2}O. The energy recovery fraction $\eta $ is plotted against the fraction of active virtual orbitals for three basis sets: 6--31G (blue), cc-pVDZ (orange), and cc-pVTZ (green). The dashed line marks 90\% recovery. A larger basis set, with more virtual orbitals, shifts the curve to the right, indicating that a larger fraction of active virtuals is required to achieve the same $\eta $}{figure.caption.27}{}}
+\newlabel{fig:basis_comparison@cref}{{[figure][8][6]6.8}{[1][41][]43}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.7}Computational Cost}{43}{section.6.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6.8}{\ignorespaces Comparison of OVOS correlation energies for CH\textsubscript  {2} with values from Adamowicz \& Bartlett \cite  {Adamowicz1987}. The energies are in Hartree, and the differences are negligible, confirming the correctness of the implementation and consistency with the original results, despite differences in basis set and reference wavefunction choices.}}{44}{table.caption.30}\protected@file@percent }
+\newlabel{tab:comparison_AB}{{6.8}{44}{Comparison of OVOS correlation energies for CH\textsubscript {2} with values from Adamowicz \& Bartlett \cite {Adamowicz1987}. The energies are in Hartree, and the differences are negligible, confirming the correctness of the implementation and consistency with the original results, despite differences in basis set and reference wavefunction choices}{table.caption.30}{}}
+\newlabel{tab:comparison_AB@cref}{{[table][8][6]6.8}{[1][42][]44}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6.9}{\ignorespaces Profiling of OVOS algorithm steps for [molecule]/[basis] with $N'_{\rm  act.unocc} = ...$. The integral transformation and Hessian assembly are identified as the bottlenecks, with their respective theoretical scalings.}}{44}{table.caption.31}\protected@file@percent }
+\newlabel{tab:profiling}{{6.9}{44}{Profiling of OVOS algorithm steps for [molecule]/[basis] with $N'_{\rm act.unocc} = ...$. The integral transformation and Hessian assembly are identified as the bottlenecks, with their respective theoretical scalings}{table.caption.31}{}}
+\newlabel{tab:profiling@cref}{{[table][9][6]6.9}{[1][43][]44}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.8}T1 Amplitudes and the Brueckner Orbital Connection}{44}{section.6.8}\protected@file@percent }
+\newlabel{sec:results_brueckner}{{6.8}{44}{T1 Amplitudes and the Brueckner Orbital Connection}{section.6.8}{}}
+\newlabel{sec:results_brueckner@cref}{{[section][8][6]6.8}{[1][44][]44}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6.9}{\ignorespaces Comparison of the Frobenius norm of the T1 amplitude tensor, $||T1||_F$, for OVOS-optimised orbitals and canonical HF orbitals as a function of the number of active virtual orbitals $N'_{\rm  act.unocc}$ for [molecule]/[basis].}}{45}{figure.caption.32}\protected@file@percent }
+\newlabel{fig:T1_comparison}{{6.9}{45}{Comparison of the Frobenius norm of the T1 amplitude tensor, $||T1||_F$, for OVOS-optimised orbitals and canonical HF orbitals as a function of the number of active virtual orbitals $N'_{\rm act.unocc}$ for [molecule]/[basis]}{figure.caption.32}{}}
+\newlabel{fig:T1_comparison@cref}{{[figure][9][6]6.9}{[1][44][]45}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.9}OVOS Orbitals as a VQE Reference State: Resource Estimates}{45}{section.6.9}\protected@file@percent }
+\newlabel{sec:results_vqe}{{6.9}{45}{OVOS Orbitals as a VQE Reference State: Resource Estimates}{section.6.9}{}}
+\newlabel{sec:results_vqe@cref}{{[section][9][6]6.9}{[1][44][]45}{}{}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}Conclusion}{47}{chapter.7}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:conclusion}{{7}{45}{Conclusion}{chapter.7}{}}
-\newlabel{ch:conclusion@cref}{{[chapter][7][]7}{[1][45][]45}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.1}Summary of Findings}{45}{section.7.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7.2}Critical Assessment}{45}{section.7.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7.3}Implications for Quantum Computing}{45}{section.7.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {8}Outlook}{47}{chapter.8}\protected@file@percent }
+\newlabel{ch:conclusion}{{7}{47}{Conclusion}{chapter.7}{}}
+\newlabel{ch:conclusion@cref}{{[chapter][7][]7}{[1][47][]47}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.1}Summary of Findings}{47}{section.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7.2}Critical Assessment}{47}{section.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7.3}Implications for Quantum Computing}{47}{section.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}Outlook}{49}{chapter.8}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:outlook}{{8}{47}{Outlook}{chapter.8}{}}
-\newlabel{ch:outlook@cref}{{[chapter][8][]8}{[1][47][]47}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {8.1}Algorithmic Improvements}{47}{section.8.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8.2}Method Extensions}{47}{section.8.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8.3}Quantum Computing Applications}{47}{section.8.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.1}OVOS Orbitals as a VQE Reference State}{47}{subsection.8.3.1}\protected@file@percent }
-\newlabel{sec:outlook_vqe}{{8.3.1}{47}{OVOS Orbitals as a VQE Reference State}{subsection.8.3.1}{}}
-\newlabel{sec:outlook_vqe@cref}{{[subsection][1][8,3]8.3.1}{[1][47][]47}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.2}Brueckner Orbitals and Circuit Depth on NISQ Devices}{47}{subsection.8.3.2}\protected@file@percent }
-\newlabel{sec:outlook_brueckner_nisq}{{8.3.2}{47}{Brueckner Orbitals and Circuit Depth on NISQ Devices}{subsection.8.3.2}{}}
-\newlabel{sec:outlook_brueckner_nisq@cref}{{[subsection][2][8,3]8.3.2}{[1][47][]47}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.3}Qubit Count Reduction and Fault-Tolerant Perspectives}{47}{subsection.8.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8.4}Larger Molecular Systems}{47}{section.8.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8.5}Benchmarking and Validation}{47}{section.8.5}\protected@file@percent }
+\newlabel{ch:outlook}{{8}{49}{Outlook}{chapter.8}{}}
+\newlabel{ch:outlook@cref}{{[chapter][8][]8}{[1][49][]49}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.1}Algorithmic Improvements}{49}{section.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.2}Method Extensions}{49}{section.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.3}Quantum Computing Applications}{49}{section.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.1}OVOS Orbitals as a VQE Reference State}{49}{subsection.8.3.1}\protected@file@percent }
+\newlabel{sec:outlook_vqe}{{8.3.1}{49}{OVOS Orbitals as a VQE Reference State}{subsection.8.3.1}{}}
+\newlabel{sec:outlook_vqe@cref}{{[subsection][1][8,3]8.3.1}{[1][49][]49}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.2}Brueckner Orbitals and Circuit Depth on NISQ Devices}{49}{subsection.8.3.2}\protected@file@percent }
+\newlabel{sec:outlook_brueckner_nisq}{{8.3.2}{49}{Brueckner Orbitals and Circuit Depth on NISQ Devices}{subsection.8.3.2}{}}
+\newlabel{sec:outlook_brueckner_nisq@cref}{{[subsection][2][8,3]8.3.2}{[1][49][]49}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.3}Qubit Count Reduction and Fault-Tolerant Perspectives}{49}{subsection.8.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.4}Larger Molecular Systems}{49}{section.8.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.5}Benchmarking and Validation}{49}{section.8.5}\protected@file@percent }
 \bibstyle{unsrtnat}
 \bibdata{bibliography}
 \bibcite{Adamowicz1987}{{1}{1987}{{Adamowicz and Bartlett}}{{}}}
-\bibcite{Handy1989}{{2}{1989}{{Handy et~al.}}{{Handy, Pople, Head-Gordon, Raghavachari, and Trucks}}}
-\bibcite{Lee2018}{{3}{2018}{{Lee and Head-Gordon}}{{}}}
-\bibcite{Peruzzo2014}{{4}{2014}{{Peruzzo et~al.}}{{Peruzzo, McClean, Shadbolt, Yung, Zhou, Love, Aspuru-Guzik, and O'Brien}}}
-\@writefile{toc}{\contentsline {chapter}{Bibliography}{49}{section.8.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}Mathematical Derivations}{51}{appendix.A}\protected@file@percent }
+\bibcite{Lowdin1955}{{2}{1955}{{L{\"o}wdin}}{{}}}
+\bibcite{Handy1989}{{3}{1989}{{Handy et~al.}}{{Handy, Pople, Head-Gordon, Raghavachari, and Trucks}}}
+\bibcite{Lee2018}{{4}{2018}{{Lee and Head-Gordon}}{{}}}
+\bibcite{Peruzzo2014}{{5}{2014}{{Peruzzo et~al.}}{{Peruzzo, McClean, Shadbolt, Yung, Zhou, Love, Aspuru-Guzik, and O'Brien}}}
+\@writefile{toc}{\contentsline {chapter}{Bibliography}{51}{section.8.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Mathematical Derivations}{53}{appendix.A}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{app:derivations}{{A}{51}{Mathematical Derivations}{appendix.A}{}}
-\newlabel{app:derivations@cref}{{[chapter][1][]A}{[1][51][]51}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {A.1}Spin-Orbital MP2 Energy from the Hylleraas Functional}{51}{section.A.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.2}Derivation of the Orbital Rotation Gradient}{51}{section.A.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.3}Derivation of the Orbital Rotation Hessian}{51}{section.A.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.4}Matrix Exponential for the Rotation Matrix}{51}{section.A.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A.5}Notation Conventions for Two-Electron Integrals}{51}{section.A.5}\protected@file@percent }
-\newlabel{sec:integral_notation}{{A.5}{51}{Notation Conventions for Two-Electron Integrals}{section.A.5}{}}
-\newlabel{sec:integral_notation@cref}{{[section][5][1]A.5}{[1][51][]51}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces Summary of two-electron integral notation used in this thesis.}}{51}{table.caption.33}\protected@file@percent }
-\newlabel{tab:notation}{{A.1}{51}{Summary of two-electron integral notation used in this thesis}{table.caption.33}{}}
-\newlabel{tab:notation@cref}{{[table][1][1]A.1}{[1][51][]51}{}{}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {B}Additional Data and Figures}{53}{appendix.B}\protected@file@percent }
+\newlabel{app:derivations}{{A}{53}{Mathematical Derivations}{appendix.A}{}}
+\newlabel{app:derivations@cref}{{[chapter][1][]A}{[1][53][]53}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.1}Spin-Orbital MP2 Energy from the Hylleraas Functional}{53}{section.A.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.2}Derivation of the Orbital Rotation Gradient}{53}{section.A.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.3}Derivation of the Orbital Rotation Hessian}{53}{section.A.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.4}Matrix Exponential for the Rotation Matrix}{53}{section.A.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A.5}Notation Conventions for Two-Electron Integrals}{53}{section.A.5}\protected@file@percent }
+\newlabel{sec:integral_notation}{{A.5}{53}{Notation Conventions for Two-Electron Integrals}{section.A.5}{}}
+\newlabel{sec:integral_notation@cref}{{[section][5][1]A.5}{[1][53][]53}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces Summary of two-electron integral notation used in this thesis.}}{53}{table.caption.34}\protected@file@percent }
+\newlabel{tab:notation}{{A.1}{53}{Summary of two-electron integral notation used in this thesis}{table.caption.34}{}}
+\newlabel{tab:notation@cref}{{[table][1][1]A.1}{[1][53][]53}{}{}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {B}Additional Data and Figures}{55}{appendix.B}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{app:data}{{B}{53}{Additional Data and Figures}{appendix.B}{}}
-\newlabel{app:data@cref}{{[chapter][2][]B}{[1][53][]53}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{53}{section.B.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{53}{section.B.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{53}{section.B.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B.4}Hessian Eigenvalue Analysis}{53}{section.B.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{55}{appendix.C}\protected@file@percent }
+\newlabel{app:data}{{B}{55}{Additional Data and Figures}{appendix.B}{}}
+\newlabel{app:data@cref}{{[chapter][2][]B}{[1][55][]55}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{55}{section.B.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{55}{section.B.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{55}{section.B.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.4}Hessian Eigenvalue Analysis}{55}{section.B.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{57}{appendix.C}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{app:code}{{C}{55}{Implementation Details and Source Code}{appendix.C}{}}
-\newlabel{app:code@cref}{{[chapter][3][]C}{[1][55][]55}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {C.1}Repository and Version Information}{55}{section.C.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{55}{section.C.2}\protected@file@percent }
-\newlabel{lst:eri_conv}{{C.1}{55}{Spatial-to-spin ERI conversion (\texttt {spatial\_2\_spin\_eri\_optimized})}{lstlisting.C.1}{}}
-\newlabel{lst:eri_conv@cref}{{[lstlisting][1][3]C.1}{[1][55][]55}{}{}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {C.1}{\ignorespaces Spatial-to-spin ERI conversion (\texttt  {spatial\_2\_spin\_eri\_optimized}).}}{55}{lstlisting.C.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{55}{section.C.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{55}{section.C.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C.5}Profiling Results}{55}{section.C.5}\protected@file@percent }
-\gdef \@abspage@last{73}
+\newlabel{app:code}{{C}{57}{Implementation Details and Source Code}{appendix.C}{}}
+\newlabel{app:code@cref}{{[chapter][3][]C}{[1][57][]57}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C.1}Repository and Version Information}{57}{section.C.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{57}{section.C.2}\protected@file@percent }
+\newlabel{lst:eri_conv}{{C.1}{57}{Spatial-to-spin ERI conversion (\texttt {spatial\_2\_spin\_eri\_optimized})}{lstlisting.C.1}{}}
+\newlabel{lst:eri_conv@cref}{{[lstlisting][1][3]C.1}{[1][57][]57}{}{}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {C.1}{\ignorespaces Spatial-to-spin ERI conversion (\texttt  {spatial\_2\_spin\_eri\_optimized}).}}{57}{lstlisting.C.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{57}{section.C.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{57}{section.C.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C.5}Profiling Results}{57}{section.C.5}\protected@file@percent }
+\gdef \@abspage@last{75}

@@ -1,4 +1,4 @@
-\begin{thebibliography}{4}
+\begin{thebibliography}{5}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -10,6 +10,12 @@ L.~Adamowicz and R.~J. Bartlett.
 \newblock Optimized virtual orbital space for high-level correlated calculations.
 \newblock \emph{J. Chem. Phys.}, 86\penalty0 (11):\penalty0 6314--6324, 1987.
 \newblock \doi{10.1063/1.452468}.
+
+\bibitem[L{\"o}wdin(1955)]{Lowdin1955}
+Per-Olov L{\"o}wdin.
+\newblock Quantum theory of many-particle systems. {I}. physical interpretations by means of density matrices, natural spin-orbitals, and convergence problems in the method of configurational interaction.
+\newblock \emph{Phys. Rev.}, 97:\penalty0 1474--1489, 1955.
+\newblock \doi{10.1103/PhysRev.97.1474}.
 
 \bibitem[Handy et~al.(1989)Handy, Pople, Head-Gordon, Raghavachari, and Trucks]{Handy1989}
 Nicholas~C. Handy, John~A. Pople, Martin Head-Gordon, Krishnan Raghavachari, and Gary~W. Trucks.

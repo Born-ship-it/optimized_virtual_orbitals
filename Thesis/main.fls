@@ -558,6 +558,9 @@ INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/rm-lmbx10.tfm
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/lmmib10.tfm
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/lmbsy10.tfm
+INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmbx10.tfm
+INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmbx8.tfm
+INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmbx6.tfm
 INPUT ./chapters/method.tex
 INPUT ./chapters/method.tex
 INPUT ./chapters/method.tex
@@ -649,6 +652,7 @@ INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmtk10.tfm
 INPUT main.aux
 INPUT ./main.out
 INPUT ./main.out
+INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx10.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx12.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmbx8.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb

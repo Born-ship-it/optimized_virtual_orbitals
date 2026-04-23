@@ -48,6 +48,8 @@
 %   - End with a clear, inspiring statement of what the reader will gain.
 % ---------------------------------------------------------------
 
+This chapter introduces the motivation, context, and objectives of this thesis, which focuses on the optimisation of virtual orbital spaces for post-Hartree-Fock methods and their implications for quantum computing. We begin by outlining the computational challenges in quantum chemistry that motivate the need for orbital optimisation. We then review existing strategies for virtual orbital reduction, leading to the OVOS method as the focus of this work. Finally, we state the specific research objectives and provide an outline of the thesis structure.
+
 \section{Motivation}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 1.1]
@@ -74,6 +76,10 @@
 %    virtual orbital space itself, which is the bottleneck for all
 %    post-HF methods and is the subject of the following section."
 % ---------------------------------------------------------------
+
+Chemistry fundamentally arises from the quantum mechanical interactions of electrons and nuclei. The exact solution of the electronic Schrödinger equation for a molecule with $N$ electrons scales as $\mathcal{O}(N!)$ in the size of the configurational space, which rapidly renders brute-force approaches infeasible for any but the smallest systems. To achieve chemical accuracy (approximately 1 kcal/mol), it is essential to account for electron correlation effects beyond the mean-field Hartree-Fock (HF) approximation. Post-HF methods such as Møller-Plesset perturbation theory (MP2), coupled cluster with single and double excitations (CCSD), and CCSD with perturbative triples [CCSD(T)] are widely used to capture these correlation effects. However, the computational cost of these methods scales steeply with system size, primarily due to the virtual orbital space. The number of virtual orbtials grows with the size of the basis set, and the computational cost of post-HF methods scales as $\mathcal{O}(N^5)$ for MP2, $\mathcal{O}(N^6)$ for CCSD, and $\mathcal{O}(N^7)$ for CCSD(T), where $N$ is the number of orbitals As occupied orbitals are typically fewer than virtual orbitals, the virtual space dominates the computational cost. 
+
+This challenge is not only relevant for classical computational chemistry but also has direct implications for quantum computing. Quantum algorithms for chemistry, such as the Variational Quantum Eigensolver (VQE), require a mapping of the electronic structure problem onto qubits. The number of qubits required scales with the number of orbitals. Given that current Noisy Intermediate-Scale Quantum (NISQ) devices have fewer than 100 high-quality qubits, reducing the number of orbitals (the virtual orbital space) is crucial for making quantum simulations of chemistry feasible in the near term. This motivates a closer examination of the virtual orbital space itself, which is the bottleneck for all post-HF methods and is the subject of the following section.
 
 \section{The Virtual Orbital Space Problem}
 % ---------------------------------------------------------------
@@ -105,6 +111,16 @@
 %    counts are the primary constraint. The following section describes
 %    this quantum computing context."
 % ---------------------------------------------------------------
+
+The virtual orbital space, which consists of the unoccupied molecular orbitals, plays a critical role in post-Hartree-Fock methods as it defines the space of excited configurations that contribute to electron corelation. The number of virtual orbitals grows with the size of the basis set, and their contribution to the correlation energy is not uniform. This section surveys various strategies that have been developed to reduce or optimise the virtual orbital space, ultimately motivating the focus of this thesis on the Optimised Virtual Orbital Space (OVOS) method, originally proposed by Adamowicz and Bartlett in 1987 \cite{Adamowicz1987}.
+
+The standard approach to defining virtual orbitals is to use the canonical Hartree-Fock (HF) virtual orbitals, which are obtained by diagonalising the Fock matrix. However, these canonical virtuals are not ordered by their contribution to the correlation energy, leading to inefficiencies in post-HF calculations.
+
+Natural orbitals, introduced by Löwdin in 1955 \cite{Lowdin1955}, are obtained by diagonalising the one-particle reduced density matrix (1-RDM) of a correlated wavefunction. They are ordered by their occupation numbers, which can be used to truncate the virtual space. However, this approach requires a correlated calculation to obtain the 1-RDM, creating a circular dependency.
+
+Frozen natural orbitals (FNO) are a practical solution to this problem. They are computed from a low-cost correlated calculation, such as MP2, and the virtual orbitals are truncated based on an occupation threshold. This method is widely used in practice and can significantly reduce the computational cost while retaining accuracy.
+
+
 
 \section{Quantum Computing Context}
 % ---------------------------------------------------------------

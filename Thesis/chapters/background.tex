@@ -681,7 +681,17 @@ This mapping allows us to represent the electronic Hamiltonian as a sum of Pauli
 
 The Variational Quantum Eigensolver (VQE) \cite{Peruzzo2014} is a hybrid quantum-classical algorithm designed to find the ground-state energy of a quantum system. VQE uses a parameterised quantum circuit, known as an ansatz, to prepare trial wavefunctions on a quantum computer. A classical outer loop optimises the parameters of the ansatz to minimise the energy expectation value, which is measured on the quantum device.
 
-The choice of reference state in VQE is crucial for the efficiency and accuracy of the algorithm, and OVOS orbitals offer a promising avenue for improving the performance of VQE by providing a better initial guess for the ground state wavefunction. Leaving the choice of ansatz, while Unitary Coupled Cluster Singles and Doubles (UCCSD) is a boardly used chemically-motivated ansatz in VQE, this work employs the Unrestricted tiled Unitary Product State (UtUPS) ansatz for its simplified structure and choosen to focus on the impact of the reference state. The UtUPS ansatz is constructed as $|\Psi(\theta)\rangle = e^{T(\theta) - T^\dagger(\theta)} |\Phi_{\text{ref}}\rangle$, where $|\Phi_{\text{ref}}\rangle$ is a reference state, typically the Hartree-Fock determinant. The quality of the reference state significantly impacts the performance of VQE, as a reference with better overlap with the true ground state can lead to faster convergence and more compact orbital spaces.
+% Diagram of VQE workflow:
+% 1. Start with a reference state |Φ_ref⟩ (e.g., HF or OVOS).
+% 2. Apply a parameterised unitary transformation U(θ) to prepare the trial state: |Ψ(θ)⟩ = U(θ) |Φ_ref⟩.
+% 3. Measure the energy expectation value E(θ) = ⟨Ψ(θ)|H|Ψ(θ)⟩ on the quantum computer. 
+% 4. Use a classical optimiser to update the parameters θ to minimise E(θ).
+% 5. Iterate until convergence to find the optimal parameters θ* and the corresponding energy E(θ*).
+% Caption: "Workflow of the Variational Quantum Eigensolver (VQE) algorithm."
+
+The choice of reference state in VQE is crucial for the efficiency and accuracy of the algorithm, and OVOS orbitals offer a promising avenue for improving the performance of VQE by providing a better initial guess for the ground state wavefunction. Leaving the choice of ansatz, while Unitary Coupled Cluster Singles and Doubles (UCCSD) is a boardly used chemically-motivated ansatz in VQE, this work employs the Unrestricted tiled Unitary Product State (UtUPS) ansatz for its simplified structure and choosen to focus on the impact of the reference state. The UtUPS ansatz is constructed as $|\Psi(\theta)\rangle = e^{T(\theta) - T^\dagger(\theta)} |\Phi_{\text{ref}}\rangle$, where $|\Phi_{\text{ref}}\rangle$ is a reference state, typically the Hartree-Fock determinant, and the $\Theta$'s are parameters, tuning the ansatz. The quality of the reference state significantly impacts the performance of VQE, as a reference with better overlap with the true ground state can lead to faster convergence and more compact orbital spaces.
+
+
 
 \subsection{OVOS Orbitals as a VQE Reference State}
 
