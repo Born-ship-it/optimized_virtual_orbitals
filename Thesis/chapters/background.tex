@@ -169,12 +169,14 @@ This chapter provides the necessary theoretical background for understanding the
 %    forms the target of the OVOS method developed in this thesis."
 % ---------------------------------------------------------------
 
-The electronic structure problem is the task of solving the non-relativistic, time-independent Schrödinger equation for a system of N electrons moving in the electrostatic potential of M fixed nuclei, reflecting the Born-Oppenheimer approximation. %Add as a footnote: "The Born-Oppenheimer approximation assumes that the nuclei are stationary due to their much larger mass compared to electrons, allowing the electronic and nuclear motions to be separated."
-Typically, the electronic Hamiltonian is expressed as:
+The electronic structure problem is the task of solving the non-relativistic, time-independent Schrödinger equation for a system of N electrons moving in the electrostatic potential of M fixed nuclei, reflecting the Born-Oppenheimer approximation.\footnote{The Born-Oppenheimer approximation assumes that the nuclei are stationary due to their much larger mass compared to electrons, allowing the electronic and nuclear motions to be separated.}
+Typically, the electronic Hamiltonian is expressed as the Schrödinger equation\cite{Helgaker2000}:
 \[\hat{H}_{el} \Psi(\mathbf{r}_1, \mathbf{r}_2, \ldots, \mathbf{r}_N) = E \Psi(\mathbf{r}_1, \mathbf{r}_2, \ldots, \mathbf{r}_N)\]
-where \(\hat{H}_{el}\) is the electronic Hamiltonian, \(\Psi\) is the many-electron wavefunction, and \(E\) is the electronic energy. The electronic Hamiltonian can be written as:
+where \(\hat{H}_{el}\) is the electronic Hamiltonian, \(\Psi\) is the many-electron wavefunction, and \(E\) is the electronic energy. The electronic Hamiltonian can be written as\cite{Helgaker2000}:
 \[\hat{H}_{el} = \sum_{i=1}^N \left( -\frac{1}{2} \nabla_i^2 - \sum_{A=1}^M \frac{Z_A}{|\mathbf{r}_i - \mathbf{R}_A|} \right) + \sum_{i<j} \frac{1}{|\mathbf{r}_i - \mathbf{r}_j|}\]
 where the first term represents the kinetic energy of the electrons, the second term is the nuclear attraction, and the third term is the electron-electron repulsion.
+
+OR DO I WRITE THE HAMILTONIAN IN SECOND QUANTISATION FORM? 
 
 The electron-electron repulsion term couples all electrons together, making the exact solution of the Schrödinger equation computationally intractable for all but the smallest systems. This motivates the development of approximate methods that can capture the essential physics of electron correlation while remaining computationally feasible.
 
@@ -230,10 +232,10 @@ For small molecules, the correlation energy can on the order of tenths of a Hart
 %    throughout this work."
 % ---------------------------------------------------------------
 
-Hartree-Fock (HF) theory approximates the N-electron wavefunction as a single Slater determinant of N orthonormal spin-orbitals, treating electron-electron repulsion in a mean-field sense. Despite its simplicity, HF underpins virtually all post-HF correlated methods.
+Hartree-Fock (HF) theory approximates the N-electron wavefunction as a single Slater determinant of N orthonormal spin-orbitals, treating electron-electron repulsion in a mean-field sense \cite{Helgaker2000}. Despite its simplicity, HF underpins virtually all post-HF correlated methods.
 
-Slater determinants are described by the Pauli exclusion principle, ensuring that no two electrons can occupy the same quantum state. This antisymmetry is crucial for accurately describing fermionic systems. The variational principle leads to the Fock equations, which can be expressed in matrix form as the Roothaan-Hall equations: \(FC = SC\epsilon\), where \(F\) is the Fock matrix, \(S\) is the overlap matrix, \(C\) is the coefficient matrix for the molecular orbitals, and \(\epsilon\) is the diagonal matrix of orbital energies. The Fock matrix incorporates the Coulomb ($J$) and exchange ($K$) operators, which represent the average electron-electron repulsion and the antisymmetry of the wavefunction, respectively. It is this equation that is solved iteratively in the self-consistent field (SCF) procedure, often accelerated by techniques that expedite convergence, like DIIS. %Footnote: "DIIS (Direct Inversion in the Iterative Subspace) is a common method for accelerating SCF convergence by extrapolating from previous iterations."
-The variational principle ensures that the HF energy is an upper bound to the exact ground state energy, \(E_{HF} = \langle \Phi_{HF} | \hat{H} | \Phi_{HF} \rangle \geq E_{exact}\). Which allows us to define that the correlation energy is negative: \(E_{corr} = E_{exact} - E_{HF} < 0\). The resulting orbital energies $\epsilon_p$ provide insight into the electronic structure, with occupied orbitals typically having negative energies and virtual orbitals having positive energies, as per Koopmans' theorem. %\cite{Koopmans1934}. 
+Slater determinants are described by the Pauli exclusion principle, ensuring that no two electrons can occupy the same quantum state. This antisymmetry is crucial for accurately describing fermionic systems. The variational principle leads to the Fock equations, which can be expressed in matrix form as the Roothaan-Hall equations\cite{Helgaker2000}: \(FC = SC\epsilon\), where \(F\) is the Fock matrix, \(S\) is the overlap matrix, \(C\) is the coefficient matrix for the molecular orbitals, and \(\epsilon\) is the diagonal matrix of orbital energies. The Fock matrix incorporates the Coulomb ($J$) and exchange ($K$) operators, which represent the average electron-electron repulsion and the antisymmetry of the wavefunction, respectively. It is this equation that is solved iteratively in the self-consistent field (SCF) procedure. %, often accelerated by techniques that expedite convergence, like DIIS. %Footnote: "DIIS (Direct Inversion in the Iterative Subspace) is a common method for accelerating SCF convergence by extrapolating from previous iterations."
+The variational principle ensures that the HF energy is an upper bound to the exact ground state energy, \(E_{HF} = \langle \Phi_{HF} | \hat{H} | \Phi_{HF} \rangle \geq E_{exact}\)\cite{Helgaker2000}. Which allows us to define that the correlation energy is negative: \(E_{corr} = E_{exact} - E_{HF} < 0\). The resulting orbital energies $\epsilon_p$ provide insight into the electronic structure, with occupied orbitals typically having negative energies and virtual orbitals having positive energies, as per Koopmans' theorem \cite{Helgaker2000}. 
 
 % Figure: Canonical MO energy level diagram for a small molecule, showing the occupied and virtual orbitals.
 
@@ -288,7 +290,7 @@ In contrast, UHF allows for different spatial orbitals for $\alpha$ and $\beta$ 
 %    core of the OVOS iteration."
 % ---------------------------------------------------------------
 
-At the core of electronic structure methods are the one- and two-electron integrals evaluated in the molecular orbital basis. These integrals form the building blocks of the Roothaan-Hall equations and the correlation energy expressions used in post-HF methods. This section defines these integrals and establishes the notation conventions applied consistently throughout this thesis, resolving an important ambiguity that arises when comparing PySCF output with the formulas of Adamowicz \& Bartlett.
+At the core of electronic structure methods are the one- and two-electron integrals evaluated in the molecular orbital basis. These integrals form the building blocks of the Roothaan-Hall equations and the correlation energy expressions used in post-HF methods\cite{Helgaker2000}. This section defines these integrals and establishes the notation conventions applied consistently throughout this thesis, resolving an important ambiguity that arises when comparing PySCF output with the formulas of Adamowicz \& Bartlett\cite{Adamowicz1987}.
 
 \subsection{One-Electron Integrals}
 
@@ -358,7 +360,7 @@ The notation for two-electron integrals can differ between chemists and physicis
 %    form the spin-orbital basis used in the implementation."
 % ---------------------------------------------------------------
 
-Møller-Plesset perturbation theory (MPPT) treats electron correlation as a perturbation on top of the mean-field Fock operator. Truncated at second order (MP2), it is the simplest post-HF method that captures dynamical correlation at $\mathcal{O}(N^5)$ computational cost, and furnishes the energy functional that OVOS seeks to optimise.
+Møller-Plesset perturbation theory (MPPT) treats electron correlation as a perturbation on top of the mean-field Fock operator. Truncated at second order (MP2), it is the simplest post-HF method that captures dynamical correlation at $\mathcal{O}(O^2V^2)$ computational cost, and furnishes the energy functional that OVOS seeks to optimise.
 
 \subsection{MP2 Correlation Energy}
 
@@ -381,7 +383,7 @@ In the unrestricted Hartree-Fock (UHF) formalism, the indices $i,j$ run over all
 
 \subsection{MP2 Limitations and Applicability}
 
-MP2 is size-consistent, meaning that the correlation energy of non-interacting subsystems is additive, $E_{corr}^{(2)} = \sum_{i>j,a>b} t_{ij}^{ab} \langle ij \| ab \rangle$, which is a crucial property for accurately describing large systems and reaction energies. For a truncated MP2 calculation, where the summation is restricted to a subset of orbitals. However, MP2 is a single-reference method and can fail in cases where the reference determinant is not a good approximation to the true wavefunction, such as in bond dissociation or transition states. In such cases, higher-order methods or multi-reference approaches may be necessary to capture the correct physics.
+MP2 is size-consistent\cite{Helgaker2000}, meaning that the correlation energy of non-interacting subsystems is additive, $E_{corr}^{(2)} = \sum_{i>j,a>b} t_{ij}^{ab} \langle ij \| ab \rangle$, which is a crucial property for accurately describing large systems and reaction energies. For a truncated MP2 calculation, where the summation is restricted to a subset of orbitals. However, MP2 is a single-reference method and can fail in cases where the reference determinant is not a good approximation to the true wavefunction, such as in bond dissociation or transition states. In such cases, higher-order methods or multi-reference approaches may be necessary to capture the correct physics.
 
 \subsection{Computational Scaling Motivation}
 

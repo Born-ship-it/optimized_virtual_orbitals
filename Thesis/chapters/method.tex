@@ -74,6 +74,9 @@
 %   - Reference the specific functions in your implementation.
 % ---------------------------------------------------------------
 
+Here in this chapter we build on the theoretical foundation laid out in Chapter~\ref{ch:theory} to describe the practical implementation of the OVOS algorithm. The goal is to provide a clear and detailed overview of the algorithmic steps, the computational strategies employed, and the choices made in the implmenentation. 
+This chapter serves as a bridge between the abstract theoretical concepts and the concrete computational details, enabling readers to understand how the OVOS method is realised and how it can be reproduced or extended in future work.
+
 \section{Algorithm Overview}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 4.1]
@@ -100,6 +103,8 @@
 %    following section."
 % ---------------------------------------------------------------
 
+Here we outline the full OVOS algorithm as implemented in this work, following the general structure proposed by Adamowicz \& Bartlett \cite{Adamowicz1987}. The algorthm consists of an initialisation phase followed by an iterative loop that optimises the active virtual orbitals to maximise the MP2 correlation energy. The key steps are summarised as pseudocode in Algorithm~\ref{alg:ovos}, which serves as a roadmap for the detailed descriptions in the subsequent sections.
+
 \begin{algorithm}[H]
 \caption{OVOS Iterative Optimisation}
 \label{alg:ovos}
@@ -118,6 +123,8 @@
   \Until{$|J_2^{(n)} - J_2^{(n-1)}| < \epsilon_{\mathrm{conv}}$}
 \end{algorithmic}
 \end{algorithm}
+
+Below we provide a detailed description of each step in the algorithm.
 
 \section{Integral Transformation}
 % ---------------------------------------------------------------
@@ -147,6 +154,9 @@
 %   "With integrals available in the MO basis, the initial active
 %    virtual subset is selected as described in the following section."
 % ---------------------------------------------------------------
+
+
+
 \subsection{AO-to-MO Transformation}
 \subsection{Spin-Orbital Construction}
 \subsection{Notation Convention: Chemists' vs.\ Physicists' Integrals}

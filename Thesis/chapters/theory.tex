@@ -1214,13 +1214,18 @@ We had VQE as a potential downstream application of OVOS, as the reduced active 
 
 \subsection{Reference-State Overlap}
 
-To quantify the quality of the OVOS orbitals as a trial state for VQE, we can consider the overlap (or fidelity) between the reference state constructed from the OVOS orbitals and the $UMP2$ natural orbitals (UNO). The fidelity $F$ is defined as: 
+To quantify the quality of the OVOS orbitals as a trial state for VQE, we can consider the overlap (or fidelity) between the reference state constructed from the OVOS orbitals and the Full Configuration Interaction (FCI) ground state. The fidelity $F$ is defined as: 
 \begin{equation}
-    F = |\langle \Phi_{ref} | \Psi_{UNO} \rangle|^2
+    F = |\langle \Phi_{ref} | \Psi_{FCI} \rangle|^2
 \end{equation}
-where $\Phi_{ref}$ is the reference state built from the OVOS orbitals and $\Psi_{UNO}$ is the UMP2 wavefunction expressed in the natural orbital basis. 
+where $\Phi_{ref}$ is the reference state built from the OVOS orbitals and $\Psi_{FCI}$ is the FCI wavefunction expressed in the natural orbital basis. 
 
-Detailing the $UMP2$ natural orbitals, being rooted in UHF orbitals, they are the given by diagonalizing the one-particle density matrix constructed from the UMP2 amplitudes:
+The claim is that $F_{\text{OVOS}} \geq F_{\text{HF}}$ because OVOS orbitals are optimized to minimize the MP2 energy, which should yield a reference state that has a higher overlap with the correlated wavefunction compared to the Hartree-Fock orbitals. This improved overlap can lead to faster convergence in VQE, as the initial state is closer to the true ground state, and can also reduce the required circuit depth to achieve a given accuracy.
+
+\subsubsection{Trial states}
+
+To evaluate how well OVOS orbitals will do, we formulate the following candidates: UMP2 natural orbitals, and canonical UHF orbitals. 
+The former are the natural orbitals obtained from a UMP2 calculation, which are known to provide a good approximation to the correlated wavefunction and often yield improved convergence in VQE. We arrive at the natural orbitals by diagonalizing the one-particle density matrix constructed from the UMP2 amplitudes:
 \begin{equation}
     D_{pq} = \sum_{ijab} t_{ij}^{ab} \langle pq | ij \rangle
 \end{equation}
@@ -1228,9 +1233,7 @@ where $t_{ij}^{ab}$ are the UMP2 amplitudes and $\langle pq | ij \rangle$ are th
 \begin{equation}
     S D_{pq} S C = S C n
 \end{equation}
-where $S$ is the overlap matrix, $C$ are the coefficients of the natural orbitals, and $n$ are the natural orbital occupation numbers. 
-
-The claim is that $F_{\text{OVOS}} \geq F_{\text{HF}}$ because OVOS orbitals are optimized to minimize the MP2 energy, which should yield a reference state that has a higher overlap with the correlated wavefunction compared to the Hartree-Fock orbitals. This improved overlap can lead to faster convergence in VQE, as the initial state is closer to the true ground state, and can also reduce the required circuit depth to achieve a given accuracy.
+where $S$ is the overlap matrix, $C$ are the coefficients of the natural orbitals, and $n$ are the natural orbital occupation numbers. The natural orbitals are expected to have a higher overlap with the FCI ground state compared to the canonical UHF orbitals, which are obtained from a standard Hartree-Fock calculation and may not capture correlation effects as effectively.
 
 \subsection{Reduction of T1 Amplitudes and Circuit Depth}
 
