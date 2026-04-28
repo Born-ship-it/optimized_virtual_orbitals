@@ -1286,7 +1286,7 @@ def run_li2_vqe():
             for num_opt_virtual_orbs in [0.75]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
                 
                 # CHANGE IT HERE TO RUN BOTH WITH AND WITHOUT ORBITAL OPTIMIZATION
-                for oo in [oo_lst[1]]: # True, False
+                for oo in [oo_lst[0]]: # True, False
 
                     for seed in seed_list:
                         print(f"{dist:.3f} Å: {seed:3d}, Prep. VQE runs for Li-Li bond length {dist:.3f} Å, with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
@@ -1364,7 +1364,7 @@ if __name__ == "__main__":
         len_thetas = None
         previous_thetas = None
 
-        file_name = f"backup/data/{molecule_name}/{basis_name}/VQE/OVOS/{last_dist_in_dist_list}/UPS_OVOS_{molecule_name}_{basis_name}_{last_dist_in_dist_list}_opt_num_{num_opt_virtual_orbs}_{oo}_8.json"
+        file_name = f"backup/data/{molecule_name}/{basis_name}/VQE/OVOS/{last_dist_in_dist_list}/UPS_OVOS_{molecule_name}_{basis_name}_{last_dist_in_dist_list}_opt_num_{num_opt_virtual_orbs}_False_8.json"
         print(f"Looking for existing thetas in \n     {file_name} \n to determine length for random theta generation...")
 
         if os.path.exists(file_name):
