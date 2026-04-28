@@ -1,4 +1,4 @@
-\begin{thebibliography}{4}
+\begin{thebibliography}{12}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -11,11 +11,59 @@ L.~Adamowicz and R.~J. Bartlett.
 \newblock \emph{J. Chem. Phys.}, 86\penalty0 (11):\penalty0 6314--6324, 1987.
 \newblock \doi{10.1063/1.452468}.
 
-\bibitem[Handy et~al.(1989)Handy, Pople, Head-Gordon, Raghavachari, and Trucks]{Handy1989}
-Nicholas~C. Handy, John~A. Pople, Martin Head-Gordon, Krishnan Raghavachari, and Gary~W. Trucks.
-\newblock Size-consistent {B}rueckner theory limited to single and double substitutions.
-\newblock \emph{Chem. Phys. Lett.}, 164:\penalty0 185--192, 1989.
-\newblock \doi{10.1016/0009-2614(89)85013-4}.
+\bibitem[Sherrill and Schaefer(1999)]{Sherrill1999}
+C.~David Sherrill and Henry~F. Schaefer.
+\newblock The configuration interaction method: Advances in highly correlated approaches.
+\newblock In Per-Olov L{\"o}wdin, editor, \emph{Advances in Quantum Chemistry}, volume~34, pages 143--269. Academic Press, 1999.
+\newblock \doi{10.1016/S0065-3276(08)60532-8}.
+
+\bibitem[M{\o}ller and Plesset(1934)]{Moller1934}
+Chr. M{\o}ller and M.~S. Plesset.
+\newblock Note on an approximation treatment for many-electron systems.
+\newblock \emph{Phys. Rev.}, 46:\penalty0 618--622, 1934.
+\newblock \doi{10.1103/PhysRev.46.618}.
+
+\bibitem[Helgaker et~al.(2000)Helgaker, Jørgensen, and Olsen]{Helgaker2000}
+Trygve Helgaker, Poul Jørgensen, and Jeppe Olsen.
+\newblock \emph{Molecular Electronic-Structure Theory}.
+\newblock Wiley, 2000.
+\newblock \doi{10.1002/9781119019572}.
+
+\bibitem[Peruzzo et~al.(2014)Peruzzo, McClean, Shadbolt, Yung, Zhou, Love, Aspuru-Guzik, and O'Brien]{Peruzzo2014}
+Alberto Peruzzo, Jarrod McClean, Peter Shadbolt, Man-Hong Yung, Xiao-Qi Zhou, Peter~J. Love, Al\'{a}n Aspuru-Guzik, and Jeremy~L. O'Brien.
+\newblock A variational eigenvalue solver on a photonic quantum processor.
+\newblock \emph{Nat. Commun.}, 5:\penalty0 4213, 2014.
+\newblock \doi{10.1038/ncomms5213}.
+
+\bibitem[Cao et~al.(2019)Cao, Romero, Olson, Degroote, Johnson, Kieferova, Kivlichan, Menke, Peropadre, Sawaya, Sim, Veis, and Aspuru-Guzik]{Cao2019}
+Yudong Cao, Jonathan Romero, Jonathan~P. Olson, Matthias Degroote, Peter~D. Johnson, Maria Kieferova, Ian~D. Kivlichan, Tim Menke, Borja Peropadre, Nicolas P.~D. Sawaya, Sukin Sim, Libor Veis, and Al{\'{a}}n Aspuru-Guzik.
+\newblock Quantum chemistry in the age of quantum computing.
+\newblock \emph{Chem. Rev.}, 119:\penalty0 10856--10915, 2019.
+\newblock \doi{10.1021/acs.chemrev.8b00803}.
+
+\bibitem[L{\"o}wdin(1955)]{Lowdin1955}
+Per-Olov L{\"o}wdin.
+\newblock Quantum theory of many-particle systems. {I}. physical interpretations by means of density matrices, natural spin-orbitals, and convergence problems in the method of configurational interaction.
+\newblock \emph{Phys. Rev.}, 97:\penalty0 1474--1489, 1955.
+\newblock \doi{10.1103/PhysRev.97.1474}.
+
+\bibitem[Taube and Bartlett(2005)]{Taube2005}
+Andrew~G. Taube and Rodney~J. Bartlett.
+\newblock Frozen natural orbitals: Systematic basis set truncation for coupled-cluster theory.
+\newblock \emph{Collect. Czech. Chem. Commun.}, 70:\penalty0 837--850, 2005.
+\newblock \doi{10.1135/cccc20050837}.
+
+\bibitem[Sun et~al.(2020)Sun, Zhang, Banerjee, Bao, Barbry, Blunt, Bogdanov, Booth, Chen, Cui, Eriksen, Gao, Guo, Hermann, Hermes, Koh, Koval, Lehtola, Li, Liu, Mardirossian, McClain, Motta, Mussard, Pham, Pulkin, Purwanto, Robinson, Ronca, Sayfutyarova, Scheurer, Schurkus, Smith, Sun, Sun, Upadhyay, Wagner, Wang, White, Whitfield, Williamson, Wouters, Yang, Yu, Zhu, Berkelbach, Sharma, Sokolov, and Chan]{Sun2020}
+Qiming Sun, Xing Zhang, Samragni Banerjee, Peng Bao, Marc Barbry, Nick~S. Blunt, Nikolay~A. Bogdanov, George~H. Booth, Jia Chen, Zhi-Hao Cui, Janus~Juul Eriksen, Yang Gao, Sheng Guo, Jan Hermann, Matthew~R. Hermes, Kevin Koh, Peter Koval, Susi Lehtola, Zhendong Li, Junzi Liu, Narbe Mardirossian, James~D. McClain, Mario Motta, Bastien Mussard, Hong-Zhou Pham, Artem Pulkin, Wirawan Purwanto, Paul~J. Robinson, Enrico Ronca, Elvira~R. Sayfutyarova, Maximilian Scheurer, Henry~F. Schurkus, James E.~T. Smith, Chong Sun, Shi-Ning Sun, Shiv Upadhyay, Lucas~K. Wagner, Xiao Wang, Alec White, James~Daniel Whitfield, Mark~J. Williamson, Sebastian Wouters, Jun Yang, Jason~M. Yu, Tianyu Zhu, Timothy~C. Berkelbach, Sandeep Sharma, Alexander~Yu. Sokolov, and Garnet Kin-Lic Chan.
+\newblock Recent developments in the {PySCF} program package.
+\newblock \emph{J. Chem. Phys.}, 153:\penalty0 024109, 2020.
+\newblock \doi{10.1063/5.0006074}.
+
+\bibitem[Seeley et~al.(2012)Seeley, Richard, and Love]{Seeley2012}
+Jacob~T. Seeley, Martin~J. Richard, and Peter~J. Love.
+\newblock The {B}ravyi--{K}itaev transformation for quantum computation of electronic structure.
+\newblock \emph{J. Chem. Phys.}, 137:\penalty0 224109, 2012.
+\newblock \doi{10.1063/1.4768229}.
 
 \bibitem[Lee and Head-Gordon(2018)]{Lee2018}
 Joonho Lee and Martin Head-Gordon.
@@ -24,10 +72,10 @@ Joonho Lee and Martin Head-Gordon.
 \newblock \doi{10.1021/acs.jctc.8b00731}.
 \newblock arXiv:1807.06185.
 
-\bibitem[Peruzzo et~al.(2014)Peruzzo, McClean, Shadbolt, Yung, Zhou, Love, Aspuru-Guzik, and O'Brien]{Peruzzo2014}
-Alberto Peruzzo, Jarrod McClean, Peter Shadbolt, Man-Hong Yung, Xiao-Qi Zhou, Peter~J. Love, Al\'{a}n Aspuru-Guzik, and Jeremy~L. O'Brien.
-\newblock A variational eigenvalue solver on a photonic quantum processor.
-\newblock \emph{Nat. Commun.}, 5:\penalty0 4213, 2014.
-\newblock \doi{10.1038/ncomms5213}.
+\bibitem[Handy et~al.(1989)Handy, Pople, Head-Gordon, Raghavachari, and Trucks]{Handy1989}
+Nicholas~C. Handy, John~A. Pople, Martin Head-Gordon, Krishnan Raghavachari, and Gary~W. Trucks.
+\newblock Size-consistent {B}rueckner theory limited to single and double substitutions.
+\newblock \emph{Chem. Phys. Lett.}, 164:\penalty0 185--192, 1989.
+\newblock \doi{10.1016/0009-2614(89)85013-4}.
 
 \end{thebibliography}

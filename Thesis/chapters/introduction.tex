@@ -48,6 +48,10 @@
 %   - End with a clear, inspiring statement of what the reader will gain.
 % ---------------------------------------------------------------
 
+This chapter introduces the motivation, context, and objectives of this thesis, which focuses on the optimisation of virtual orbital spaces for post-Hartree-Fock methods and their implications for quantum computing. We begin by outlining the computational challenges in quantum chemistry that motivate the need for orbital optimisation. We then review existing strategies for virtual orbital reduction, leading to the OVOS method as the focus of this work. Finally, we state the specific research objectives and provide an outline of the thesis structure.
+
+NEED TO CHECK WITH PROJECT DESCRIPTION
+
 \section{Motivation}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 1.1]
@@ -74,6 +78,12 @@
 %    virtual orbital space itself, which is the bottleneck for all
 %    post-HF methods and is the subject of the following section."
 % ---------------------------------------------------------------
+
+Chemistry fundamentally arises from the quantum mechanical interactions of electrons and nuclei.
+% CITE: SzaboOstlund1989 or Helgaker2000 for fundamental electronic structure background
+The exact solution of the electronic Schrödinger equation for a molecule with $N$ electrons scales as $\mathcal{O}(N!)$ in the size of the configurational space, which rapidly renders brute-force approaches infeasible for any but the smallest systems \cite{Sherrill1999}. To achieve chemical accuracy (approximately 1 kcal/mol), it is essential to account for electron correlation effects beyond the mean-field Hartree-Fock (HF) approximation. Post-HF methods such as Møller-Plesset perturbation theory (MP2), coupled cluster with single and double excitations (CCSD), and CCSD with perturbative triples [CCSD(T)] are widely used to capture these correlation effects \cite{Moller1934}. However, the computational cost of these methods scales steeply with system size, primarily due to the virtual orbital space. The number of virtual orbitals grows with the size of the basis set, and the computational cost of post-HF methods scales as $\mathcal{O}(O^2 V^2)$ for MP2 (AO to MO basis), $\mathcal{O}(V^4 O^2)$ for CCSD, and $\mathcal{O}(O^3 V^4)$ for CCSD(T), where $O$ is the number of occupied and $V$ is the number of virtual orbitals, notation from \cite{Helgaker2000}. As occupied orbitals are typically fewer than virtual orbitals, the virtual space dominates the computational cost. 
+
+This challenge is not only relevant for classical computational chemistry but also has direct implications for quantum computing. Quantum algorithms for chemistry, such as the Variational Quantum Eigensolver (VQE), require a mapping of the electronic structure problem onto qubits \cite{Peruzzo2014}. The number of qubits required scales with the number of orbitals. Given that current Noisy Intermediate-Scale Quantum (NISQ) devices have fewer than 100 high-quality qubits, reducing the number of orbitals (the virtual orbital space) is crucial for making quantum simulations of chemistry feasible in the near term \cite{Cao2019}. This motivates a closer examination of the virtual orbital space itself, which is the bottleneck for all post-HF methods and is the subject of the following section.
 
 \section{The Virtual Orbital Space Problem}
 % ---------------------------------------------------------------
@@ -106,6 +116,18 @@
 %    this quantum computing context."
 % ---------------------------------------------------------------
 
+The virtual orbital space, which consists of the unoccupied molecular orbitals, plays a critical role in post-Hartree-Fock methods as it defines the space of excited configurations that contribute to electron correlation. The number of virtual orbitals grows with the size of the basis set, and their contribution to the correlation energy is not uniform. This section surveys various strategies that have been developed to reduce or optimise the virtual orbital space, ultimately motivating the focus of this thesis on the Optimised Virtual Orbital Space (OVOS) method, originally proposed by Adamowicz and Bartlett in 1987 \cite{Adamowicz1987}.
+
+The standard approach to defining virtual orbitals is to use the canonical Hartree-Fock (HF) virtual orbitals, which are obtained by diagonalising the Fock matrix \cite{Helgaker2000}. However, these canonical virtuals are not ordered by their contribution to the correlation energy, leading to inefficiencies in post-HF calculations.
+
+Natural orbitals, introduced by Löwdin in 1955 \cite{Lowdin1955}, are obtained by diagonalising the one-particle reduced density matrix (1-RDM) of a correlated wavefunction. They are ordered by their occupation numbers, which can be used to truncate the virtual space. However, this approach requires a correlated calculation to obtain the 1-RDM, creating a circular dependency.
+
+Frozen natural orbitals (FNO) are a practical solution to this problem. They are computed from a low-cost correlated calculation, such as MP2, and the virtual orbitals are truncated based on an occupation threshold \cite{Taube2005}. This method is widely used in practice and can significantly reduce the computational cost while retaining accuracy.
+
+% Skip pair natural orbitals (PNO) for now, as they are more complex and less directly relevant to the OVOS method.
+
+The OVOS method takes a different approach by directly optimising a subset of the virtual orbitals to maximise the second-order correlation energy \cite{Adamowicz1987}. This method does not require a pre-existing correlated density and can be systematically applied to any desired number of virtual orbitals. The OVOS method is the focus of this thesis, and we will implement and benchmark it in the context of unrestricted Hartree-Fock (UHF) calculations using the PySCF software package \cite{Sun2020}.
+
 \section{Quantum Computing Context}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 1.3]
@@ -135,6 +157,16 @@
 %   "From this landscape of motivation, the concrete research
 %    objectives of this thesis are stated in the following section."
 % ---------------------------------------------------------------
+
+Quantum computing has emerged as a promising paradigm for simulating quantum systems, including molecular electronic structure. Algorithms such as the Variational Quantum Eigensolver (VQE) off the potential to efficiently find ground state energies by preparing a parameterised quantum state and optimising the parameters using a classical optimiser \cite{Peruzzo2014}. However, current Noisy Intermediate-Scale Quantum (NISQ) devices are severely limited in the number of qubits and the depth of quantum circuits they can reliably execute \cite{Cao2019}. This makes the connection between orbital-space reduction and quantum resource requirements directly relevant to this thesis.
+
+In quantum chemistry, the electronic structure problem is typically mapped onto qubits using transformations such as the Jordan-Wigner \cite{Seeley2012}, which requires $Q = 2N_{\rm orb}$ qubits for $N_{\rm orb}$ spatial orbitals.
+% CITE: Cao2019 or Peruzzo2014 for VQE ansatz selection and circuit depth considerations
+Given the limited number of qubits and the need for shallow circuits, reducing the number of virtual orbitals directly translates to a reduction in qubit requirements and circuit depth.
+% CITE: Cao2019 for impact of orbital reduction on quantum resource requirements
+The OVOS method, by optimising a subset of the virtual orbitals, can significantly reduce the number of qubits needed for a given level of accuracy, $Q = 2N'_{\rm orb}$, where $N'_{\rm orb} < N_{\rm orb}$ is the number of orbitals retained after OVOS optimisation.
+% CITE: Clausen2025 for COVO connection and preliminary work on orbital optimization for quantum computing
+% NOTE: Could also cite deGracia2024 for Hamiltonian simulation in NISQ era
 
 \section{Objectives}
 % ---------------------------------------------------------------
@@ -169,6 +201,16 @@
 %  and extends it to a full implementation and systematic benchmark.
 % ---------------------------------------------------------------
 
+The thesis will seek to achieve the following specific objectives:
+
+\begin{enumerate}
+    \item Implement and validate the OVOS algorithm of Adamowicz \& Bartlett \cite{Adamowicz1987} in a UHF framework using the PySCF software package, for a representative set of molecules and basis sets.
+    \item Characterise the energy recovery as a function of the active virtual orbital count for all test systems, quantifying the fraction of correlation energy recovered by the OVOS-optimised orbitals.
+    \item Investigate whether OVOS-optimised molecular orbitals satisfy the Brueckner orbital condition at the MP2 level (vanishing T1 amplitudes), and assess the theoretical connection between OVOS and orbital-optimised MP2 \cite{Lee2018}.
+    \item Quantify the potential benefit of OVOS-optimised orbitals as a reference trial state for VQE-type quantum computing algorithms: assess the expected improvement in reference-state overlap and compare initialisation strategies (default UHF, OVOS, UMP2 natural orbitals).
+\end{enumerate}
+
+
 \section{Thesis Outline}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 1.5]
@@ -189,4 +231,12 @@
 %   "All source code and data used in this thesis are available at
 %    [repository URL]. Chapter~\ref{ch:background} begins with the
 %    theoretical foundations needed to understand the OVOS method."
+%
+% SUGGESTED CITATIONS FOR CHAPTER OUTLINE:
+%   - Chapter 2 (Background): Helgaker2000, SzaboOstlund1989, Jensen2017 for fundamentals
+%   - Chapter 3 (Theory): Adamowicz1987 for OVOS theory; Lee2018 for Brueckner connection
+%   - Chapter 4 (Method): Sun2018/Sun2020 for PySCF; Adamowicz1987 for algorithm details
+%   - Chapter 5 (Results): Cite specific studies on molecules studied
+%   - Chapter 6 (Quantum): Cao2019, Peruzzo2014, Clausen2025 for VQE context
+%   - Chapter 7 (Conclusion): Summarize evidence from chapters 2-6
 % ---------------------------------------------------------------
