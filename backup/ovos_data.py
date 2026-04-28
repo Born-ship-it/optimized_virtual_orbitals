@@ -592,12 +592,61 @@ def plot_OVOS_MO_coefficient_diff_MP2(molecule, basis):
     mol.charge = 0
     mol.symmetry = False
     mol.build()
+    norb = mol.nao_nr()
+    print(f"Number of atomic orbitals: {norb}")
+    nelec = mol.nelectron
+    print(f"Number of electrons: {nelec}")
         # Perform RHF calculation to get MO coefficients (MP2 orbitals are the same as RHF orbitals)
     mf = scf.RHF(mol)
     mf.kernel()
         # Do MP2
     MP2 = mf.MP2().run()
-    mo_coeffs_MP2 = MP2.mo_coeff  # MO coefficients for MP2 (same as RHF)
+    mo_coeffs_MP2 = np.array(MP2.mo_coeff)  # MO coefficients for MP2 (same as RHF)
+
+    # === FCI Correlation Energy (only for small systems) ===
+    import pyscf
+    FCI_mo_coeffs = None
+    if basis == "6-31G" and molecule_name in ["HF", "H2O"]:
+        print("Computing FCI (Full Configuration Interaction)...")
+        try:
+            cisolver = pyscf.fci.FCI(mol, mf.mo_coeff)
+            e, fcivec = cisolver.kernel()
+            print(f"FCI vector shape: {fcivec.shape}")
+
+            # Number of alpha and beta electrons (closed‑shell case)
+            na = nb = nelec // 2
+
+            # Compute the spin‑resolved 1‑particle density matrices
+            rdm1a, rdm1b = cisolver.make_rdm1s(fcivec, norb, (na, nb))
+
+            occ_a, coeff_a = np.linalg.eigh(rdm1a)   # coeff_a shape (norb, norb)
+            occ_b, coeff_b = np.linalg.eigh(rdm1b)
+            # sort descending occupation
+            idx_a = occ_a.argsort()[::-1]
+            idx_b = occ_b.argsort()[::-1]
+            alpha_spin_mo_coeff = coeff_a[:, idx_a]
+            beta_spin_mo_coeff  = coeff_b[:, idx_b]
+            alpha_spin_ao_coeff = mf.mo_coeff @ alpha_spin_mo_coeff
+            beta_spin_ao_coeff = mf.mo_coeff @ beta_spin_mo_coeff
+
+            FCI_mo_coeffs = [alpha_spin_ao_coeff, beta_spin_ao_coeff]
+
+        except Exception as e:
+            print(f"⚠️  FCI computation failed: {e}")
+            FCI_mo_coeffs = None
+    else:
+        print("FCI skipped (only computed for 6-31G with HF, H2O)")
+
+    print(f"Is FCI MO coefficients available for comparison? {'Yes' if FCI_mo_coeffs is not None else 'No'}")
+
+    if FCI_mo_coeffs is not None:
+        print("Using FCI MO coefficients for comparison.")
+        # print(FCI_mo_coeffs)
+        mo_coeffs_MP2 = FCI_mo_coeffs  # Use FCI MO coefficients for comparison if available
+        print("MP2 MO coefficients replaced with FCI MO coefficients for comparison.")
+        print("MP2 MO coefficients shape:", mo_coeffs_MP2[0].shape, mo_coeffs_MP2[1].shape)
+    else:
+        print("Using MP2 MO coefficients for comparison.")
 
     # Find 75% of the virtual orbitals to determine which point in the convergence history to plot
     num_electrons = mol.nelectron
@@ -648,36 +697,68 @@ def plot_OVOS_MO_coefficient_diff_MP2(molecule, basis):
             axes.append(fig.add_subplot(gs[i, 3]))
 
         # Title
-        fig.suptitle(f'MO Coefficients vs MP2: {molecule_name}/{basis}, Method: {method}, {num_opt_virt_orb} Optimized Orbitals', 
-                     fontsize=24, y=0.98)
+        if FCI_mo_coeffs is not None:
+            fig.suptitle(f'MO Coefficients vs FCI: {molecule_name}/{basis}, Method: {method}, {num_opt_virt_orb//2} Optimized Orbitals', 
+                        fontsize=24, y=0.98)
+        else:
+            fig.suptitle(f'MO Coefficients vs MP2: {molecule_name}/{basis}, Method: {method}, {num_opt_virt_orb//2} Optimized Orbitals', 
+                        fontsize=24, y=0.98)
+        
 
         # Determine color scales
-        vmin = min(np.min(mo_coeffs_ovos[0]), np.min(mo_coeffs_MP2))
-        vmax = max(np.max(mo_coeffs_ovos[0]), np.max(mo_coeffs_MP2))
+        if FCI_mo_coeffs is not None:
+            vmin = min(np.min(mo_coeffs_ovos[0]), np.min(FCI_mo_coeffs[0]), np.min(FCI_mo_coeffs[1]))
+            vmax = max(np.max(mo_coeffs_ovos[0]), np.max(FCI_mo_coeffs[0]), np.max(FCI_mo_coeffs[1]))
+            
+            diff_vmax = max(
+                np.max(np.abs(mo_coeffs_ovos[0] - mo_coeffs_MP2[0])),
+                np.max(np.abs(mo_coeffs_ovos[1] - mo_coeffs_MP2[0])),
+                np.max(np.abs(mo_coeffs_ovos[0] - mo_coeffs_MP2[1])),
+                np.max(np.abs(mo_coeffs_ovos[1] - mo_coeffs_MP2[1]))
+            )
+
+        else:
+            vmin = min(np.min(mo_coeffs_ovos[0]), np.min(mo_coeffs_MP2))
+            vmax = max(np.max(mo_coeffs_ovos[0]), np.max(mo_coeffs_MP2))
+            
+            diff_vmax = max(
+                np.max(np.abs(mo_coeffs_ovos[0] - mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]])),
+                np.max(np.abs(mo_coeffs_ovos[1] - mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]]))
+            )
         
-        diff_vmax = max(
-            np.max(np.abs(mo_coeffs_ovos[0] - mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]])),
-            np.max(np.abs(mo_coeffs_ovos[1] - mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]]))
-        )
         diff_vmin = -diff_vmax
 
         # Alpha spin plots
         im0 = axes[0].imshow(mo_coeffs_ovos[0], vmin=vmin, vmax=vmax, cmap='viridis')
         axes[0].set_ylabel('Basis Functions')
         
-        im1 = axes[1].imshow(mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]], vmin=vmin, vmax=vmax, cmap='viridis')
-        
-        im2 = axes[2].imshow(mo_coeffs_ovos[0] - mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]], 
-                             cmap='RdBu_r', vmin=diff_vmin, vmax=diff_vmax)
+        if FCI_mo_coeffs is not None:
+            im1 = axes[1].imshow(mo_coeffs_MP2[0], vmin=vmin, vmax=vmax, cmap='viridis')
+            
+            im2 = axes[2].imshow(mo_coeffs_ovos[0] - mo_coeffs_MP2[0], 
+                                cmap='RdBu_r', vmin=diff_vmin, vmax=diff_vmax)
+
+        else:
+            im1 = axes[1].imshow(mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]], vmin=vmin, vmax=vmax, cmap='viridis')
+            
+            im2 = axes[2].imshow(mo_coeffs_ovos[0] - mo_coeffs_MP2[:, :mo_coeffs_ovos[0].shape[1]], 
+                                cmap='RdBu_r', vmin=diff_vmin, vmax=diff_vmax)
 
         # Beta spin plots
         im3 = axes[3].imshow(mo_coeffs_ovos[1], vmin=vmin, vmax=vmax, cmap='viridis')
         axes[3].set_ylabel('Basis Functions')
         
-        im4 = axes[4].imshow(mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]], vmin=vmin, vmax=vmax, cmap='viridis')
-        
-        im5 = axes[5].imshow(mo_coeffs_ovos[1] - mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]], 
-                             cmap='RdBu_r', vmin=diff_vmin, vmax=diff_vmax)
+        if FCI_mo_coeffs is not None:
+            im4 = axes[4].imshow(mo_coeffs_MP2[1], vmin=vmin, vmax=vmax, cmap='viridis')
+            
+            im5 = axes[5].imshow(mo_coeffs_ovos[1] - mo_coeffs_MP2[1], 
+                                cmap='RdBu_r', vmin=diff_vmin, vmax=diff_vmax)
+
+        else:
+            im4 = axes[4].imshow(mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]], vmin=vmin, vmax=vmax, cmap='viridis')
+            
+            im5 = axes[5].imshow(mo_coeffs_ovos[1] - mo_coeffs_MP2[:, :mo_coeffs_ovos[1].shape[1]], 
+                                cmap='RdBu_r', vmin=diff_vmin, vmax=diff_vmax)
 
         # Plot a black stripped line in each heatmap to indicate the separation between occupied and virtual orbitals, which is at num_electrons//2
         num_occupied_orbitals = num_electrons // 2
@@ -709,15 +790,21 @@ def plot_OVOS_MO_coefficient_diff_MP2(molecule, basis):
         # Add labels for the coloumns on the top of coloumns for OVOS, MP2 and difference and on the left hand side for alpha and beta spin
             # Column labels (top)
         fig.text(0.23, 0.92, 'OVOS Orbitals', ha='center', va='top', fontsize=12, fontweight='bold')
-        fig.text(0.47, 0.92, 'MP2 Orbitals', ha='center', va='top', fontsize=12, fontweight='bold')
-        fig.text(0.78, 0.92, 'Difference (OVOS - MP2)', ha='center', va='top', fontsize=12, fontweight='bold')
+        if FCI_mo_coeffs is not None:
+            fig.text(0.47, 0.92, 'FCI Orbitals', ha='center', va='top', fontsize=12, fontweight='bold')
+        else:
+            fig.text(0.47, 0.92, 'MP2 Orbitals', ha='center', va='top', fontsize=12, fontweight='bold')
+        fig.text(0.78, 0.92, 'Difference (OVOS - FCI)', ha='center', va='top', fontsize=12, fontweight='bold')
         
             # Row labels (left side)
         fig.text(0.085, 0.695, 'Alpha Spin', ha='left', va='center', rotation=90, fontsize=12, fontweight='bold')
         fig.text(0.085, 0.295, 'Beta Spin', ha='left', va='center', rotation=90, fontsize=12, fontweight='bold')
         
         # Save figure
-        output_file = output_dir / f"MO_coefficients_vs_MP2_{molecule_name}_{basis}_{method}.png"
+        if FCI_mo_coeffs is not None:
+            output_file = output_dir / f"MO_coefficients_vs_FCI_{molecule_name}_{basis}_{method}.png"
+        else:
+            output_file = output_dir / f"MO_coefficients_vs_MP2_{molecule_name}_{basis}_{method}.png"
         plt.savefig(output_file, dpi=150, bbox_inches='tight')
         print(f"✅ Plot saved to: {output_file}")
         plt.close()
@@ -1886,23 +1973,30 @@ if __name__ == "__main__":
     # Debug run
     # run_ovos_for_virtual_orbs(molecules[2], basis_sets[0], method="RHF", num_opt_virtual_orbs=6)
 
-    for basis in basis_sets[1:2]:   # Done: 6-31G
-        for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
-            for method in methods[0:2]:
-                ovos_object(molecule, basis, method)
+    if False:
+        for basis in basis_sets[1:2]:   # Done: 6-31G
+            for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
+                for method in methods[0:2]:
+                    ovos_object(molecule, basis, method)
 
-            try:
-                save_molecule_reference_data(molecule, basis)
-            except Exception as e:
-                print(f"❌ Failed for {molecule}/{basis}: {e}\n")
+                try:
+                    save_molecule_reference_data(molecule, basis)
+                except Exception as e:
+                    print(f"❌ Failed for {molecule}/{basis}: {e}\n")
+    if False:
+        for basis in basis_sets[1:2]:   # Done: 6-31G
+            for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
 
-            # After running ovos_object(), plot the results
-            plot_OVOS_convergence_from_data(molecule, basis, methods=["RHF", "prev", "random"])
-                # Plot convergence histories for all methods on the same plot for comparison
-            plot_OVOS_convergence_histories(molecule, basis, methods=["RHF", "prev", "random"])
+                # After running ovos_object(), plot the results
+                plot_OVOS_convergence_from_data(molecule, basis, methods=["RHF", "prev", "random"])
+                    # Plot convergence histories for all methods on the same plot for comparison
+                plot_OVOS_convergence_histories(molecule, basis, methods=["RHF", "prev", "random"])
+    if True:
+        for basis in basis_sets:   # Done: 6-31G
+            for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
 
-            # Plot MO coefficient convergence for all methods
-            plot_OVOS_MO_coefficient_diff_MP2(molecule, basis)
+                # Plot MO coefficient convergence for all methods
+                plot_OVOS_MO_coefficient_diff_MP2(molecule, basis)
 
 
     # Test convergence criteria and early stopping for "RHF" method

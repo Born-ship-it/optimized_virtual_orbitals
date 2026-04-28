@@ -224,7 +224,7 @@ def run_ucc_and_get_stats(wf, str_, orbital_optimization, atol=1e-6):
 
 
 
-def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
+def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas, thetas_bool=False):
     # name_out = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/OVOS_{molecule}_{dist}_{basis}_VQE_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}_output.txt"
     # if not os.path.exists(os.path.dirname(name_out)):
     #     os.makedirs(os.path.dirname(name_out))
@@ -236,6 +236,11 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
         # Setup logging
     logger, name_out = setup_logging_in_function(seed, dist, molecule, basis, num_opt_virtual_orbs, oo)
     set_logger(logger)
+
+    # Change seed to True if thetas_boll is True to use thetas as input instead of random initialization
+    if thetas_bool == True:
+        log_print(f"Using provided thetas for seed {seed} instead of random initialization.")
+        seed = "True"  # Just to indicate in the logs that we are using provided thetas instead of random initialization
 
 
     if True:  # Just capture to list and write at the end to avoid issues with multiprocessing
@@ -324,12 +329,18 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
                 {"n_layers":1},
                 include_active_kappa=False,
             )
-                # Initialize thetas randomly for reproducibility
-            np.random.seed(seed)
-            thetas = (2*np.pi*np.random.random(len(WF_ovos.thetas)) - np.pi).tolist()       
             atol = 1e-6
                 # Use same random seed and initial thetas for fair comparison
-            WF_ovos.thetas = thetas
+                    # Initialize thetas randomly for reproducibility
+            if thetas_bool == False:
+                np.random.seed(seed)
+                thetas = (2*np.pi*np.random.random(len(WF_ovos.thetas)) - np.pi).tolist()       
+
+            if thetas_bool == False:
+                WF_ovos.thetas = thetas
+            else:
+                WF_ovos.thetas = thetas[0]
+            
             
                 # Optimize WF
             stats_ovos_opt = run_ucc_and_get_stats(WF_ovos, "BFGS", oo, atol)
@@ -379,7 +390,10 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
                 {"n_layers":1},
                 include_active_kappa=False,
             )
-            WF_uhf.thetas = thetas
+            if thetas_bool == False:
+                WF_uhf.thetas = thetas
+            else:
+                WF_uhf.thetas = thetas[1]
 
                 # Optimize WF
             stats_uhf_opt = run_ucc_and_get_stats(WF_uhf, "BFGS", oo, atol)
@@ -449,7 +463,10 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
                 {"n_layers":1},
                 include_active_kappa=False,
             )
-            WF_ump2_no.thetas = thetas
+            if thetas_bool == False:
+                WF_ump2_no.thetas = thetas
+            else:
+                WF_ump2_no.thetas = thetas[2]
 
                 # Optimize WF
             stats_ump2_no_opt = run_ucc_and_get_stats(WF_ump2_no, "BFGS", oo, atol)
@@ -496,6 +513,7 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
                 "num_orbitals": num_orbitals,
                 "num_opt_virtual_orbs": num_opt_virtual_orbs,
                 "thetas": thetas,
+                "thetas_final": [WF_ovos.thetas, WF_uhf.thetas, WF_ump2_no.thetas], 
                 "oo": oo,
                 "E_corr_OVOS": E_tot,
                 "E_ovos_opt": E_ovos_opt,
@@ -520,6 +538,17 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed):
             raise
         finally:
             set_logger(None)  # Clear logger reference
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Define the molecule
@@ -569,7 +598,7 @@ def run_hf_vqe():
         # Varying the bond length around the equilibrium geometry:
             # 'H 0 0 0; F 0 0 0.917'
     
-    dist_list = np.arange(0.7, 2.025, 0.025)  # From 0.7 to 2.0 Angstrom in steps of 0.05 for faster testing
+    dist_list = np.arange(0.675, 2.025, 0.025)  # From 0.7 to 2.0 Angstrom in steps of 0.05 for faster testing
     dist_list = [round(d, 3) for d in dist_list]  # Round to 4 decimals for cleaner output
     
     # Make the files for HF if they don't exist
@@ -649,11 +678,13 @@ def run_hf_vqe():
     # Run the VQE optimizations for HF for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
     # seed_list = [8]
-    seed_list = [149, 159, 169, 179, 189, 19, 199, 20, 21, 29]
-    # 10: [42, 123, 14, 10, 20, 21, 101, 404, 9, 13]
-    # 20: [9, 10, 101, 109, 119, 123, 129, 13, 139, 14], 
-    # 30: [149, 159, 169, 179, 189, 19, 199, 20, 21, 29], 
-    # 40: ['39', '404', '42', '49', '59', '69', '79', '8', '89', '9', '99']
+    seed_list = [32, 72, 91, 64, 111, 128, 256, 303, 512, 1024, 2048, 4096, 8192, 16384] 
+    # Have already:
+        # 8, 9, 10, 13, 14, 20, 21, 42, 101, 109, 119, 123, 129, 139, 404
+            # A total of 16...
+        # 14 more seeds to run for a total of 30 seeds per dist variation, which should give us a good picture of the distribution of results for each dist variation.
+        
+
 
     args_list = []
     for dist in dist_list:
@@ -708,7 +739,7 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
     print(f"Equilibrium H-O-H angle: {angle_deg:.2f} degrees")
         # Now we can vary the O-H bond length while keeping the angle fixed by scaling the H coordinates accordingly
             # Try 10 different bond length variations around the equilibrium geometry, e.g. from 0.75 to 1.25 times the equilibrium bond length
-    bond_length_set = [1.775] # np.arange(1.8, 2.025, 0.025)
+    bond_length_set = np.arange(0.675, 2.025, 0.025)
             # Figure out the procentages we need to get the bond_length_set values
     bond_length_variations = [bl / bond_lengths[0] for bl in bond_length_set]
                 # Round off to 3 decimals
@@ -838,11 +869,10 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
 
     # Run the VQE optimizations for H2O for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    seed_list = [10, 14] # 8
-    # seed_list = [42, 123, 14, 10, 20]
-    # 10: [42, 123, 14, 10, 20] Done: [21, 101, 404, 8, 13]
-    # 20: [9, 10, 101, 109, 119, 123, 129, 13, 139, 14], 
-    # 30: [149, 159, 169, 179, 189, 19, 199, 20, 21, 29], 
+    seed_list = [32, 72] #, 91, 64, 111, 128, 256, 303, 512, 1024, 2048, 4096, 8192, 16384]
+    # Done: 8, 10, 13, 14, 20, 21, 42, 101, 123, 404
+        # Total: 16 seeds
+
     args_list = []
     for i, atom_str in enumerate(dist_list_h2o):
         dist = dist_list_h2o_bond_lengths[i]
@@ -1014,7 +1044,7 @@ def run_nh3_vqe():
     print(f"Equilibrium H-N-H angles: {angle_1_deg:.2f}, {angle_2_deg:.2f}, {angle_3_deg:.2f} degrees")
 
     # Now we can vary the N-H bond length while keeping the angles fixed by scaling to the following bond length variations around the equilibrium geometry, e.g. from 0.75 to 1.25 times the equilibrium bond length
-    bond_length_set = [0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
+    bond_length_set = [0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
         # Figure out the procentages we need to get the bond_length_set values
     bond_length_variations = [bl / bond_lengths[0] for bl in bond_length_set]
         # Round off to 3 decimals
@@ -1160,7 +1190,8 @@ def run_li2_vqe():
             # which we can vary around the equilibrium bond length of 1.6 Angstrom.
     
     # Trial dist list
-    dist_list = [3.7] # np.arange(3.8, 6.1, 0.1).round(1).tolist()  # Trial
+    dist_list = np.arange(2.4, 6.1, 0.1).round(1).tolist()  # Trial
+
     print("\nGenerated Li2 geometries with varying Li-Li bond lengths:")
     for dist in dist_list:
         atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
@@ -1172,87 +1203,91 @@ def run_li2_vqe():
     basis_lst = ["6-31G", "cc-pVDZ"]
     basis = basis_lst[0]
 
-    for dist in dist_list:
-        # Make the VQE folders for dist if they don't exist
-        if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/dist/{dist}"):
-            os.makedirs(f"backup/data/{atom}/{basis}/VQE/dist/{dist}")
-        for method in ["OVOS", "UHF", "UMP2"]:
-            if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}"):
-                os.makedirs(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}")
+    # for dist in dist_list:
+    #     # Make the VQE folders for dist if they don't exist
+    #     if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/dist/{dist}"):
+    #         os.makedirs(f"backup/data/{atom}/{basis}/VQE/dist/{dist}")
+    #     for method in ["OVOS", "UHF", "UMP2"]:
+    #         if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}"):
+    #             os.makedirs(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}")
 
     # Make the nuclear repulsion energy files for Li2 if they don't exist
-    for dist in dist_list:
-        atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
-        # set up molecule
-        mol = gto.Mole()
-        mol.atom = atom_str
-        mol.basis = basis_lst[0]
-        mol.unit = 'Angstrom'
-        mol.spin = 0
-        mol.charge = 0
-        mol.symmetry = False
-        mol.verbose = 0
-        mol.build()
+    # for dist in dist_list:
+    #     atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
+    #     # set up molecule
+    #     mol = gto.Mole()
+    #     mol.atom = atom_str
+    #     mol.basis = basis_lst[0]
+    #     mol.unit = 'Angstrom'
+    #     mol.spin = 0
+    #     mol.charge = 0
+    #     mol.symmetry = False
+    #     mol.verbose = 0
+    #     mol.build()
         
-        # Get nuclear repulsion energy  
-        nuc_rep_energy = mol.energy_nuc()
+    #     # Get nuclear repulsion energy  
+    #     nuc_rep_energy = mol.energy_nuc()
 
-        # Save nuclear repulsion energy for later comparison
-        name_nuc_rep = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/nuclear_repulsion_{molecule}_{basis}_{dist}_energy.txt"
-        if not os.path.exists(name_nuc_rep):
-            with open(name_nuc_rep, "w") as f:
-                f.write(f"{nuc_rep_energy:.6f}\n")
-            print(f"Nuclear repulsion energy for {atom_str} at dist {dist} saved to {name_nuc_rep}.")
-            skip_nuc_rep_calculation = False
-        else:
-            skip_nuc_rep_calculation = True
-    if skip_nuc_rep_calculation == True:
-        print(f"Nuclear repulsion energy files already exists for {molecule} skipping calculation.")
+    #     # Save nuclear repulsion energy for later comparison
+    #     name_nuc_rep = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/nuclear_repulsion_{molecule}_{basis}_{dist}_energy.txt"
+    #     if True: # not os.path.exists(name_nuc_rep):
+    #         with open(name_nuc_rep, "w") as f:
+    #             f.write(f"{nuc_rep_energy:.6f}\n")
+    #         print(f"Nuclear repulsion energy for {atom_str} at dist {dist} saved to {name_nuc_rep}.")
+    #         skip_nuc_rep_calculation = False
+    #     else:
+    #         skip_nuc_rep_calculation = True
+    # if skip_nuc_rep_calculation == True:
+    #     print(f"Nuclear repulsion energy files already exists for {molecule} skipping calculation.")
 
     # Make the UHF/RHF reference energy files for Li2 if they don't exist
-    for dist in dist_list:
-        atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
-        for hf in ["UHF", "RHF"]:
-            # set up molecule
-            mol = gto.Mole()
-            mol.atom = atom_str
-            mol.basis = basis_lst[0]
-            mol.unit = 'Angstrom'
-            mol.spin = 0
-            mol.charge = 0
-            mol.symmetry = False
-            mol.verbose = 0
-            mol.build()
+    # for dist in dist_list:
+    #     atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
+    #     for hf in ["UHF", "RHF"]:
+    #         # set up molecule
+    #         mol = gto.Mole()
+    #         mol.atom = atom_str
+    #         mol.basis = basis_lst[0]
+    #         mol.unit = 'Angstrom'
+    #         mol.spin = 0
+    #         mol.charge = 0
+    #         mol.symmetry = False
+    #         mol.verbose = 0
+    #         mol.build()
             
-            # Get reference energies  
-            if hf == "UHF":
-                hf_energy = mol.UHF().run().e_tot
-            else:
-                hf_energy = mol.RHF().run().e_tot
+    #         # Get reference energies  
+    #         if hf == "UHF":
+    #             hf_energy = mol.UHF().run().e_tot
+    #         else:
+    #             hf_energy = mol.RHF().run().e_tot
 
-            # Save HF reference energy for later comparison
-            name_hf = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/{hf}_{molecule}_{basis}_{dist}_reference_energy.txt"
-            if not os.path.exists(name_hf):
-                with open(name_hf, "w") as f:
-                    f.write(f"{hf_energy:.6f}\n")
-                print(f"HF reference energy for {atom_str} at dist {dist} saved to {name_hf}.")
-                skip_hf_calculation = False
-            else:
-                skip_hf_calculation = True
-    if skip_hf_calculation == True:
-        print(f"HF reference energy file already exists for {molecule}, skipping calculation.")
+    #         # Save HF reference energy for later comparison
+    #         name_hf = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/{hf}_{molecule}_{basis}_{dist}_reference_energy.txt"
+    #         if True: # not os.path.exists(name_hf):
+    #             with open(name_hf, "w") as f:
+    #                 f.write(f"{hf_energy:.6f}\n")
+    #             print(f"HF reference energy for {atom_str} at dist {dist} saved to {name_hf}.")
+    #             skip_hf_calculation = False
+    #         else:
+    #             skip_hf_calculation = True
+    # if skip_hf_calculation == True:
+    #     print(f"HF reference energy file already exists for {molecule}, skipping calculation.")
 
     # Run the VQE optimizations for Li2 for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    seed_list = [13] # [9] # Trial seed, verify...
-    # seed_list = [42, 123, 14, 10, 20, 21, 101, 404, 8, 13]
+    seed_list = [42]
+        # Done: 8, 9, 10, 13, 14, 20, 21, 42, 101, 123, 404, 32, 72, 111, 128, 64, 91, 256, 152, 303
+            # Total seeds done:
 
     args_list = []
     for dist in dist_list:
         atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
         for basis in [basis_lst[0]]:
             for num_opt_virtual_orbs in [0.75]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
+                
+                # CHANGE IT HERE TO RUN BOTH WITH AND WITHOUT ORBITAL OPTIMIZATION
                 for oo in [oo_lst[1]]: # True, False
+
                     for seed in seed_list:
                         print(f"{dist:.3f} Å: {seed:3d}, Prep. VQE runs for Li-Li bond length {dist:.3f} Å, with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
                         # Args for each run: atom string, basis, dist, num_opt_virtual_orbs, oo, seed
@@ -1267,19 +1302,21 @@ def run_li2_vqe():
 
 def run_single(args):
     """Wrapper function for multiprocessing.dummy.Pool"""
-    atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed = args
-    return VQE_OVOS(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed)
+    atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas, thetas_bool = args
+
+    return VQE_OVOS(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas, thetas_bool)
 
 # Run
 if __name__ == "__main__":
     # Molecule: HF, H2O, CO, NH3, Li2
-    # args_list = run_hf_vqe()
-    # args_list = run_h2o_vqe()
-    # args_list = run_co_vqe()  # RAM exploded, even when running 1...
-    # args_list = run_nh3_vqe()
-    args_list = run_li2_vqe()
+    # args_list = run_hf_vqe()  # HF,  Done 
+    # args_list = run_h2o_vqe() # H2O, Done
+    args_list = run_li2_vqe()   # 16...
 
-    if True:
+    if False:
+        # Set thetas to empty list... and thetas_bool to False
+        args_list = [(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, [], False) for (atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed) in args_list]
+
         num_cores = os.cpu_count()
         num_workers = 10
         
@@ -1295,10 +1332,78 @@ if __name__ == "__main__":
         print(f"✓ Completed {len(results)} VQE runs")
         print(f"Performance: ~{len(args_list)/num_workers:.1f} runs per core on average")
     
-    if False:
-        # Run in serial
+    if True:
+        # Run in serial to allow for prev. thetas to be used as initial guess for next run
+        args_list = [(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, [], True) for (atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed) in args_list]
+                # From the data file entry for "thetas" of the random runs
+        atom_str = args_list[-1][0]
+        molecule_name = args_list[-1][1]
+        basis_name = args_list[-1][2]
+        last_dist_in_dist_list = args_list[-1][3]
+        num_opt_virtual_orbs = args_list[-1][4]     # %
+        oo = args_list[-1][5]
+
+        # Get num_orbitals and num_electrons 
+        mol = gto.Mole()
+        mol.atom = atom_str
+        mol.basis = basis_name
+        mol.unit = 'Angstrom'
+        mol.spin = 0
+        mol.charge = 0
+        mol.symmetry = False
+        mol.verbose = 0
+        mol.build()
+
+        num_orbitals = mol.nao_nr()  # Number of atomic orbitals
+        num_electrons = mol.nelectron  # Number of electrons
+
+        num_opt_virtual_orbs = int(num_opt_virtual_orbs * (num_orbitals - num_electrons//2))
+
+        # Start random thetas for the first run, then use thetas from each run as initial guess for the next run
+            # Get the length of the thetas list we need for the first run to generate random thetas of the correct length
+        len_thetas = None
+        previous_thetas = None
+
+        file_name = f"backup/data/{molecule_name}/{basis_name}/VQE/OVOS/{last_dist_in_dist_list}/UPS_OVOS_{molecule_name}_{basis_name}_{last_dist_in_dist_list}_opt_num_{num_opt_virtual_orbs}_{oo}_8.json"
+        print(f"Looking for existing thetas in \n     {file_name} \n to determine length for random theta generation...")
+
+        if os.path.exists(file_name):
+            with open(file_name, "r") as f:
+                data = json.load(f)
+                thetas_from_file = data.get("thetas", [])
+                if thetas_from_file:
+                    len_thetas = len(thetas_from_file)
+                    print(f"Found existing thetas in {file_name}, using length {len_thetas} for random theta generation.")
+                else:
+                    print(f"No thetas found in {file_name}, will determine length from first run.")
+        else:            
+            assert False, "No existing file found to determine theta length from first run. Please run one VQE optimization with random thetas first to generate the file with thetas for the correct length, then run this script again to use those thetas as initial guess for the rest of the runs."
+
+        np.random.seed(42)  # For reproducibility of random thetas
+        thetas = (2*np.pi*np.random.random(len_thetas) - np.pi).tolist()       
+        thetas = [thetas, thetas, thetas]  
+
         for args in args_list:
-            run_single(args)
+            atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, _, _ = args
+            print(f"Running VQE for {molecule} at dist {dist} with seed {seed}...")
+            data_out = VQE_OVOS(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas, True)
+            thetas = data_out.get("thetas_final", thetas)  # Update thetas for the next run, if thetas_final is not in data_out, keep using the same thetas
+            previous_thetas = thetas  # Use thetas from this run as initial guess for next run
+
+
+
+
+# TO DO:
+# - Run VQE RANDOM for 5 seeds w. OO True
+# - Run VQE PREV. THETAS w. OO False
+# - Run VQE PREV. THETAS w. OO True
+
+
+
+
+
+
+
 
 
 
