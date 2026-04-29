@@ -785,7 +785,10 @@ def plot_OVOS_MO_coefficient_diff_MP2(molecule, basis):
         # Colorbar 2: For RdBu (differences)
         cbar_ax2 = fig.add_axes([0.89, 0.16, 0.015, 0.7])
         cbar2 = fig.colorbar(im2, cax=cbar_ax2)
-        cbar2.set_label('Difference (OVOS - MP2)', rotation=270, labelpad=18, fontweight='bold')
+        if FCI_mo_coeffs is not None:
+            cbar2.set_label('Difference (OVOS - FCI)', rotation=270, labelpad=18, fontweight='bold')
+        else:
+            cbar2.set_label('Difference (OVOS - MP2)', rotation=270, labelpad=18, fontweight='bold')
 
         # Add labels for the coloumns on the top of coloumns for OVOS, MP2 and difference and on the left hand side for alpha and beta spin
             # Column labels (top)
@@ -794,8 +797,12 @@ def plot_OVOS_MO_coefficient_diff_MP2(molecule, basis):
             fig.text(0.47, 0.92, 'FCI Orbitals', ha='center', va='top', fontsize=12, fontweight='bold')
         else:
             fig.text(0.47, 0.92, 'MP2 Orbitals', ha='center', va='top', fontsize=12, fontweight='bold')
-        fig.text(0.78, 0.92, 'Difference (OVOS - FCI)', ha='center', va='top', fontsize=12, fontweight='bold')
         
+        if FCI_mo_coeffs is not None:
+            fig.text(0.78, 0.92, 'Difference (OVOS - FCI)', ha='center', va='top', fontsize=12, fontweight='bold')
+        else:
+            fig.text(0.78, 0.92, 'Difference (OVOS - MP2)', ha='center', va='top', fontsize=12, fontweight='bold')
+
             # Row labels (left side)
         fig.text(0.085, 0.695, 'Alpha Spin', ha='left', va='center', rotation=90, fontsize=12, fontweight='bold')
         fig.text(0.085, 0.295, 'Beta Spin', ha='left', va='center', rotation=90, fontsize=12, fontweight='bold')

@@ -1379,11 +1379,40 @@ if __name__ == "__main__":
         else:            
             assert False, "No existing file found to determine theta length from first run. Please run one VQE optimization with random thetas first to generate the file with thetas for the correct length, then run this script again to use those thetas as initial guess for the rest of the runs."
 
-        np.random.seed(42)  # For reproducibility of random thetas
-        thetas = (2*np.pi*np.random.random(len_thetas) - np.pi).tolist()       
-        thetas = [thetas, thetas, thetas]  
+        # Clean start
+        if False:
+            np.random.seed(42)  # For reproducibility of random thetas
+            thetas = (2*np.pi*np.random.random(len_thetas) - np.pi).tolist()       
+            thetas = [thetas, thetas, thetas]  
 
+        # Continue start
+            
+            # Need to continue for Li2!!!!!!!!11
+
+        if True: # Found for oo = Ture each dist takes a while, need to be able to start from thetas from a previous dist to avoid having to run all dists sequentially from the start...
+            # Dist to get prev. from
+            prev_dist = 2.4
+            # Get thetas from the file for the prev_dist
+            file_name_prev = f"backup/data/{molecule_name}/{basis_name}/VQE/OVOS/{prev_dist}/UPS_OVOS_{molecule_name}_{basis_name}_{prev_dist}_opt_num_{num_opt_virtual_orbs}_True_True.json"
+            print(f"Looking for existing thetas in \n     {file_name_prev} \n to use as initial guess for the first run...")
+            if os.path.exists(file_name_prev):
+                with open(file_name_prev, "r") as f:
+                    data = json.load(f)
+                    thetas = data.get("thetas", [])
+                    if thetas:
+                        print(f"Found existing thetas in {file_name_prev}, using them as initial guess for the first run.")
+                    else:
+                        print(f"No thetas found in {file_name_prev}")
+            else:
+                assert False, f"No existing file found at {file_name_prev} to get thetas from. Please run a VQE optimization for dist {prev_dist} with orbital optimization first to generate the file with thetas, then run this script again to use those thetas as initial guess for the rest of the runs."
+
+        # Run the VQE optimizations in serial, using thetas from each run as initial guess for the next run
         for args in args_list:
+            # Skip the runs until we reach the dist we have thetas for, then start using thetas from each run as initial guess for the next run
+            dist = args[3]
+            if dist <= prev_dist: 
+                print(f"Skipping dist {dist} since done...")
+                continue
             atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, _, _ = args
             print(f"Running VQE for {molecule} at dist {dist} with seed {seed}...")
             data_out = VQE_OVOS(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas, True)
@@ -1394,10 +1423,14 @@ if __name__ == "__main__":
 
 
 # TO DO:
-# - Run VQE RANDOM for 5 seeds w. OO True
 # - Run VQE PREV. THETAS w. OO False
-# - Run VQE PREV. THETAS w. OO True
+    # H2O, HF
 
+# - Run VQE RANDOM for 5 seeds w. OO True
+    # H2O, HF, Li2
+
+# - Run VQE PREV. THETAS w. OO True
+    # H2O, HF | continue Li2...
 
 
 

@@ -106,31 +106,60 @@ def make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual
     #               ...
     #           }
     #      }
-    for num_opt_virtual_orbital in [num_opt_virtual_orbitals]:
-        data = {}
-        for method in ["OVOS", "UHF", "UMP2"]:
-            method_data = {}
-            for dist in dist_list:
-                energies = []
-                energies_initial = []
-                for seed in seeds_lst:
-                    if method == "UMP2":
-                        method_name = "UMP2_NO"
-                    else:
-                        method_name = method
-                    filename = f"backup/data/{molecule}/{basis}/VQE/{method}/{dist}/UPS_{method_name}_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbital}_False_{seed}.json"
-                    with open(filename, 'r') as f:
-                        result = json.load(f)
-                        energies.append(result['final_energy'])
-                        energies_initial.append(result['iter_energies'][0])
-                energy_min = min(energies)
-                seed_min = seeds_lst[energies.index(energy_min)]
-                method_data[dist] = [energies_initial[energies.index(energy_min)], energy_min, seed_min]  # Save the initial energy, lowest energy, and seed for this method and dist in the method_data dictionary
-            data[method] = method_data
-        
-        file_name = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_results_{num_opt_virtual_orbital}.json"
-        with open(file_name, 'w') as f:
-            json.dump(data, f, indent=4)
+    if seeds_lst is type(bool) and seeds_lst == True:
+        for oo in [False]: #[True, False]:
+            for num_opt_virtual_orbital in [num_opt_virtual_orbitals]:
+                data = {}
+                for method in ["OVOS", "UHF", "UMP2"]:
+                    method_data = {}
+                    for dist in dist_list:
+                        energies = []
+                        energies_initial = []
+                        if method == "UMP2":
+                            method_name = "UMP2_NO"
+                        else:
+                            method_name = method
+                        filename = f"backup/data/{molecule}/{basis}/VQE/{method}/{dist}/UPS_{method_name}_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbital}_{oo}_True.json"
+                        with open(filename, 'r') as f:
+                            result = json.load(f)
+                            energies.append(result['final_energy'])
+                            energies_initial.append(result['iter_energies'][0])
+                        energy_min = min(energies)
+                        seed_min = seeds_lst[energies.index(energy_min)]
+                        method_data[dist] = [energies_initial[energies.index(energy_min)], energy_min, seed_min]  # Save the initial energy, lowest energy, and seed for this method and dist in the method_data dictionary
+                    data[method] = method_data
+                
+                file_name = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_results_{num_opt_virtual_orbital}_{oo}_True.json"
+                with open(file_name, 'w') as f:
+                    json.dump(data, f, indent=4)
+
+    else:
+        for oo in [False]: #[True, False]:
+            for num_opt_virtual_orbital in [num_opt_virtual_orbitals]:
+                data = {}
+                for method in ["OVOS", "UHF", "UMP2"]:
+                    method_data = {}
+                    for dist in dist_list:
+                        energies = []
+                        energies_initial = []
+                        for seed in seeds_lst:
+                            if method == "UMP2":
+                                method_name = "UMP2_NO"
+                            else:
+                                method_name = method
+                            filename = f"backup/data/{molecule}/{basis}/VQE/{method}/{dist}/UPS_{method_name}_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbital}_{oo}_{seed}.json"
+                            with open(filename, 'r') as f:
+                                result = json.load(f)
+                                energies.append(result['final_energy'])
+                                energies_initial.append(result['iter_energies'][0])
+                        energy_min = min(energies)
+                        seed_min = seeds_lst[energies.index(energy_min)]
+                        method_data[dist] = [energies_initial[energies.index(energy_min)], energy_min, seed_min]  # Save the initial energy, lowest energy, and seed for this method and dist in the method_data dictionary
+                    data[method] = method_data
+                
+                file_name = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_results_{num_opt_virtual_orbital}_{oo}_True.json"
+                with open(file_name, 'w') as f:
+                    json.dump(data, f, indent=4)
 
 
 def make_vqe_dist_results_file(molecule, basis, dist, seeds_lst, num_opt_virtual_orbitals):
@@ -144,41 +173,83 @@ def make_vqe_dist_results_file(molecule, basis, dist, seeds_lst, num_opt_virtual
     #           "UHF": lowest_energy,
     #           "UMP2": lowest_energy
     #      }
-    data = {}
-    for method in ["OVOS", "UHF", "UMP2"]:
-        energies = []
-        energies_initial = []
-        energies_iterations = []
-        mo_type_by_seed = []
-        for seed in seeds_lst:
-            if method == "UMP2":
-                method_name = "UMP2_NO"
-            else:
-                method_name = method
-            filename = f"backup/data/{molecule}/{basis}/VQE/{method}/{dist}/UPS_{method_name}_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_False_{seed}.json"
-            try:
-                with open(filename, 'r') as f:
-                    result = json.load(f)
-                    energies.append(result['final_energy'])                 # Final energy
-                    energies_initial.append(result['iter_energies'][0])     # Initial energy
-                    energies_iterations.append(result['iterations'])         # Number of iterations
-                    mo_type_by_seed.append(check_vqe_mo_restricted_or_unrestricted(filename))
-                    # MO_type = ...
-            except FileNotFoundError:
-                print(f"Warning: VQE result file not found {filename} for method {method}, dist {dist}, seed {seed}")
+    # print(f"\n Gathering VQE results for {dist} with {num_opt_virtual_orbitals} for {seeds_lst}...")
+    if type(seeds_lst) is bool and seeds_lst == True:
+        for oo in [False]: #[True, False]:
+            # print(f"   Prev. oo = {oo}")
+            data = {}
+            for method in ["OVOS", "UHF", "UMP2"]:
+                energies = []
+                energies_initial = []
+                energies_iterations = []
+                mo_type_by_seed = []
+                if method == "UMP2":
+                    method_name = "UMP2_NO"
+                else:
+                    method_name = method
+                filename = f"backup/data/{molecule}/{basis}/VQE/{method}/{dist}/UPS_{method_name}_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_{oo}_True.json"
+                try:
+                    with open(filename, 'r') as f:
+                        result = json.load(f)
+                        energies.append(result['final_energy'])                 # Final energy
+                        energies_initial.append(result['iter_energies'][0])     # Initial energy
+                        energies_iterations.append(result['iterations'])         # Number of iterations
+                        mo_type_by_seed.append(check_vqe_mo_restricted_or_unrestricted(filename))
+                        # MO_type = ...
+                except FileNotFoundError:
+                    print(f"Warning: VQE result file not found {filename} for method {method}, dist {dist}, seed {seed}")
 
-        # Get index of the lowest energy
-            # Save the lowest energy and initial energy for this method and dist in the data dictionary
-        energy_min = min(energies)
-        seed_min = seeds_lst[energies.index(energy_min)]
-        iteratoins_min = energies_iterations[energies.index(energy_min)]
-        data[method] = [energies_initial[energies.index(energy_min)], energy_min, iteratoins_min, mo_type_by_seed[energies.index(energy_min)], seed_min]  # Save the initial energy, lowest energy, and MO type for this method and dist in the data dictionary
+                # Get index of the lowest energy
+                    # Save the lowest energy and initial energy for this method and dist in the data dictionary
+                energy_min = min(energies)
+                seed_min = "True"
+                iteratoins_min = energies_iterations[energies.index(energy_min)]
+                data[method] = [energies_initial[energies.index(energy_min)], energy_min, iteratoins_min, mo_type_by_seed[energies.index(energy_min)], seed_min]  
+                # Save the initial energy, lowest energy, and MO type for this method and dist in the data dictionary
 
-    file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbitals}.json"
-    if not os.path.exists(f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/"):
-        os.makedirs(f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/")
-    with open(file_name, 'w') as f:
-        json.dump(data, f, indent=4)
+            file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbitals}_{oo}_True.json"
+            if not os.path.exists(f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/"):
+                os.makedirs(f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/")
+            with open(file_name, 'w') as f:
+                json.dump(data, f, indent=4)
+        
+    else:
+        for oo in [False]: #[True, False]:
+            data = {}
+            for method in ["OVOS", "UHF", "UMP2"]:
+                energies = []
+                energies_initial = []
+                energies_iterations = []
+                mo_type_by_seed = []
+                for seed in seeds_lst:
+                    if method == "UMP2":
+                        method_name = "UMP2_NO"
+                    else:
+                        method_name = method
+                    filename = f"backup/data/{molecule}/{basis}/VQE/{method}/{dist}/UPS_{method_name}_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbitals}_{oo}_{seed}.json"
+                    try:
+                        with open(filename, 'r') as f:
+                            result = json.load(f)
+                            energies.append(result['final_energy'])                 # Final energy
+                            energies_initial.append(result['iter_energies'][0])     # Initial energy
+                            energies_iterations.append(result['iterations'])         # Number of iterations
+                            mo_type_by_seed.append(check_vqe_mo_restricted_or_unrestricted(filename))
+                            # MO_type = ...
+                    except FileNotFoundError:
+                        print(f"Warning: VQE result file not found {filename} for method {method}, dist {dist}, seed {seed}")
+
+                # Get index of the lowest energy
+                    # Save the lowest energy and initial energy for this method and dist in the data dictionary
+                energy_min = min(energies)
+                seed_min = seeds_lst[energies.index(energy_min)]
+                iteratoins_min = energies_iterations[energies.index(energy_min)]
+                data[method] = [energies_initial[energies.index(energy_min)], energy_min, iteratoins_min, mo_type_by_seed[energies.index(energy_min)], seed_min]  # Save the initial energy, lowest energy, and MO type for this method and dist in the data dictionary
+
+            file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbitals}_{oo}.json"
+            if not os.path.exists(f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/"):
+                os.makedirs(f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/")
+            with open(file_name, 'w') as f:
+                json.dump(data, f, indent=4)
 
     # print(f"VQE results write to {file_name} for dist {dist}: {data}")
 
@@ -219,7 +290,7 @@ def check_vqe_mo_restricted_or_unrestricted(filename):
         return "unrestricted"
                 
 
-def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals, plot_init):    
+def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals, plot_init, plot_prev, oo):    
     # Make sure num_opt_virtual_orbitals is at least a list of one element, which is the number of optimal virtual orbitals for the OVOS method, and we can use it to get the dist_list for the correct number of optimal virtual orbitals
     if not isinstance(num_opt_virtual_orbitals, list):
         num_opt_virtual_orbitals = [num_opt_virtual_orbitals]
@@ -229,12 +300,16 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
         # print(dist_list_25)
 
     methods = ["OVOS", "UHF", "UMP2"]
-    method_labels = {"OVOS": "OVOS (75%)", "UHF": "UHF", "UMP2": "UMP2 Nat. Orbs"}
+    method_labels = {"OVOS": "OVOS", "UHF": "UHF", "UMP2": "UMP2"}
     colors = {'OVOS': 'blue', 'UHF': 'purple', 'UMP2': 'green'}
     marker = {'OVOS':'D', 'UHF': 'X', 'UMP2': 'P'}
     
     # Convert dist_list strings to floats for proper numeric plotting
-    dist_list_float = [float(d) for d in dist_list]
+    if dist_list is type(list):
+        dist_list_float = [float(d) for d in dist_list]
+    else:
+        dist_list = dist_list_
+        dist_list_float = dist_list
     
     # Collect data organized by method
     data_by_method = {method: {'distances': [], 'energies': [], 'initial energies': [], 'iterations': [], 'UHF reference': [], 'RHF reference': [], 'nuclear repulsion': []} for method in methods}
@@ -242,9 +317,17 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     # Collect if the MOs are restricted or unrestricted for each dist and method, and print it out
     mo_type_by_method_and_dist = {method: {} for method in methods}
 
+    dist_list = dist_list[0]
+    # print(f"\nDist list for plotting: {dist_list} for num_opt_virtual_orbitals: {num_opt_virtual_orbitals}")
+
     for dist in dist_list:
         num_opt_virtual_orbital = num_opt_virtual_orbitals[-1]
-        file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbital}.json"
+        
+        if plot_prev == True:
+            file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbital}_{oo}_True.json"
+        else:
+            file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbital}_{oo}.json"
+        
         try:
             with open(file_name, 'r') as f:
                 data = json.load(f)
@@ -261,7 +344,7 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
                 else:
                     print(f"Warning: Method {method} not found in data for dist {dist}")
         except FileNotFoundError:
-            print(f"Warning: File not found {file_name}")
+            print(f"(1) Warning: File not found {file_name}")
             continue
 
         file_name_uhf_ref = f"backup/data/{molecule}/6-31G/VQE/UHF/{dist}/UHF_{molecule}_6-31G_{dist}_reference_energy.txt"
@@ -404,14 +487,14 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
                 color="red",
                 linestyle='--',
                 linewidth=1.5)
-    if molecule == "Li2":
-        # Plot UHF reference line
-        plt.plot(data_by_method_for_plotting['UHF']['distances'], 
-                    data_by_method_for_plotting['UHF']['UHF reference'],
-                    label="UHF Reference",
-                    color="purple",
-                    linestyle='--',
-                    linewidth=1.5)
+    # if molecule == "Li2":
+    #     # Plot UHF reference line
+    #     plt.plot(data_by_method_for_plotting['UHF']['distances'], 
+    #                 data_by_method_for_plotting['UHF']['UHF reference'],
+    #                 label="UHF Reference",
+    #                 color="purple",
+    #                 linestyle='--',
+    #                 linewidth=1.5)
 
         # Point plot
     for method in methods:
@@ -479,7 +562,13 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
 
                 # Text at initial energy points that shows the number of iterations it took to converge to the final energy for each method and dist, and make the text in the same color as the points for each method
             for i, dist in enumerate(data_to_plot_dist):
-                plt.text(dist, data_to_plot_initial[i]+0.01, f"{data_to_plot_iterations[i]} ", color=colors[method], fontsize=8, ha=loc_text[methods.index(method)], va='bottom')
+
+                if plot_prev == False:
+                    y_add = 0.01
+                else:
+                    y_add = 0.001
+
+                plt.text(dist, data_to_plot_initial[i]+y_add, f"{data_to_plot_iterations[i]} ", color=colors[method], fontsize=8, ha=loc_text[methods.index(method)], va='bottom')
 
         # Color intervals over the plot grey and white for every 2.25-2.75, 2.75-3.25, 3.25-3.75, 3.75-4.25, 4.25-4.75, 4.75-5.25, 5.25-5.75, 5.75-6.25 for Li2, and for every 0.9-1.1, 1.1-1.3 for HF
         if molecule == "Li2":
@@ -531,9 +620,15 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
 
     # Save the plot
     if plot_init:
-        output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_dist_results.png"
+        if plot_prev:
+            output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_dist_results_{oo}_prev.png"
+        else:
+            output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_dist_results_{oo}.png"
     else:
-        output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_dist_results_zoom.png"
+        if plot_prev:
+            output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_dist_results_zoom_{oo}_prev.png"
+        else:
+            output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_dist_results_zoom_{oo}.png"
     plt.savefig(output_path, dpi=300)
     print(f"Zoomed VQE dist results plot saved to {output_path}")
 
@@ -734,59 +829,121 @@ def gather_and_print_vqe_final_energy_spread(molecule, basis, method, dist, num_
         print(f"No final energies found for {method} at dist {dist} to calculate spread.")
 
 
-# if True:
-for molecule in ["Li2", "HF", "H2O"]:
-    # molecule = "Li2"
+if True:
+    for molecule in ["Li2", "HF", "H2O"]:
+        # molecule = "Li2"
+        basis = "6-31G"
+        method = "OVOS" # Placeholder for getting dist and seed list
+
+            # Get dist list from the folder
+        # dist_list = gather_dist_lst(molecule, basis, method)
+        dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
+            # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
+        num_opt_virtual_orbitals = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0])
+                # Set dist list with negatives floats first and then positive floats, and sorted by absolute value
+        
+        # dist_list = sorted(dist_list, key=lambda x: abs(4.0-float(x)))[::-1]
+        dist_list_save = []
+        for num_opt_virtual_orbital in num_opt_virtual_orbitals:
+            dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
+            print(f"Dist list for {molecule} {basis} method {method} num_opt_virtual_orbital {num_opt_virtual_orbital}: {dist_list}")
+
+                # If the molecule is Li2, we only want to the range above 2.5 Angstrom, so we can filter the dist_list to only include dist that are above 2.5 Angstrom, and we can use this filtered dist_list for the rest of the code
+            if molecule == "Li2":
+                dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
+
+                # Save dist_list
+            dist_list_save.append(dist_list)
+                # For each dist, get seeds list and make VQE results file for that dist
+            if len(dist_list) < 5:
+                seeds_lst = [9] # Only seed 9 or 8
+            else:
+                seeds_lst = gather_seeds_lst(molecule, basis, method, dist_list[0], num_opt_virtual_orbital) # Get seeds list from the first dist, assuming it's the same for all dists
+                # Remove the last seed from the seeds_lst
+                seeds_lst = seeds_lst[:-1]
+            
+            print(f"Seeds list for {molecule} {basis} method {method} dist {dist_list[0]}: {seeds_lst}")
+
+            for dist in dist_list:
+                    # ... and make the VQE results file for that dist
+                make_vqe_dist_results_file(molecule, basis, dist, seeds_lst, num_opt_virtual_orbital)
+
+            # Get the dist list again for full file generation
+            make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual_orbital)
+
+            # Check the correlation energy of OVOS vs. UMP2 for this molecule, basis, dist, and num_opt_virtual_orbitals as a sanity check
+            # for dist in dist_list:
+            #     print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbital, seeds_lst)
+
+            # Check the spread of VQE final energies for all seeds for this molecule, basis, method, dist, and num_opt_virtual_orbitals to see if there are convergence issues
+            # We can do this by gathering the final energies for all seeds for this molecule, basis, method, dist, and num_opt_virtual_orbitals, and then print the range and standard deviation of the final energies to see if there is a lot of variance in the final energies for different seeds, which might indicate convergence issues
+            # for dist in dist_list:
+            #     for method in ["OVOS", "UHF", "UMP2"]:
+            #         gather_and_print_vqe_final_energy_spread(molecule, basis, method, dist, num_opt_virtual_orbital, seeds_lst)
+
+        for oo in [False]: # [True, False]:
+            plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, True, False, oo)
+            plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, False, False, oo)
+        
+
+if False:
+    # Need to plot the VQE curve for one seed = "True", and both oo = True and False...
+        # So we can see the difference in using prev. final thetas and keep trying to find best from random...
+    
+    molecule = "Li2"
     basis = "6-31G"
     method = "OVOS" # Placeholder for getting dist and seed list
 
-        # Get dist list from the folder
-    # dist_list = gather_dist_lst(molecule, basis, method)
+    # Get dist list from the folder
     dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
-        # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
-    num_opt_virtual_orbitals = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0])
-            # Set dist list with negatives floats first and then positive floats, and sorted by absolute value
+    # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
+    num_opt_virtual_orbital = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0])[0]
     
-    # dist_list = sorted(dist_list, key=lambda x: abs(4.0-float(x)))[::-1]
-    dist_list_save = []
-    for num_opt_virtual_orbital in num_opt_virtual_orbitals:
-        dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
-        print(f"Dist list for {molecule} {basis} method {method} num_opt_virtual_orbital {num_opt_virtual_orbital}: {dist_list}")
+    # for num_opt_virtual_orbital in num_opt_virtual_orbitals:
+    dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
+    if molecule == "Li2":
+        dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
 
-            # If the molecule is Li2, we only want to the range above 2.5 Angstrom, so we can filter the dist_list to only include dist that are above 2.5 Angstrom, and we can use this filtered dist_list for the rest of the code
-        if molecule == "Li2":
-            dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
+    # Here i need to designate the seed to "True" as i do not use a specific seed but the prev.
+    seed_lst = True
 
-            # Save dist_list
-        dist_list_save.append(dist_list)
-            # For each dist, get seeds list and make VQE results file for that dist
-        if len(dist_list) < 5:
-            seeds_lst = [9] # Only seed 9 or 8
-        else:
-            seeds_lst = gather_seeds_lst(molecule, basis, method, dist_list[0], num_opt_virtual_orbital) # Get seeds list from the first dist, assuming it's the same for all dists
-        
-        print(f"Seeds list for {molecule} {basis} method {method} dist {dist_list[0]}: {seeds_lst}")
+    for dist in dist_list:
+        make_vqe_dist_results_file(molecule, basis, dist, seed_lst, num_opt_virtual_orbital)
 
-        for dist in dist_list:
-                # ... and make the VQE results file for that dist
-            make_vqe_dist_results_file(molecule, basis, dist, seeds_lst, num_opt_virtual_orbital)
+    make_vqe_results_file(molecule, basis, dist_list, seed_lst, num_opt_virtual_orbital)
 
-        # Get the dist list again for full file generation
-        make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual_orbital)
+    print(f"\nFinished gathering VQE results for {molecule} {basis} for all dists and num_opt_virtual_orbitals, now plotting the curves...")    
+    print(f"Number of optimal virtual orbitals: {num_opt_virtual_orbital}")
+    print(f"Dist list for plotting: {dist_list}")
 
-        # Check the correlation energy of OVOS vs. UMP2 for this molecule, basis, dist, and num_opt_virtual_orbitals as a sanity check
-        for dist in dist_list:
-            print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbital, seeds_lst)
+    for oo in [False]: # [True, False]:
+        plot_vqe_curve_results(molecule, basis, dist_list, [num_opt_virtual_orbital], True, True, oo)
+        plot_vqe_curve_results(molecule, basis, dist_list, [num_opt_virtual_orbital], False, True, oo)
 
-        # Check the spread of VQE final energies for all seeds for this molecule, basis, method, dist, and num_opt_virtual_orbitals to see if there are convergence issues
-        # We can do this by gathering the final energies for all seeds for this molecule, basis, method, dist, and num_opt_virtual_orbitals, and then print the range and standard deviation of the final energies to see if there is a lot of variance in the final energies for different seeds, which might indicate convergence issues
-        for dist in dist_list:
-            for method in ["OVOS", "UHF", "UMP2"]:
-                gather_and_print_vqe_final_energy_spread(molecule, basis, method, dist, num_opt_virtual_orbital, seeds_lst)
 
-    plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, True)
-    plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, False)
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if False:
     # Exame the spread of final energies for a dist in a method to see if there is a lot of variance in the final energies for different seeds, which might indicate convergence issues

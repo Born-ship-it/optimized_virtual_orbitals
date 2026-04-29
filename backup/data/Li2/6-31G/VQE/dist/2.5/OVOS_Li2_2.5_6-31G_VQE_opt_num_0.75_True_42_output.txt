@@ -5,9 +5,3 @@ Built molecule Li2 with basis 6-31G and bond length 2.5 Angstrom.
 Number of electrons: 6, Number of orbitals: 18
 Initial MO coefficients are restricted (RHF-like).
 Optimizing 11 active virtual orbitals (out of 15 total virtual orbitals).
-
-Optimization finished. Final MP2 energy = -14.879318017102698 Hartree. (ΔE_corr = -0.016306254267924085 Hartree)
-OVOS optimized orbitals are unrestricted (UHF-like).
-
-
-Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
