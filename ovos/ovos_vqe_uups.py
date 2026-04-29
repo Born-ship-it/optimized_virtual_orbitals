@@ -1430,7 +1430,7 @@ if __name__ == "__main__":
     # H2O, HF, Li2
 
 # - Run VQE PREV. THETAS w. OO True
-    # H2O, HF | continue Li2...
+    # H2O, HF | continue
 
 
 
