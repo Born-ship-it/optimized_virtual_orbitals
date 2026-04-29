@@ -106,7 +106,7 @@ def make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual
     #               ...
     #           }
     #      }
-    if seeds_lst is type(bool) and seeds_lst == True:
+    if type(seeds_lst) is bool and seeds_lst == True:
         for oo in [False]: #[True, False]:
             for num_opt_virtual_orbital in [num_opt_virtual_orbitals]:
                 data = {}
@@ -125,7 +125,7 @@ def make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual
                             energies.append(result['final_energy'])
                             energies_initial.append(result['iter_energies'][0])
                         energy_min = min(energies)
-                        seed_min = seeds_lst[energies.index(energy_min)]
+                        seed_min = "True"
                         method_data[dist] = [energies_initial[energies.index(energy_min)], energy_min, seed_min]  # Save the initial energy, lowest energy, and seed for this method and dist in the method_data dictionary
                     data[method] = method_data
                 
@@ -305,11 +305,14 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     marker = {'OVOS':'D', 'UHF': 'X', 'UMP2': 'P'}
     
     # Convert dist_list strings to floats for proper numeric plotting
-    if dist_list is type(list):
-        dist_list_float = [float(d) for d in dist_list]
-    else:
-        dist_list = dist_list_
-        dist_list_float = dist_list
+    # print(dist_list, dist_list_)
+    # if type(dist_list) is list:
+    dist_list_float = [float(d) for d in dist_list_]
+    dist_list = [dist_list_float]
+    print(dist_list)
+    # else:
+    #     dist_list = dist_list_
+    #     dist_list_float = dist_list
     
     # Collect data organized by method
     data_by_method = {method: {'distances': [], 'energies': [], 'initial energies': [], 'iterations': [], 'UHF reference': [], 'RHF reference': [], 'nuclear repulsion': []} for method in methods}
@@ -829,7 +832,7 @@ def gather_and_print_vqe_final_energy_spread(molecule, basis, method, dist, num_
         print(f"No final energies found for {method} at dist {dist} to calculate spread.")
 
 
-if True:
+if False:
     for molecule in ["Li2", "HF", "H2O"]:
         # molecule = "Li2"
         basis = "6-31G"
@@ -886,11 +889,11 @@ if True:
             plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, False, False, oo)
         
 
-if False:
+if True:
     # Need to plot the VQE curve for one seed = "True", and both oo = True and False...
         # So we can see the difference in using prev. final thetas and keep trying to find best from random...
     
-    molecule = "Li2"
+    molecule = "HF" # "Li2"
     basis = "6-31G"
     method = "OVOS" # Placeholder for getting dist and seed list
 

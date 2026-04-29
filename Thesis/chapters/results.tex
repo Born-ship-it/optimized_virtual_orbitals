@@ -17,6 +17,7 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
     \item \textbf{Section 6.9} estimates the practical benefits of using OVOS orbitals as a reference state for quantum computing applications, including overlap with FCI states and resource estimates for VQE.
 \end{itemize}
 
+$\textcolor{red}{DOES THIS OVERVEIW WORK WELL, USED IN OTHER CHPATERS?}$
 
 % ---------------------------------------------------------------
 % WRITING TIPS – RESULTS
@@ -113,7 +114,7 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %    is presented in the following section."
 % ---------------------------------------------------------------
 
-PySCF gives me an opportunity to validate my implementation of full space MP2 by comparing with their built-in MP2 module, \code{pyscf.mp.MP2}. I present my the deviation $\Delta E_{\rm corr} = E_{\rm corr}^{\rm code} - E_{\rm corr}^{\rm PySCF}$ is within numerical precision for all test molecules except CO, which shows a bit larger deviation, in Figure~\ref{tab:validation}. As CO's deviation is still within the acceptable range, it confirms that my implementation of the MP2 correlation energy is correct, and that the OVOS code correctly reproduces the full-space MP2 limit when $N'_{\rm act.unocc} = N_{\rm act.unocc}$.
+PySCF gives me an opportunity to validate my implementation of full space MP2 by comparing with their built-in MP2 module, \code{pyscf.mp.MP2}. I present the deviation $\Delta E_{\rm corr} = E_{\rm corr}^{\rm code} - E_{\rm corr}^{\rm PySCF}$ is within numerical precision for all test molecules except CO, see Figure~\ref{tab:validation}. As CO's deviation is still within an acceptable range, it confirms that my implementation of the MP2 correlation energy is correct, and that the OVOS code correctly reproduces the full-space MP2 limit when $N'_{\rm act.unocc} = N_{\rm act.unocc}$.
 
 \begin{table}[ht]
     \centering
@@ -125,7 +126,7 @@ PySCF gives me an opportunity to validate my implementation of full space MP2 by
         H$_2$O   & -1.28851E-01 & -1.28851E-01    & 1.91423E-09   \\
         HF       & -1.28694E-01 & -1.28694E-01    & -2.47007E-09  \\
         NH3      & -1.14441E-01 & -1.14441E-01    & -2.79223E-10  \\
-        % Add more rows for other molecules/basis sets
+        Li2      & -#.#####E-01 & -#.#####E-01    & -#.#####E-10  \\
         \hline
     \end{tabular}
     \caption{Validation of the OVOS implementation against PySCF \code{mp.MP2}.
@@ -385,6 +386,8 @@ Figure \ref{fig:final_comparison}, also highlights the spread of correlation ene
 
 We see a relative agreement between the three initialisation strategies, with the best-of-random sampling sometimes finding a slightly lower energy than the default and warm-start approaches. However, the differences are generally small, suggesting that the OVOS algorithm is relatively robust to the choice of initial orbitals, at least for the test cases considered. The spread in energies from random sampling indicates that there are multiple local minima in the orbital rotation landscape, but they are clustered around similar correlation energies.
 
+See appendix ## for the resulting plots of molecules ... 
+
 \section{Basis Set Dependence}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.5]
@@ -412,12 +415,12 @@ We see a relative agreement between the three initialisation strategies, with th
 %    Adamowicz \& Bartlett is made in the following section."
 % ---------------------------------------------------------------
 
-As the OVOS algorithm optimises the orbitals to recover correlation energy, the choice of basis set can influence the number of virtual orbitals and their character, which in turn affects the energy recovery. In this section, I compare the energy recovery curves for different basis sets (6--31G, cc-pVDZ, cc-pVTZ) for a the test molecule H\textsubscript{2}O. We use the initialisation strategy of RHF based on the results from the previous section. The results are plotted in Figure~\ref{fig:basis_comparison}.
+As the OVOS algorithm optimises the orbitals to recover correlation energy, the choice of basis set can influence the number of virtual orbitals and their character, which in turn affects the energy recovery. In this section, I compare the energy recovery curves for different basis sets (6--31G, cc--pVDZ) for the test molecule H\textsubscript{2}O. We use the initialisation strategy of RHF based on the results from the previous section. The results are plotted in Figure~\ref{fig:basis_comparison}.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1.0\textwidth]{figures/Placeholder.png}
-    \caption{Basis set dependence of energy recovery for H\textsubscript{2}O. The energy recovery fraction $\eta$ is plotted against the fraction of active virtual orbitals for three basis sets: 6--31G (blue), cc-pVDZ (orange), and cc-pVTZ (green). The dashed line marks 90\% recovery. A larger basis set, with more virtual orbitals, shifts the curve to the right, indicating that a larger fraction of active virtuals is required to achieve the same $\eta$.}
+    \caption{Basis set dependence of energy recovery for H\textsubscript{2}O. The MP2 energy correlation is plotted against the fraction of active virtual orbitals for the basis sets: 6--31G (blue) and cc--pVDZ (orange). A larger basis set, with more virtual orbitals, shifts the curve to the right, indicating that a larger fraction of active virtuals is required to achieve the same $\eta$.}
     \label{fig:basis_comparison}
 \end{figure}
 
@@ -438,9 +441,9 @@ To conclude the behaviour of the energy recovery curves across basis sets, we co
     \label{tab:basis_comparison_relative}
 \end{table}
 
-The Table~\ref{tab:basis_comparison_relative} shows that for a fixed relative number of active unoccupied orbitals, the relative energy recovery increases with the size of the basis set.
+The Table~\ref{tab:basis_comparison_relative} shows that for a fixed relative number of active unoccupied orbitals, the relative energy recovery increases with the size of the basis set, with a bigger difference for a lower procentage of virtual space.
 
-For a bigger basis set at a fixed number of active unoccupied orbitals, we can recover the same fraction of correlation energy at a higher number of orbitals in a smaller basis set...
+For the bigger basis set cc--pVDZ, at the number of virtual space of the smaller 6--31G set for active virtual space, we can recover the a better correlation energy than at full space in 6--31G...
 
 If instead we fix the absolute number of active unoccupied orbitals, we can recover a higher fraction of correlation energy in a smaller basis set, as the total number of virtual orbitals is smaller, as seen in Table~\ref{tab:basis_comparison_fix}.
 
@@ -459,7 +462,11 @@ If instead we fix the absolute number of active unoccupied orbitals, we can reco
     \label{tab:basis_comparison_fix}
 \end{table}
 
-These results indicate that the choice of basis set has a significant impact on the energy recovery behaviour of the OVOS algorithm, a larger basis set ...
+Instead we flip it and make a sat procentage of the active unoccupied orbitals, we can recover a better correlation energy in a bigger basis set, as the total number of virtual orbitals is smaller, as seen in ... 
+
+% Table...
+
+These results indicate that the choice of basis set has a significant impact on the energy recovery behaviour of the OVOS algorithm, a larger basis set means more mixing options means a better correlation energy...
 
 Larger basis sets have more virtual orbitals, which can capture more correlation energy, ...
 
@@ -495,7 +502,7 @@ Larger basis sets have more virtual orbitals, which can capture more correlation
 %    the following section."
 % ---------------------------------------------------------------
 
-Adamowicz \& Bartlett's 1987 paper presents OVOS results for the CH\textsubscript{2} molecule in a specific basis set and with a ... reference, in their Table I ... . Wanting to compare results for the same molecule, but not being able to replicate their geometrical setup and basis set, I instead compare the energy recovery curves for CH\textsubscript{2} in the 6--31G and cc-pVDZ basis sets with the RHF reference. The results are plotted in Table~\ref{tab:comparison_AB}.
+Adamowicz \& Bartlett's 1987 paper presents OVOS results for the CH\textsubscript{2} molecule in a specific basis set and with a ... reference, in their Table I ... . Wanting to compare results for the same molecule, but not being able to replicate their geometrical setup and basis set, I instead compare the energy recovery curves for CH\textsubscript{2} in the 6--31G and cc--pVDZ basis sets with the RHF reference. The results are plotted in Table~\ref{tab:comparison_AB}.
 
 \begin{table}[ht]
     \centering
@@ -517,7 +524,7 @@ Adamowicz \& Bartlett's 1987 paper presents OVOS results for the CH\textsubscrip
 
 Looking past not being able to replicate the exact setup of Adamowicz \& Bartlett, the results show a behaviour that is consistent with their findings, with the energy recovery curve showing a rapid increase in correlation energy recovered as $N'_{\rm act.unocc}$ increases, with the increase in basis set size leading to a higher correlation energy recovery at the same $N'_{\rm act.unocc}$, as expected from the previous section. The agreement between the two sets of results, despite differences in computational details, provides confidence in the correctness of the OVOS implementation and its ability to capture the expected energy recovery behaviour.
 
-
+$\textcolor{red}{DO I NEED THIS WE HAVE NOT DONE MUCH WITH CH2...}$
 
 
 \section{Computational Cost}
@@ -551,9 +558,13 @@ Looking past not being able to replicate the exact setup of Adamowicz \& Bartlet
 %    by theory."
 % ---------------------------------------------------------------
 
-Practically speaking, the computational cost of the OVOS algorithm is an important consideration for its applicability to larger systems. In this section, I report ...
+$\textcolor{red}{DO I NOTE THESE THINGS HERE OR IS IT OKAY TO ONLY DO IT IN PREV. CHAPTER?}$
 
-It is worth mentioning that it is relatively inexpensive to compute the MP2 correlation energy for bigger basis sets, in software packages like PySCF... I highlight here PySCF MP2 for the test molecule H\textsubscript{2}O in the cc-pVTZ basis, takes ... seconds, while the OVOS algorithm takes ... seconds at $25\%$, $N'_{\rm act.unocc} = ...$ (Recovers ...\%) and at $50\%$, $N'_{\rm act.unocc} = ....$ (Recovers ...\%). For which the OVOS algorthm is ... times more  expensive than the MP2 calculation at $25\%$ and ... times more expensive at $50\%$.
+Practically speaking, the computational cost of the OVOS algorithm is an important consideration for its applicability to larger systems. In this section, I report timings, bottlenecks, and assesses empirical scaling with $N'$.
+
+It is worth mentioning that it is relatively inexpensive to compute the MP2 correlation energy for bigger basis sets, in software packages like PySCF... CITE????
+
+I highlight here PySCF MP2 for the test molecule H\textsubscript{2}O in the cc--pVTZ basis, takes ... seconds, while the OVOS algorithm takes ... seconds at $25\%$, $N'_{\rm act.unocc} = ...$ (Recovers ...\%) and at $50\%$, $N'_{\rm act.unocc} = ....$ (Recovers ...\%). Ran on the device detailed in Chapter~\ref{ch:computational}. For which the OVOS algorthm is ... times more  expensive than the MP2 calculation at $25\%$ and ... times more expensive at $50\%$.
 
 Profilling the OVOS code for a test molecule in a few active unoccupied orbitals for two different basis sets reveals that the bottleneck steps in the OVOS algorithm are the ..., which scales as ..., and the ..., which scales as ..., see Table~\ref{tab:profiling}.
 
@@ -603,6 +614,8 @@ Profilling the OVOS code for a test molecule in a few active unoccupied orbitals
 % EH... : https://fy.chalmers.se/~f3ail/Publications/LowdinFinal.pdf
 % ---------------------------------------------------------------
 
+NEED TO BE SURE OF DEFINITION OF BRUECKNER ORBITALS HERE!!!!!!!!!!!!1
+
 In this section, we investigate the connection between the OVOS-optimised orbitals and Brueckner orbitals, by the maximum-overlap criterion and Brillouinn-Brueckner condition. Brueckner orbitals are defined as the orbitals for which the single excitation amplitudes (T1) vanish, i.e. the excited determinants with one electron promoted from an occupied to a virtual orbital do not contribute to the wavefunction. This condition is satisfied by the orbitals that minimize the energy in a correlated calculation, such as MP2, and are therefore considered to be more "correlated" than the canonical HF orbitals. 
 
 Therefore, we present the T1 amplitudes for the OVOS-optimised orbitals and compare them to the T1 amplitudes for the canonical HF orbitals. We compute the Frobenius norm of the T1 amplitude tensor, $||T1||_F$, for both sets of orbitals as a function of the number of active virtual orbitals $N'_{\rm act.unocc}$, and plot the results in Figure~\ref{fig:T1_comparison}.
@@ -615,6 +628,10 @@ Therefore, we present the T1 amplitudes for the OVOS-optimised orbitals and comp
 \end{figure}
 
 It results in the T1 amplitudes for the OVOS-optimised orbitals being significantly smaller than those for the canonical HF orbitals, and approaching zero as $N'_{\rm act.unocc}$ increases, consistent with the Brueckner condition. This provides numerical evidence that the OVOS-optimised orbitals are indeed closer to Brueckner orbitals than the canonical HF orbitals, and therefore can be expected to capture more correlation energy in subsequent calculations.
+
+FOUND T1 AMPLITUDES ARE AT E-16 FOR ALL OVOS ...
+
+OVERLAP, FIDELITY, OF FCI WAVEFUNCTION... HAVE ORBITALS HEATMAP REFERENCE TO Appendix
 
 
 \section{OVOS Orbitals as a VQE Reference State: Resource Estimates}

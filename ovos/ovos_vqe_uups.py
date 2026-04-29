@@ -115,6 +115,8 @@ class Tee(io.StringIO):
     def flush(self):
         super().flush()
         self.original_stream.flush()
+
+
 def run_ucc_and_get_stats(wf, str_, orbital_optimization, atol=1e-6):
     # Save the original streams
     original_stdout = sys.stdout
@@ -203,6 +205,11 @@ def run_ucc_and_get_stats(wf, str_, orbital_optimization, atol=1e-6):
                     stats['iter_energies'].append(energy_val)
                 except ValueError:
                     pass
+        else:
+            # No iterations, optimization terminated immediately
+                # Set iter_energies to just the final energy if not already set from the progress table
+            if 'iter_energies' not in stats and stats['final_energy'] is not None:
+                stats['iter_energies'] = [stats['final_energy']]
 
 
     # Fallback to progress table if summary missing
@@ -678,13 +685,11 @@ def run_hf_vqe():
     # Run the VQE optimizations for HF for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
     # seed_list = [8]
-    seed_list = [32, 72, 91, 64, 111, 128, 256, 303, 512, 1024, 2048, 4096, 8192, 16384] 
+    seed_list = [42] 
     # Have already:
         # 8, 9, 10, 13, 14, 20, 21, 42, 101, 109, 119, 123, 129, 139, 404
             # A total of 16...
         # 14 more seeds to run for a total of 30 seeds per dist variation, which should give us a good picture of the distribution of results for each dist variation.
-        
-
 
     args_list = []
     for dist in dist_list:
@@ -869,7 +874,7 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
 
     # Run the VQE optimizations for H2O for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    seed_list = [32, 72] #, 91, 64, 111, 128, 256, 303, 512, 1024, 2048, 4096, 8192, 16384]
+    seed_list = [42] #, 91, 64, 111, 128, 256, 303, 512, 1024, 2048, 4096, 8192, 16384]
     # Done: 8, 10, 13, 14, 20, 21, 42, 101, 123, 404
         # Total: 16 seeds
 
@@ -1309,9 +1314,9 @@ def run_single(args):
 # Run
 if __name__ == "__main__":
     # Molecule: HF, H2O, CO, NH3, Li2
-    # args_list = run_hf_vqe()  # HF,  Done 
+    args_list = run_hf_vqe()  # HF,  Done 
     # args_list = run_h2o_vqe() # H2O, Done
-    args_list = run_li2_vqe()   # 16...
+    # args_list = run_li2_vqe()   # 16...
 
     if False:
         # Set thetas to empty list... and thetas_bool to False
@@ -1385,15 +1390,18 @@ if __name__ == "__main__":
             thetas = (2*np.pi*np.random.random(len_thetas) - np.pi).tolist()       
             thetas = [thetas, thetas, thetas]  
 
+            prev_dist = None
+
         # Continue start
             
-            # Need to continue for Li2!!!!!!!!11
+            # Need to continue for Li2!!!!!!!!11 w. OO True...
 
         if True: # Found for oo = Ture each dist takes a while, need to be able to start from thetas from a previous dist to avoid having to run all dists sequentially from the start...
             # Dist to get prev. from
-            prev_dist = 2.4
+            oo_str = "False"
+            prev_dist = 1.0
             # Get thetas from the file for the prev_dist
-            file_name_prev = f"backup/data/{molecule_name}/{basis_name}/VQE/OVOS/{prev_dist}/UPS_OVOS_{molecule_name}_{basis_name}_{prev_dist}_opt_num_{num_opt_virtual_orbs}_True_True.json"
+            file_name_prev = f"backup/data/{molecule_name}/{basis_name}/VQE/OVOS/{prev_dist}/UPS_OVOS_{molecule_name}_{basis_name}_{prev_dist}_opt_num_{num_opt_virtual_orbs}_{oo_str}_True.json"
             print(f"Looking for existing thetas in \n     {file_name_prev} \n to use as initial guess for the first run...")
             if os.path.exists(file_name_prev):
                 with open(file_name_prev, "r") as f:
@@ -1410,9 +1418,10 @@ if __name__ == "__main__":
         for args in args_list:
             # Skip the runs until we reach the dist we have thetas for, then start using thetas from each run as initial guess for the next run
             dist = args[3]
-            if dist <= prev_dist: 
-                print(f"Skipping dist {dist} since done...")
-                continue
+            if prev_dist is not None:
+                if dist <= prev_dist: 
+                    print(f"Skipping dist {dist} since done...")
+                    continue
             atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, _, _ = args
             print(f"Running VQE for {molecule} at dist {dist} with seed {seed}...")
             data_out = VQE_OVOS(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas, True)
