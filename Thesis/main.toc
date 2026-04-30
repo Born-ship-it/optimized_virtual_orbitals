@@ -27,15 +27,15 @@
 \contentsline {subsection}{\numberline {2.5.1}Partitioning and Index Notation}{10}{subsection.2.5.1}%
 \contentsline {section}{\numberline {2.6}Spin-Orbital Formalism}{11}{section.2.6}%
 \contentsline {section}{\numberline {2.7}Orbital Rotations and Stationarity}{12}{section.2.7}%
-\contentsline {subsection}{\numberline {2.7.1}Orbital Rotation}{12}{subsection.2.7.1}%
+\contentsline {subsection}{\numberline {2.7.1}Orbital Rotation}{13}{subsection.2.7.1}%
 \contentsline {subsection}{\numberline {2.7.2}The Stationarity Principle}{13}{subsection.2.7.2}%
 \contentsline {subsection}{\numberline {2.7.3}Optimization Strategies}{13}{subsection.2.7.3}%
-\contentsline {section}{\numberline {2.8}Brueckner Orbitals}{13}{section.2.8}%
+\contentsline {section}{\numberline {2.8}Brueckner Orbitals}{14}{section.2.8}%
 \contentsline {subsection}{\numberline {2.8.1}Connection to Orbital-Optimised MP2 methods}{14}{subsection.2.8.1}%
-\contentsline {section}{\numberline {2.9}Quantum Computing and Orbital Space}{14}{section.2.9}%
+\contentsline {section}{\numberline {2.9}Quantum Computing and Orbital Space}{15}{section.2.9}%
 \contentsline {subsection}{\numberline {2.9.1}Second Quantisation and Qubit Mapping}{15}{subsection.2.9.1}%
 \contentsline {subsection}{\numberline {2.9.2}The Variational Quantum Eigensolver}{15}{subsection.2.9.2}%
-\contentsline {subsection}{\numberline {2.9.3}OVOS Orbitals as a VQE Reference State}{15}{subsection.2.9.3}%
+\contentsline {subsection}{\numberline {2.9.3}OVOS Orbitals as a VQE Reference State}{16}{subsection.2.9.3}%
 \contentsline {chapter}{\numberline {3}Theory}{17}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Notation and Integral Conventions}{17}{section.3.1}%
 \contentsline {subsection}{\numberline {3.1.1}Index Ordering and Orbital Partitioning}{17}{subsection.3.1.1}%
@@ -70,7 +70,7 @@
 \contentsline {subsection}{\numberline {3.8.4}Breakeven Analysis and Practical Realisation}{28}{subsection.3.8.4}%
 \contentsline {section}{\numberline {3.9}OVOS Orbitals as Approximate Brueckner Orbitals}{29}{section.3.9}%
 \contentsline {section}{\numberline {3.10}OVOS Molecular Orbitals as a Trial State for VQE}{29}{section.3.10}%
-\contentsline {subsection}{\numberline {3.10.1}Reference-State Overlap}{29}{subsection.3.10.1}%
+\contentsline {subsection}{\numberline {3.10.1}Reference-State Overlap}{30}{subsection.3.10.1}%
 \contentsline {subsubsection}{Trial states}{30}{equation.3.71}%
 \contentsline {subsection}{\numberline {3.10.2}Reduction of T1 Amplitudes and Circuit Depth}{30}{subsection.3.10.2}%
 \contentsline {chapter}{\numberline {4}Method}{31}{chapter.4}%
@@ -95,47 +95,47 @@
 \contentsline {section}{\numberline {5.2}Hardware}{33}{section.5.2}%
 \contentsline {section}{\numberline {5.3}Molecular Geometries}{34}{section.5.3}%
 \contentsline {section}{\numberline {5.4}Basis Sets}{34}{section.5.4}%
-\contentsline {section}{\numberline {5.5}Reference SCF Calculations}{34}{section.5.5}%
-\contentsline {section}{\numberline {5.6}OVOS Calculation Settings}{34}{section.5.6}%
-\contentsline {section}{\numberline {5.7}Data Storage and Reproducibility}{34}{section.5.7}%
-\contentsline {chapter}{\numberline {6}Results}{35}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Validation of the Implementation}{35}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Energy Recovery as a Function of Active Virtual Orbital Count}{36}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Convergence Behaviour}{39}{section.6.3}%
-\contentsline {section}{\numberline {6.4}Effect of Initialization Strategy}{42}{section.6.4}%
-\contentsline {section}{\numberline {6.5}Basis Set Dependence}{43}{section.6.5}%
-\contentsline {section}{\numberline {6.6}Comparison with Adamowicz and Bartlett (1987)}{44}{section.6.6}%
-\contentsline {section}{\numberline {6.7}Computational Cost}{45}{section.6.7}%
-\contentsline {section}{\numberline {6.8}T1 Amplitudes and the Brueckner Orbital Connection}{46}{section.6.8}%
-\contentsline {section}{\numberline {6.9}OVOS Orbitals as a VQE Reference State: Resource Estimates}{47}{section.6.9}%
-\contentsline {chapter}{\numberline {7}Conclusion}{49}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Summary of Findings}{49}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Critical Assessment}{49}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Implications for Quantum Computing}{49}{section.7.3}%
-\contentsline {chapter}{\numberline {8}Outlook}{51}{chapter.8}%
-\contentsline {section}{\numberline {8.1}Algorithmic Improvements}{51}{section.8.1}%
-\contentsline {section}{\numberline {8.2}Method Extensions}{51}{section.8.2}%
-\contentsline {section}{\numberline {8.3}Quantum Computing Applications}{51}{section.8.3}%
-\contentsline {subsection}{\numberline {8.3.1}OVOS Orbitals as a VQE Reference State}{51}{subsection.8.3.1}%
-\contentsline {subsection}{\numberline {8.3.2}Brueckner Orbitals and Circuit Depth on NISQ Devices}{51}{subsection.8.3.2}%
-\contentsline {subsection}{\numberline {8.3.3}Qubit Count Reduction and Fault-Tolerant Perspectives}{51}{subsection.8.3.3}%
-\contentsline {section}{\numberline {8.4}Larger Molecular Systems}{51}{section.8.4}%
-\contentsline {section}{\numberline {8.5}Benchmarking and Validation}{51}{section.8.5}%
-\contentsline {chapter}{Bibliography}{53}{section.8.5}%
-\contentsline {chapter}{\numberline {A}Mathematical Derivations}{55}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Spin-Orbital MP2 Energy from the Hylleraas Functional}{55}{section.A.1}%
-\contentsline {section}{\numberline {A.2}Derivation of the Orbital Rotation Gradient}{55}{section.A.2}%
-\contentsline {section}{\numberline {A.3}Derivation of the Orbital Rotation Hessian}{55}{section.A.3}%
-\contentsline {section}{\numberline {A.4}Matrix Exponential for the Rotation Matrix}{55}{section.A.4}%
-\contentsline {section}{\numberline {A.5}Notation Conventions for Two-Electron Integrals}{55}{section.A.5}%
-\contentsline {chapter}{\numberline {B}Additional Data and Figures}{57}{appendix.B}%
-\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{57}{section.B.1}%
-\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{57}{section.B.2}%
-\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{57}{section.B.3}%
-\contentsline {section}{\numberline {B.4}Hessian Eigenvalue Analysis}{57}{section.B.4}%
-\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{59}{appendix.C}%
-\contentsline {section}{\numberline {C.1}Repository and Version Information}{59}{section.C.1}%
-\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{59}{section.C.2}%
-\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{59}{section.C.3}%
-\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{59}{section.C.4}%
-\contentsline {section}{\numberline {C.5}Profiling Results}{59}{section.C.5}%
+\contentsline {section}{\numberline {5.5}Reference SCF Calculations}{35}{section.5.5}%
+\contentsline {section}{\numberline {5.6}OVOS Calculation Settings}{35}{section.5.6}%
+\contentsline {section}{\numberline {5.7}VQE}{35}{section.5.7}%
+\contentsline {chapter}{\numberline {6}Results}{37}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Validation of the Implementation}{37}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Energy Recovery as a Function of Active Virtual Orbital Count}{38}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Convergence Behaviour}{41}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Effect of Initialization Strategy}{44}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Basis Set Dependence}{45}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Comparison with Adamowicz and Bartlett (1987)}{47}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Computational Cost}{48}{section.6.7}%
+\contentsline {section}{\numberline {6.8}T1 Amplitudes and the Brueckner Orbital Connection}{48}{section.6.8}%
+\contentsline {section}{\numberline {6.9}OVOS Orbitals as a VQE Reference State: Resource Estimates}{49}{section.6.9}%
+\contentsline {chapter}{\numberline {7}Conclusion}{51}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Summary of Findings}{51}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Critical Assessment}{51}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Implications for Quantum Computing}{51}{section.7.3}%
+\contentsline {chapter}{\numberline {8}Outlook}{53}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Algorithmic Improvements}{53}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Method Extensions}{53}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Quantum Computing Applications}{53}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}OVOS Orbitals as a VQE Reference State}{53}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}Brueckner Orbitals and Circuit Depth on NISQ Devices}{53}{subsection.8.3.2}%
+\contentsline {subsection}{\numberline {8.3.3}Qubit Count Reduction and Fault-Tolerant Perspectives}{53}{subsection.8.3.3}%
+\contentsline {section}{\numberline {8.4}Larger Molecular Systems}{53}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Benchmarking and Validation}{53}{section.8.5}%
+\contentsline {chapter}{Bibliography}{55}{section.8.5}%
+\contentsline {chapter}{\numberline {A}Mathematical Derivations}{59}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Spin-Orbital MP2 Energy from the Hylleraas Functional}{59}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Derivation of the Orbital Rotation Gradient}{59}{section.A.2}%
+\contentsline {section}{\numberline {A.3}Derivation of the Orbital Rotation Hessian}{59}{section.A.3}%
+\contentsline {section}{\numberline {A.4}Matrix Exponential for the Rotation Matrix}{59}{section.A.4}%
+\contentsline {section}{\numberline {A.5}Notation Conventions for Two-Electron Integrals}{59}{section.A.5}%
+\contentsline {chapter}{\numberline {B}Additional Data and Figures}{61}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{61}{section.B.1}%
+\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{61}{section.B.2}%
+\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{61}{section.B.3}%
+\contentsline {section}{\numberline {B.4}Hessian Eigenvalue Analysis}{61}{section.B.4}%
+\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{63}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Repository and Version Information}{63}{section.C.1}%
+\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{63}{section.C.2}%
+\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{63}{section.C.3}%
+\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{63}{section.C.4}%
+\contentsline {section}{\numberline {C.5}Profiling Results}{63}{section.C.5}%

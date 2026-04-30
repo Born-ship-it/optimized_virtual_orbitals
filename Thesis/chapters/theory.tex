@@ -4,7 +4,7 @@
 \chapter{Theory}
 \label{ch:theory}
 
-This chapter presents the theoretical framework of the OVOS method,starting from the definition of the second-order Hylleraas functional to the energy recovery metric. The derivations are based on the original work of Adamowicz \& Bartlett (1987) and are supplemented with modern prespectives.
+This chapter presents the theoretical framework of the OVOS method, starting from the definition of the second-order Hylleraas functional to the energy recovery metric. The derivations are based on the original work of Adamowicz \& Bartlett (1987)\cite{Adamowicz1987} and are supplemented with modern prespectives.
 
 \section{Notation and Integral Conventions}
 \label{sec:notation}
@@ -39,7 +39,7 @@ This chapter presents the theoretical framework of the OVOS method,starting from
 %         \cite{Adamowicz1987_OVOS} (state OVOS convention)
 % ---------------------------------------------------------------
 
-We establish the following specific notation and conventions for OVOS, for consistency with the original Adamowicz \& Bartlett paper (Note, for a comprehensive treatment see Background Chapter~\ref{ch:background}, Sections~\ref{sec:notation_background} through~\ref{sec:spin_orbital}):
+We establish the following specific notation and conventions for OVOS, for consistency with the original Adamowicz \& Bartlett paper \cite{Adamowicz1987} (Note, for a comprehensive treatment see Background Chapter~\ref{ch:background}, Sections~\ref{sec:notation_background} through~\ref{sec:spin_orbital}):
 
 
 \subsection{Index Ordering and Orbital Partitioning}
@@ -51,7 +51,7 @@ Orbital indices follows the standard convention:
     \item $p,q,r,s,...$ for unrestricted orbitals
 \end{itemize}
 
-In OVOS, the virtual orbitals are further partitioned into active ($a,b,...$) and inactive ($e,f,...$) subsets, with the active space containing $N'$ orbtials optimised for correlation recorvery.
+In OVOS, the virtual orbitals are further partitioned into active ($a,b,...$) and inactive ($e,f,...$) subsets, with the active space containing $N'$ orbitals optimised for correlation recovery.
 
 
 \subsection{Integral Notation: Antisymmetrised vs Non-antisymmetrised}
@@ -200,10 +200,10 @@ The physicists' notation is used throughout the OVOS derivations for consistency
 % ---------------------------------------------------------------
 
 
-OVOS finds it roots in minimising the second-order Hylleraas functional $J_2$ with respect to the choice of active virtual orbitals. This section seeks to derive $J_2$ from the second-order Rayleigh-Schrödinger perturbation expression and to establish its connection to the MP2 correlation energy.
+OVOS finds it roots in minimising the second-order Hylleraas functional $J_2$ with respect to the choice of active virtual orbitals \cite{Adamowicz1987}. This section seeks to derive $J_2$ from the second-order Rayleigh-Schrödinger perturbation expression and to establish its connection to the MP2 correlation energy.
 
 \subsection{From Perturbation Theory to the Hylleraas Principle}
-We arrive at the Hylleraas functional by starting from the Rayleigh-Schrödinger (RS) perturbation theory expression for the second-order energy correction, starting by an expansion of the total energy:
+We arrive at the Hylleraas functional by starting from the Rayleigh-Schrödinger (RS) perturbation theory expression for the second-order energy correction \cite{Helgaker2000}, starting by an expansion of the total energy:
 \begin{equation}
 E = E^{(0)} + E^{(1)} + E^{(2)} + \ldots
 \end{equation}
@@ -344,7 +344,7 @@ The final expression for $J_{ij}^{(2)}$ is then:
 %    with respect to the rotation parameters is derived in the following section."
 % ---------------------------------------------------------------
 
-Optimising orbitals in OVOS is achieved by applying a unitary transformation, rotating the virtual orbitals to maximise the correlation energy captured by the active space. This section introduces the mathematical formalism of orbital rotations, parameterised by an antisymetric matrix $\mathbf{R}$, and how the unitary transformation $\mathbf{U} = e^{\mathbf{R}}$ is constructed to mix only the active and inactive virtual orbitals.
+Optimising orbitals in OVOS is achieved by applying a unitary transformation, rotating the virtual orbitals to maximise the correlation energy captured by the active space \cite{Adamowicz1987}. This section introduces the mathematical formalism of orbital rotations, parameterised by an antisymetric matrix $\mathbf{R}$, and how the unitary transformation $\mathbf{U} = e^{\mathbf{R}}$ is constructed to mix only the active and inactive virtual orbitals.
 
 
 \subsection{Active and Inactive Virtual Subspaces}
@@ -428,7 +428,7 @@ where the original active orbital is mixed with the inactive orbitals via the fi
 %    Newton-Raphson step derived in Section~\ref{sec:hessian}."
 % ---------------------------------------------------------------
 
-The descent direction for OVOS optimisation is given by the gradient of the Hylleraas functional $J_2$ with respect to the orbital rotation parameters $R_{ae}$. This section derives the expression for the gradient, which consists of two terms: a direct contribution from the active-inactive mixing and an indirect contribution via the MP2 virtual-virtual density matrix $D_{ab}$.
+The descent direction for OVOS optimisation is given by the gradient of the Hylleraas functional $J_2$ with respect to the orbital rotation parameters $R_{ae}$ \cite{Adamowicz1987}. This section derives the expression for the gradient, which consists of two terms: a direct contribution from the active-inactive mixing and an indirect contribution via the MP2 virtual-virtual density matrix $D_{ab}$.
 
 \subsection{MP2 Virtual-Virtual Density Matrix}
 
@@ -539,7 +539,7 @@ Adamowicz and Bartlett derive the full expression for the Hessian, which consist
                \\ &\qquad + D_{ab}(f_{aa} - f_{bb}) \delta_{ef}
                + D_{ab} f_{ef}(1-\delta_{ef})
 \end{align}
-they note the active orbitals are canonical, and that the Hessian also shows pair separability. 
+they note the active orbitals are canonical, and that the Hessian also shows pair separability  \cite{Adamowicz1987}. 
 
 \subsection{Derivation of the Hessian Expression}
 
@@ -764,7 +764,7 @@ such that two orbitals $a,b$ would rotate to the same orbital. This translate to
 
 \subsection{Negative Eigenvalues and Level-Shift Stabilisation}
 
-As the Hessian expresses the curvature of the energy landscape, it may become indefinite (i.e., have negative eigenvalues) near saddle points or in cases with small virtual orbital energy gaps. This can lead to divergence or oscillations in the Newton-Raphson optimization. To address this, a level-shift strategy is can be employed: if any diagonal block of the Hessian has negative eigenvalues, a positive shift $\lambda$ is added to the diagonal elements, effectively replacing $\mathbf{H}$ with $\mathbf{H} + \lambda\mathbf{I}$. The choice of $\lambda$ can be empirical or based on a dynamic threshold related to the smallest eigenvalue. This ensures that the modified Hessian is positive-definite, allowing for stable convergence towards a local minimum. Adamowicz \& Bartlett does not discuss this strategy. It is observed that the block approximation does get rid of most negative eigenvalues, but some may still remain, especially in cases with small virtual gaps $\epsilon_a - \epsilon_i$.
+As the Hessian expresses the curvature of the energy landscape, it may become indefinite (i.e., have negative eigenvalues) near saddle points or in cases with small virtual orbital energy gaps. This can lead to divergence or oscillations in the Newton-Raphson optimization. To address this, a level-shift strategy is can be employed: if any diagonal block of the Hessian has negative eigenvalues, a positive shift $\lambda$ is added to the diagonal elements, effectively replacing $\mathbf{H}$ with $\mathbf{H} + \lambda\mathbf{I}$. The choice of $\lambda$ can be empirical or based on a dynamic threshold related to the smallest eigenvalue. This ensures that the modified Hessian is positive-definite, allowing for stable convergence towards a local minimum. Adamowicz \& Bartlett does not discuss this strategy. It is observed that the block approximation does get rid of most negative eigenvalues, but some may still remain, like which may be in cases with small virtual gaps $\epsilon_a - \epsilon_i$ from basis sets with diffuse functions.
 
 
 \section{Newton-Raphson Orbital Optimisation}

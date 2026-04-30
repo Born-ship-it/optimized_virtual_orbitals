@@ -1,0 +1,1271 @@
+
+--- PAGE 1 ---
+IHVSICAI. RRVIE% VOIUMR97,NUMBI:R MARCH 1,i955
+Two-Body ForcesandNuclear Saturation. III.DetailsoftheStructure oftheNucleus
+K.A.BRUECKNER
+InChuna University, Bloomington, Indiana*
+(Received November 22,1954)
+Thecharacteristics ofparticle motion inthenuclear medium havebeenexamined indetail.Theorigin
+ofthestrongdependence ofthepotential energyonthenucleon momentum isdiscussed andanequivalent
+formulation isexhibited inwhichauniform andconstant potential isassumed butthenucleon moveswith
+markedly reduced mass.Thedetermination ofthepotential isshowntoleadtoaself-consistency problem
+whichistosomeextentsimilartothatappearing intheHartree method ofself-consistent fields.Solution
+ofthisproblem showsthattheself-consistency requirements imposesevererestrictions onthesolution and
+haveastrongstabilizing influence inthesaturation problem. Thevolume energyofthenucleushasbeen
+evaluated byusingtwo-body potentials closelyequivalent toacombination ofcentralandtensorforces
+whichagreewiththelow-energy parameters andpredictscattering correctly upto90Mev.Theresult
+agreescloselywiththeobserved valuesofenergyanddensity.
+Thecollective character ofthenucleon potential isdescribed andshowntomanifest itselfmarkedly in
+theexcitation energyofsingle-particle levelswhereaconsiderable fraction oftheenergyistakenupin
+smalladiabatic shiftsofthestatesoftheremaining nucleons.
+Theoriginofthesurfaceandsymmetry energyisdiscussed; anevaluation oftheseeffectsgivesaresult
+ingoodagreement withempirically derived values.Thestability ofthenucleus againstdistortion arising
+fromthepolarizing effectsofthetensorforceisalsoexamined anditisfoundthatthenucleus showsmarked
+stability againstsuchdistortion.
+I.INTRODUCTION II.DISPERSION LAWINNUCLEAR MATTER;
+SELF-CONSISTENCY PROBLEMS ''Nprevious papersontheproblem ofnuclearsatu-
+~~ration'(tobereferredtoasNSIandNSII),an
+approximation method wasdeveloped andappliedto
+thedetermination ofcertainproperties ofthevolume
+andsurface energies ofnuclearmatterinthepresence
+ofcentralandtensorforces.Itisthepurpose ofthis
+papertodiscussavariety ofadditional structural
+details whichconsiderably increase thecompleteness
+ofthisnuclear model.InSec.IIweshallconsider
+various aspectsofthemotionofnuclear particles in
+nuclearmatterandtheproblem ofderiving thepo
+tentialenergyfeltbysuchaparticle.Inthisconnectio
+weshalldevelop someconcepts ofthedispersion la
+relating energyandwavenumber innuclearmatte
+andoftheself-consistency requirements intheformu
+lationoftheproblem. InSec.IIIweshalldiscusssom
+ofthecollective aspectsofthenuclearstateswhichar
+implicit intheworkofSec.II;inSec.IVweshal
+discuss theproblems ofthesurface andsymmet
+energies ofthenucleus andthestability ofthenucleu
+againstdistortion arisingfrompolarizing actionofth
+tensorforce.Finally inSec.Vwesummarize ou
+resultsandmakesomeconcluding remarks.
+Inthispaperweshallnotdiscussthebasicassump
+tionsofthemethod asdeveloped inNSI;adetaile
+discussion ofthesetogether withaphysical interpre
+tationofvarious aspectsofthemodel willformth
+contentofanother papernowinpreparation.A.OriginofDispersion EQ'ectandof
+Self-Consistency Requirement
+InNSIandNSIIitwasshownthatthepotential
+energyofaparticle moving inaplanewavestatein
+uniform nuclearmatter wasingeneralafunction of
+itsmomentum, sothattheenergyofaparticle of
+momentum kwasrelatedtokby
+E(k)=k'/2&V+ V(k),
+*Supported inpartbyagrantfromtheNational Science
+Foundation. Theworkwasalsodoneinpartwhiletheauthor
+wasavisiting Associate Physicist atBrookhaven National
+Laboratory.
+'Brueckner, Levinson, andMahmoud, Phys.Rev.95,217
+(1954);K.A.Brueckner, Phys.Rev.96,908(1954).withV(k)notaconstant. Thisexpression isastatement
+ofadispersion lawrelatingEandk.Inmanytypical
+applications suchasthoseencountered inthedevelop-
+mentoftheshellmodel,itisassumed thatthepotential
+isindependent oftheparticlestate.Forexample inthe
+ecaseofasquare wellthepresence ofthepotential
+emerely servestodefineaboundary andanewzero
+]pointofenergywithout otherwise affecting theparticle
+motion.Itis,however, notingeneralpossibletoassume
+thatthepotential isindependent ofthestate.Weshall
+discussqualitatively theoriginofthedispersion effect
+statedinEq.(1)beforeproceeding toanexamination
+ofitsfurtherimplications.
+Thedependence ofthepotential energyonkarises
+fromtheoriginofthisenergyintheinteraction ofthe
+particle withitsneighbors inthenuclear medium. In
+themodelwhichwehavedeveloped, thepotential
+energy isamanifestation oftheeffectofcollisions on
+thewavefunction; sincethiseffectdropsoffrapidlyas
+therelative energy incollision increases (andthe
+scattering decreases), onewouldexpecttohanda
+decrease inthepotential strength asthemomentum of
+theparticle underconsideration rises.Thedirection of
+theeffectisofcourseintimately relatedtothesatu-
+1353
+
+
+--- PAGE 2 ---
+K.A.BRUECKNER
+ratingcharacter ofthetwo-body interaction considered,
+sincetheamplitude forforward scattering arisesfrom
+thisinteraction characteristically becomes small(or
+eventually changes sign)athighenergy. Thuswe
+expectalessening ofthepotential strength fora
+rapidly movingparticle.
+Another interesting wayofdescribing theseeGects
+hasbeensuggested totheauthorbyWheeler.'He
+observes thatnearzeromomentum thepotential energy
+V(k)canbeexpanded as
+V(k)=V(0)+bk'+ (2)
+whereM"'asdefinedbythisequation isrelatedtothe
+normalmassby
+M*=M/(1+2LV)
+andconsequently islessthanthenormalmass.Thus
+weareledtoanequivalent description inwhichthe
+.nuclear potential isconstant butthe"nucleon" mass
+ismodified. ThiseGectcanbeexpected tomanifest
+itselfinotherwaystowhichweshallreturnlater.
+Wehavesofarnotdiscussed aconsequence ofthis
+modification innuclear matter ofthepropagation
+characteristics ofanucleon which,asweshallsee,leads
+toaself-consistency requirement ontheformulation
+oftheproblem. Asdeveloped inNSI,thepotential
+energyofanucleon couldbeexpressed intermsofa
+summation overnuclearstatesofthetwo-body forward
+scattering amplitude era/uatediethenuclear medium.
+Weshallexpressthisrequirement formally inthenext
+section; weremarkhereonlythatalready anobvious
+diQiculty arisesinthattoevaluate thescatteringie
+themediumitisnecessary toknowthedispersion law
+forpropagation beforecarrying outthisevaluation.
+Thusthedispersion lawdetermined isafunction ofthe
+dispersion lawassumed andaself-consistency require-
+mentarises.Asweshallsee,thispresents arather
+formidable mathematical problem which weshall
+discuss inthefollowing sections.
+B.FormalStatement ofSelf-Consistency
+Problem
+Theformalstatement equivalent totherequirement
+thatwedetermine thescattering amplitude "inthe
+nuclearmedium" isthefollowing': let~~~betheinter-
+sJ.A.Wheeler (private communication).'SeeN.C.Francis andK.M.Watson, Phys.Rev.92,29k
+(1953).whereinsomecasesonlythesefirsttwotermsinthe
+expansion needbeconsidered. Weexpecttheleading
+termV(0)tobenegative, whilethequadratic correction
+termwillingeneral bepositive. Thuswecannow
+writethedispersion lawofEq.(1)as
+Z(k)=k'/2M+V(0)+bk'
+=ks/2M*+ V(0),actionbetween nucleons 1and2.Wefurther define
+thetwoquantities t~~andVgbytheequations:
+4s=~ts+~rsLEtjEs—Ho(1)—Hp(2)
+—Vc(1)—Vc(2))—'tts,(5)
+wheretqisthepartofthescattering operator twhich
+isdiagonal (orcoherent) withrespecttothenuclear
+states.Wedefinethesingularity intheenergydenomi-
+natorofEq.(5)bytakingtheprincipal value';this
+corresponds tothestationary character oftheproblem.
+Theoperator tdined thiswayisoftencalledthe
+reaction matrix.Thepotential Vo(i)isthepotential
+energyoftheithparticle; themodification fromthet
+defined forfree-particle scattering arisesfromthe
+presence ofthepotential energy V&inthepropagation
+function.'Thecomplication oftheproblem arisesfrom
+theappearance ofVginthedining equation fort
+whichmustbesolvedtoobtainU~,themathematical
+problem presented isthesolution ofanonlinear integral
+equation forV~.
+Thepresence ofthemodified propagator inthis
+problem represents theexpected andquitereasonable
+many-body effectontheinteraction oftwonucleons in
+densenuclearmatter. Wenotethatitdoesnotarise
+fromachangeinthetwo-body potential ~&~,thiseffect
+hasbeenpreviously discussed inNSIandshownto
+besmall.
+Thisproblem hassomeoftheaspects oftheself-
+consistent fieldproblems encountered inatomicphysics.
+Inourcaseweknowthewavefunctions (degenerate
+Fermigas)buttheinteraction isnotknown, whilein
+theHartree method theinteraction isspecified but
+thewavefunction isunknown. Theself-consistency
+requirement ofourproblem istospecifysuchanaverage
+potential, solvefortheinteractions andfinallyfrom
+theinteractions determine theaveragepotential. Thus
+thesolution ofthisproblem bearsacertainresemblance
+totheatomiccasebutisfortunately somewhat easier
+toobtain.
+InsolvingthepairofEqs.(5)and(6)thesimplest
+approximation method isthatpreviously usedinNSI
+andII.Toexhibitthis,weassumethatthetransfor-
+mation tothecenter-of-mass system andrelative
+coordinates ispossible LasitisifVo(kr)depends at
+mostonaconstant andatermquadratic inkt]and
+writeinmomentum space,where kistherelative
+'B.A.Lippmann andJ.Schwinger, Phys.Rev.79,469(1950).'Theexclusion principle alsoactstomodify thescattering
+operators; itcanbeshown, however, thatthemostimportant
+classofintermediate statesincluded intheconstruction oft
+whichwouldappeartoviolatetheexclusion principle areexactly
+cancelled whentheexpectation valueinthemanyparticlestate
+isevaluated. Inaddition, mostofthecontribution totheintegral
+overintermediate statescomesfromhighexcitedstateswhichare
+unaffected bytheexclusion principle.
+
+
+--- PAGE 3 ---
+TWO—BODYFORCES ANDNUCLEAR SATURATION. III
+momentum, '
+tc(k)=(k)t~k)=(k)v)k)+(2v)-' "dk'(k)v[k')
+X[E(k)—k"/M—Vc(k'))'(k'itik).(7)
+tc(k)=(k(v
+~k)+(2v)-')dk'(k( v[k')[k'/M k"/M—
++Vc(k)—Vc(k')]'(k'iteak).(9)
+Then,ifVc(k)isindependent ofkorifthevariation
+inVc(k)—Vc(k')isslowrelative tothevariation in
+(k'—k")/M, thenthetermsinVccanbedropped and
+wehaveapproximately:
+tc(k)=(k~v~k)+M(2~) '
+Xdk'(k)v(k')(k' —k")-'(k'[t~k). (10)
+Inthiscase,whichisnowexactlyanalogous tothefree
+scattering atmomentum k,theeGectofthepotential
+hasbeenmerelytoreplacethe(negative) energyEby
+k'/Mwhichisthekineticenergyinthenuclearmedium.
+Thisapproximation wasusedinNSIandIIsinceit
+wasassumed thatanappreciable correction wouldnot
+arisefromthisapproximation totheproperties ofthe
+medium; weshallnowproceed, however, todevelopa
+morerigorous methodforsolvingEqs.(5)and(6).
+Thedefining equation fort»ofEq.(5)canbe
+rewritten
+$128120)
+where
+Q=1+(EHoVc)'vi2Q.——(12)
+Thustheconstruction of0issufhcient todetermine t.
+Thisequation, however, isanalogous totheusual
+scattering waveequation (except forthemodified
+boundary condition); henceweknowthatthetcanbe
+expressed intermsofthephaseshiftswhichweobtain
+bysolvingthewaveequation
+(E—Hp—Vc)Q=viiQ. (13)
+Knowing Vginmomentum spaceallowsustomake
+thetransformation tocoordinate spaceinastraight
+forward manner.
+6Inthisandtherestofthepaperweshallassumethatthe
+diagonal partof5isgivenonlybytheforward scattering. The
+inclusion oftheexchange scattering hasbeendiscussed inNSI
+andshowntheretogiveatrivialchangetotheformalism.Thepoleinthedenominator appearsattheenergy-
+conserving point,
+E(k)=k'/M+Vc(k),
+whichallowsustowriteC.Approximation Methods forSolvingthe
+Self-Consistent Problem
+YVeconsider firstthesimplecaseinwhichonly
+constant andquadratic termsinV&areused.Aswe
+shallshow,thisisaquitegoodapproximation overthe
+rangeofmomenta whichenterinthegroundstatebut
+breaksdownsomewhat inevaluating 3sinceaconsider-
+ablylargerrangeofmomenta enters(invirtualstates)
+insolvingthewaveequation fort.Making thisapproxi-
+mation, wecanwritetheproblem:
+(E2VO+—2bV2—Ho)Q= vQ (14)
+SincetheenergyEis
+E(k)=2VO+2bk'+k'/M (13)
+thisisequivalent to
+(k&+V')Q=M*vQ, (16)
+withM*definedbyEq.(4).Theeffectofthedispersion
+ofthemedium therefore (aswasremarked earlier) isto
+introduce amassmodification. Thesolution ofEq.(16)
+forthephaseshiftsnowfollows standard methods;
+theusualscattering amplitude aI,(8)isfinallyrelated
+totc(k)by
+tc(k)=—ai(0).M*e
+Itisinteresting tonotethattisindependent ofM*in
+Bornapproximation sinceinsuchacaseal,(0)is
+proportional toM*.
+Theself-consistency requirement onVc(k)thusis
+reduced toasingle-parameter problem, sinceitisnow
+sufficient tofindavalueM*(orb)inthedispersion
+lawwhichwillpredictscattering amplitudes andhence
+aVc(k)whichdepends onkinthesameway(i.e.,is
+self-consistent). Thisprocedure willbedescribed in
+moredetailinthefollowing section.
+Beforeproceeding, wemakeonefurther remark
+aboutaslightlymoregeneralchoiceofVc(k).Let
+Vc(k)=Vo+bk'+ck4, (18)
+whichisasomewhat betterrepresentation ofthek
+dependence ofthepotential forkvaluesratherlarger
+thantheFermimomentum, although thetermink4is
+negligible forsmallvaluesofk.According toEq.(13)
+wenowcanwritetheSchrodinger equation:
+[Eki2/2M k22/2M—2V0b(k—'+k22)——
+—c(ki'+k2')7Q(1,2)=vi2Q(1)2),(19)
+wherek1andk2aretobeinterpreted asoperators on
+thecoordinates ofparticles 1and2.Transforming to
+thecenter-of-momentum system andrelative coordi-
+natesbytherelations
+k,=k+-',P,k,=—k+—,'P, (20)
+weareledtothetransformed equation:
+[E—(1/M+2b) (k'+-'E')—2Vp—c(2k4+3k'P'1 ~P4)jQ=vQ.(21)
+
+
+--- PAGE 4 ---
+K.A.8RUECKNER
+Next,introducing therelation between energy,I',and
+ko(theasymptotic valueofk),
+E=(1/M+2b) (ko'+-,'P')+2Vo
++c(2ko'+3kooP'+ 'P4)—,(22)
+wefind
+L(1/M+ 2b)(ko'—ko)—2c(k4—ko4+-'O'P'—-'k'P')$0=vD.(23)
+Thisisofstandard form(withmodified mass)except
+forthetermproportional toc.Thisweapproximate in
+thefollowing way;aswehaveremarked, thetermsin
+careunimportant exceptforlargekvalues.Thuswe
+expectonlythetermink'tobeappreciable forlow
+valuesofkpandI'.Treating thistermasaperturbation,
+wemakethereplacementVc&"(k)=Vo&"+bok'+cok4, (30)
+andforthischoiceconstruct thescattering amplitudes
+and6nallya6rstiterate Vz&')whichwillbeafunction
+ofbpandcp,i.e.,
+Vco~(k)=Vco~(k,bo,co).
+Then,expanding the6rstiterate,
+Vc~"(k,bo,co)=Vo"'+bgk'+cgk',(31)
+(32)
+weexpectthenewconstants b~andc~tobefunctions of
+Ep)Cp)l.e.)
+by=bc(bo, co),cs=ci(bo, co) (33)shiftsoveralargerangeofenergies foreachchoiceof
+theparameters bandc.Thuswemustassume in
+practicea"zerothorder"formforVc(k)whichwecall
+ck4Q=M*ck'L (1/M+ 2b)koowlQ-
+=—35*eh'vQ.
+Next,introducing anewfunction
+P=(1—2cM*'e)0(24)
+(25)Theself-consistency requirement isfinally
+61bp)C1Cp
+D.ASelf-Consistent Solution(34')
+Eq.(23)reducesto
+(k'+'7')~=
+1—2C3f*'e(26)
+ifweagaindropsomesmalltermsinckp',with3f*
+=M/(1+2bM) asbefore[Eq.(4)j.Theasymptotic
+formsof0andparethesame,andfornonsingular
+potentials theboundary condition attheoriginis
+unchanged; thusasolution forthephaseshiftsusing
+Eq.(26)isequivalent toasolution oftheoriginal
+problem.
+Another wayofexpressing theresultofEq.(26)is
+thattheeffective mass"M*~de6nedby
+M**=M*/(1—2cM*'o) (27)
+differstosomeextentfromtheasymptotic valueM*.
+Thedirection ofthiscorrection depends onthesizeof
+c;asweshallseelater-thedeparture fromthesimple
+quadratic lawforVc(k)giveninEq.(2)corresponds
+toasmallnegative c.Thustheeffective mass"used
+insolvingEq.(26)issomewhat largerthantheasym-
+ptoticvalueorequivalently, theeffective potential
+v*=n/(1—2cM*'v) (28)
+issomewhat stronger. Theeffectisnotverylarge;we
+shall,however, makeatleastqualitative useofthis
+resultinthenextsection.
+Theseconsiderations haveshown howtheself-
+consistent problem maybereducedtoatwo-parameter
+problem, theself-consistent determination ofthecon-
+stants bandcintheexpansion ofthepotentialTABLEI.Equivalent squarewellparameters. Theranges
+aregiveninunitsof1.40)&10'~cm.
+Singlet TripletThemethod ofthelastsectioncaninprinciple be
+appliedtoanytwo-body interaction; itisofcoursein
+thegeneralcase(inwhichtensorforcesareincluded)
+extremely tedious sinceaconsiderable rangeofvalues
+oftheparameters (particularly ofthemostimportant
+parameter b)mustbestudiedtomapoutthedependence
+ofV|.-.Weshall,however, inpartavoidthisdi6iculty
+byusingsimplepotentials approximately equivalent to
+theonesconsidered inNSIandNSII.Intheseearlier
+works,apotential derived frommesontheorywasused
+whichhadarathercomplicated exchange dependence
+andwhichcontained alargetensorforce.Since,how-
+ever,themany-body potential energyderiveddepended
+primarily onthelow-energy scattering characteristics
+ofthepotentials, itispossible toreplace(atleastat
+lowenergies) theoriginalpotentials usedbyanychoice
+agreeing withthelow-energy parameters. Animportant
+restriction onthepotentials, however, isthatthephase
+shiftsathighenergyshowtherapiddropresulting from
+thepresence ofrepulsive coresinthepotentials. A
+furtherrequirement isthatthetripletevenscattering
+approximate tothetensorscattering athighenergies,
+whichisrathersmaller thanthescattering froma
+centralpotential because ofthefirst-order averaging
+tozeroofthetensorforcescattering.
+Potentials whichapproximately satisfythesecondi-
+tionsandwhichallowrelatively simpleevaluation of
+theself-consistency problem aresquarewellsofappro-
+V(k)=Vo+bk'+ck4. (29)
+Theproblem ishowever hardlyatrivialoneinthatit
+isnecessary toobtainacomplete solution forallphaseRange
+Coreradius
+Depth(Mev)1.53
+0.40
+40.60.93
+0.30
+148
+
+
+--- PAGE 5 ---
+TWO—BODYFORCES ANDNUCLEAR SATURATION. III 1357
+priaterangeandstrength, witharegionofcentral
+repulsion. Theparameters ofthesepotentials aregiven
+inTableI;thes-wavescattering predicted bythemis
+giveninFig.1incomparison withthes-wavescattering
+ofNSII.Theremaining partial waveshavebeen
+omitted forthefollowing reasons. (Sincetheycanbe
+treatedinBornapproximation andthusareonlyweakly
+affected bythemodifications oftheeffective massthe
+following remarks basedonthestudiesofXSIIare
+valid.)(1)Theinvestigations ofthetensorscattering
+showthattheeffectofthehigherwavesisverysmall,
+considerable cancellation occurring amongtheD-waves
+ofdiiferentJandre~.(2)TheDwavesing-letscattering
+isappreciable butisapproximately cancelled bythe
+scattering arisingfromtheodd-state singletrepulsive
+potentials. (3)Themagnitude oftheenergyisalmost
+entirely determined bytheinteraction atlowenergy
+andthusisverywellapproximated bythes-wave
+scattering alone.Theseremarks haveallbeenquantita-
+180
+120
+60
+.8 1.2
+FIG.1.S-wave scattering fromsquarewellswithparameters
+giveninTableI,compared with5-wavescattering calculated for
+centralandtensorwellsofNSIandNSII.Inthelattercasefor
+thetensorforce,the8eigenphaseshiftisgiven.
+wherer,istheradiusofrepulsion andEistherange
+ofthewell.Thisequation determines phaseshiftsasa
+function ofM**=M~/(1+2cM*'Up), (36)
+andasafunction ofenergy.Thephaseshiftspredicted
+forthesingletandtripletstatesareshownasafunction
+ofthemassparameter inFig.2.Thepotential energy
+perparticle isrelatedtothesephaseshifts(seeNSItivelyverifiedbyacomparison withthecalculation in
+NSIIoftheenergyasafunction ofdensitypredicted
+bytheequivalent squarewells.
+Thuswecanproceed toanevaluation oftheself-
+consistency problem usingthesimpleequivalent square
+wells.Wenoticefirstthattheequivalent Schrodinger
+equation is
+(kp'+V')P=M**eP
+M*Uo
+r,&r&R, (35)1+2cM*'Up40Degrees
+20
+-200.5 1.0 1.5
+FIG.2.Singlet(s)andtriplet(f)phaseshiftsfromequivalent
+square wellscalculated asafunction ofmassparameter. The
+valuesofM"'~/M areindicated.
+I.etusfirstconsider thesimplecaseforwhich@=0andM*=M**LseeEq.(36)).Inthiscasetheself-consis-
+tencyrequirement israthereasytosatisfysincewe
+haveanadditional parameter atourdisposal, namely
+theadiabatic density parameter q.Thisparameter
+appears through thedependence ofkponthedensity
+through therelation
+kp——1.52@/tf. (39)
+Wethusproceed inthefollowing way:foragiven
+valueofMo*,wecompute
+VG(k,Mp*,rf)=Vp+b(Mp*rf)k' (40)
+andadjustthedensityparameter qsothatthevalueof
+M*,predicted bytherelation
+MI*=M/(1+2b(Mp*, ri)M), (41)
+agreeswithMo*.Thisrequirement givesM*asa
+function ofthedensity (seeFig.3)andthusalsothe
+potential energyVzasafunction ofkandthedensity.
+Wecanthenproceedtothemeanpotential energyper
+particlebyevaluating theaverage
+VA„—— —,'~ksVG(k)dk~k'dk,
+0 0
+thefactorof-,'compensating forthedoublesummation
+overallparticle coordinates. Finally, themeanenergy
+perparticleasafunction ofdensity isgivenby
+pA~=Tp+UAvandNSII)bytheequations (forsstatesonly):
+6
+Vc(k)=—~rP(k,k')Ptanb, (k',M**)
+xM*~
++tanb,(k',M**))k'dk', (37)
+where
+P(k,k')=2,0&k'&-', (kp—k)
+=[-I,kp'—(-',k—k')')/kk'
+-',ikp—ki&k'&-',(kp+k). (3&)
+
+
+--- PAGE 6 ---
+1358 K.A.BRUECKNER
+0,9~iu
+0.7
+0.5
+0.6 0.8 1,0 1.2 1,4
+FIG.3.Self-consistent valuesofmassparameter asafunction
+ofdensity parameter p[detined inEq.(39)).Thetwocases3I~=3f**andM*=0.803f**aregiven.
+Theself-consistency requirements havingalready been
+satisfied foreachvalueofg,itissufhcient todetermine
+thevalueofpforwhichtheenergyisaminimum, thus
+determining theequilibrium density andbinding
+energy.Thisrelation betweenEandpisgiveninFig.4,
+theminimum occursatadensityofp=1.30or8=1.82
+)&10"2'andabinding energyofabout4.5Mevper
+particl.e.
+Thisratherunsatisfactory solution totheproblem
+isnotyetfullyconsistent sincethek4dependence of
+thepotential isnotnegligible. Thefunction Vc(k)as
+determined fortheapproximately self-consistent pa-
+rametersM*/M=0. 70andii=0.9isgiveninFig.5as
+afunction ofkuptoavalueofkconsiderably larger
+thantheFermimomentum kg.Agoodapproximation
+tothiscurveis:/
+Thisrelation isofcoursenotverywelldetermined since
+itisahigherordercorrection tothedominant quadratic
+effectinthedispersion law.Inaddition itsprecisevalue
+depends rathersensitively onthehigh-momentum
+behavior ofthescattering whichisnotgivenvery
+reliablybytheseapproximation methods. Nevertheless,
+itisprobably correcttoassumethattheeffective mass
+inthehigh-momentum regionissomewhat greater
+thantheeffective massatlow-momentum values.
+ByusingtheratiobetweenM**andM*otEq.(45),
+itisagainpossible tocarryoutaself-consistent evalu-
+ationoftheeffective, mass3f*andconsequently ofthe
+potential energy.TheseresultsaregiveninFigs.3and
+4.Forthiscasethebinding energyperparticle isnow
+about12.8Mevatadensityg=1.00or8=1.40
+&(10"A'.Atthisvalueofthedensity theeffective
+low-momentum massM*is0.54M,andacheckonthe
+self-consistency athighmomentum valuesshowsthat
+theratioM*=0.SM**isstillapproximately satisfied.
+-40
+-80
+-120
+Vo(k)=(—119+57 3k'/kp'—718k'/kp')Mev,(44)0.4.8 1,2 1.6
+sothatalthough thequadratic approximation isvalid
+fork(kp,thetermink'isnotnegligible forvaluesof
+k/k+appreciably largerthanone.Thesignotthisterm
+inVoisnegative; inserting thisvalueinEq.(36)for
+3E**,wefind
+&*~0.SO&~*,
+takinganaverage forthesingletandtripletstates.
+-l2
+.5
+Fzo.4.Energyasafunction ofdensityforself-consistent potentials
+with&*=M** andwith&*=0.80M**.FIG.5.Potential energyasafunction ofkfor3f*=0.70Mandg=0.90.
+Thuswehaveanapproximately self-consistent
+solutiontothetwo-parameter problem.
+E.Discussion
+Someratherstriking features oftheseresultsare
+readily seen.Themostevident effectoftheself-
+consistent inclusion ofthedispersion effectsisthe
+reduction inthemeanpotential energyandasimul-
+taneous changeintheposition ofthedensity minimum
+ofthetotalenergycurve(seeFig.6).Thismodification
+arisesfromtheimpossibility offindingaself-consistent
+solution totheproblem whenthepotential energyis
+toolargeorequivalently, whenthe"effective mass"is
+closetothenucleon mass.Thusastrongstabilizing
+inQuence onthenuclear density arisesfromtheself
+consistency requirement onthesolution. Theeffectis
+intimately associated withthemany-body character of
+theproblem, arisingasitdoesfromthemodi6cation of
+thepropagation characteristics ofanucleon innuclear
+matter. Assuchitgivesaninteresting insightintothe
+
+
+--- PAGE 7 ---
+TWO—BODYFORCES ANDNUCLEAR SATURATION. III
+interplay ofsects whichleadtotheequilibrium
+con6guration ofthenucleus.
+III.COLLECTIVE ASPECTS OFTHEMOTION
+Aswehaveshownintheprevious section,themotion
+ofnucleons through nuclearmatterisdetermined bya
+potential whichvariesrapidly withthenucleon mo-
+mentum; itisalsotrueinourtreatment thatthe
+potential energyarisesfromtwo-body interactions. In
+thissection wewouldliketodiscussthesigni6cance of
+theseresultsandhowtheymayberelatedtothe
+single-particle andcollective aspects ofthenuclear
+structure.
+Letusconsider firsttherelation oftheenergies ofthe
+nucleons tosuchquantities asmeanbinding energyand
+thebinding energyofthelastnucleon. Thepotential
+energyofanucleusofmomentum kwecallVz(k)as—.2o-Mev
+-40
+-60
+-80
+0.00.25 G50 0.75!.00
+FIG.7.Totalenergyandpotential energyasafunction of
+momentum atequilibrium density.
+IO
+-10
+-20
+0.5 0.7 0.9
+k'dkpk'/2M+2Uc(k)gk'dk,(46)
+ashasbeenobserved earlier.
+Wenowproceedtotherelation between thebinding
+energy ofanucleon andthekinetic andpotentialFze.6.Comparison ofself-consistent energyEfor&*=0.803f**
+withtheresultobtained inNSIIwithnoself-consistency re-
+quirement imposed. Forthelattercase3f**=3f and3f*isin
+therange0.2to0.4.
+before.Thisenergycannot, however, beunambiguously
+assignedtoonenucleon, sinceitistheresultoftwo-body
+interactions andthusissharedbetween thenucleon
+underconsideration andtherestofthenucleus. Thus,
+inanobvious way,thepotential energyisalreadya
+manifestation ofacollective characteristic. Themean
+energyofthesystem wegetbyaveraging (thekinetic
+energyandthepotential energy) overthemomentum
+distribution, i.e.,
+&A.=I'A.+VA.energies. Atfirstwemightexpecttoobtainthisby
+simply evaluating E(k);this,however, isobviously
+incorrect sincewearenottakingintoaccount the
+"shared" character ofthepotential energy. Afurther
+complication arisesfromthepossibility thatthenuclear
+system willreadjust itsdensitytobringtheenergyto
+aminimum, whichmustalsobetakenintoaccount in
+determining thebinding energy.Inspiteofthecompli-
+catedcharacter ofthesequestions, wecaneasilyobtain
+ananswerbyconsidering thephysical character ofthe
+binding energy, whichisthediGerence between the
+energyofanucleus ofAnucleons inthegroundstate
+andtheenergyofanucleusof(A—1)nucleons inthe
+groundstateplusaremoved nucleon. Thisdifference
+issimplythemeanbinding energyasgiveninEq.(46).
+Thissimpleresultactually originates inarather
+complicated interplay ofsectswhichcanbesomewhat
+unphysically separated inthefollowing way:wesuppose
+thatweformally consider theenergyofremoval ofa
+nucleonasarising6rstfromremoval withtheremaining
+nuclearcon6guration held6xedandsecondtheenergy
+ofrearrangement oftheremaining nucleus intoits
+loweststate.ThefirstoftheseisclearlyE(k)=T(k)+Vz(k);therearrangement energythenmakesupthe
+diGerence between thisvalueandthemeanbinding
+energy.Thelatterisamanifestation ofthecollective
+originoftheenergy; inourexample (seeFig.7)the
+valuesofE(k~)is—22Mev,ofEA,is—12.8Mev;
+thus'therearrangement energyis9.2Mev.Theorigin
+oftherearrangement energyisfairlyobvious; itarises
+intheadiabatic shiftofallofthenuclear energylevels
+asoneoftheparticles contributing tothebinding is
+removed; italsoarisesfromthereduction ofthenuclear
+equilibrium volumeastheparticle isremoved.
+Wecanalsoexpressthisresultforthemoregeneral
+caseofnuclearexcitation. Forsimplicity letusconsider
+aparticle outsideacore(forexample aclosedshell
+
+
+--- PAGE 8 ---
+1360 K.A.8RUECKNE Rjonenucleon). Inthiscasetheexcitation oftheoutside
+particletoanexcitedstateisalsorejected inachange
+inthepotential energyofeachofthecoreparticles, so
+thattheenergyofeachlevelintheclosedsystemshifts
+slightlyasaconsequence oftheexcitation oftheoutside
+particle. Theexcitation energythusmustbesupplied
+notonlytoexcitenonadiabatically thelastnucleonbut
+alsotoshiftadiabatically thestatesofthecore.Because
+oftherelatedoriginofthesetwoeffectsinthetwo-body
+natureofthebinding, theyareofthesameorderof
+magnitude. Wetherefore seethatinnosensearethe
+"single-particle" excitation energies oftheshellmodel
+single-particle inorigin;theyareratherofcollective
+character andmeasure thesumofthechanges inenergy
+whichtakeplaceineverystateofthesystem upon
+excitation ofanyparticle.
+Itmightberemarked thatthecollective effect
+described hereisratherdifferent fromthecollective
+modesofexcitation discussed byBohrandMottelson.~
+Theeffectwedescribe ispresent eveninexcitations
+whichtheirtheorywoulddescribe asofpuresingle-
+particle origin,sincewefindthatatruesingle-particle
+picturehasnozerothordervalidity.stateswithmomentum lessthankpis
+4eke'
+tsar(ks)=1Vg(k)dk=v-(1——,skp/ks). (49)
+~Jg&kp 3(2v.)s
+Defining amodified volumev~bytherelation
+v~——v(1——',kp/kp),
+wecanwrite(50)
+Rsr——R(1——,'kp/ks)
+8~R——are,p (52)
+orthattheeffective radiusR~islessthantheradiusR
+oftheoriginal normalization volume byanamounteg(kp)=v~(4/3)7rkss/(2v. )s. (51)
+Thismodi6ed volume thusisanequivalent volume in
+whichthenumber ofstateswithmomenta lessthankJ
+hasthesameformasinthecaseofaninfinitemedium.
+Letusconsider thephysical implication ofthischange
+innormalization volume. Firstweobserve thatthe
+change involume isequivalent toachange inradius:
+toaresultvalidforaspherical nucleusofradiusE,
+1Vg(k)dk=vdk/1—3v/(4kB)]/(2v)s—=vdk(1—kp/k)/(2v-)', (48)
+withkp=3v./4R.Inthisexpression visthevolume on
+thesurface ofwhichthenuclear wavefunction is
+required tovanish.Itisconvenient tochange the
+normalization ofthisdensitydistribution inthefollow-
+ingway:wenoticeerstthatthetotalnumber of
+7A.BohrandB.Mottelson, Kgl.Danske Videnskab. Selskab~
+Mat.-fys.Medd.27,No.16(1953).'D,HjllandJ.Wheeler, Phys.Rev.89,1102(1953),IV.SURFACE ANDSYMMETRY ENERGIES:
+STABILITY AGAINST DISTORTION
+A.Surface Energy
+Inthissection weshallmakeadetermination ofthe
+nuclear surface energy,i.e.,thatpartoftheenergyof
+thenucleus whichisassociated withsurfaceeffectsand
+hencehasadifferent dependence onthetotalnumber
+ofnucleons thandoesthevolume energy.Inthis
+development weshallfollowcloselytheprocedure used
+inNSIIwithmodifications, however, whichleadto
+morereasonable resultsthanthoseearlierobtained.
+InNSIIanapproximate resultofHillandWheeler
+wasusedtorepresent the6nitevolume effectonthe
+distribution ofmomentum statesinthenucleusandwas
+showntoleadtoasurfaceenergy.TheresultofHill
+andWheeler isthattheeffectofthefinitevolume isto
+modifythedensityofmomentum statesfromtheresult
+validforaninfinitemedium,
+Z„(k)dk= vdk/(2v)s,0.5Rm
+(QO0I4
+FIG.8.Plotofthedensityofparticles inaFermigaswiththe
+wavefunctions required tovanishonaplaneboundary atr=0.
+Themeanradiusisindicated, asisalsothescaleinabsolute units,
+showing thatthenuclear edgeinthiscasehasadepthofthe
+orderof2X10"cm.
+verynearlyequaltothewavelength Xpoftheparticles
+ofmaximum momentum. This,however, isaresult
+previously pointed outbySwiatecki' andshown in
+Fig.8.Physically therequirement thatthewave
+function vanishonthesurfaceofthevolume hasthe
+effectofcompressing thenuclearmatterintoaregion
+ofsmaller meanradius,thecompression beinggiven
+byprecisely thechange fromRtoE~.Thusthe
+modified volumee~represents moreaccurately the
+physical volume inwhichthenucleons areonthe
+average confined. Usingthisresult,wefindforthe
+relations between atomic number3andtheFermi
+momentum (with2neutrons and2protons perstate):
+A=4vsI(4/3)v-kF'/(2v.)s, (53)
+'W.J.Swiatecki, Proc,Phys.Soc(London) A64t226(1951).
+
+
+--- PAGE 9 ---
+TVVO—BODYFORCES ANDNUCLEAR SATURATION. III
+andtheaveragekineticenergyperparticle: ko.Theresultis
+rk'
+Tp'——(I—kp/k)dkm(1—kp/k)dk VA.(R)—VA.(~)=9k0
+kg—'dkidks
+32m'M*
+3ks'( 5kp)(3kp)
+52M&4k')(2k~)(54)(ki—ksy(ki—k,q-(23x«I I+«I) &2)(k,k)
+Tofirstorderinkp(ortofirstorderinA&),thereis
+thusanincrease inthekineticenergyperparticle over
+thatforanin6nitemedium:
+3kp'1ko
+rz(&)T'z(~)—=x-——
+52M4k'
+=(5.69/rP)A&Mev.Inevaluating thiscorrection wemakeuseofthe
+self-consistent resultsofSec.IIforM*andthecorre-
+sponding resultsforthescattering amplitudes. The
+resultisarepulsive correction tothepotential energy,
+ofmagnitude
+(2.992.73i
+V„„(R)—V„()=
+~+ ~A&Mev.(60)
+econsider nextthemeanpotential energypero gssuwtteneticenegyeBect Combinin theseresultswiththekineticenereffect
+particle. Inthiscaseweneedevaluate asumoverofEq.(55),wefind
+statesoftheform:OD ITI
+wherethesurfaceenergyis
+VA„———ppto(k;;),
+A~i(56) (8.682./3i+)(62)
+wheretqisthetransition operator forforward scat-
+tering.Previously wehaveusedtherelation between
+tc(k)andthescattering amplitude as(8)
+4x
+to(k)=ai(0),M*e
+VA,(R)=(ki—ks)(kp)(kpp+~,l2)(k,)Ek)
+tdki(1——,'kp/kp)'(58)
+Thisexpression isidentical withthatusedpreviously in
+NSIIexceptforonenormalization factor(1—sskp/k~)—'.
+Thischangeistheresultofthechange inthenormal-
+ization volume, whichwasnottakenintoaccount
+previously inafullyconsistent way.
+Weagaincanseparate thisresultintoaterminde-
+pendent ofR(orofkp)andacorrection termlinearinwhere visagainthenormalization volume forthe
+nuclearstates.Thesameeffect,however, shouldbe
+included hereaswehavejustdiscussed, namely, the
+effective volume ismoreaccurately represented bythe
+modified (andreduced) volume rtsr,thereasonbeing
+precisely thesameasthatalready discussed. Going
+overinEq.(56)fromthedoublesumtoanintegration
+andusingthemodified relation between tgandu~,
+we6nd
+3 r~(ki—k,)'dkidks~,
+~8m~(2)Attheequilibrium densityofp=1.00,E.=11.4Mev
+A'whichisapproximately equaltotheusually
+accepted value."Itisinteresting tonotethatthe
+surfaceenergyisalmostexactlyequallydividedbetween
+effectsonthepotential andkineticenergies.
+Thisresultisconsiderably lessthanthatpreviously
+obtained inNsII;theimprovement isaconsequence
+ofthemorenearlycorrecttreatment oftheeGective
+nuclear volume. Thegreatsensitivity ofthesurface
+energytotheprecisedetailsofthetreatment shows
+thattheresultsobtained arenotcompletely quantita-
+tive;itisclear,however, thatthismodelgivesresults
+whicharequitecompatible withtheempirically derived
+surfaceenergy.
+B.Symmetry Energy
+Thesymmetry energyofthenucleus arisesfroma
+departure ofthenuclearstatefromthemostsym-
+metrical one,i.e.,thatwithequalneutron andproton
+numbers. Observed displacements oftheneutron-to-
+protonratiofromunityaretheconsequence ofthe
+Coulomb interaction whichleadstoaneutron excess.
+Wewishtomakeaquantitative studyoftheseeGects.
+Inthisdiscussion weshallomitthesurfacesects
+sincethesehaveadiferent originthanthesymmetry
+energyandcanbeomitted (infirstapproximations) in
+adiscussion ofthelatter.
+Weshallassume thefollowing nuclear modelon
+whichtobaseourconsiderations. Weletthemaximum
+Fermimomentum fortheneutrons bek~andforthe
+protonsk~.Wealsointroduce thenumbers character-"E.Feenberg, Revs.Modern Phys.19,239(1947).
+
+
+--- PAGE 10 ---
+1362 K.A.BRUECKNER
+izingtheneutronexcess: Thenwecanwrite
+orN~N—p=l)N~+Np=A)
+N~———,'A(1+»))Np——-',A(1—»), (64)(63) (~ki))(ki))
+J(»)=dkidk2ki'k2'a, (ki)k2)
+00 ao
+where»=I/A. Wefurther introduce theFermimo-
+mentum kgdehnedasbeforewith&=0.Asafunction
+ofe,themaximum neutron andprotonmomenta are
+kx=kp(1+»)*) kpkp(1——»)',—
+andthemeankineticenergyis(65)
+T,—Tp——(5/9)TpP, (67)
+whichisarepulsive termopposing departure ofthe
+neutron-proton ratiofromunity.
+Wetreatthepotential energy similarly. Firstwe
+dehneanintegralT.=»(kp'/2~)kL(1+»)'"+ (1—»)'"] (66)
+Thelinearterminevanishes; consideration ofthe
+quadratic termissufficient forourpurposes. Thuswe
+finddk2klk2a)(kl)k2)
+~k)))t)kp
++dki dk2kik2Ia,(ki)k2)+3a)(ki)k2)]. (69)
+~o~o
+Wenowcarryoutanexpansion oftheintegralJ(»)
+aboutthepoint»=0.Theleading termJ(0)then
+corresponds tozeroisotopic excessandtherefore gives
+risetotheundisturbed potential energy.Thelinear
+termineiseasilyshowntovanish,ifonemakesuseof
+therelations:
+Bk/i)B)=»',k(p1+)-»,Bkp/—B»=——,'kp(1—»)—.(70)
+Retaining onlythequadratic termine,wefind
+J(»)—J(0)=-',»'kp' -',a,(kp,kp)—a,(kp,kp)
+J(»)=(4)r) '
+~dkdka
+kg kg)kp
++kp'k'dkLa,(kp,k)+a)(kp,k)].(71)
+~o Bkp
++dkidk2app+ dkidk2a~p, (68)
+kgk~ ~kp ki))
+ki—kg+dkidkka.(Jkp(2
+(k&—k&y
+2)
+(67')
+2
+Letusdenotetheresultofcarrying outtheangular
+integrals overk&andk2by
+Pk&—key(4~)-"dn,"dn,a1 1=a(ki, k2).J &2)(68)wherethethreetermsrepresent contributions fromthe
+neutron-neutron, proton-proton, andneutron-proton
+interactions, respectively. Restricting ourselves tocon-
+sideration ofthes-wave interaction alone,wecan
+expressthisintegral asafunction ofintegrals overthe
+amplitudes forscattering inthesingletandtripletspin
+states,i.e.,
+(ki—k,)J(»)=(4~) '
+2Thetermdepending onthedifference inthescattering
+forsingletandtripletstatesrepresents theeffectonthe
+relative populations ofthesingletandtripletspin
+statesofincreasing theisotopic excess.Thesecond
+termistheresultoftheeffectonthepotential energy
+ofthegeneral shifttohigher-momentum states.We
+finallycanusetheresultexpressed inEq.(71)tofind
+theeffectonthepotential energy, whichis
+LV(»)—V(0)]/V(0) =[J(»)—J(0)]/J(0),
+or
+[V(»)—V(0)]/V(0) =—,'»'kp'-',a,(kp,kp)—a,(kp,kp)
+~kp
++kp'k'dk[a,(kp,k)+a)(kp,k)]1~o
+kp ky
+X)kpdk,)k~'dk2ta,(ki)k2)
+0 0
+ya,(k„k,)].(72)
+Theevaluation ofthisintegral ismosteasilyeffected
+ifwechoose anexplicit dependence ofthesum
+all(ski2k2)+a)(ski 2k2)onthetwovectorski,k2.
+Agoodrepresentation oftheseamplitudes fortheself
+consistent mass&*=0.5435is
+a,+a,=2a[k,—k2~—'+bp,—'+gc~ki—k2~))k',(73)
+
+
+--- PAGE 11 ---
+TWO—BODYFORCES ANDNUCLEAR SATURATION. III 1363
+wherea=0.467,b=1.258,c=—0.885.Inserting this
+expansion intotheintegrals ofEq.(72),wefind
+V(p)—V(0)1(4abkpckp'i'ki=-p'i—++(a,—(kp,kp)9(159p9p') 3 V(0)
+22kp'
+kp—a,(kp,kp)a—+—c—.(74)
+315p,'
+(1V—Zq'
+E(p)—Z(0)=25.1p'Mev=25. 1Mev~
+&1V+Z)(76)
+Thisistobecompared withtheempirical valuegiven
+byFeenberg" of18.1~'Mev.Thustheagreement
+between theobserved andcalculated symmetry energy
+israthergood.Theresultwehaveobtained depends,
+however, rathersensitively ontheprecisecharacter of
+thescattering neartheFermimomentum through the
+firsttwotermsontherightsideofEq.(74).While
+thesecontribute about3ofthetotalsymmetry energy,
+theirprecisevalues(moreexactlytheirdifference) are
+notsocriticalelsewhere. Thustheagreement wehave
+foundisprobably asgoodaswecanexpectconsidering
+theuncertainties ofourmethods ondetailssuchasthis.Atequilibrium density, takingp=1.00andinserting
+thevaluesoftheconstants, wefind
+V(p)—V(0)=—0.62p'V(0)=16.9p'Mev. (75)
+Confirming thiswiththekineticeffect,we6ndforthe
+symmetry energy:polarization parameter eofthelastsection.Toallow
+forphysical distortion ofthenucleus, weintroduce a
+distortion parameter pbytherelation:
+E=Rp[1+ pPp(cos8)]. (79)
+Thisdistortion ofshapeisthesimplest possible forthe
+nucleus, adistortion proportional toPi(cos8) corre-
+sponding merelytoadisplacement ofthesurface.The
+densityofmomentum statesis,following themethod
+ofHillandWheeler'
+1V(k)dk= 1—[1+pPp(cos8))',(80)(2~)' 4Rpk
+5kp( 1
+5)
+3kp( 1
+Xk~'1———
+]1+-p'
+)2k+( 5)
+3kpp 1+k'1———
+~1+—p'~,(81)2k+4 5)
+withkpdefinedasbeforeinEq.(48).Writingwhere8isnowtheanglebetween kandtheaxisof
+distortion n.Thedetermination ofthekineticenergy
+givestosecondorderinp..
+31t5kpt' 1T=-tk+'1————
+)1+—p'
+)52M 4k+& 5).
+C.Stability oftheNucleus againstDistortionkp——(1+s)'ki, k=(1—s)&kg, (82)
+Inthissection, weshallexamine thestability ofthe
+nucleus against spinpolarization andshapedistortion.
+Ingeneral wecanexpectthatarepulsive symmetry
+energyofthetypediscussed inSec.IVwillarisein
+connection withpolarization ofthespinandthusthat
+themoststableconfiguration ofthenucleus willbethat
+ofgreatest symmetry. ThiseGectcanbecompensated
+tosomeextent,however, bytheactionofthetensor
+forcewhich, coupling together thespinpolarization
+andshapedistribution ofthenucleus, canpossibly lead
+toastablenonspherical configuration withspinpolar-
+ization.InthiseGectthetensorforceissomewhat
+analogous totheCoulomb forcewhichpolarizes the
+isotopic spinofthesystem.
+Weproceed inamanner similartotheprevious
+section. Weletk+bethemaximum momentum of
+stateswithspinparalleltoanaxis(tobetakentheaxis
+ofdistortion) n,andkthemaximum forstateswith
+antiparallel spin.Wefurtherlet
+or1V+—1V=5, 1V+.+1V=A, (77)
+1V+=-',A(1+s), 1V=-',A(1—s), (78)
+wheresisaparameter analogous totheisotopic spinandexpanding thekineticenergyaboutpandsequal
+tozero,wefind
+1ko51koT=Tp1++s'+ p'4k'920k'(83)
+ko (ki—kpqX1——[1+pPp(2))'a~ ~,(84)
+k2 2)
+whereaisthescattering amplitude. Forthecaseof
+tensorscattering whichdiffersforthethreesubstates of
+spin1,itisconvenient tointroduce projection operators
+forthestatesinwhichthespinisparallel, perpendicular,
+orantiparallel totherelative momentum vectorInthisresultthesecondtermisasurfacecorrection,
+thethirdarisesfromspinpolarization, andthefourth
+fromshapedistortion.
+Weconsider nextthepotential energy.Wedehnean
+integralrelatedtothepotential energybytheequation:
+ko
+k(s,p)=(4~)'Pdkidkp 1——[1+pP,(1))—'
+spin8& kg
+
+
+--- PAGE 12 ---
+1364 K.A.BRUECKNE R
+k=-',(ki—kp).Thuswewriteforthetripletstates:
+g,(k)=pti(k)(1+-,'Sip)+pto(1—pSip)=p(2ti+to)+ 6(titp)S»)
+where
+S123&1'ko'2'k/k &1'&2) (86)clok(0,0)kpo
+G=2 =2ti(ky,kz)+to(k~, kg)
+S27
+~ky'—9$(kp,kp)+3k p,-o
+llkodk
+I2t,(k~,k)ak.
+andti(orto)istheamplitude forscattering withspin
+parallel orantiparallel (orperpendicular) tok.The
+matrixelements ofS~~forthethreetripletsubstates
+are(relative toadirection ofquantization atanangle
+ewiththerelative momentum vectork):+tp(kF,k)+38(k p,k)jI,(91)
+8'k(0,0)8jdQid0,H=2 =—kokomo ~lPp(cosg)
+Bs'Bp9~(4~)'
+(1ISipI1)=(—1ISipI—1)=3cos'0—1,
+(0IS»10)=—2(3cos'0—1). (87)t'k,—k,q~k,—k,~-
+XEp(costi) tiI I—toI
+2)(2(92)
+Byusingtheseresultsandseparating theintegration
+overmomenta andsummation overspinsintointe-
+grations overtheregions ofspinup(+)andspin
+down(—),Eq.(84)canbewritten
+k(s,p)=-',(4m)'dkidkpN(ki)1V(kp)
+XI2ti+tp+ (ti—to)Pp(cose)]
++IdkidkpN(ki)N(kp)withinthelastintegral thevectorskiandk&equalto
+kpinmagnitude. Thetermk(0,0)issimplyrelatedto
+thepotential energywithout distortion, therepulsive
+"spinsymmetry" energyarisesfromG,andthemagni-
+tudeofIIdetermines theamount ofdistortion. Inthe
+absence oftensorforce, t~——toandnodistortion will
+occur.
+Beforeevaluating theseintegrals letusexamine the
+generalfeatures ofthechangeinkineticandpotential
+energywithdistortion. Aftercombining Eqs.(83)and
+(89)togivethetotalenergy,theresultis(dropping the
+~kp/kpterminthekineticenergy):
+XI2ti+to+ (ti—tp)Pp(cos8) g
++dkiIdknlV(ki)1V(kp)L-2ti+tp+9S
+—2(ti—tp)Pp(coso)i .(88)
+k(s,p)=k(0,0)+s'G+s'pH, (89)Incalculating thisintegral weshallkeeponlythefirst
+nonvanishing termsinpands';insodoingweomit
+termsinp'whichareofthesamemagnitude asthose
+keptinthekineticenergyandwhicharealsorepulsive.
+Asweshallsee,onlyaroughdetermination ofthep'
+termsissufficient toshowthatthesystem isstable
+againstdistortion sothatweshallforsimplicity make
+useofonlythequadratic kinetic effect(andthus
+underestimate thesetquadratic terminp).Inexpand-
+ingtheintegral k(s,p),wefindthatasinthecaseof
+thesymmetry energythetermslinearinsvanish.The
+resultofthisdevelopment is0E=Tp1+s'+ p'
+920k'
+GII+Vp1+s' +sop—'.(93)
+k(0,0)k(0,0)!
+Minimizing theenergywithrespecttop,wefind
+56E=To+Vp+s'To+Vo—
+'9k(0,0).
+s'(VpH/k(0,0))'
+1kp t'GUp5——ToI+-ToI
+5kp(k(0,0)9)(94)
+Thesymmetry correction termstothekinetic and
+potential energies arebothrepulsive andofthesame
+orderofmagnitude; alsoToandVoarenearlyequalin
+magnitude. Thusletuswriteveryroughly (fornuclei
+withA=200thatpkp/kg=1/25):
+where
+ko)(kop
+k(0,0)=(4~)'
+i
+Ek,)&k,)IVoI~5HEEp=IVpIs'1—s'—
+Tp&k(0,0))(95)
+Fortheenergyofthenucleustobelowerforlarge
+X(2ti+to+3S), (90)distortions, itisnecessary forthetermproportional
+
+
+--- PAGE 13 ---
+T~O—BODYFORCES ANDNUCLEAR","SATURATION. III 1365
+Combining thiswiththek.ineticenergyandmini-
+mizing withrespecttothedistortion parameter p,
+we6nd
+E—Eo——21.5Mevs2(1—0.0029s') (97)
+Thus,forpossible valuesofs'(lessthanunity), the
+increment inthetensorforceenergyduetothedistor-
+tion(thenegative terminthebracket) isentirely
+negligible relativetothedominant repulsive energy
+associated withthespinpolarization (thetermins').
+Wetherefore seethatthereisnotendency forthe
+nucleustodepartfromitsspherical shapeortopolarize
+itsspin,thestability againstsucheffectsbeingmarked,
+V.SUMMARY OFRESULTS
+Inthepreceding sections wehavediscussed someof
+theconsequences ofatreatment ofthesaturation and
+structure problems whichismoregeneral thanthe
+considerations ofearlierpapers(NSIandNSII).In
+considering thedispersive characteristics ofthenuclear
+medium wehavebeenledtoaproblem ofself-consis-
+tencywhichwehaveformulated andapproximately
+solvedinSec.II.Theproblems encountered thereare
+mathematically dificult tosolveandalsodepend on
+somefeatures ofthetheorywhicharelesscertainthan
+thecentralaspects oftheformulation. Inparticular,
+thedispersive characteristics ofthemedium forvery
+fastparticles appeartoberatherimportant; conse-tos'todominate (withs'lessthanone).Theratio
+H)k(0,0)isgenerally muchlessthanunitysinceit
+involvesaratioofessentially asurfacetermtoavolume
+term;thiscanbecompensated for,however, bya
+suKciently largeratioofVo/To.Thiscannotoccurin
+ourproblem because ofthestrongstabilization ofthe
+nuclear density nearanormal density forwhichthe
+kineticandpotential energies areofthesamemagni-
+tude.Thuswecanexpectrathergenerally forsaturating
+forcesthatthepresence ofanadmixture oftensorforce
+willnotleadtopolarization anddistortion. Consistent
+withtheseremarks, wecontent ourselves withapproxi-
+mateevaluation oftheseintegrals sinceonlyaquali-
+tativeresultisneeded.
+Ink(0,0)andGweneglectthetensorforcesplitting
+ofthespinsubstates sincethisaGectstheresultonly
+weakly.Theintegrals thenmaybeevaluated following
+themethods usedinevaluating thesymmetry energy.
+Intheintegral forHwemaketheapproximation of
+replacing thedifference t~—tobyitsangular average
+leavingtheintegration overtheproduct oftheLegendre
+functions alone.Wealsogetanapproximate valuefor
+thetensorforcesplitting byexamining theresultsof
+NSIIwhichshowthat(t]30)k~isapproximately
+equalto0.30.Againtheprecisevalueofthisquantity
+isnotneededsinceweneedonlyaveryroughmeasure
+oftheenergy.Theresultsoftheseapproximations are
+V(s,p)—V(0,0)=11.5Mevs'+0.25Mevs"'p.(96)TABLEII.Summary ofresultsforvolume, surface, andsym-
+metryenergy.Forcomparison theresultsofFeenberg arealso
+given.Theenergies areallinunitsofMev.
+Bsymmetrp Bsurfaee
+Calculated
+FeenbergRadius
+1.40X10-"
+1.46X1o-"@volume
+].2.8
+14011.4
+13.125.2
+18.1
+aSeereference 1o.
+quently adetailed knowledge ofveryhigh-energy
+scattering isnecessary. Thuswecannolongerclaim
+thatwehavefullysolvedtheproblem originally formu-
+lated,although itisprobable thatthemainfeatures
+havebeenhandled onthewholecorrectly. Thequanti-
+tativeresultsofthispaperare,considering theapproxi-
+mations made,inverysatisfactory andperhaps sur-
+prisingagreement withtheempirical valuesfordensity,
+binding energy, surface energy, andsymmetry energy
+(seeTableII).Sincethetheoryhasnofreeparameters
+thissuccessistosomeextentpersuasive ofthecorrect-
+nessofthemainconcepts involved.
+Thepictureofthenucleus whichwehavedeveloped
+isoneinwhichthenucleons movetoagoodapproxi-
+mation intheindependent-particle statesdetermined
+byauniform potential. Theproperties ofthehighly
+dispersive nuclear medium arededuced fromthetwo-
+bodyinteractions andarearapidlyvarying function of
+thedensity ofthenuclearmatter. Theequilibrium
+densityattheenergyminimum occursastheresultof
+arathercomplex balance between thekinetic and
+potential energy.
+Theproperties ofthenucleus arecollective toa
+remarkable extentasaresultofthecodetermination
+bythenucleons ofthepotential inwhichtheymove.
+Astriking consequence ofthisisshowninthecollective
+character oftheexcitation energies of"single-particle"
+excitedstates,thisenergybeingsharedalmostequally
+bytheexcitedparticle andbytheremainder ofthe
+nucleus. Theuniquefeatures ofthenuclearstructure
+arealsoexpressed clearlyinanequivalent formulation
+oftheproblem inwhichthepotential isassumed
+constant butthenucleon massreduced byafactorof
+approximately two.Thusthe"nucleons" canbecon-
+sideredtomoveinaconventional uniform andconstant
+potential butwithaverydifferent "effective mass."
+Theresultsofthisworkcanofcourseimmediately
+beextended totheshellmodel.Areasonable procedure
+inthiscasewouldbetoassumethatthepotential
+energyappropriate toashell-model stateisforsome
+meanvalueofthemomentum inthestate.Theresults
+ofthispapercouldthenbeimmediately appliedtothe
+caseofspherical quantization. Asimpler procedure
+wouldbetointroduce theequivalent problem inwhich
+thenuclear massisreduced andtheappropriate con-
+stantpotential used.Inourcase,forexample, themass
+reduction isbyafactor0.54andtheequivalent po-
+
+
+--- PAGE 14 ---
+i366 K.A.BRUECKNER
+tentialhasadepthof67Mev.Oneofthemostobvious
+.consequences ofthischange isthatthespacing of
+shell-model energystateswouldbeconsiderably in-
+creased. Otherconsequences ofthischangeandtheir
+relevance toexperiment willbediscussed inaseparate
+paper.Theauthorwouldliketoacknowledge anumber of
+helpfuldiscussions oftopicsrelatedtothecontents of
+thispaperwithDr.R.J.Eden,Dr.N.Francis, and
+Dr.C.A.Levinson. Heisalsoindebted toProfessor
+JohnA.Wheeler whoseinterest hasbeengreatly
+stimulating tothiswork.
+PHYSICALREVIEW VOLUME 97,NUMBER 5
+TheoryofNuclear Models
+R.J.EDEN ANDN.C,FRANcls
+IndianaUnioers, ity,Bloomington, InChanat
+(Received November 22,1954)MARCH 1,1955
+Theframework forauni6edtheoryofnuclearstructure isdescribed inwhichthewavefunctions for
+different nuclear modelsareobtained bytransformations ontheactualnuclear wavefunction. Thisfor-
+mulation provides abasisforexplaining thesuccessofweak-coupling modelsofthenucleus andshowing
+thattheyarenotinconvictwiththeassumption thatnucleons haveverystrongmutualinteractions. The
+explanation liesinthefactthatonlyincertaincircumstances canthe"particles" inanuclear modelbe
+interpreted asnucleons.
+Weinvestigate theproperties whichtransformation operators musthavetochangethenuclear wave
+function intoamodelwavefunction andconsider howfartheseproperties aresatis6ed inpractice. Self-
+consistent equations aresetupforamodelhavingaproduct wavefunction intheparticle variables, and
+itisshownthattheseequations canbesolvedinanapproximation relevant totheproblem ofnuclear
+saturation.
+I.INTRODUCTION
+'Nrecentyearsanumberofnuclearmodelshavebeen
+~-developed whichsuccessfully describe manyaspects
+ofnuclearstructure. Themoststriking successes have
+beenobtained bytheMayer-Jensen' shellmodeland
+byWeisskopf's' cloudycrystal-ball model,anditis
+clearthatforlowenergies theremustbeaclosecorre-
+spondence between thesemodelsandtheactualnucleus.
+Ontheotherhand,thesemodelsarebasedonan
+assumption ofweakinteraction between theparticles
+theydescribe andthisassumption appears tobein
+directcontradiction withthestrongnucleon interac-
+tionswhichareobserved inscattering experiments. We
+shallshowinthispaperthatthisapparent contradiction
+isnotarealonebutisexplained essentially bythe
+factthatthe"particles" inthesenuclear modelsare
+notnucleons—thatistosaytheycannotinallcircum-
+stancesbeinterpreted asnucleons.
+Ourprogram is6rstlytosetupandexplainafor-
+malism inwhichthewavefunctions ofvarious models
+canbetransformed by"modeloperators" intothereal
+nuclear wavefunction. Nextweconsider howactual
+nuclear modelsfitintotheframework ofourtheory,
+andfinally weconsider theproblem ofusingthese
+modeloperators inpractical applications ofthetheory.
+*Smithson Research FellowoftheRoyalSociety, onleaveof
+absence fromClareCollege, Cambridge, England.
+fThisworkwassupported bygrantsfromtheNational Science
+Foundation, theOKceofNavalResearch, andtheU.S.Atomic
+Energy Commission.'MariaGoeppert Mayer, Phys,Rev.75,j.969(1949);Haxel,
+Jensen,andSuess,Phys.Rev.75,1766(1949).'Feshbach, Porter,andWeisskopf, Phys.Rev.96,448(1954).Sincethistheoryshowsthattheparticles, intheshell
+model,forexample, arenotnucleons, itisnecessary to
+showthatshell-model resultscanstillbeexplained
+withthisnewinterpretation. Wedonotattempt to
+derivetheexplicit assumptions oftheshellmodel,
+although ourformalism leadstoself-consistent equa-
+tionswhichifsolvedshouldleadtothewellpotential
+ofthemodel.Ourprimary concern istoshowhowthe
+following aspectsoftheshellmodelareconsistent with
+ourmethod: theparticles inthemodelobeytheex-
+clusion principle asthough theyareneutrons and
+protons, energy levelsarepredicted withsufficient
+accuracy toindicate theorderoffillingsingle-particle
+states,angular momentum andparityareaccurately
+predicted asthoughthemodelwastherealnucleus, and
+selection rulesarewellpredicted. Thisisnotbyany
+meansacomplete listbutshouldservetoindicate the
+problems ofinterpretation whichhavetobeconsidered.
+Also,wemustconsider therelation ofourtheoryto
+thefailuresofthemodelsuchasthefailuretopredict
+transition rateswithanyaccuracy.
+Sinceourmethods arequitegeneralandapplytoany
+nuclear model,acomplete presentation ofthistheory
+wouldrequire detailed consideration ofverymany
+aspectsoftherelation ofnuclearmodelstoexperiment.
+Wehaveinthispaperattempted toselectsufficient of
+theseaspectsofthetheorytoindicate thepowerofthe
+method, andhopeinfuturepaperstoexamine other
+aspects.Inparticular, wehavelimited ourselves to
+consideration oflow-energy nuclearmodelsalthough we
+believethatthemethods arealsoapplicable tohigh-
+energyproblems. Inaddition totheshellmodel, we
+

@@ -183,7 +183,7 @@ The thesis focuses on a test set of nine molecules that represent a variety of e
 Molecule & Geometry (Å) & Multiplicity & Charge & Symmetry \\
 \midrule
 LiH      & $r(\mathrm{Li-H}) = 1.595$  & 1 & 0 & $C_{\infty v}$ \\
-\ce{H2O} & $r = 0.957$, $\angle = 104.5°$ & 1 & 0 & $C_{2v}$ \\
+\ce{H2O} & $r = 0.957$, $\angle = 104.5^\circ$ & 1 & 0 & $C_{2v}$ \\
 CO       & $r(\mathrm{C-O}) = 1.128$   & 1 & 0 & $C_{\infty v}$ \\
 HF       & $r(\mathrm{H-F}) = 0.917$   & 1 & 0 & $C_{\infty v}$ \\
 \ce{NH3} & $r(\mathrm{N-H}) = 1.012$   & 1 & 0 & $C_{3v}$ \\
@@ -218,13 +218,11 @@ The basis-set-specific orbital space dimensions for each molecule are given in t
 %    calculations from which OVOS begins are summarised in the following section."
 % ---------------------------------------------------------------
 
-The choice of basis set determines the size of the virtual orbital space and hence the difficulty and accuracy of the OVOS calculation. This section describes the basis sets employed and provides the resulting orbital space dimensions for each molecule.
+The choice of basis set determines the size of the virtual orbital space and hence the difficulty and accuracy of the OVOS calculation. This section describes the basis sets employed and provides the resulting orbital space dimensions for each molecule. See Basis Set Exchange \cite{pritchard2019a} for the source of all basis sets used in this work.
 
-\subsubsubsection{6--31G}
-This basis set \dots
+\textbf{6--31G:} A split-valence double-zeta basis set developed by Pople et. al. \cite{ditchfield1971a}\cite{dill1975a}\cite{hehre1972a}. It consists of a minimal basis for core electrons and a double-zeta basis for valence electrons, allowing for improved flexibility in describing electron correlation compared to minimal basis sets.
 
-\subsubsubsection{cc--pVDZ}
-Expanding to a bigger basis set ...
+\textbf{cc--pVDZ:} The correlation-consistent polarized valence double-zeta basis set developed by Dunning \cite{dunning1989}. It includes polarization functions that allow for a better description of electron correlation effects, particularly important for accurate energy calculations.
 
 
 
@@ -255,8 +253,10 @@ Expanding to a bigger basis set ...
 %    these references are given in the following section."
 % ---------------------------------------------------------------
 
-Calculations on Hartree-Fock (HF) are obtained from PySCF with $\texttt{gto}$ and $\texttt{scf}$. This section records the reference restricted HF (RHF), unrestricted (UHF) and MP2 calculations, that serve as benchmarks throughout the results.
-Equal for all molecule initialisation with PySCF is the use of $\texttt{gto.Mole()}$ with spin $0$ (...), charge $0$ (...) and symmetry $\texttt{False}$ (...). 
+Calculations on Hartree-Fock (HF) are obtained from PySCF with \texttt{gto} and \texttt{scf}. This section records the reference restricted HF (RHF), unrestricted (UHF) and MP2 calculations, that serve as benchmarks throughout the results.
+
+Equal for all molecule initialisation with PySCF is the use of \texttt{gto.Mole()} with spin $0$ (...), charge $0$ (...) and symmetry \texttt{False} (...). 
+
 In the HF references settings ...
 
 % \begin{table}
@@ -317,16 +317,14 @@ In the HF references settings ...
 %    all results are described in the following section."
 % ---------------------------------------------------------------
 
-This section specifies parameters of the OVOS calculation, ensuring reproducibility. Values given here correspond to the presented data in Chapter~\ref{ch:results}. 
+For all calculations, the molecule is initialized using PySCF with \texttt{gto.Mole()} and the Hartree-Fock reference is computed as \texttt{mf} (see Section~\ref{sec:ref_scf}). 
 
-For all calculations the parameters given cover the molecule's PySCF initialisation as $\texttt{mol}$, to the HF $\texttt{mf}$...
+The orbital optimization parameters are specified as follows: \texttt{num\_opt\_virtual\_orbs} specifies the number of active virtual spin-orbitals to optimize, \texttt{mo\_coeff} provides the orbital coefficients, and \texttt{init\_orbs} selects the initial orbital type (RHF or UHF).
 
-The parameters covering the orbtials we optimize, we give a number of orbitals to optimize for $\texttt{num_opt_virtual_orbs}$, and the orbitals we optimize for $\texttt{mo_coeff}$, for the type of orbitals $\texttt{init_orbs}$ as RHF or UHF.
-
-Further, we set convergence thresholds are given for the change in energy $|\Delta E_{\rm corr}| < 10^{-8}$~Hartree and gradient $|\Delta G_{\rm corr}| < 10^{-6}$~Hartree. We check this threshold for a maximum of 1000 iterations, and for when the convergence threshold triggers we check for consistent convergence for a $\texttt{keep_track_max}$ parameter sat to $50$.
+Convergence is monitored via two criteria: a change in correlation energy of $|\Delta E_{\rm corr}| < 10^{-8}$\,Hartree and a gradient norm of $|\Delta G_{\rm corr}| < 10^{-6}$\,Hartree. Optimization proceeds for a maximum of 1000 iterations. Once convergence is achieved, consistent convergence is verified over \texttt{keep\_track\_max}~$= 50$ consecutive iterations to ensure stability.
 
 
-$\textcolor{red}{NEED TO CLEAN UP CODE PARAMETERS AND CODE IN ovos.py}$
+%\textcolor{KURed}{NEED TO CLEAN UP CODE PARAMETERS AND CODE IN ovos.py}
 
 
 % Refer to vode in appendix...

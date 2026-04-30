@@ -1,4 +1,4 @@
-\begin{thebibliography}{12}
+\begin{thebibliography}{23}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -72,10 +72,76 @@ Joonho Lee and Martin Head-Gordon.
 \newblock \doi{10.1021/acs.jctc.8b00731}.
 \newblock arXiv:1807.06185.
 
+\bibitem[Jensen(2017)]{Jensen2017}
+Frank Jensen.
+\newblock \emph{Introduction to Computational Chemistry}.
+\newblock Wiley, 3rd edition, 2017.
+\newblock ISBN 978-1-118-82599-0.
+
+\bibitem[Szabo and Ostlund(1989)]{SzaboOstlund1989}
+Attila Szabo and Neil~S. Ostlund.
+\newblock \emph{Modern Quantum Chemistry: Introduction to Advanced Electronic Structure Theory}.
+\newblock Dover Publications, 1989.
+\newblock ISBN 978-0-486-69186-2.
+
 \bibitem[Handy et~al.(1989)Handy, Pople, Head-Gordon, Raghavachari, and Trucks]{Handy1989}
 Nicholas~C. Handy, John~A. Pople, Martin Head-Gordon, Krishnan Raghavachari, and Gary~W. Trucks.
 \newblock Size-consistent {B}rueckner theory limited to single and double substitutions.
 \newblock \emph{Chem. Phys. Lett.}, 164:\penalty0 185--192, 1989.
 \newblock \doi{10.1016/0009-2614(89)85013-4}.
+
+\bibitem[Brueckner(1954)]{Brueckner1954}
+Keith~A. Brueckner.
+\newblock Two-body forces and nuclear saturation. {III}. details of the structure of the nucleus.
+\newblock \emph{Phys. Rev.}, 97:\penalty0 1353--1366, 1954.
+\newblock \doi{10.1103/PhysRev.97.1353}.
+
+\bibitem[Ditchfield et~al.(1971)Ditchfield, Hehre, and Pople]{ditchfield1971a}
+R.~Ditchfield, W.~J. Hehre, and J.~A. Pople.
+\newblock Self-consistent molecular-orbital methods. ix. an extended gaussian-type basis for molecular-orbital studies of organic molecules.
+\newblock \emph{J. Chem. Phys.}, 54:\penalty0 724--728, 1971.
+\newblock \doi{10.1063/1.1674902}.
+
+\bibitem[Hehre et~al.(1972)Hehre, Ditchfield, and Pople]{hehre1972a}
+W.~J. Hehre, R.~Ditchfield, and J.~A. Pople.
+\newblock Self-consistent molecular orbital methods. xii. further extensions of gaussian-type basis sets for use in molecular orbital studies of organic molecules.
+\newblock \emph{J. Chem. Phys.}, 56:\penalty0 2257--2261, 1972.
+\newblock \doi{10.1063/1.1677527}.
+
+\bibitem[Dill and Pople(1975)]{dill1975a}
+James~D. Dill and John~A. Pople.
+\newblock Self-consistent molecular orbital methods. xv. extended gaussian-type basis sets for lithium, beryllium, and boron.
+\newblock \emph{J. Chem. Phys.}, 62:\penalty0 2921--2923, 1975.
+\newblock \doi{10.1063/1.430801}.
+
+\bibitem[Dunning(1989)]{dunning1989}
+Thom~H. Dunning.
+\newblock Gaussian basis sets for use in correlated molecular calculations. {I}. the atoms boron through neon and hydrogen.
+\newblock \emph{J. Chem. Phys.}, 90:\penalty0 1007--1023, 1989.
+\newblock \doi{10.1063/1.456153}.
+
+\bibitem[Rolik and K\'allay(2011)]{Rolik2011}
+Zolt\'an Rolik and Mih\'aly K\'allay.
+\newblock Cost reduction of high-order coupled-cluster methods via active-space and orbital transformation techniques.
+\newblock \emph{J. Chem. Phys.}, 134:\penalty0 124111, 2011.
+\newblock \doi{10.1063/1.3569829}.
+
+\bibitem[Pito\v{n}\'ak et~al.(2006)Pito\v{n}\'ak, Holka, Neogr\'ady, and Urban]{Pitonak2006}
+Michal Pito\v{n}\'ak, Filip Holka, Pavel Neogr\'ady, and Miroslav Urban.
+\newblock Optimized virtual orbitals for correlated calculations: Towards large-scale {CCSD(T)} calculations of molecular dipole moments and polarizabilities.
+\newblock \emph{Molecular Structure: THEOCHEM}, 768:\penalty0 79--89, 2006.
+\newblock \doi{10.1016/j.theochem.2006.05.018}.
+
+\bibitem[Purvis and Bartlett(1982)]{Purvis1982}
+George~D. Purvis and Rodney~J. Bartlett.
+\newblock A full coupled-cluster singles and doubles model: {T}he inclusion of disconnected triples.
+\newblock \emph{J. Chem. Phys.}, 76:\penalty0 1910--1918, 1982.
+\newblock \doi{10.1063/1.443164}.
+
+\bibitem[Pritchard et~al.(2019)Pritchard, Altarawy, Didier, Gibsom, and Windus]{pritchard2019a}
+Benjamin~P. Pritchard, Doaa Altarawy, Brett Didier, Tara~D. Gibsom, and Theresa~L. Windus.
+\newblock A new basis set exchange: An open, up-to-date resource for the molecular sciences community.
+\newblock \emph{J. Chem. Inf. Model.}, 59:\penalty0 4814--4820, 2019.
+\newblock \doi{10.1021/acs.jcim.9b00725}.
 
 \end{thebibliography}

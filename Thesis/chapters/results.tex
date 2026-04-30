@@ -17,8 +17,6 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
     \item \textbf{Section 6.9} estimates the practical benefits of using OVOS orbitals as a reference state for quantum computing applications, including overlap with FCI states and resource estimates for VQE.
 \end{itemize}
 
-$\textcolor{red}{DOES THIS OVERVEIW WORK WELL, USED IN OTHER CHPATERS?}$
-
 % ---------------------------------------------------------------
 % WRITING TIPS – RESULTS
 % ---------------------------------------------------------------
@@ -126,7 +124,7 @@ PySCF gives me an opportunity to validate my implementation of full space MP2 by
         H$_2$O   & -1.28851E-01 & -1.28851E-01    & 1.91423E-09   \\
         HF       & -1.28694E-01 & -1.28694E-01    & -2.47007E-09  \\
         NH3      & -1.14441E-01 & -1.14441E-01    & -2.79223E-10  \\
-        Li2      & -#.#####E-01 & -#.#####E-01    & -#.#####E-10  \\
+        Li2      & -1E-01 & -1E-01    & -1E-10  \\
         \hline
     \end{tabular}
     \caption{Validation of the OVOS implementation against PySCF \code{mp.MP2}.
@@ -254,7 +252,7 @@ The table is plotted in Figure~\ref{fig:HF_6-31G_ovos} to show the convergence b
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{figures/HF/ovos_conv_vs_vorb_HF_6-31G_RHF.png}
+    \includegraphics[width=1\textwidth]{figures/Placeholder.png}
     \caption{Convergence of the MP2 correlation energy for HF in the 6--31G basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
     \label{fig:HF_6-31G_ovos}
 \end{figure}
@@ -386,7 +384,7 @@ Figure \ref{fig:final_comparison}, also highlights the spread of correlation ene
 
 We see a relative agreement between the three initialisation strategies, with the best-of-random sampling sometimes finding a slightly lower energy than the default and warm-start approaches. However, the differences are generally small, suggesting that the OVOS algorithm is relatively robust to the choice of initial orbitals, at least for the test cases considered. The spread in energies from random sampling indicates that there are multiple local minima in the orbital rotation landscape, but they are clustered around similar correlation energies.
 
-See appendix ## for the resulting plots of molecules ... 
+See appendix ? for the resulting plots of molecules ... 
 
 \section{Basis Set Dependence}
 % ---------------------------------------------------------------
