@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1777388722.04741 "main.aux" "main.bbl" "main" 1777388730.49681 0
-  "./bibliography.bib" 1777386284 10598 ff82cbe634bba198cee409d88583c210 ""
+["bibtex main"] 1777555602.51174 "main.aux" "main.bbl" "main" 1777555603.39253 0
+  "./bibliography.bib" 1777555600 10600 a4105ee35ef8c118c7f26b4da3adaca5 ""
   "d:/Programs/texlive/2026/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1775563050 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
   "main.aux" 1777388728 47382 cc65dbf409fc0105576d6739280a9086 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1777388722.84786 "d:/Programs/Git Clones/optimized_virtual_orbitals/Thesis/main.tex" "main.pdf" "main" 1777388730.49815 0
+["pdflatex"] 1777388722.84786 "d:/Programs/Git Clones/optimized_virtual_orbitals/Thesis/main.tex" "main.pdf" "main" 1777555603.39323 0
   "appendices/appendix_a.tex" 1774731725 3271 935cdd3a8a7b16c19cb83c0dcc9dafc3 ""
   "appendices/appendix_b.tex" 1774731725 2020 f5e8a7d80a487f923a09624eb822ea40 ""
   "appendices/appendix_c.tex" 1774731725 3583 a7a7c9efbfc2a1cfee5a3a77585abf1d ""
@@ -310,7 +310,7 @@
   "figures/Placeholder.png" 1774731725 45282 6c4f0306b95f9f6351449c9b25cef20e ""
   "frontpage.tex" 1774731725 2213 9fa8577cbf823929a64abbaed1f95aa5 ""
   "main.aux" 1777388728 47382 cc65dbf409fc0105576d6739280a9086 "pdflatex"
-  "main.bbl" 1777388722 5524 54690ec3c51b094371022849541d835e "bibtex main"
+  "main.bbl" 1777555603 5524 54690ec3c51b094371022849541d835e "bibtex main"
   "main.lof" 1777388728 5562 71ad7331895d42785063735036e55abc "pdflatex"
   "main.lot" 1777388728 3140 e981874ce3b0eac048a56757d26230d9 "pdflatex"
   "main.out" 1777388728 28040 d252d74cc331ee8a75e029ea870c9302 "pdflatex"
