@@ -307,6 +307,8 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
     # Convert dist_list strings to floats for proper numeric plotting
     # print(dist_list, dist_list_)
     # if type(dist_list) is list:
+    if plot_prev == False:
+        dist_list_ = dist_list_[0]
     dist_list_float = [float(d) for d in dist_list_]
     dist_list = [dist_list_float]
     print(dist_list)
@@ -854,6 +856,8 @@ if False:
                 # If the molecule is Li2, we only want to the range above 2.5 Angstrom, so we can filter the dist_list to only include dist that are above 2.5 Angstrom, and we can use this filtered dist_list for the rest of the code
             if molecule == "Li2":
                 dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
+            else:
+                dist_list = [dist for dist in dist_list if float(dist) >= 0.7]
 
                 # Save dist_list
             dist_list_save.append(dist_list)
@@ -893,35 +897,37 @@ if True:
     # Need to plot the VQE curve for one seed = "True", and both oo = True and False...
         # So we can see the difference in using prev. final thetas and keep trying to find best from random...
     
-    molecule = "HF" # "Li2"
-    basis = "6-31G"
-    method = "OVOS" # Placeholder for getting dist and seed list
+    for molecule in ["Li2", "HF", "H2O"]:
+        basis = "6-31G"
+        method = "OVOS" # Placeholder for getting dist and seed list
 
-    # Get dist list from the folder
-    dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
-    # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
-    num_opt_virtual_orbital = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0])[0]
-    
-    # for num_opt_virtual_orbital in num_opt_virtual_orbitals:
-    dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
-    if molecule == "Li2":
-        dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
+        # Get dist list from the folder
+        dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
+        # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
+        num_opt_virtual_orbital = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0])[0]
+        
+        # for num_opt_virtual_orbital in num_opt_virtual_orbitals:
+        dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
+        if molecule == "Li2":
+            dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
+        else:
+            dist_list = [dist for dist in dist_list if float(dist) >= 0.7]
+            
+        # Here i need to designate the seed to "True" as i do not use a specific seed but the prev.
+        seed_lst = True
 
-    # Here i need to designate the seed to "True" as i do not use a specific seed but the prev.
-    seed_lst = True
+        for dist in dist_list:
+            make_vqe_dist_results_file(molecule, basis, dist, seed_lst, num_opt_virtual_orbital)
 
-    for dist in dist_list:
-        make_vqe_dist_results_file(molecule, basis, dist, seed_lst, num_opt_virtual_orbital)
+        make_vqe_results_file(molecule, basis, dist_list, seed_lst, num_opt_virtual_orbital)
 
-    make_vqe_results_file(molecule, basis, dist_list, seed_lst, num_opt_virtual_orbital)
+        print(f"\nFinished gathering VQE results for {molecule} {basis} for all dists and num_opt_virtual_orbitals, now plotting the curves...")    
+        print(f"Number of optimal virtual orbitals: {num_opt_virtual_orbital}")
+        print(f"Dist list for plotting: {dist_list}")
 
-    print(f"\nFinished gathering VQE results for {molecule} {basis} for all dists and num_opt_virtual_orbitals, now plotting the curves...")    
-    print(f"Number of optimal virtual orbitals: {num_opt_virtual_orbital}")
-    print(f"Dist list for plotting: {dist_list}")
-
-    for oo in [False]: # [True, False]:
-        plot_vqe_curve_results(molecule, basis, dist_list, [num_opt_virtual_orbital], True, True, oo)
-        plot_vqe_curve_results(molecule, basis, dist_list, [num_opt_virtual_orbital], False, True, oo)
+        for oo in [False]: # [True, False]:
+            plot_vqe_curve_results(molecule, basis, dist_list, [num_opt_virtual_orbital], True, True, oo)
+            plot_vqe_curve_results(molecule, basis, dist_list, [num_opt_virtual_orbital], False, True, oo)
 
 
 

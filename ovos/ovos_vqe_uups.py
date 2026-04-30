@@ -1314,9 +1314,9 @@ def run_single(args):
 # Run
 if __name__ == "__main__":
     # Molecule: HF, H2O, CO, NH3, Li2
-    args_list = run_hf_vqe()  # HF,  Done 
+    # args_list = run_hf_vqe()  # HF,  Done 
     # args_list = run_h2o_vqe() # H2O, Done
-    # args_list = run_li2_vqe()   # 16...
+    args_list = run_li2_vqe()   # 16...
 
     if False:
         # Set thetas to empty list... and thetas_bool to False
@@ -1399,7 +1399,7 @@ if __name__ == "__main__":
         if True: # Found for oo = Ture each dist takes a while, need to be able to start from thetas from a previous dist to avoid having to run all dists sequentially from the start...
             # Dist to get prev. from
             oo_str = "False"
-            prev_dist = 1.0
+            prev_dist = 2.4
             # Get thetas from the file for the prev_dist
             file_name_prev = f"backup/data/{molecule_name}/{basis_name}/VQE/OVOS/{prev_dist}/UPS_OVOS_{molecule_name}_{basis_name}_{prev_dist}_opt_num_{num_opt_virtual_orbs}_{oo_str}_True.json"
             print(f"Looking for existing thetas in \n     {file_name_prev} \n to use as initial guess for the first run...")
@@ -1433,7 +1433,7 @@ if __name__ == "__main__":
 
 # TO DO:
 # - Run VQE PREV. THETAS w. OO False
-    # H2O, HF
+    # H2O
 
 # - Run VQE RANDOM for 5 seeds w. OO True
     # H2O, HF, Li2
