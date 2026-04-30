@@ -1,3 +1,4 @@
+Using provided thetas for seed 42 instead of random initialization.
 
 Running VQE with OVOS optimization for HF w. bond length 0.925 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
 Built molecule HF with basis 6-31G and bond length 0.925 Angstrom.
@@ -5,24 +6,24 @@ Number of electrons: 10, Number of orbitals: 11
 Initial MO coefficients are restricted (RHF-like).
 Optimizing 4 active virtual orbitals (out of 6 total virtual orbitals).
 
-Optimization finished. Final MP2 energy = -100.10783534015617 Hartree. (ΔE_corr = -0.12442866387463225 Hartree)
+Optimization finished. Final MP2 energy = -100.10783534015616 Hartree. (ΔE_corr = -0.12442866387462992 Hartree)
 OVOS optimized orbitals are unrestricted (UHF-like).
 
 
 Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
-OVOS optimized energy = -105.14155 Hartree @ iterations 183.
+OVOS optimized energy = -105.139464 Hartree @ iterations 51.
 
 Calculating UHF reference for comparison...
-UHF energy = -105.13272 Hartree @ iterations 97.
+UHF energy = -105.132158 Hartree @ iterations 1.
 
 Calculating UMP2 natural orbitals for comparison...
 UMP2 natural orbitals are restricted (RHF-like).
-UHF natural orbital energy = -105.155385 Hartree @ iterations 67.
+UHF natural orbital energy = -105.155389 Hartree @ iterations 174.
 
 Summary of results:
 Molecule: H 0 0 0; F 0 0 0.925 with basis set 6-31G for a total of 10 electrons and 11 orbitals.
 OVOS correlation energy: -100.107835 Hartree (Active unocc. orbitals: 4)
-OVOS energy: -105.141550 Hartree  @ iterations 183 (Eval. func. 201, grad. 201
-UHF energy: -105.132720 Hartree  @ iterations 97 (Eval. func. 103, grad. 103
-UMP2 natural orbital energy: -105.155385 Hartree  @ iterations 67 (Eval. func. 87, grad. 87
+OVOS energy: -105.139464 Hartree  @ iterations 51 (Eval. func. 58, grad. 58
+UHF energy: -105.132158 Hartree  @ iterations 1 (Eval. func. 3, grad. 3
+UMP2 natural orbital energy: -105.155389 Hartree  @ iterations 174 (Eval. func. 202, grad. 202
 ✓ Completed. Output saved to backup/data/HF/6-31G/VQE/dist/0.925/OVOS_HF_0.925_6-31G_VQE_opt_num_0.75_False_42_output.txt

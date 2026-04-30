@@ -1,3 +1,4 @@
+Using provided thetas for seed 42 instead of random initialization.
 
 Running VQE with OVOS optimization for H2O w. bond length 1.775 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
 Built molecule H2O with basis 6-31G and bond length 1.775 Angstrom.
@@ -5,24 +6,24 @@ Number of electrons: 10, Number of orbitals: 13
 Initial MO coefficients are restricted (RHF-like).
 Optimizing 6 active virtual orbitals (out of 8 total virtual orbitals).
 
-Optimization finished. Final MP2 energy = -75.8644747409099 Hartree. (ΔE_corr = -0.22087082332591518 Hartree)
+Optimization finished. Final MP2 energy = -75.85913846610154 Hartree. (ΔE_corr = -0.21553454851754938 Hartree)
 OVOS optimized orbitals are unrestricted (UHF-like).
 
 
 Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
-OVOS optimized energy = -80.68348 Hartree @ iterations 185.
+OVOS optimized energy = -80.682652 Hartree @ iterations 268.
 
 Calculating UHF reference for comparison...
-UHF energy = -80.676196 Hartree @ iterations 93.
+UHF energy = -80.676196 Hartree @ iterations 136.
 
 Calculating UMP2 natural orbitals for comparison...
 UMP2 natural orbitals are restricted (RHF-like).
-UHF natural orbital energy = -80.68277 Hartree @ iterations 243.
+UHF natural orbital energy = -80.68277 Hartree @ iterations 56.
 
 Summary of results:
 Molecule: O 0.0000 0.0000 0.1173; H 0.0000 1.4031 -0.9695; H 0.0000 -1.4031 -0.9695 with basis set 6-31G for a total of 10 electrons and 13 orbitals.
-OVOS correlation energy: -75.864475 Hartree (Active unocc. orbitals: 6)
-OVOS energy: -80.683480 Hartree  @ iterations 185 (Eval. func. 202, grad. 202
-UHF energy: -80.676196 Hartree  @ iterations 93 (Eval. func. 99, grad. 99
-UMP2 natural orbital energy: -80.682770 Hartree  @ iterations 243 (Eval. func. 268, grad. 268
+OVOS correlation energy: -75.859138 Hartree (Active unocc. orbitals: 6)
+OVOS energy: -80.682652 Hartree  @ iterations 268 (Eval. func. 307, grad. 307
+UHF energy: -80.676196 Hartree  @ iterations 136 (Eval. func. 148, grad. 148
+UMP2 natural orbital energy: -80.682770 Hartree  @ iterations 56 (Eval. func. 57, grad. 57
 ✓ Completed. Output saved to backup/data/H2O/6-31G/VQE/dist/1.775/OVOS_H2O_1.775_6-31G_VQE_opt_num_0.75_False_42_output.txt

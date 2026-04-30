@@ -40,7 +40,7 @@ def test_ovos_random_CO():
 def test_ovos_random_H2O():
     # Water molecule
     mol = gto.Mole()
-    mol.atom = 'O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692'
+    mol.atom = 'O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692' # Angle: ...
     mol.basis = '6-31G'
     mol.unit = 'Angstrom'
     mol.spin = 0

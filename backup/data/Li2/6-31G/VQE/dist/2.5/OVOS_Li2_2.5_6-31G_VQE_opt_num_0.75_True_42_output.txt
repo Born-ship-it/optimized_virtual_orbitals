@@ -1,0 +1,7 @@
+Using provided thetas for seed 42 instead of random initialization.
+
+Running VQE with OVOS optimization for Li2 w. bond length 2.5 in basis 6-31G with 75% active virtual orbitals and orbital opt. = True...
+Built molecule Li2 with basis 6-31G and bond length 2.5 Angstrom.
+Number of electrons: 6, Number of orbitals: 18
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 11 active virtual orbitals (out of 15 total virtual orbitals).

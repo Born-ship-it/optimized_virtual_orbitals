@@ -1,3 +1,4 @@
+Using provided thetas for seed 42 instead of random initialization.
 
 Running VQE with OVOS optimization for Li2 w. bond length 4.1 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
 Built molecule Li2 with basis 6-31G and bond length 4.1 Angstrom.
@@ -5,24 +6,24 @@ Number of electrons: 6, Number of orbitals: 18
 Initial MO coefficients are restricted (RHF-like).
 Optimizing 11 active virtual orbitals (out of 15 total virtual orbitals).
 
-Optimization finished. Final MP2 energy = -14.862328558374855 Hartree. (ΔE_corr = -0.017801669973158813 Hartree)
+Optimization finished. Final MP2 energy = -14.86226077448549 Hartree. (ΔE_corr = -0.017733886083792606 Hartree)
 OVOS optimized orbitals are unrestricted (UHF-like).
 
 
 Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
-OVOS optimized energy = -16.023274 Hartree @ iterations 99.
+OVOS optimized energy = -16.025729 Hartree @ iterations 32.
 
 Calculating UHF reference for comparison...
-UHF energy = -16.018861 Hartree @ iterations 65.
+UHF energy = -16.018861 Hartree @ iterations 25.
 
 Calculating UMP2 natural orbitals for comparison...
 UMP2 natural orbitals are restricted (RHF-like).
-UHF natural orbital energy = -16.03152 Hartree @ iterations 103.
+UHF natural orbital energy = -16.03152 Hartree @ iterations 83.
 
 Summary of results:
 Molecule: Li 0 0 0; Li 0 0 4.100 with basis set 6-31G for a total of 6 electrons and 18 orbitals.
-OVOS correlation energy: -14.862329 Hartree (Active unocc. orbitals: 11)
-OVOS energy: -16.023274 Hartree  @ iterations 99 (Eval. func. 105, grad. 105
-UHF energy: -16.018861 Hartree  @ iterations 65 (Eval. func. 77, grad. 77
-UMP2 natural orbital energy: -16.031520 Hartree  @ iterations 103 (Eval. func. 110, grad. 110
+OVOS correlation energy: -14.862261 Hartree (Active unocc. orbitals: 11)
+OVOS energy: -16.025729 Hartree  @ iterations 32 (Eval. func. 33, grad. 33
+UHF energy: -16.018861 Hartree  @ iterations 25 (Eval. func. 27, grad. 27
+UMP2 natural orbital energy: -16.031520 Hartree  @ iterations 83 (Eval. func. 85, grad. 85
 ✓ Completed. Output saved to backup/data/Li2/6-31G/VQE/dist/4.1/OVOS_Li2_4.1_6-31G_VQE_opt_num_0.75_False_42_output.txt

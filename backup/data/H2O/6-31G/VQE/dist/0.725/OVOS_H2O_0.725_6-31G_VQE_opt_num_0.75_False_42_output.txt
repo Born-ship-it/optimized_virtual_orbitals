@@ -1,3 +1,4 @@
+Using provided thetas for seed 42 instead of random initialization.
 
 Running VQE with OVOS optimization for H2O w. bond length 0.725 in basis 6-31G with 75% active virtual orbitals and orbital opt. = False...
 Built molecule H2O with basis 6-31G and bond length 0.725 Angstrom.
@@ -5,53 +6,24 @@ Number of electrons: 10, Number of orbitals: 13
 Initial MO coefficients are restricted (RHF-like).
 Optimizing 6 active virtual orbitals (out of 8 total virtual orbitals).
 
-Optimization finished. Final MP2 energy = -75.8968814156989 Hartree. (ΔE_corr = -0.10658748878754228 Hartree)
+Optimization finished. Final MP2 energy = -75.8968814156989 Hartree. (ΔE_corr = -0.1065874887875447 Hartree)
 OVOS optimized orbitals are unrestricted (UHF-like).
 
 
 Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...
-✗ ERROR in seed 42: CPUDispatcher(<function apply_operator_serial at 0x7fede5e8c360>) returned a result with an exception set
-Traceback (most recent call last):
-  File "/mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/numba/core/serialize.py", line 30, in _numba_unpickle
-    def _numba_unpickle(address, bytedata, hashed):
-    
-KeyboardInterrupt
+OVOS optimized energy = -87.932062 Hartree @ iterations 36.
 
-The above exception was the direct cause of the following exception:
+Calculating UHF reference for comparison...
+UHF energy = -87.929712 Hartree @ iterations 60.
 
-Traceback (most recent call last):
-  File "/mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/ovos/ovos_vqe_uups.py", line 335, in VQE_OVOS
-    stats_ovos_opt = run_ucc_and_get_stats(WF_ovos, "BFGS", oo, atol)
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/ovos/ovos_vqe_uups.py", line 135, in run_ucc_and_get_stats
-    wf.run_wf_optimization_1step(str_, orbital_optimization=orbital_optimization, tol=atol, maxiter=5000)
-  File "/mnt/c/Users/tobia/Desktop/Clones/SlowQuant/slowquant/unitary_coupled_cluster/unrestricted_ups_wavefunction.py", line 917, in run_wf_optimization_1step
-    res = optimizer.minimize(
-          ^^^^^^^^^^^^^^^^^^^
-  File "/mnt/c/Users/tobia/Desktop/Clones/SlowQuant/slowquant/unitary_coupled_cluster/optimizers.py", line 96, in minimize
-    res = scipy.optimize.minimize(
-          ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/optimize/_minimize.py", line 779, in minimize
-    res = _minimize_bfgs(fun, x0, args, jac, callback, **options)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/optimize/_optimize.py", line 1416, in _minimize_bfgs
-    sf = _prepare_scalar_function(fun, x0, jac, args=args, epsilon=eps,
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/optimize/_optimize.py", line 310, in _prepare_scalar_function
-    sf = ScalarFunction(fun, x0, args, grad, hess,
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/optimize/_differentiable_functions.py", line 292, in __init__
-    self._update_grad()
-  File "/mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/optimize/_differentiable_functions.py", line 375, in _update_grad
-    self.g = self._wrapped_grad(self.x, f0=self.f)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/c/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/.venv/lib/python3.12/site-packages/scipy/optimize/_differentiable_functions.py", line 39, in __call__
-    g = np.atleast_1d(self.grad(np.copy(x), *self.args))
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/c/Users/tobia/Desktop/Clones/SlowQuant/slowquant/unitary_coupled_cluster/unrestricted_ups_wavefunction.py", line 1161, in _calc_gradient_optimization
-    bra_vec = propagate_state(
-              ^^^^^^^^^^^^^^^^
-  File "/mnt/c/Users/tobia/Desktop/Clones/SlowQuant/slowquant/unitary_coupled_cluster/operator_state_algebra.py", line 608, in propagate_state
-    tmp_state = apply_operator_serial(
-                ^^^^^^^^^^^^^^^^^^^^^^
-SystemError: CPUDispatcher(<function apply_operator_serial at 0x7fede5e8c360>) returned a result with an exception set
+Calculating UMP2 natural orbitals for comparison...
+UMP2 natural orbitals are restricted (RHF-like).
+UHF natural orbital energy = -87.941424 Hartree @ iterations 25.
+
+Summary of results:
+Molecule: O 0.0000 0.0000 0.1173; H 0.0000 0.5732 -0.3267; H 0.0000 -0.5732 -0.3267 with basis set 6-31G for a total of 10 electrons and 13 orbitals.
+OVOS correlation energy: -75.896881 Hartree (Active unocc. orbitals: 6)
+OVOS energy: -87.932062 Hartree  @ iterations 36 (Eval. func. 43, grad. 43
+UHF energy: -87.929712 Hartree  @ iterations 60 (Eval. func. 64, grad. 64
+UMP2 natural orbital energy: -87.941424 Hartree  @ iterations 25 (Eval. func. 30, grad. 30
+✓ Completed. Output saved to backup/data/H2O/6-31G/VQE/dist/0.725/OVOS_H2O_0.725_6-31G_VQE_opt_num_0.75_False_42_output.txt
