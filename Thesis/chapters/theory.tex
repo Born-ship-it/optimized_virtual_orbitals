@@ -798,13 +798,13 @@ As the Hessian expresses the curvature of the energy landscape, it may become in
 
 Building off the gradient and Hessian of $J_2$ an orbital rotation update $\Delta\mathbf{R}$ can be computed using the Newton-Raphson (NR) method, which iteratively refines the orbital coefficients to minimize $J_2$. The NR update is given by:
 \begin{equation}
-    \mathcal{R} = - \mathcal{G} \cdot \mathcal{H}^{-1}
+    \mathbf{R} = - \mathbf{G} \cdot \mathbf{H}^{-1}
 \end{equation}
 which is equivalent to:
 \begin{equation}
-    \mathcal{H} \mathcal{R} = - \mathcal{G}
+    \mathbf{H} \mathbf{R} = - \mathbf{G}
 \end{equation}
-where $\mathcal{G}$ is the gradient vector and $\mathcal{H}$ is the Hessian matrix. The NR method has a quadratic convergence rate near the optimum, meaning that the error decreases quadratically with each iteration. In other words, if the current solution is close to the optimal orbitals, the next iteration will be significantly closer, leading to rapid convergence. However, if the energy landscape is flat or has multiple minima, convergence can be slow or may require damping of the update step. The block-diagonal structure of the Hessian allows for efficient inversion, as each block can be treated independently, which is equivalent to solving a reduced linear equation in each inactive-orbital block. To ensure numerical stability, especially in cases where the Hessian may have negative eigenvalues, a level-shift strategy can be applied, as discussed in the previous section. The convergence criterion for the NR iterations is typically defined as $|J_2{(n)} - J_2{(n-1)}| < 10^{-8}$, indicating that the change in the Hylleraas functional between iterations is sufficiently small to consider the solution converged.
+where $\mathbf{G}$ is the gradient vector and $\mathbf{H}$ is the Hessian matrix. The NR method has a quadratic convergence rate near the optimum, meaning that the error decreases quadratically with each iteration. In other words, if the current solution is close to the optimal orbitals, the next iteration will be significantly closer, leading to rapid convergence. However, if the energy landscape is flat or has multiple minima, convergence can be slow or may require damping of the update step. The block-diagonal structure of the Hessian allows for efficient inversion, as each block can be treated independently, which is equivalent to solving a reduced linear equation in each inactive-orbital block. To ensure numerical stability, especially in cases where the Hessian may have negative eigenvalues, a level-shift strategy can be applied, as discussed in the previous section. The convergence criterion for the NR iterations is typically defined as $|J_2{(n)} - J_2{(n-1)}| < 10^{-8}$, indicating that the change in the Hylleraas functional between iterations is sufficiently small to consider the solution converged.
 
 % \section{Generating the Unitary Rotation Matrix}
 % \label{sec:unitary}
@@ -866,7 +866,7 @@ where $\mathcal{G}$ is the gradient vector and $\mathcal{H}$ is the Hessian matr
 %    procedure in a single algorithm overview for clarity."
 % ---------------------------------------------------------------
 
-After a unitary rotation, the virtual Fock block $F_{ab}^{\rm active}$ is generally non-diagonal, meaning the active virtual orbitals are no longer canonical. To restore the canonical form, we compute the active Fock block in the rotated basis:
+After a unitary rotation, the virtual Fock block $F_{ab}^{\rm active}$ is generally non-diagonal, meaning the active virtual orbitals are no longer canonical \cite{Helgaker2000}. To restore the canonical form, we compute the active Fock block in the rotated basis:
 \begin{equation}
     F_{ab} = \mathbf{C'}^\dagger\, F^{\rm AO}\, \mathbf{C'}
 \end{equation}
@@ -995,7 +995,7 @@ With canonical rotated orbitals, the MP2 energy for the new active space can be 
 %   CITE: \cite{Adamowicz1987_OVOS} Discussion section\n%         \cite{Rolik2011_Cost_Reduction} \S Results [experimental speedup curves]\n%         \cite{Neogrady2011_CC_OVOS} \S Implementation for detailed timing
 % ---------------------------------------------------------------
 
-A central motivation for OVOS is the potential for significant computational speedup by contracting the orbital space to a smaller active orbital set. To quantify this, we analyse the computational cost of each step in the OVOS iteration and compare it to the cost of traditional full-space correlation methods.
+A central motivation for OVOS is the potential for significant computational speedup by contracting the orbital space to a smaller active orbital set \cite{Adamowicz1987}. To quantify this, we analyse the computational cost of each step in the OVOS iteration and compare it to the cost of traditional full-space correlation methods.
 
 \subsection{Per-Iteration Cost of OVOS Optimisation}
 
@@ -1019,7 +1019,7 @@ Overall, the per-iteration cost is dominated differently for a few cases, summar
     \centering
     \small
     \begin{tabular}{c|c|c|c|c}
-        \textbf{Active Space Size} & \textbf{$r = N'/N_{\text{virt}}$} & \textbf{Dominant Step} & \textbf{Cost Scaling} & \textbf{Relative Cost} \\
+        \textbf{Active Space} & \textbf{$r = N'/N_{\text{virt}}$} & \textbf{Dominant Step} & \textbf{Cost Scaling} & \textbf{Relative Cost} \\
         \hline
         \textbf{Small} & $\sim 0.1$ & Orbital Rotation & $O(N_{\text{virt}}^3)$ & Fastest, but minimal speedup \\
         \textbf{Medium} & $\sim 0.3$–$0.5$ & Newton Solver* & $O((N_{\text{inact}} N')^3)$ & \textbf{Optimal window} \\
@@ -1225,7 +1225,7 @@ The claim is that $F_{\text{OVOS}} \geq F_{\text{HF}}$ because OVOS orbitals are
 \subsubsection{Trial states}
 
 To evaluate how well OVOS orbitals will do, we formulate the following candidates: UMP2 natural orbitals, and canonical UHF orbitals. 
-The former are the natural orbitals obtained from a UMP2 calculation, which are known to provide a good approximation to the correlated wavefunction and often yield improved convergence in VQE. We arrive at the natural orbitals by diagonalizing the one-particle density matrix constructed from the UMP2 amplitudes:
+The former are the natural orbitals obtained from a UMP2 calculation, which are known to provide a good approximation to the correlated wavefunction and often yield improved convergence in VQE, formulated in PySCF \cite{Sun2020}. They formulate we arrive at the natural orbitals by diagonalizing the one-particle density matrix constructed from the UMP2 amplitudes:
 \begin{equation}
     D_{pq} = \sum_{ijab} t_{ij}^{ab} \langle pq | ij \rangle
 \end{equation}

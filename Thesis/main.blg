@@ -4,45 +4,45 @@ The top-level auxiliary file: main.aux
 The style file: unsrtnat.bst
 Database file #1: bibliography.bib
 Warning--I didn't find a database entry for "Szabo1989"
-You've used 23 entries,
+You've used 24 entries,
             2481 wiz_defined-function locations,
-            738 strings with 10340 characters,
-and the built_in function-call counts, 10960 in all, are:
-= -- 861
-> -- 773
+            743 strings with 10444 characters,
+and the built_in function-call counts, 11264 in all, are:
+= -- 882
+> -- 794
 < -- 15
-+ -- 283
-- -- 237
-* -- 975
-:= -- 1862
-add.period$ -- 94
-call.type$ -- 23
-change.case$ -- 44
-chr.to.int$ -- 23
-cite$ -- 23
-duplicate$ -- 450
-empty$ -- 861
-format.name$ -- 278
-if$ -- 2246
++ -- 291
+- -- 243
+* -- 996
+:= -- 1910
+add.period$ -- 96
+call.type$ -- 24
+change.case$ -- 46
+chr.to.int$ -- 24
+cite$ -- 24
+duplicate$ -- 464
+empty$ -- 891
+format.name$ -- 285
+if$ -- 2311
 int.to.chr$ -- 1
-int.to.str$ -- 24
+int.to.str$ -- 25
 missing$ -- 26
-newline$ -- 147
-num.names$ -- 71
-pop$ -- 155
+newline$ -- 151
+num.names$ -- 74
+pop$ -- 168
 preamble$ -- 1
-purify$ -- 23
+purify$ -- 24
 quote$ -- 0
-skip$ -- 262
+skip$ -- 273
 stack$ -- 0
-substring$ -- 559
-swap$ -- 56
+substring$ -- 561
+swap$ -- 58
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 152
+type$ -- 159
 warning$ -- 0
-while$ -- 79
+while$ -- 81
 width$ -- 0
-write$ -- 354
+write$ -- 364
 (There was 1 warning)
