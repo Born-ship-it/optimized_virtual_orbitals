@@ -696,7 +696,7 @@ def run_hf_vqe():
         atom_str = f"H 0 0 0; F 0 0 {dist}"
         for basis in [basis_lst[0]]:
             for num_opt_virtual_orbs in [0.75]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
-                for oo in [oo_lst[1]]: # True, False
+                for oo in [oo_lst[0]]: # True, False
                     for seed in seed_list:
                         print(f"{dist:.3f} Å: {seed:3d}, Prep. VQE runs for H-F bond length {dist:.3f} Å, with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
                         # Args for each run: atom string, basis, dist, num_opt_virtual_orbs, oo, seed
@@ -884,7 +884,7 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
         dist = round(dist, 3)
         for basis in [basis_lst[0]]:
             for num_opt_virtual_orbs in [0.75]: #[num_opt_virtual_orbs_lst[0]]: # 0.25,0.5,0.75
-                for oo in [oo_lst[1]]: # True, False
+                for oo in [oo_lst[0]]: # True, False
                     for seed in seed_list:
                         print(f"{i+1:2d} / {len(dist_list_h2o)}: {seed:3d}, Prep. VQE runs for O-H bond length {dist:.4f} Å, with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
                         # Args for each run: atom string, basis, dist, num_opt_virtual_orbs, oo, seed
@@ -1315,8 +1315,8 @@ def run_single(args):
 if __name__ == "__main__":
     # Molecule: HF, H2O, CO, NH3, Li2
     # args_list = run_hf_vqe()  # HF,  Done 
-    # args_list = run_h2o_vqe() # H2O, Done
-    args_list = run_li2_vqe()   # 16...
+    args_list = run_h2o_vqe() # H2O, Done
+    # args_list = run_li2_vqe()   # 16...
 
     if False:
         # Set thetas to empty list... and thetas_bool to False
@@ -1385,7 +1385,7 @@ if __name__ == "__main__":
             assert False, "No existing file found to determine theta length from first run. Please run one VQE optimization with random thetas first to generate the file with thetas for the correct length, then run this script again to use those thetas as initial guess for the rest of the runs."
 
         # Clean start
-        if False:
+        if True:
             np.random.seed(42)  # For reproducibility of random thetas
             thetas = (2*np.pi*np.random.random(len_thetas) - np.pi).tolist()       
             thetas = [thetas, thetas, thetas]  
@@ -1396,10 +1396,19 @@ if __name__ == "__main__":
             
             # Need to continue for Li2!!!!!!!!11 w. OO True...
 
-        if True: # Found for oo = Ture each dist takes a while, need to be able to start from thetas from a previous dist to avoid having to run all dists sequentially from the start...
+        if False: # Found for oo = Ture each dist takes a while, need to be able to start from thetas from a previous dist to avoid having to run all dists sequentially from the start...
             # Dist to get prev. from
             oo_str = "False"
-            prev_dist = 2.4
+
+                # Li2
+            # prev_dist = 3.8
+
+                # HF
+            # prev_dist = 1.825
+
+                # H2O
+            # prev_dist = 0.7
+
             # Get thetas from the file for the prev_dist
             file_name_prev = f"backup/data/{molecule_name}/{basis_name}/VQE/OVOS/{prev_dist}/UPS_OVOS_{molecule_name}_{basis_name}_{prev_dist}_opt_num_{num_opt_virtual_orbs}_{oo_str}_True.json"
             print(f"Looking for existing thetas in \n     {file_name_prev} \n to use as initial guess for the first run...")

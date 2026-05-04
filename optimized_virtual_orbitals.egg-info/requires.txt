@@ -8,6 +8,7 @@ sympy==1.14.0
 tqdm==4.67.3
 llvmlite==0.46.0
 psutil>=7.2.2
+keyboard>=0.13.5
 
 [dev]
 pytest>=7.4.0
