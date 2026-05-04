@@ -74,7 +74,7 @@
 %   - State clearly what counts as "full" MP2 (the reference energy).
 % ---------------------------------------------------------------
 
-In this chapter, we provide a comprehensive account of the computational details underlying all calculations presented in this thesis. This includes the software and libraries used, the hardware enviroment, the molecular geometries and basis sets employed, the settings for the reference SCF calculations, the specific hyperparameters of the OVOS optimisation, and the data storage format. The goal is to ensure that all results are fully reproducible by any reader with access to similar computational resources.
+In this chapter, we provide a comprehensive account of the computational details underlying all calculations presented in this thesis. This includes the software and libraries used, the hardware enviroment, the molecular geometries and basis sets employed, the settings for the reference SCF calculations, and the specific hyperparameters of the OVOS optimisation. The goal is to ensure that all results are fully reproducible by any reader with access to similar computational resources.
 
 
 \section{Software and Libraries}
@@ -104,7 +104,7 @@ In this chapter, we provide a comprehensive account of the computational details
 %    is described in the following section."
 % ---------------------------------------------------------------
 
-In this section we detail the software enviroment used for all calculations in this thesis. The primary quantum chemistry calculations were performed using PySCF version 2.10 \cite{Sun2020}, and SlowQuant version A.B.C cite ... . Numerical operations were carried out using NumPy version 1.26.4 and SciPy version 1.17, a complete list of which is provided in Table~\ref{tab:software}.
+In this section we detail the software enviroment used for all calculations in this thesis. The primary quantum chemistry calculations were performed using PySCF version 2.10 \cite{Sun2020}, and SlowQuant branch Unrestricted VQE \cite{Kjellgren2026}. Numerical operations were carried out using NumPy version 1.26.4 and SciPy version 1.17, a complete list of which is provided in Table~\ref{tab:software}.
 
 \begin{table}[H]
     \centering
@@ -115,14 +115,12 @@ In this section we detail the software enviroment used for all calculations in t
         Package & Version & Purpose & Citation \\
         \midrule
         PySCF & 2.10.0 & Quantum chemistry calculations & ... \\
-        SlowQuant & A.B.C & Alternative quantum chemistry package & ... \\
+        SlowQuant & A.B.C & Alternative quantum chemistry package & \cite{Kjellgren2026} \\
         NumPy & 1.26.4 & Numerical operations & ... \\
         SciPy & 1.17.0 & Scientific computing & ... \\
         \bottomrule
     \end{tabular}
 \end{table}
-
-
 
 The OVOS method was implemented as a standalone Python class, with source code provided in Appendix~\ref{app:code}. All calculations were executed in a single-threaded mode to ensure reproducibility, with the environment variables \texttt{OPENBLAS\_NUM\_THREADS} and \texttt{OMP\_NUM\_THREADS} set to 1. The operating system used was Windows in Microsoft Visual Studio Code's WSL ubuntu virtual machine, as PySCF needs a Unix-like environment, and the Python distribution was standard Python version 3.11.
 
@@ -182,11 +180,11 @@ The thesis focuses on a test set of nine molecules that represent a variety of e
 \toprule
 Molecule & Geometry (Å) & Multiplicity & Charge & Symmetry \\
 \midrule
-LiH      & $r(\mathrm{Li-H}) = 1.595$  & 1 & 0 & $C_{\infty v}$ \\
-\ce{H2O} & $r = 0.957$, $\angle = 104.5°$ & 1 & 0 & $C_{2v}$ \\
-CO       & $r(\mathrm{C-O}) = 1.128$   & 1 & 0 & $C_{\infty v}$ \\
-HF       & $r(\mathrm{H-F}) = 0.917$   & 1 & 0 & $C_{\infty v}$ \\
-\ce{NH3} & $r(\mathrm{N-H}) = 1.012$   & 1 & 0 & $C_{3v}$ \\
+LiH      & $r(\mathrm{Li-H}) = 1.595$  & 1 & 0 & \code{False} \\
+\ce{H2O} & $r = 0.957$, $\angle = 104.5^\circ$ & 1 & 0 & \code{False} \\
+CO       & $r(\mathrm{C-O}) = 1.128$   & 1 & 0 & \code{False} \\
+HF       & $r(\mathrm{H-F}) = 0.917$   & 1 & 0 & \code{False} \\
+\ce{NH3} & $r(\mathrm{N-H}) = 1.012$   & 1 & 0 & \code{False} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -218,18 +216,17 @@ The basis-set-specific orbital space dimensions for each molecule are given in t
 %    calculations from which OVOS begins are summarised in the following section."
 % ---------------------------------------------------------------
 
-The choice of basis set determines the size of the virtual orbital space and hence the difficulty and accuracy of the OVOS calculation. This section describes the basis sets employed and provides the resulting orbital space dimensions for each molecule.
+The choice of basis set determines the size of the virtual orbital space and hence the difficulty and accuracy of the OVOS calculation. This section describes the basis sets employed and provides the resulting orbital space dimensions for each molecule. See Basis Set Exchange \cite{pritchard2019a} for the source of all basis sets used in this work.
 
-\subsubsubsection{6--31G}
-This basis set \dots
+\textbf{6--31G:} A split-valence double-zeta basis set developed by Pople et. al. \cite{ditchfield1971a,dill1975a,hehre1972a}. It consists of a minimal basis for core electrons and a double-zeta basis for valence electrons, allowing for improved flexibility in describing electron correlation compared to minimal basis sets.
 
-\subsubsubsection{cc--pVDZ}
-Expanding to a bigger basis set ...
+\textbf{cc--pVDZ:} The correlation-consistent polarized valence double-zeta basis set developed by Dunning \cite{dunning1989}. It includes polarization functions that allow for a better description of electron correlation effects, particularly important for accurate energy calculations.
 
 
 
 
 \section{Reference SCF Calculations}
+\label{sec:ref_scf}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 5.5]
 %   "All calculations use an unrestricted Hartree-Fock (UHF) reference
@@ -255,13 +252,32 @@ Expanding to a bigger basis set ...
 %    these references are given in the following section."
 % ---------------------------------------------------------------
 
-Calculations on Hartree-Fock (HF) are obtained from PySCF with $\texttt{gto}$ and $\texttt{scf}$. This section records the reference restricted HF (RHF), unrestricted (UHF) and MP2 calculations, that serve as benchmarks throughout the results.
-Equal for all molecule initialisation with PySCF is the use of $\texttt{gto.Mole()}$ with spin $0$ (...), charge $0$ (...) and symmetry $\texttt{False}$ (...). 
-In the HF references settings ...
+Calculations on Hartree-Fock (HF) are obtained from PySCF with \code{gto} and \code{scf}. This section records the reference restricted HF (RHF), unrestricted (UHF) and MP2 calculations, that serve as benchmarks throughout the results.
 
-% \begin{table}
-%     ...
-% \end{table}
+Equal for all molecule initialisation with PySCF is the use of \code{gto.Mole()} to set up the molecule, and \code{scf.RHF()} or \code{scf.UHF()} to compute the reference HF energy. The convergence threshold for SCF is set to $10^{-10}$ Hartree, and DIIS acceleration is enabled by default in PySCF \cite{Sun2020}. Symmetry is disabled (\code{mol.symmetry = False}) to avoid symmetry-broken orbitals, and the spin state is explicitly defined for each molecule using the \code{spin} parameter. At spin multiplicity $2S+1$, the number of unpaired electrons is $2S$, so for a singlet state ($S=0$) we set \code{spin = 0}.
+
+The reference energies for each molecule and basis set combination are summarised in Table~\ref{tab:reference_energies}, including the HF energy, the MP2 correlation energy, and the total MP2 energy (HF + correlation). These values serve as benchmarks against which the performance of OVOS is measured in terms of energy recovery.
+
+\begin{table}
+    \centering
+    \caption{Reference UHF and full-space MP2 energies for the test set.}
+    \label{tab:reference_energies}
+    \begin{tabular}{lcccc}
+        \toprule
+        Molecule & Basis & $E_{\rm HF}$ (Hartree) & $E_{\rm corr}^{\rm MP2}$ (Hartree) & $E_{\rm total}^{\rm MP2}$ (Hartree) \\
+        \midrule
+        H\textsubscript{2}O & 6-31G   & ... & ... & ... \\
+        CO       & 6-31G   & ... & ... & ... \\
+        HF       & 6-31G   & ... & ... & ... \\
+        NH\textsubscript{3} & 6-31G   & ... & ... & ... \\
+        H\textsubscript{2}O & cc-pVDZ & ... & ... & ... \\
+        CO       & cc-pVDZ & ... & ... & ... \\
+        HF       & cc-pVDZ & ... & ... & ... \\
+        NH\textsubscript{3} & cc-pVDZ & ... & ... & ... \\
+        % Add more rows as needed for all molecule/basis combinations.
+        \bottomrule
+    \end{tabular}
+\end{table}
 
     % Insert Python
 % from pyscf import gto, scf
@@ -305,28 +321,19 @@ In the HF references settings ...
 %         Orbital increment | Level-shift threshold | Init strategy
 %   Caption: "OVOS calculation settings used throughout this work."
 %
-% [TABLE] Dataset labels:
-%   Columns: File label | Initialisation strategy | Description
-%   Rows: RHF\_init | UHF/RHF canonical | Default start
-%         prev      | Warm-start        | Reuse previous N' solution
-%         random    | Random unitary    | 500-sample global search
-%   Caption: "Meaning of dataset labels used in the \texttt{branch/data/} directory."
-%
 % [LEAD-IN TO §5.7]
 %   "Finally, the file format and directory structure used to store
 %    all results are described in the following section."
 % ---------------------------------------------------------------
 
-This section specifies parameters of the OVOS calculation, ensuring reproducibility. Values given here correspond to the presented data in Chapter~\ref{ch:results}. 
+For all calculations, the molecule is initialized using PySCF with \code{gto.Mole()} and the Hartree-Fock reference is computed as \code{mf} (see Section~\ref{sec:ref_scf}). This section specifies all hyperparameters of the OVOS calculation, ensuring reproducibility.
 
-For all calculations the parameters given cover the molecule's PySCF initialisation as $\texttt{mol}$, to the HF $\texttt{mf}$...
+Equal for all OVOS calculations, the orbital optimization parameters are specified, such that \code{num\_opt\_virtual\_orbs} specifies the number of active virtual spin-orbitals to optimize, \code{mo\_coeff} sets the orbital coefficients, and \code{init\_orbs} selects the initial orbital type (RHF or UHF).
 
-The parameters covering the orbtials we optimize, we give a number of orbitals to optimize for $\texttt{num_opt_virtual_orbs}$, and the orbitals we optimize for $\texttt{mo_coeff}$, for the type of orbitals $\texttt{init_orbs}$ as RHF or UHF.
-
-Further, we set convergence thresholds are given for the change in energy $|\Delta E_{\rm corr}| < 10^{-8}$~Hartree and gradient $|\Delta G_{\rm corr}| < 10^{-6}$~Hartree. We check this threshold for a maximum of 1000 iterations, and for when the convergence threshold triggers we check for consistent convergence for a $\texttt{keep_track_max}$ parameter sat to $50$.
+Convergence is monitored via two criteria: a change in correlation energy $|\Delta E_{\rm corr}| < 10^{-8}$\,Hartree and a change in gradient norm $|\Delta G_{\rm corr}| < 10^{-6}$\,Hartree. Optimization proceeds for a maximum of 1000 iterations. Once convergence is achieved, consistent convergence is verified over \code{keep\_track\_max}~$= 50$ consecutive iterations to ensure stability.
 
 
-$\textcolor{red}{NEED TO CLEAN UP CODE PARAMETERS AND CODE IN ovos.py}$
+%\textcolor{KURed}{NEED TO CLEAN UP CODE PARAMETERS AND CODE IN ovos.py}
 
 
 % Refer to vode in appendix...
@@ -351,6 +358,9 @@ $\textcolor{red}{NEED TO CLEAN UP CODE PARAMETERS AND CODE IN ovos.py}$
 % [SECTION INTRO – 5.7]
 %  "This section seek to specify the VQE claculations..."
 
-...
+All VQE calculations were performed using the SlowQuant branch of the Unrestricted VQE codebase \cite{Kjellgren2026}. The same molecular geometries and basis sets as described in Sections~\ref{sec:geometries} and \ref{sec:basis} were used for all VQE calculations, ensuring a direct comparison with OVOS results. The VQE calculations were executed on the same hardware environment as the OVOS calculations.
 
-% Using code from ... for SlowQuant ... to do Wavefunction ... using ... 
+"Detail ansatz used, number of parameters, optimisation method, convergence criteria, etc."
+
+"Give a flowchart of the VQE calculation steps, from Hamiltonian construction to energy evaluation and parameter update."
+
