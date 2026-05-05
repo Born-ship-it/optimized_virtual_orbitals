@@ -1,0 +1,13 @@
+Using provided thetas for seed 42 instead of random initialization.
+
+Running VQE with OVOS optimization for HF w. bond length 1.825 in basis 6-31G with 75% active virtual orbitals and orbital opt. = True...
+Built molecule HF with basis 6-31G and bond length 1.825 Angstrom.
+Number of electrons: 10, Number of orbitals: 11
+Initial MO coefficients are restricted (RHF-like).
+Optimizing 4 active virtual orbitals (out of 6 total virtual orbitals).
+
+Optimization finished. Final MP2 energy = -99.94287173987296 Hartree. (ΔE_corr = -0.16409328725676264 Hartree)
+OVOS optimized orbitals are unrestricted (UHF-like).
+
+
+Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...

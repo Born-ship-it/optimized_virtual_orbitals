@@ -50,6 +50,45 @@ print(f"✅ OVOS imported from: {ovos_module.__file__}")
 print(f"✅ Load timestamp: {ovos_module._LOAD_TIME}")
 print(f"✅ Module version: {ovos_module._MODULE_VERSION}\n")
 
+# Import keyboard for interactive use
+import signal
+import sys
+import threading
+
+    # In the InterruptHandler class definition - add the missing kill_event:
+class InterruptHandler:
+    """Handle keyboard signals for different behaviors."""
+    
+    def __init__(self):
+        self.skip_event = threading.Event()
+        self.kill_event = threading.Event()  # ← ADD THIS LINE
+    
+    def setup(self):
+        """Setup signal handler for Ctrl+C."""
+        signal.signal(signal.SIGINT, self._sigint_handler)
+        self.ctrl_c_count = 0
+        self.last_interrupt_time = None
+    
+    def _sigint_handler(self, signum, frame):
+        import time
+        current_time = time.time()
+        
+        if self.last_interrupt_time is None or (current_time - self.last_interrupt_time) > 1.0:
+            self.ctrl_c_count = 1
+            self.last_interrupt_time = current_time
+            print("\n  ⏭️  Skip signal received (Ctrl+C), moving to next virtual orbital count...\n")
+            print("     (Press Ctrl+C again quickly to exit completely)\n")
+            self.skip_event.set()
+        else:
+            self.ctrl_c_count += 1
+            if self.ctrl_c_count >= 2:
+                print("\n  ⏹️  Double Ctrl+C pressed, exiting completely...\n")
+                sys.exit(0)
+
+    # Global interrupt handler
+interrupt_handler = InterruptHandler()
+
+
 # Import PySCF
 from pyscf import gto, scf
 
@@ -245,6 +284,7 @@ def plot_OVOS_convergence_from_data(molecule, basis, methods=None):
     # Make a line connecting best of the 3 methods for each virtual orbital count
         # This will show the best convergence path across different initializations
     coordinates_for_lines = []
+    # print(conv_virtual_orbs_data['RHF']['num_virtual_orbitals'])
     for i in range(len(conv_virtual_orbs_data['RHF']['num_virtual_orbitals'])):
         best_energy = None
         best_x = None
@@ -252,6 +292,7 @@ def plot_OVOS_convergence_from_data(molecule, basis, methods=None):
         for method in methods:
             if method in conv_virtual_orbs_data:
                 data_dict = conv_virtual_orbs_data[method]
+                # print(method, data_dict['num_virtual_orbitals'])
                 num_virt_orbs = data_dict['num_virtual_orbitals'][i]
                 MP2_vorb = data_dict['MP2_final_energies'][i]
                 
@@ -265,6 +306,14 @@ def plot_OVOS_convergence_from_data(molecule, basis, methods=None):
     if coordinates_for_lines:
         x_coords, y_coords = zip(*coordinates_for_lines)
         ax_vo.plot(x_coords, y_coords, color='black', linestyle='-', alpha=0.25, label='Best Convergence Path')
+
+        # Save the coordinates in .json file for different basis set size plot
+    best_coor_file_name = f"OVOS_best_coor_{molecule_name}_{basis}.json"
+    best_coor_output_path = project_root / "backup" / "data" / molecule_name / basis / "OVOS"
+    best_coor_output = best_coor_output_path / best_coor_file_name
+    # Save to JSON    
+    with open(best_coor_output, "w") as f:
+        json.dump(coordinates_for_lines, f, indent=2, cls=NumpyEncoder)
 
     # Reference lines
         # MP2 correlation energy for full space
@@ -459,6 +508,162 @@ def plot_OVOS_convergence_histories(molecule, basis, methods=None):
         print(f"✅ Plot saved to: {output_file}")
         plt.close()
         
+
+
+# Plot basis set best MP2 corr. energy vs num opt virt
+def plot_OVOS_basis_set_best(molecule, basis_sets):
+
+    # Get data
+    molecule_name = get_molecule_name(molecule)
+
+    # Init list for each basis set in basis_sets
+    len_basis_sets = len(basis_sets)
+    lst_basis_sets = ""
+    lst_full_space_size = ""
+    keep_track_lst = 0
+    bs_best = {f"{basis}": None for basis in basis_sets}
+    for basis in basis_sets:
+            # file
+        best_coor_file_name = f"OVOS_best_coor_{molecule_name}_{basis}.json"
+        best_coor_output_path = project_root / "backup" / "data" / molecule_name / basis / "OVOS"
+        best_coor_output = best_coor_output_path / best_coor_file_name
+            # Input
+        json_file = best_coor_output 
+        if json_file.exists():
+            with open(json_file, "r") as f:
+                data_best = json.load(f)
+            print(f"✅ Loaded data from {json_file}")
+        else:
+            print(f"⚠️  data not found at {json_file}")
+
+        # Data to procentages... as they do not fit...
+            # Need MP2 full space and full space size
+        molecule_data_output = best_coor_output_path / "molecule_data.json"
+            # Input
+        json_file = molecule_data_output 
+        if json_file.exists():
+            with open(json_file, "r") as f:
+                data = json.load(f)
+                MP2_fs_e_corr = data["MP2_e_corr"]
+                num_electrons = data["num_electrons"]
+                full_space_size = data["full_space_size"]
+                active_space_size = full_space_size - num_electrons//2
+                E_corr_MP2 = MP2_fs_e_corr/MP2_fs_e_corr
+                E_corr_OOMP2 = data["OOMP2_e_corr"]
+            # print(f"✅ Loaded data from {json_file}")
+        else:
+            print(f"⚠️  data not found at {json_file}")
+
+
+        if E_corr_OOMP2 == None:
+            E_corr_OOMP2 = None
+        else:
+            E_corr_OOMP2 =  E_corr_OOMP2/MP2_fs_e_corr
+
+        lst_basis_sets += str(basis)
+        lst_full_space_size += str(full_space_size)
+            
+        if keep_track_lst == 0:
+            lst_basis_sets += ", "
+            lst_full_space_size += ", "
+        keep_track_lst += 1
+        
+            # Transform data
+                # Get the list of y-coordinates in data_best
+        x_coor_before, y_coor_before = zip(*data_best)
+        y_coor_after = np.array(y_coor_before)/MP2_fs_e_corr
+        x_corr_after = np.arange(2,active_space_size*2 + 2, 2)/(active_space_size*2)
+
+
+        # Marker styles
+        marker_style = {
+            'RHF': ('D', -0.5),
+            'prev': ('s', 0.0),
+            'random': ('^', 0.5)
+        }  
+        
+        mark_style = [""]*len(x_coor_before)
+        for i, e in enumerate(x_coor_before-x_corr_after*(active_space_size*2)):
+            if e == -0.5:
+                mark_style[i] = 'D'
+            elif e == 0.0:
+                mark_style[i] = 's'
+            else:
+                mark_style[i] = '^'
+
+            # Save to list
+        bs_best[f"{basis}"] = [x_corr_after, y_coor_after, mark_style]
+
+    # Initialize figure
+    fig_size_length = 12
+    fig_vo, ax_vo = plt.subplots(figsize=(fig_size_length, 7))
+    
+
+    # Title
+    suptitle_txt = f'OVOS Basis set convergence: {molecule_name}/({lst_basis_sets}), Full Space ({num_electrons}e,({lst_full_space_size})o)'
+    fig_vo.suptitle(suptitle_txt, fontsize=16)
+    
+    # lines
+    linestyles = ['-', '--']
+    for basis, linestyle in zip(basis_sets,linestyles):
+        x_coords, y_coords, _ = bs_best[f"{basis}"]
+        ax_vo.plot(x_coords, y_coords, color='black', linestyle=linestyle, alpha=0.25, label=f'{basis}')
+
+    # Points
+    for basis, linestyle in zip(basis_sets,linestyles):
+        x_coords, y_coords, mark_style = bs_best[f"{basis}"]
+        for i in range(len(x_coords)):
+            ax_vo.scatter(x_coords[i], y_coords[i], marker=mark_style[i], color='black', alpha=0.25)
+
+    y_max = 1
+    #     # for full space MP2 correlation energy
+    # if E_corr_MP2 != None:
+    #     plt.axhline(E_corr_MP2, color='red', linestyle='--', label='Full Space MP2', linewidth=2, alpha=0.75)
+    #     y_max = E_corr_MP2
+
+    #     # for full space OO-MP2 correlation energy
+    # if E_corr_OOMP2 != None:
+    #     plt.axhline(E_corr_OOMP2, color='blue', linestyle='--', label='Full Space OO-MP2', linewidth=2, alpha=0.75)
+    #     y_max = E_corr_OOMP2
+    
+    y_max += 0.01
+
+    # axis lims
+    ax_vo.set_xlim(0, 1)
+    ax_vo.set_ylim(y_max, 0)
+    ax_vo.set_xlabel('Number of Active Unoccupied Orbitals [%]')
+    ax_vo.set_ylabel('Correlation Energy [%]')
+    
+    # Legend for markers
+    methods = ["RHF", "prev", "random"]
+    for method in methods:
+        marker, x_offset = marker_style[method]
+        ax_vo.scatter([], [], marker=marker, color='black', label=f'Start Guess: {method}')
+
+    # Grid with colored intervals
+    for i in range(1, active_space_size + 1):
+        x_start = i*2 - 1
+        x_end = i*2 + 1
+        if i % 2 == 0:
+            ax_vo.axvspan(x_start, x_end, color='lightgray', alpha=0.2)
+    
+    ax_vo.grid(which='major', axis='y', linestyle='--', alpha=0.7)
+    ax_vo.minorticks_on()
+    ax_vo.grid(which='minor', axis='y', linestyle=':', alpha=0.5)
+    
+    ax_vo.legend(loc='upper right')
+    plt.tight_layout()
+    
+    # Save figure
+    output_dir = project_root / "backup" / "images" / molecule_name
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_file = output_dir / f"ovos_basis_set_{molecule_name}_{basis_sets}.png"
+    plt.savefig(output_file, dpi=150)
+    print(f"✅ Plot saved to: {output_file}\n")
+    plt.close()
+
+
+
 
 # Plot MO coefficient heat-maps for the initial and final orbitals of OVOS, and their differences, for a given molecule, basis set, and method (RHF, prev, random)
 def plot_OVOS_MO_coefficients(molecule, basis, method="RHF"):
@@ -1262,6 +1467,12 @@ def run_ovos_random_attempt(molecule, basis, num_opt_virtual_orbs, mo_coeffs_tri
     dict
         Results dictionary for this attempt
     """
+
+    if num_iter_max is None:
+        num_iter_max = 1000
+    if num_iter_max <= 25:
+        num_iter_max = 250
+
     # Reimport for worker process
     from ovos.ovos import OVOS
     from pyscf import gto, scf
@@ -1369,7 +1580,7 @@ def ovos_object(molecule, basis, method="RHF"):
         from concurrent.futures import ProcessPoolExecutor
         
         virt_orb_counts = list(range(1, max_num_opt_virt + 1))
-        
+
         with ProcessPoolExecutor(max_workers=num_workers) as executor:
             futures = {
                 executor.submit(run_ovos_for_virtual_orbs, molecule, basis, method, num_virt): num_virt
@@ -1449,14 +1660,16 @@ def ovos_object(molecule, basis, method="RHF"):
                         print(f"  ⚠️  RHF data not found for {2*num_opt_virtual_orbs} spin-orbs, no early stopping")
 
                 from concurrent.futures import ProcessPoolExecutor
-                import threading
 
                 num_cores = os.cpu_count()
                 num_workers = min(10, num_random_attempts)
-                
+
                 # Thread-safe flag for early stopping
-                stop_attempts = threading.Event()
+                stop_flag = threading.Event()
     
+                # Thread-safe flag for early stopping (keep this - it's for the main process)
+                skip_to_next_virtual_orbs = False
+                
                 with ProcessPoolExecutor(max_workers=num_workers) as executor:
                     futures = {
                         executor.submit(
@@ -1472,16 +1685,30 @@ def ovos_object(molecule, basis, method="RHF"):
                     attempt_results = {}
                     best_attempt_idx = None
                     best_energy = None
+                    best_iter = None
+                    keep_count = 0  # Count how many attempts we have done without finding a better
                     completed_count = 0
+                    
+                    # Use futures.as_completed() to properly iterate through results as they finish
+                    from concurrent.futures import as_completed
+    
+                    for future in as_completed(futures):
+                        # Check skip signal
+                        if interrupt_handler.skip_event.is_set():
+                            print("\n  ⏭️  Skip signal received, stopping attempts early...\n")
+                            interrupt_handler.skip_event.clear()  # Clear the event for future runs
+                            skip_to_next_virtual_orbs = True
 
-                    for future in futures:
-                        if stop_attempts.is_set():
-                            # Cancel remaining futures
+                            stop_flag.set()  # Signal all workers to stop
+
                             for f in futures:
-                                f.cancel()
+                                f.cancel()  # Cancel any remaining futures
+                            
+                            executor.shutdown(wait=False, cancel_futures=True)
                             break
                         
                         attempt_idx = futures[future]
+
                         try:
                             result = future.result()
                             attempt_results[attempt_idx] = result
@@ -1526,12 +1753,19 @@ def ovos_object(molecule, basis, method="RHF"):
                                 if (energy_gap < margin and iter_gap <= 0 and keep_count >= min_attempts) or keep_count >= min_attempts:  
                                     print(f"\n  ✅ Early stopping: Found result {abs(energy_gap):.6f} Ha better than RHF!")
                                     print(f"     Completed {completed_count}/{num_random_attempts} attempts\n")
-                                    stop_attempts.set()
+                                    executor.shutdown(wait=False, cancel_futures=True)
+                                    break
                             
                         except Exception as e:
                             print(f"  ⚠️  Attempt {attempt_idx} failed: {e}")
                 
-                # Use best attempt result
+
+                # After executor closes, check flag
+                if skip_to_next_virtual_orbs:
+                    print(f"  Skipped all attempts for {2*num_opt_virtual_orbs} spin-orbitals\n")
+                    continue  # ← Skip to next while iteration (next virtual orbital count)
+
+                # Only process best result if we didn't skip
                 if best_attempt_idx is not None:
                     best_result = attempt_results[best_attempt_idx]
 
@@ -1539,6 +1773,17 @@ def ovos_object(molecule, basis, method="RHF"):
                     E_corr_iter = best_result['E_corr_iter']
                     E_corr_mo = best_result['E_corr_mo']
                     stop_reason = best_result['stop_reason']
+
+                    # Store results
+                    diff_alpha_beta = np.max(np.abs(E_corr_mo[0] - E_corr_mo[1]))
+                    alpha_beta_check = "True" if diff_alpha_beta > 1e-4 else "False"
+
+                    lst_E_corr_virt_orbs[0].append(E_corr_hist)
+                    lst_E_corr_virt_orbs[1].append(num_opt_virtual_orbs)
+                    lst_E_corr_virt_orbs[2].append(E_corr_iter)
+                    lst_E_corr_virt_orbs[3].append(alpha_beta_check)
+                    lst_E_corr_virt_orbs[4].append(E_corr_mo)
+                    lst_E_corr_virt_orbs[5].append(stop_reason)
                     
                     print(f"  ✅ Best: Corr. energy = {best_energy:.6f} Ha, "
                         f"ratio to MP2 = {best_energy/E_corr_MP2:.4f}, "
@@ -1546,7 +1791,7 @@ def ovos_object(molecule, basis, method="RHF"):
                 else:
                     print(f"  ❌ No successful attempts for {2*num_opt_virtual_orbs} spin-orbs, skipping...\n")
                     continue
-
+                
             # ===== PREV METHOD (sequential with warm-start) =====
             elif method == "prev":
                 if num_opt_virtual_orbs == 1:
@@ -1578,16 +1823,16 @@ def ovos_object(molecule, basis, method="RHF"):
                 # Update mo_coeffs for next iteration
                 mo_coeffs = E_corr_mo
 
-            # Store results
-            diff_alpha_beta = np.max(np.abs(E_corr_mo[0] - E_corr_mo[1]))
-            alpha_beta_check = "True" if diff_alpha_beta > 1e-4 else "False"
+                # Store results
+                diff_alpha_beta = np.max(np.abs(E_corr_mo[0] - E_corr_mo[1]))
+                alpha_beta_check = "True" if diff_alpha_beta > 1e-4 else "False"
 
-            lst_E_corr_virt_orbs[0].append(E_corr_hist)
-            lst_E_corr_virt_orbs[1].append(2*num_opt_virtual_orbs)
-            lst_E_corr_virt_orbs[2].append(E_corr_iter)
-            lst_E_corr_virt_orbs[3].append(alpha_beta_check)
-            lst_E_corr_virt_orbs[4].append(E_corr_mo)
-            lst_E_corr_virt_orbs[5].append(stop_reason)
+                lst_E_corr_virt_orbs[0].append(E_corr_hist)
+                lst_E_corr_virt_orbs[1].append(2*num_opt_virtual_orbs)
+                lst_E_corr_virt_orbs[2].append(E_corr_iter)
+                lst_E_corr_virt_orbs[3].append(alpha_beta_check)
+                lst_E_corr_virt_orbs[4].append(E_corr_mo)
+                lst_E_corr_virt_orbs[5].append(stop_reason)
 
     # Save to JSON    
     with open(output_file, "w") as f:
@@ -1958,6 +2203,9 @@ def save_molecule_reference_data(molecule, basis):
 
 
 if __name__ == "__main__":
+    
+    interrupt_handler.setup()
+
     molecules = [
         "Li .0 .0 .0; Li .0 .0 2.673",  # Li2 molecule 0:1
         "H .0 .0 .0; F .0 .0 0.917",  # HF molecule    1:2
@@ -1980,10 +2228,10 @@ if __name__ == "__main__":
     # Debug run
     # run_ovos_for_virtual_orbs(molecules[2], basis_sets[0], method="RHF", num_opt_virtual_orbs=6)
 
-    if False:
+    if True:
         for basis in basis_sets[1:2]:   # Done: 6-31G
-            for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
-                for method in methods[0:2]:
+            for molecule in molecules[0:1]:  # Done: HF, H2O | Todo: Li2, CO, NH3
+                for method in methods[2:3]:  # "random"
                     ovos_object(molecule, basis, method)
 
                 try:
@@ -1991,19 +2239,27 @@ if __name__ == "__main__":
                 except Exception as e:
                     print(f"❌ Failed for {molecule}/{basis}: {e}\n")
     if False:
-        for basis in basis_sets[1:2]:   # Done: 6-31G
+        for basis in basis_sets:   # Done: 6-31G
             for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
 
                 # After running ovos_object(), plot the results
                 plot_OVOS_convergence_from_data(molecule, basis, methods=["RHF", "prev", "random"])
+                
                     # Plot convergence histories for all methods on the same plot for comparison
-                plot_OVOS_convergence_histories(molecule, basis, methods=["RHF", "prev", "random"])
-    if True:
-        for basis in basis_sets:   # Done: 6-31G
-            for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
+                # plot_OVOS_convergence_histories(molecule, basis, methods=["RHF", "prev", "random"])
 
-                # Plot MO coefficient convergence for all methods
-                plot_OVOS_MO_coefficient_diff_MP2(molecule, basis)
+    if False:
+        for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
+
+            # After running ovos_object(), plot the results
+            plot_OVOS_basis_set_best(molecule, basis_sets)
+
+                
+    if False:
+        for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
+
+            # Plot MO coefficient convergence for all methods
+            plot_OVOS_MO_coefficient_diff_MP2(molecule, basis_sets)
 
 
     # Test convergence criteria and early stopping for "RHF" method
