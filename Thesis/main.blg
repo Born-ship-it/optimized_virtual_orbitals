@@ -3,46 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: unsrtnat.bst
 Database file #1: bibliography.bib
-Warning--I didn't find a database entry for "Szabo1989"
-You've used 24 entries,
+You've used 22 entries,
             2481 wiz_defined-function locations,
-            743 strings with 10444 characters,
-and the built_in function-call counts, 11264 in all, are:
-= -- 882
-> -- 794
-< -- 15
-+ -- 291
-- -- 243
-* -- 996
-:= -- 1910
-add.period$ -- 96
-call.type$ -- 24
-change.case$ -- 46
-chr.to.int$ -- 24
-cite$ -- 24
-duplicate$ -- 464
-empty$ -- 891
-format.name$ -- 285
-if$ -- 2311
+            724 strings with 9913 characters,
+and the built_in function-call counts, 10466 in all, are:
+= -- 813
+> -- 752
+< -- 14
++ -- 275
+- -- 231
+* -- 931
+:= -- 1779
+add.period$ -- 88
+call.type$ -- 22
+change.case$ -- 42
+chr.to.int$ -- 22
+cite$ -- 22
+duplicate$ -- 426
+empty$ -- 820
+format.name$ -- 269
+if$ -- 2141
 int.to.chr$ -- 1
-int.to.str$ -- 25
-missing$ -- 26
-newline$ -- 151
-num.names$ -- 74
-pop$ -- 168
+int.to.str$ -- 23
+missing$ -- 24
+newline$ -- 139
+num.names$ -- 68
+pop$ -- 156
 preamble$ -- 1
-purify$ -- 24
+purify$ -- 22
 quote$ -- 0
-skip$ -- 273
+skip$ -- 251
 stack$ -- 0
-substring$ -- 561
-swap$ -- 58
+substring$ -- 524
+swap$ -- 54
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 159
+type$ -- 145
 warning$ -- 0
-while$ -- 81
+while$ -- 75
 width$ -- 0
-write$ -- 364
-(There was 1 warning)
+write$ -- 334

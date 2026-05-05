@@ -12,25 +12,25 @@
 \contentsline {chapter}{\numberline {2}Background}{5}{chapter.2}%
 \contentsline {section}{\numberline {2.1}The Electronic Structure Problem}{5}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Hartree-Fock Theory}{6}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Restricted and Unrestricted Formalism}{6}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.1}Restricted and Unrestricted Formalism}{7}{subsection.2.2.1}%
 \contentsline {section}{\numberline {2.3}Molecular Orbital Integrals}{7}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}One-Electron Integrals}{7}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Two-Electron Integrals}{7}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.2}Two-Electron Integrals}{8}{subsection.2.3.2}%
 \contentsline {subsection}{\numberline {2.3.3}Integral Notation: Chemists' vs.\ Physicists' Conventions}{8}{subsection.2.3.3}%
 \contentsline {section}{\numberline {2.4}Møller-Plesset Perturbation Theory}{8}{section.2.4}%
 \contentsline {subsection}{\numberline {2.4.1}MP2 Correlation Energy}{8}{subsection.2.4.1}%
 \contentsline {subsection}{\numberline {2.4.2}High-Order Amplitudes and T1 definition}{9}{subsection.2.4.2}%
 \contentsline {subsection}{\numberline {2.4.3}Spin-Orbital Formulation}{9}{subsection.2.4.3}%
-\contentsline {subsection}{\numberline {2.4.4}MP2 Limitations and Applicability}{9}{subsection.2.4.4}%
-\contentsline {subsection}{\numberline {2.4.5}Computational Scaling Motivation}{9}{subsection.2.4.5}%
+\contentsline {subsection}{\numberline {2.4.4}MP2 Limitations and Applicability}{10}{subsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.4.5}Computational Scaling Motivation}{10}{subsection.2.4.5}%
 \contentsline {section}{\numberline {2.5}Orbital Space}{10}{section.2.5}%
 \contentsline {subsection}{\numberline {2.5.1}Partitioning and Index Notation}{10}{subsection.2.5.1}%
-\contentsline {section}{\numberline {2.6}Spin-Orbital Formalism}{11}{section.2.6}%
-\contentsline {section}{\numberline {2.7}Orbital Rotations and Stationarity}{12}{section.2.7}%
-\contentsline {subsection}{\numberline {2.7.1}Orbital Rotation}{13}{subsection.2.7.1}%
+\contentsline {section}{\numberline {2.6}Spin-Orbital Formalism - Maybe delete?}{12}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Orbital Rotations and Stationarity -> In theory only?}{12}{section.2.7}%
+\contentsline {subsection}{\numberline {2.7.1}Orbital Rotation}{12}{subsection.2.7.1}%
 \contentsline {subsection}{\numberline {2.7.2}The Stationarity Principle}{13}{subsection.2.7.2}%
 \contentsline {subsection}{\numberline {2.7.3}Optimization Strategies}{13}{subsection.2.7.3}%
-\contentsline {section}{\numberline {2.8}Brueckner Orbitals}{14}{section.2.8}%
+\contentsline {section}{\numberline {2.8}Brueckner Orbitals -> In theory only?}{14}{section.2.8}%
 \contentsline {subsection}{\numberline {2.8.1}Connection to Orbital-Optimised MP2 methods}{14}{subsection.2.8.1}%
 \contentsline {section}{\numberline {2.9}Quantum Computing and Orbital Space}{15}{section.2.9}%
 \contentsline {subsection}{\numberline {2.9.1}Second Quantisation and Qubit Mapping}{15}{subsection.2.9.1}%
@@ -122,20 +122,20 @@
 \contentsline {section}{\numberline {8.4}Larger Molecular Systems}{51}{section.8.4}%
 \contentsline {section}{\numberline {8.5}Benchmarking and Validation}{51}{section.8.5}%
 \contentsline {chapter}{Bibliography}{53}{section.8.5}%
-\contentsline {chapter}{\numberline {A}Mathematical Derivations}{57}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Spin-Orbital MP2 Energy from the Hylleraas Functional}{57}{section.A.1}%
-\contentsline {section}{\numberline {A.2}Derivation of the Orbital Rotation Gradient}{57}{section.A.2}%
-\contentsline {section}{\numberline {A.3}Derivation of the Orbital Rotation Hessian}{57}{section.A.3}%
-\contentsline {section}{\numberline {A.4}Matrix Exponential for the Rotation Matrix}{57}{section.A.4}%
-\contentsline {section}{\numberline {A.5}Notation Conventions for Two-Electron Integrals}{57}{section.A.5}%
-\contentsline {chapter}{\numberline {B}Additional Data and Figures}{59}{appendix.B}%
-\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{59}{section.B.1}%
-\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{59}{section.B.2}%
-\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{59}{section.B.3}%
-\contentsline {section}{\numberline {B.4}Hessian Eigenvalue Analysis}{59}{section.B.4}%
-\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{61}{appendix.C}%
-\contentsline {section}{\numberline {C.1}Repository and Version Information}{61}{section.C.1}%
-\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{61}{section.C.2}%
-\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{61}{section.C.3}%
-\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{61}{section.C.4}%
-\contentsline {section}{\numberline {C.5}Profiling Results}{61}{section.C.5}%
+\contentsline {chapter}{\numberline {A}Mathematical Derivations}{55}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Spin-Orbital MP2 Energy from the Hylleraas Functional}{55}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Derivation of the Orbital Rotation Gradient}{55}{section.A.2}%
+\contentsline {section}{\numberline {A.3}Derivation of the Orbital Rotation Hessian}{55}{section.A.3}%
+\contentsline {section}{\numberline {A.4}Matrix Exponential for the Rotation Matrix}{55}{section.A.4}%
+\contentsline {section}{\numberline {A.5}Notation Conventions for Two-Electron Integrals}{55}{section.A.5}%
+\contentsline {chapter}{\numberline {B}Additional Data and Figures}{57}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{57}{section.B.1}%
+\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{57}{section.B.2}%
+\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{57}{section.B.3}%
+\contentsline {section}{\numberline {B.4}Hessian Eigenvalue Analysis}{57}{section.B.4}%
+\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{59}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Repository and Version Information}{59}{section.C.1}%
+\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{59}{section.C.2}%
+\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{59}{section.C.3}%
+\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{59}{section.C.4}%
+\contentsline {section}{\numberline {C.5}Profiling Results}{59}{section.C.5}%
