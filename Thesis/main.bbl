@@ -5,12 +5,6 @@
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[Adamowicz and Bartlett(1987)]{Adamowicz1987}
-L.~Adamowicz and R.~J. Bartlett.
-\newblock Optimized virtual orbital space for high-level correlated calculations.
-\newblock \emph{J. Chem. Phys.}, 86\penalty0 (11):\penalty0 6314--6324, 1987.
-\newblock \doi{10.1063/1.452468}.
-
 \bibitem[Sherrill and Schaefer(1999)]{Sherrill1999}
 C.~David Sherrill and Henry~F. Schaefer.
 \newblock The configuration interaction method: Advances in highly correlated approaches.
@@ -40,6 +34,12 @@ Yudong Cao, Jonathan Romero, Jonathan~P. Olson, Matthias Degroote, Peter~D. John
 \newblock Quantum chemistry in the age of quantum computing.
 \newblock \emph{Chem. Rev.}, 119:\penalty0 10856--10915, 2019.
 \newblock \doi{10.1021/acs.chemrev.8b00803}.
+
+\bibitem[Adamowicz and Bartlett(1987)]{Adamowicz1987}
+L.~Adamowicz and R.~J. Bartlett.
+\newblock Optimized virtual orbital space for high-level correlated calculations.
+\newblock \emph{J. Chem. Phys.}, 86\penalty0 (11):\penalty0 6314--6324, 1987.
+\newblock \doi{10.1063/1.452468}.
 
 \bibitem[L{\"o}wdin(1955)]{Lowdin1955}
 Per-Olov L{\"o}wdin.

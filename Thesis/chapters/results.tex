@@ -126,11 +126,11 @@ PySCF gives me an opportunity to validate my implementation of full space MP2 by
         H$_2$O   & -2.04003E-01 & -2.04003E-01    & 2.29192E-9   \\
         HF       & -2.03781E-01 & -2.03781E-01    & 1.23463E-10  \\
         NH3      & -1.88825E-01 & -1.88825E-01    & 8.31300E-10  \\
-        Li2      & ...          & ...             & ...          \\
+        Li2      & -2.00076E-02 & -2.00076E-02    & 1.11200E-9   \\
         \hline
     \end{tabular}
     \caption{Validation of the OVOS implementation against PySCF \code{mp.MP2}.
-    Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the cc--pVDZ basis for this validation.}
+    Deviations $\Delta E$ are within numerical precision ($|\delta E| <\eqsim 10^{-8}$~Hartree). All molecules are of the cc--pVDZ basis for this validation.}
     \label{tab:validation}
 \end{table}
 
@@ -139,6 +139,7 @@ It is observed that CO's deviation is barely at acceptable range of $10^{-8}$~Ha
 Verifying that the full-space MP2 energies match PySCF's results, any differences observed in the OVOS results are due to the orbital optimization and active space truncation, rather than a bug in the MP2 implementation. 
 
 \section{Energy Recovery as a Function of Active Virtual Orbital Count}
+\label{sec:energy-recovery}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.2]
 %   "This section presents the central result of the thesis: the fraction
@@ -174,17 +175,15 @@ Verifying that the full-space MP2 energies match PySCF's results, any difference
 %    is quantified in the following section."
 % ---------------------------------------------------------------
 
-The results of the OVOS algorithm for all test molecules in the 6--31G and cc--pVDZ basis sets for start guess RHF, are presented in this section. Explore the correlation energy recovered by OVOS as a function of the number of active unoccupied orbitals $N'_{\rm act.unocc}$.  
+The results of the OVOS algorithm for all test molecules in the cc--pVDZ basis sets for start guess RHF, are presented in this section. Explore the correlation energy recovered by OVOS as a function of the number of active unoccupied orbitals $N'_{\rm act.unocc}$.  
 
 \subsubsection*{CO}
 
-The OVOS algorithm results for CO in the cc--pVDZ basis through each $N'_{\rm act.unocc}$ to full space of active unoccupied orbitals are shown in Figure~\ref{fig:CO_cc-pVDZ_ovos}. OVOS recovers increasingly more correlation energy $E_{\rm corr}^{\rm OVOS}$ as $N'_{\rm act.unocc}$ increases, with the percentage of correlation energy recovered reaching 100\% at $N'_{\rm act.unocc} = 21$. Reaching 90\% recovery at $N'_{\rm act.unocc} = 13$, which is approximately 60\% of the total number of active unoccupied orbitals. 
+We observe that OVOS nearly steadily recovers increasingly more of the total correlation energy $E_{\rm corr}^{\rm OVOS}$ as $N'_{\rm act.unocc}$ increases, with the percentage of correlation energy recovered reaching 100\% at $N'_{\rm act.unocc} = 21$. Reaching 90\% recovery at $N'_{\rm act.unocc} = 13$, which is approximately 62\% of the total number of active unoccupied orbitals. The OVOS algorithm results for $CO$ in the cc--pVDZ basis through each $N'_{\rm act.unocc}$ to full space of active unoccupied orbitals are shown in Figure~\ref{fig:CO_cc-pVDZ_ovos}. 
 
-We mark the difference the OVOS algorithm makes at each $N'_{\rm act.unocc}$ from initial point with iterations as the line connecting the points for each $N'_{\rm act.unocc}$, highlighted in Figure~\ref{fig:CO_cc-pVDZ_ovos} as the points for each $N'_{\rm act.unocc}$. The most recovered correlation energy is between $N'_{\rm act.unocc} = 3$ and $N'_{\rm act.unocc} = 10$ with $\Delta E_{\rm corr}^{\rm OVOS} \simeq 0.1$ Hartree. Convergence is nearly achieved in all cases, $N'_{\rm act.unocc} = 6$ being nonconvergened reaching maximum iterations. Iteration counts somewhat increases as $N'_{\rm act.unocc}$ reaches 50\% of the total number of active unoccupied orbitals and decreases thereafter. 
+We mark the difference the OVOS algorithm make, amount of correlation energy recovered, at each $N'_{\rm act.unocc}$ by an initial point with iterations to the final point for each $N'_{\rm act.unocc}$ in Figure~\ref{fig:CO_cc-pVDZ_ovos} as the points for each $N'_{\rm act.unocc}$. The most recovered correlation energy is between $N'_{\rm act.unocc} = 3$ and $N'_{\rm act.unocc} = 10$ with $\Delta E_{\rm corr}^{\rm OVOS} \simeq 0.1$ Hartree. Convergence is nearly achieved in all cases, $N'_{\rm act.unocc} = 6$ being non convergened reaching maximum iterations, see Appendix~\ref{app:CO_cc-pVDZ_ovos_6_iterations}. Iteration counts show no clear pattern as $N'_{\rm act.unocc}$ reaches the total number of active unoccupied orbitals. The correlation energy iterations are plottet in Appendix~\ref{app:CO_cc-pVDZ_ovos_iterations} to show the convergence behaviour of the OVOS algorithm for CO in the cc--pVDZ basis at each $N'_{\rm act.unocc}$.
 
 Shortcomings of the OVOS algorithm are observed at $N'_{\rm act.unocc} = 11, 12$ and $N'_{\rm act.unocc} = 13$ for start guess RHF, where the algorithm fails to converge at an agreeable correlation energy, and instead converges to a local minimum with a much higher correlation energy. This suggest that the orbital optimization landscape has multiple local minima, which can trap the algorithm if the initial guess is not close enough to the global minimum. This is further explored in Section 6.4, where the effect of different initialisation strategies is investigated.
-
-The correlation energy iterations are plottet in Appendix~\ref{app:CO_cc-pVDZ_ovos_iterations} to show the convergence behaviour of the OVOS algorithm for CO in the cc--pVDZ basis at each $N'_{\rm act.unocc}$.
 
 \begin{figure}
     \centering
@@ -196,8 +195,10 @@ The correlation energy iterations are plottet in Appendix~\ref{app:CO_cc-pVDZ_ov
 
 \subsubsection*{H2O}
 
-"Comment on the resulting data illustrated in Figure~\ref{fig:H2O_cc-pVDZ_ovos}, THIS PLOT NEEDED TO BE CORRECTED TO ONLY SHOW start guess RHF..."
+OVOS recovers increasingly more of the total correlation energy $E_{\rm corr}^{\rm OVOS}$ as $N'_{\rm act.unocc}$ increases, with the percentage of correlation energy recovered reaching 100\% at $N'_{\rm act.unocc} = 19$. Reaching 90\% recovery at $N'_{\rm act.unocc} = 13$, which is approximately 68\% of the total number of active unoccupied orbitals. The OVOS algorithm results for $H_2O$ in the cc--pVDZ basis through each $N'_{\rm act.unocc}$ to full space of active unoccupied orbitals are shown in Figure~\ref{fig:H2O_cc-pVDZ_ovos}. 
 
+The diffrence OVOS makes for $H_2O$ at each $N'_{\rm act.unocc}$ is marked in Figure~\ref{fig:H2O_cc-pVDZ_ovos}. The most recovered correlation energy is for $N'_{\rm act.unocc} \in \{3, 4, 9, 10\}$ with $\Delta E_{\rm corr}^{\rm OVOS} \simeq 0.1$ Hartree. Convergence is achieved in nearly all cases, except for $N'_{\rm act.unocc} = 13$, which is observed to stop at a correlation energy between $N'_{\rm act.unocc} = 12$ and $N'_{\rm act.unocc} = 14$, as seen in Figure~\ref{fig:H2O_cc-pVDZ_ovos}. Iteration counts show no clear pattern as $N'_{\rm act.unocc}$ increases, with the highest iteration count at $N'_{\rm act.unocc} = 14$ for converged start guess RHF. The correlation energy iterations are plottet in Appendix~\ref{app:H2O_cc-pVDZ_ovos_iterations} to show the convergence behaviour of the OVOS algorithm for H2O in the cc--pVDZ basis at each $N'_{\rm act.unocc}$.
+ 
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{figures//OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ.png}
@@ -208,9 +209,10 @@ The correlation energy iterations are plottet in Appendix~\ref{app:CO_cc-pVDZ_ov
 
 \subsubsection*{HF}
 
-"Comment on the resulting data illustrated in Figure~\ref{fig:HF_cc-pVDZ_ovos}, THIS PLOT NEEDED TO BE CORRECTED TO ONLY SHOW start guess RHF..."
+OVOS recovers increasingly more of the total correlation energy $E_{\rm corr}^{\rm OVOS}$ as $N'_{\rm act.unocc}$ increases, with the percentage of correlation energy recovered reaching 100\% at $N'_{\rm act.unocc} = 14$. Reaching 90\% recovery at $N'_{\rm act.unocc} = 9$, which is approximately 64\% of the total number of active unoccupied orbitals. The OVOS algorithm results for HF in the cc--pVDZ basis through each $N'_{\rm act.unocc}$ to full space of active unoccupied orbitals are shown in Figure~\ref{fig:HF_cc-pVDZ_ovos}.     
 
-% The OVOS algorithm results for HF in the cc--pVDZ basis through each $N'_{\rm act.unocc}$ to full space of active unoccupied orbitals are shown in Table~\ref{tab:HF_6-31G_results}. OVOS recovers increasingly more correlation energy $E_{\rm corr}^{\rm OVOS}$ as $N'_{\rm act.unocc}$ increases, with the percentage of correlation energy recovered reaching 100\% at $N'_{\rm act.unocc} = 6$. We mark the difference the OVOS algorithm makes at each $N'_{\rm act.unocc}$ from initial MP2 as $\Delta E_{\rm corr}^{\rm OVOS}$, highlighted in Figure~\ref{fig:HF_6-31G_ovos} as the points for each $N'_{\rm act.unocc}$. The most recovered correlation energy is at $N'_{\rm act.unocc} = 4$ with $\Delta E_{\rm corr}^{\rm OVOS} = -5.49038e-2$. Convergence is achieved in all cases, with iteration counts increasing as $N'_{\rm act.unocc}$ reaches 50\% of the total number of active unoccupied orbitals and decreases thereafter.
+The most correlation energy recovered by OVOS for HF is at $N'_{\rm act.unocc} = 3,4, 9$ with $\Delta E_{\rm corr}^{\rm OVOS} \simeq 0.625$ Hartree. Convergence is achieved in all cases, with iteration counts increasing and decreasing as $N'_{\rm act.unocc}$ increases. The correlation energy iterations are plottet in Appendix~\ref{app:HF_cc-pVDZ_ovos_iterations} to show the convergence behaviour of the OVOS algorithm for HF in the cc--pVDZ basis at each $N'_{\rm act.unocc}$.
+
 
 % \begin{table}[ht]
 %     \centering
@@ -240,7 +242,9 @@ The correlation energy iterations are plottet in Appendix~\ref{app:CO_cc-pVDZ_ov
 
 \subsubsection*{NH3}
 
-"Comment on the resulting data illustrated in Figure~\ref{fig:NH3_cc-pVDZ_ovos}, THIS PLOT NEEDED TO BE CORRECTED TO ONLY SHOW start guess RHF..."
+OVOS recovers increasingly more of the total correlation energy $E_{\rm corr}^{\rm OVOS}$ as $N'_{\rm act.unocc}$ increases, except the convergence behavior for NH3 is less straightforward, we observe outliers at higher values of $N'_{\rm act.unocc}$. It still holds that the percentage of correlation energy recovered reaches 100\% at $N'_{\rm act.unocc} = 24$, and we reach 90\% recovery at $N'_{\rm act.unocc} = 12$, which is approximately 50\% of the total number of active unoccupied orbitals. The OVOS algorithm results for NH3 in the cc--pVDZ basis through each $N'_{\rm act.unocc}$ to full space of active unoccupied orbitals are shown in Figure~\ref{fig:NH3_cc-pVDZ_ovos}.
+
+The most correlation energy recovered by OVOS for NH3 is at $N'_{\rm act.unocc} = 3, \ ..., \ 9$ with $\Delta E_{\rm corr}^{\rm OVOS} \simeq 0.75$ Hartree. Only at $N'_{\rm act.unocc} = 8$ does OVOS not converge, which is observed to stop at an agreeable correlation energy, between $N'_{\rm act.unocc} = 9$ and $N'_{\rm act.unocc} = 10$, as seen in Figure~\ref{fig:NH3_cc-pVDZ_ovos}. Iteration counts show no clear pattern as $N'_{\rm act.unocc}$ increases, with the highest iteration count at $N'_{\rm act.unocc} = 23$ of $797$, undergoing both oscillations and divergence. The correlation energy iterations are plottet in Appendix~\ref{app:NH3_cc-pVDZ_ovos_iterations} to show the convergence behaviour of the OVOS algorithm for NH3 in the cc--pVDZ basis at each $N'_{\rm act.unocc}$.
 
 % % setup template of table and plot 
 % \begin{table}[ht]
@@ -262,58 +266,80 @@ The correlation energy iterations are plottet in Appendix~\ref{app:CO_cc-pVDZ_ov
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{figures/OVOS_PLOTS/NH3/cc-pVDZ/ovos_convergence_NH3_cc-pVDZ.png}
-    \caption{Convergence of the MP2 correlation energy for ... in the ... basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
+    \caption{Convergence of the MP2 correlation energy for NH3 in the cc--pVDZ basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
     \label{fig:NH3_cc-pVDZ_ovos}
 \end{figure}
 
 
 \subsubsection*{Li2}
 
-"Do I also do the Li2 molecule here? - am thinking yes as we use it in VQE"
+OVOS increasingly recovers more of the total correlation energy $E_{\rm corr}^{\rm OVOS}$ as $N'_{\rm act.unocc}$ increases, queitely slowing down as $N'_{\rm act.unocc}$ approaches $9$, hereafter convergence issues show up, as multiple points deviates from the expected correlation energy behavior toward full space. The percentage of correlation energy recovered reaches 100\% at $N'_{\rm act.unocc} = 25$, and we reach 90\% recovery at $N'_{\rm act.unocc} = 7$, which is approximately 28\% of the total number of active unoccupied orbitals. The OVOS algorithm results for Li2 in the cc--pVDZ basis through each $N'_{\rm act.unocc}$ to full space of active unoccupied orbitals are shown in Figure~\ref{fig:Li2_cc-pVDZ_ovos}. 
 
-\section{Convergence Behaviour "Skip?"}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 6.3]
-%   "The OVOS convergence behaviour --- the evolution of the MP2
-%    correlation energy per iteration --- reveals the numerical stability
-%    and efficiency of the Newton-Raphson orbital optimisation.
-%    This section presents representative convergence profiles and
-%    summarises iteration counts across the test set."
-%
-% [WHAT TO COVER]
-%   - Convergence means $|\Delta E_{\rm corr}| < 10^{-8}$ achieved.
-%   - Show a representative case, e.g. H\textsubscript{2}O/cc-pVDZ, $N'=8$.
-%   - Discuss cases of slow or oscillatory convergence (large active spaces?)
-%   - Report iteration counts vs.~$N'_{\rm act.unocc}$: do larger spaces need more iterations?
-%
-% [FIGURE]
-%   x-axis: Iteration number | y-axis: $|\Delta E_{\rm corr}|$ (log scale)
-%   Caption: ``Convergence of the MP2 correlation energy for
-%   H\textsubscript{2}O/cc-pVDZ with $N'_{\rm act.unocc} = 8$ active virtual
-%   spin-orbitals. The dashed line marks the convergence threshold $10^{-8}$~$E_h$.''
-%
-% [TABLE]
-%   Columns: Molecule | Basis | $N'_{\rm act.unocc}$ | Iterations | Converged?
-%   Caption: ``Iteration counts to convergence for all OVOS calculations.
-%   Maximum iterations: [value].''
-%
-% [LEAD-IN TO §6.4]
-%   "The degree to which convergence and final energy depend on the
-%    initial orbital guess is investigated in the following section."
-% ---------------------------------------------------------------
+The most correlation energy recovered by OVOS for Li2 is at $N'_{\rm act.unocc} = 5,\ 6,\ 7$ with $\Delta E_{\rm corr}^{\rm OVOS} \simeq 0.0125$ Hartree. OVOS converges for all $N'_{\rm act.unocc}$. Iteration counts show no clear pattern as $N'_{\rm act.unocc}$ increases, with the highest iteration count at $N'_{\rm act.unocc} = 9$ of $569$, undergoing both oscillations and divergence. The correlation energy iterations are plottet in Appendix~\ref{app:Li2_cc-pVDZ_ovos_iterations} to show the convergence behaviour of the OVOS algorithm for Li2 in the cc--pVDZ basis at each $N'_{\rm act.unocc}$.
 
-In this section, I present the convergence profiles of the OVOS algorithm for the test molecules in the 6--31G and cc--pVDZ basis sets. 
-
-Convergence is achieved when $|\Delta E_{\rm corr}| < 10^{-8}$~Hartree for at least 50 consecutive iterations. Some cases, would get stuck in a local minimum achieving convergence. The consecutive iteration criterion then avoids these false positives, and help identify true convergence, a global minimum. For example, ... 
-
-"illustrate a good example of convergence and a bad example of convergence, with the corresponding plots in the appendix."
-
-\begin{figure}[ht]
+\begin{figure}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/CO/cc-pVDZ/convergence_histories/ovos_convergence_history_CO_cc-pVDZ_32_virt_orbs.png}
-    \caption{Convergence behavior of the MP2 correlation energy for ... in the ... basis with $N'_{\rm act.unocc} = ...$ active virtual spin-orbitals.}
-    \label{fig:HF_6-31G_convergence}
+    \includegraphics[width=1\textwidth]{figures/OVOS_PLOTS/Li2/cc-pVDZ/ovos_convergence_Li2_cc-pVDZ.png}
+    \caption{Convergence of the MP2 correlation energy for Li2 in the cc--pVDZ basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF as start guess. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
+    \label{fig:Li2_cc-pVDZ_ovos}
 \end{figure}
+
+
+
+
+% Just to keep track
+% Procentage of total space it took to reach 90\% recovery for each molecule in cc--pVDZ:
+% CO: 62\%
+% H2O: 68\%
+% HF: 64\%
+% NH3: 50\%
+% Li2: 28\%
+
+
+
+% \section{Convergence Behaviour "Skip?"}
+% % ---------------------------------------------------------------
+% % [SECTION INTRO – 6.3]
+% %   "The OVOS convergence behaviour --- the evolution of the MP2
+% %    correlation energy per iteration --- reveals the numerical stability
+% %    and efficiency of the Newton-Raphson orbital optimisation.
+% %    This section presents representative convergence profiles and
+% %    summarises iteration counts across the test set."
+% %
+% % [WHAT TO COVER]
+% %   - Convergence means $|\Delta E_{\rm corr}| < 10^{-8}$ achieved.
+% %   - Show a representative case, e.g. H\textsubscript{2}O/cc-pVDZ, $N'=8$.
+% %   - Discuss cases of slow or oscillatory convergence (large active spaces?)
+% %   - Report iteration counts vs.~$N'_{\rm act.unocc}$: do larger spaces need more iterations?
+% %
+% % [FIGURE]
+% %   x-axis: Iteration number | y-axis: $|\Delta E_{\rm corr}|$ (log scale)
+% %   Caption: ``Convergence of the MP2 correlation energy for
+% %   H\textsubscript{2}O/cc-pVDZ with $N'_{\rm act.unocc} = 8$ active virtual
+% %   spin-orbitals. The dashed line marks the convergence threshold $10^{-8}$~$E_h$.''
+% %
+% % [TABLE]
+% %   Columns: Molecule | Basis | $N'_{\rm act.unocc}$ | Iterations | Converged?
+% %   Caption: ``Iteration counts to convergence for all OVOS calculations.
+% %   Maximum iterations: [value].''
+% %
+% % [LEAD-IN TO §6.4]
+% %   "The degree to which convergence and final energy depend on the
+% %    initial orbital guess is investigated in the following section."
+% % ---------------------------------------------------------------
+
+% In this section, I present the convergence profiles of the OVOS algorithm for the test molecules in the 6--31G and cc--pVDZ basis sets. 
+
+% Convergence is achieved when $|\Delta E_{\rm corr}| < 10^{-8}$~Hartree for at least 50 consecutive iterations. Some cases, would get stuck in a local minimum achieving convergence. The consecutive iteration criterion then avoids these false positives, and help identify true convergence, a global minimum. For example, ... 
+
+% "illustrate a good example of convergence and a bad example of convergence, with the corresponding plots in the appendix."
+
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/CO/cc-pVDZ/convergence_histories/ovos_convergence_history_CO_cc-pVDZ_32_virt_orbs.png}
+%     \caption{Convergence behavior of the MP2 correlation energy for ... in the ... basis with $N'_{\rm act.unocc} = ...$ active virtual spin-orbitals.}
+%     \label{fig:HF_6-31G_convergence}
+% \end{figure}
 
 \section{Effect of Initialization Strategy}
 % ---------------------------------------------------------------
@@ -347,16 +373,20 @@ Convergence is achieved when $|\Delta E_{\rm corr}| < 10^{-8}$~Hartree for at le
 %    is examined in the following section."
 % ---------------------------------------------------------------
 
-As the OVOS algorithm optimises the orbitals to recover correlation energy, the choice of initial orbitals can influence the convergence path and final energy. In this section, I compare three initialisation strategies: default SCF (RHF), warm-start from a previous $N'$ run, and random unitary sampling. For the random sampling, I generate 1000 random unitary transformations of the initial orbitals and run OVOS for each, recording the final correlation energy. The best energy from the random sampling is compared against the default and warm-start strategies for test molecules, as plotted in Figure~\ref{fig:init_comparison}. 
+As the OVOS algorithm optimises the orbitals to recover correlation energy, the choice of initial orbitals can influence the convergence path and final energy. In this section, I compare three initialisation strategies: default SCF (RHF), warm-start from a previous $N'$ run, and random unitary sampling. For the random sampling, I generate 1000 random unitary transformations of the initial orbitals and run OVOS for each, recording the final correlation energy. The best result from the random sampling is then compared to the default and warm-start strategies. The results for the benchmark molecules in the cc--pVDZ basis are presented below. 
 
 \subsubsection*{CO}
 
-"Comment on the resulting data illustrated in Figure~\ref{fig:CO_cc-pVDZ_ovos_init_comparison}..."
+The three initialisation strategies show a similar trend in the correlation energy recovered as $N'_{\rm act.unocc}$ increases. It shows that while warm-starting from the previous $N'$ run can provide a improvement in convergence where RHF initialisation struggles, itself can also struggle at certain $N'_{\rm act.unocc}$, such as $N'_{\rm act.unocc} = 12, \ ..., \ 17$, where it converges to a local minimum with a much higher correlation energy. The best-of-random sampling strategy finds ...
+
+All three methods deviate between each other for amount of correlation energy recovered at each $N'_{\rm act.unocc}$, with the best-of-random sampling consistently finding at times significantly higher initial correlation energies than the other two strategies. Oppositely the warm-start strategy shows a smaller initial correlation energy than the default SCF (RHF) strategy at points the previous $N'$ run converges to a local minimum. 
+
+Between the three strategies, we can pick the best result at each $N'_{\rm act.unocc}$, which is shown as the green line in Figure~\ref{fig:CO_cc-pVDZ_ovos_init_comparison}. This best-of strategy shows a significant improvement in the correlation energy recovered at each $N'_{\rm act.unocc}$, especially at points where the default and warm-start strategies struggle. This suggests that the OVOS algorithm has multiple local minima in the orbital rotation landscape, and that the choice of initial orbitals can significantly affect the final energy. 
 
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth]{figures/OVOS_PLOTS/CO/cc-pVDZ/ovos_convergence_CO_cc-pVDZ.png}
-    \caption{Comparison of final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$, and best-of-1000 random unitary samples, for [molecule]/[basis]. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
+    \caption{Comparison of final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$ orbitals, and best-of-1000 random unitary samples, for [molecule]/[basis]. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
     \label{fig:CO_cc-pVDZ_ovos_init_comparison}
 \end{figure}
 
@@ -406,15 +436,17 @@ As the OVOS algorithm optimises the orbitals to recover correlation energy, the 
 %    Adamowicz \& Bartlett is made in the following section."
 % ---------------------------------------------------------------
 
-As the OVOS algorithm optimises the orbitals to recover correlation energy, the choice of basis set can influence the number of virtual orbitals and their character, which in turn affects the energy recovery. In this section, I compare the energy recovery curves for different basis sets (6--31G, cc--pVDZ) for the benchmark molecules. We use the best results of initialisation strategies based on the results from the previous section.
+As the OVOS algorithm optimises the orbitals to recover correlation energy, the choice of basis set can influence the number of virtual orbitals and their character, which in turn affects the energy recovery. In this section, I compare the energy recovery curves for different basis sets (6--31G, cc--pVDZ) for the benchmarked molecules. We use the best results of initialisation strategies based on the results from the previous section.
 
 \subsubsection*{CO}
 
-"Comment on the resulting data illustrated in Figure~\ref{fig:CO_basis_comparison}..."
+Observing the energy recovery curves for CO in the 6--31G and cc--pVDZ basis sets, we see that the larger cc--pVDZ basis set, which has more virtual orbitals, allows for a higher fraction of correlation energy to be recovered at lower $N'_{\rm act.unocc}$. At $N'_{\rm act.unocc} = 25\%$ of the total active virtual orbitals, the cc--pVDZ basis recovers less than 6--31G basis, for which as $N'_{\rm act.unocc}$ increases, the two basis sets show similar trends. The energy recovery curves for CO in the 6--31G and cc--pVDZ basis sets are shown in Figure~\ref{fig:CO_basis_comparison}.
+
+
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/Placeholder.png}
+    \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/CO/ovos_basis_set_CO_['6-31G', 'cc-pVDZ'].png}
     \caption{Basis set dependence of energy recovery for CO. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
     \label{fig:CO_basis_comparison}
 \end{figure}
@@ -424,15 +456,48 @@ As the OVOS algorithm optimises the orbitals to recover correlation energy, the 
 
 "Comment on the resulting data illustrated in Figure~\ref{fig:H2O_basis_comparison}..."
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/H2O/ovos_basis_set_H2O_['6-31G', 'cc-pVDZ'].png}
+    \caption{Basis set dependence of energy recovery for H2O. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
+    \label{fig:H2O_basis_comparison}
+\end{figure}
+
 
 \subsubsection*{HF}
 
 "Comment on the resulting data illustrated in Figure~\ref{fig:HF_basis_comparison}..."
 
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/HF/ovos_basis_set_HF_['6-31G', 'cc-pVDZ'].png}
+    \caption{Basis set dependence of energy recovery for HF. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
+    \label{fig:HF_basis_comparison}
+\end{figure}
+
 \subsubsection*{NH3}
 
 "Comment on the resulting data illustrated in Figure~\ref{fig:NH3_basis_comparison}..."
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/NH3/ovos_basis_set_NH3_['6-31G', 'cc-pVDZ'].png}
+    \caption{Basis set dependence of energy recovery for NH3. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
+    \label{fig:NH3_basis_comparison}
+\end{figure}
+
+\subsubsection*{Li2}
+
+"Comment on the resulting data illustrated in Figure~\ref{fig:Li2_basis_comparison}..."
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/Li2/ovos_basis_set_Li2_['6-31G', 'cc-pVDZ'].png}
+    \caption{Basis set dependence of energy recovery for Li2. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
+    \label{fig:Li2_basis_comparison}
+\end{figure}
+
 
 
 ...
@@ -446,7 +511,7 @@ Instead we flip it and make a sat procentage of the active unoccupied orbitals, 
 These results indicate that the choice of basis set has a significant impact on the energy recovery behaviour of the OVOS algorithm, a larger basis set means more mixing options translating to a better correlation energy...
 
 
-\section{Comparison with Adamowicz and Bartlett (1987) - "Skip?"}
+\subsection{Comparison with Adamowicz and Bartlett (1987) - "Skip?"}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.6]
 %   "The benchmark test case of Adamowicz \& Bartlett \cite{Adamowicz1987}
@@ -475,25 +540,27 @@ These results indicate that the choice of basis set has a significant impact on 
 %    the following section."
 % ---------------------------------------------------------------
 
-Adamowicz \& Bartlett's 1987 paper presents OVOS results for the CH\textsubscript{2} molecule in a specific basis set ... in their Table I ... . Wanting to compare results for the same molecule, but not being able to replicate their geometrical setup and basis set, I instead compare the energy recovery curves for CH\textsubscript{2} in the 6--31G and cc--pVDZ basis sets with the RHF reference. The results are plotted in Table~\ref{tab:comparison_AB}.
+Adamowicz \& Bartlett's 1987 paper presents OVOS results for the CH\textsubscript{2} molecule in a specific basis set ... in their Table I ... . I include their results here to show potential of OVOS at bigger basis sets, and to compare with the results obtained in this work. However, it is important to note that there are differences in the computational details between their work and this one, such as their handling of convergence (which does not seem to be detailed, e.g. ill-conditioned Hessian, iteration count, ...), the version of the basis set used, and the geometry of the molecule. These differences can lead to variations in the correlation energy values, making a direct comparison challenging.
 
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{cccc}
-        \hline
-        $N'_{\rm act.unocc}$ (\%) & $E_{\rm corr}^{\rm A\&B}$ (\%) & $E_{\rm corr}$ (\%) \\
-        \hline
-        11\% & 52\% & ...\% \\
-        31\% & 88\% & ...\% \\
-        50\% & 96\% & ...\% \\
-        65\% & 99\% & ...\% \\
-        \hline
-    \end{tabular}
-    \caption{Comparison of OVOS correlation energies for CH\textsubscript{2} in cc--pVDZ basis set with values from Adamowicz \& Bartlett \cite{Adamowicz1987}. The energies are in procentages of the full space correlation energy, and the differences are agreeable with basis set size increases, confirming the consistency with the original results, despite differences in basis set and reference wavefunction choices.}
-    \label{tab:comparison_AB}
-\end{table}
+% Wanting to compare results for the same molecule, but not being able to replicate their geometrical setup and basis set, I instead compare the energy recovery curves for CH\textsubscript{2} in the 6--31G and cc--pVDZ basis sets with the RHF reference. The results are plotted in Table~\ref{tab:comparison_AB}.
 
-Looking past not being able to replicate the exact setup of Adamowicz \& Bartlett, the results show a behaviour that is consistent with their findings, with the energy recovery curve showing a rapid increase in correlation energy recovered as $N'_{\rm act.unocc}$ increases, with the increase in basis set size leading to a higher correlation energy recovery at the same $N'_{\rm act.unocc}$, as expected from the previous section. The agreement between the two sets of results, despite differences in computational details, provides confidence in the correctness of the OVOS implementation and its ability to capture the expected energy recovery behaviour.
+% \begin{table}[ht]
+%     \centering
+%     \begin{tabular}{cccc}
+%         \hline
+%         $N'_{\rm act.unocc}$ (\%) & $E_{\rm corr}^{\rm A\&B}$ (\%) & $E_{\rm corr}$ (\%) \\
+%         \hline
+%         11\% & 52\% & ...\% \\
+%         31\% & 88\% & ...\% \\
+%         50\% & 96\% & ...\% \\
+%         65\% & 99\% & ...\% \\
+%         \hline
+%     \end{tabular}
+%     \caption{Comparison of OVOS correlation energies for CH\textsubscript{2} in cc--pVDZ basis set with values from Adamowicz \& Bartlett \cite{Adamowicz1987}. The energies are in procentages of the full space correlation energy, and the differences are agreeable with basis set size increases, confirming the consistency with the original results, despite differences in basis set and reference wavefunction choices.}
+%     \label{tab:comparison_AB}
+% \end{table}
+
+Looking past not being able to replicate the exact setup of Adamowicz \& Bartlett, the basis sets behaviour shows some similarities with their findings, the energy recovery curve showing a rapid increase in correlation energy recovered as $N'_{\rm act.unocc}$ increases \ref{sec:energy-recovery}, the increase in basis set size leading to a higher correlation energy recovery at the same $N'_{\rm act.unocc}$. 
 
 \section{Computational Cost - "Skip?"}
 % ---------------------------------------------------------------

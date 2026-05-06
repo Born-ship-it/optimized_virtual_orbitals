@@ -482,7 +482,6 @@ INPUT main.lot
 INPUT d:/Programs/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
 INPUT d:/Programs/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
 INPUT d:/Programs/texlive/2026/texmf-dist/tex/latex/listings/lstlang1.sty
-INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmr8.tfm
 OUTPUT main.lot
 INPUT ./chapters/introduction.tex
 INPUT ./chapters/introduction.tex
@@ -496,6 +495,7 @@ INPUT ./chapters/background.tex
 INPUT ./chapters/background.tex
 INPUT ./chapters/background.tex
 INPUT chapters/background.tex
+INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmr8.tfm
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/ec-lmr10.tfm
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/rm-lmr10.tfm
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/tfm/public/lm/rm-lmr7.tfm
@@ -610,19 +610,40 @@ INPUT ./figures/OVOS_PLOTS/NH3/cc-pVDZ/ovos_convergence_NH3_cc-pVDZ.png
 INPUT ./figures/OVOS_PLOTS/NH3/cc-pVDZ/ovos_convergence_NH3_cc-pVDZ.png
 INPUT ./figures/OVOS_PLOTS/NH3/cc-pVDZ/ovos_convergence_NH3_cc-pVDZ.png
 INPUT ./figures/OVOS_PLOTS/NH3/cc-pVDZ/ovos_convergence_NH3_cc-pVDZ.png
-INPUT ./figures/OVOS_PLOTS/CO/cc-pVDZ/convergence_histories/ovos_convergence_history_CO_cc-pVDZ_32_virt_orbs.png
-INPUT ./figures/OVOS_PLOTS/CO/cc-pVDZ/convergence_histories/ovos_convergence_history_CO_cc-pVDZ_32_virt_orbs.png
-INPUT ./figures/OVOS_PLOTS/CO/cc-pVDZ/convergence_histories/ovos_convergence_history_CO_cc-pVDZ_32_virt_orbs.png
-INPUT ./figures/OVOS_PLOTS/CO/cc-pVDZ/convergence_histories/ovos_convergence_history_CO_cc-pVDZ_32_virt_orbs.png
-INPUT ./figures/OVOS_PLOTS/CO/cc-pVDZ/convergence_histories/ovos_convergence_history_CO_cc-pVDZ_32_virt_orbs.png
+INPUT ./figures/OVOS_PLOTS/Li2/cc-pVDZ/ovos_convergence_Li2_cc-pVDZ.png
+INPUT ./figures/OVOS_PLOTS/Li2/cc-pVDZ/ovos_convergence_Li2_cc-pVDZ.png
+INPUT ./figures/OVOS_PLOTS/Li2/cc-pVDZ/ovos_convergence_Li2_cc-pVDZ.png
+INPUT ./figures/OVOS_PLOTS/Li2/cc-pVDZ/ovos_convergence_Li2_cc-pVDZ.png
+INPUT ./figures/OVOS_PLOTS/Li2/cc-pVDZ/ovos_convergence_Li2_cc-pVDZ.png
 INPUT ./figures/OVOS_PLOTS/CO/cc-pVDZ/ovos_convergence_CO_cc-pVDZ.png
 INPUT ./figures/OVOS_PLOTS/CO/cc-pVDZ/ovos_convergence_CO_cc-pVDZ.png
 INPUT ./figures/OVOS_PLOTS/CO/cc-pVDZ/ovos_convergence_CO_cc-pVDZ.png
 INPUT ./figures/OVOS_PLOTS/CO/cc-pVDZ/ovos_convergence_CO_cc-pVDZ.png
-INPUT ./figures/Placeholder.png
-INPUT ./figures/Placeholder.png
-INPUT ./figures/Placeholder.png
-INPUT ./figures/Placeholder.png
+INPUT ./figures/OVOS_PLOTS/CO/ovos_basis_set_CO_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/CO/ovos_basis_set_CO_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/CO/ovos_basis_set_CO_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/CO/ovos_basis_set_CO_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/CO/ovos_basis_set_CO_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/H2O/ovos_basis_set_H2O_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/H2O/ovos_basis_set_H2O_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/H2O/ovos_basis_set_H2O_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/H2O/ovos_basis_set_H2O_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/H2O/ovos_basis_set_H2O_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/HF/ovos_basis_set_HF_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/HF/ovos_basis_set_HF_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/HF/ovos_basis_set_HF_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/HF/ovos_basis_set_HF_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/HF/ovos_basis_set_HF_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/NH3/ovos_basis_set_NH3_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/NH3/ovos_basis_set_NH3_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/NH3/ovos_basis_set_NH3_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/NH3/ovos_basis_set_NH3_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/NH3/ovos_basis_set_NH3_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/Li2/ovos_basis_set_Li2_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/Li2/ovos_basis_set_Li2_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/Li2/ovos_basis_set_Li2_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/Li2/ovos_basis_set_Li2_['6-31G', 'cc-pVDZ'].png
+INPUT ./figures/OVOS_PLOTS/Li2/ovos_basis_set_Li2_['6-31G', 'cc-pVDZ'].png
 INPUT ./chapters/conclusion.tex
 INPUT ./chapters/conclusion.tex
 INPUT ./chapters/conclusion.tex
@@ -680,3 +701,4 @@ INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtt10.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtt12.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/lm/lmtti10.pfb
 INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb
+INPUT d:/Programs/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb

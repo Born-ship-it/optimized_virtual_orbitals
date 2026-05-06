@@ -76,6 +76,27 @@
 %    results is provided in the following section."
 % ---------------------------------------------------------------
 
+
+% Just to keep track
+% Procentage of total space it took to reach 90\% recovery for each molecule in cc--pVDZ:
+% HF: 64\%  (out of 14)
+% H2O: 68\% (out of 19)
+% CO: 62\%  (out of 21)
+% NH3: 50\% (out of 24)
+% Li2: 28\% (out of 25)
+% Li2 Wins -> more molecule dependent than just the number of virtual orbitals. 
+
+% All OVOS converge to correlation energies below to at full space MP2 correlation energy... Expected!
+
+% See OVOS convergence is not steady and need more work!!! 
+
+% Difficult to correlate convergence iteration count to number of virtual orbitals, because of the oscillatory convergence. Need to do more work on this.
+
+% This indicates that a larger basis set, with more virtual orbitals, despite offering more flexibility for orbital optimization and does not necessarily allow for a better recovery of correlation energy, especially as we approach the full virtual space.
+
+% The agreement with the results from Adamowicz \& Bartlett, despite differences in computational details, provides confidence in the correctness of the OVOS implementation and its ability to capture the expected energy recovery behaviour.
+
+
 \section{Critical Assessment}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 7.2]

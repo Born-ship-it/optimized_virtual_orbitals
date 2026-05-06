@@ -10,11 +10,10 @@
 \contentsline {table}{\numberline {5.2}{\ignorespaces Molecular geometries and electronic structure parameters used in this work.}}{34}{table.caption.14}%
 \contentsline {table}{\numberline {5.3}{\ignorespaces Reference UHF and full-space MP2 energies for the test set.}}{35}{table.caption.15}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {6.1}{\ignorespaces Validation of the OVOS implementation against PySCF \lstinline [language=Python]|mp.MP2|. Deviations $\Delta E$ are within numerical precision ($|\delta E| < 10^{-8}$~Hartree). All molecules are run in the cc--pVDZ basis for this validation.}}{38}{table.caption.16}%
-\contentsline {table}{\numberline {6.2}{\ignorespaces Comparison of OVOS correlation energies for CH\textsubscript {2} in cc--pVDZ basis set with values from Adamowicz \& Bartlett \cite {Adamowicz1987}. The energies are in procentages of the full space correlation energy, and the differences are agreeable with basis set size increases, confirming the consistency with the original results, despite differences in basis set and reference wavefunction choices.}}{46}{table.caption.24}%
+\contentsline {table}{\numberline {6.1}{\ignorespaces Validation of the OVOS implementation against PySCF \lstinline [language=Python]|mp.MP2|. Deviations $\Delta E$ are within numerical precision ($|\delta E| <\eqsim 10^{-8}$~Hartree). All molecules are of the cc--pVDZ basis for this validation.}}{38}{table.caption.16}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {A.1}{\ignorespaces Summary of two-electron integral notation used in this thesis.}}{55}{table.caption.26}%
+\contentsline {table}{\numberline {A.1}{\ignorespaces Summary of two-electron integral notation used in this thesis.}}{57}{table.caption.29}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
