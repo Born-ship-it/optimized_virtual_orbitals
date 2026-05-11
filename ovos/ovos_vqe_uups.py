@@ -604,8 +604,8 @@ def run_hf_vqe():
     # Let us explore the dist list we need for HF
         # Varying the bond length around the equilibrium geometry:
             # 'H 0 0 0; F 0 0 0.917'
-    
-    dist_list = np.arange(0.675, 2.025, 0.025)  # From 0.7 to 2.0 Angstrom in steps of 0.05 for faster testing
+    # dist_list = np.arange(0.675, 2.025, 0.025)  # From 0.7 to 2.0 Angstrom in steps of 0.05 for faster testing
+    dist_list = np.arange(1.25, 2.025, 0.025)  # From 0.7 to 2.0 Angstrom in steps of 0.05 for faster testing
     dist_list = [round(d, 3) for d in dist_list]  # Round to 4 decimals for cleaner output
     
     # Make the files for HF if they don't exist
@@ -685,7 +685,8 @@ def run_hf_vqe():
     # Run the VQE optimizations for HF for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
     # seed_list = [8]
-    seed_list = [42] 
+    seed_list = [1024, 21, 10, 20, 111] 
+    # seed_list = [1024, 21, 10, 20, 111]  # the five seeds for VQE oo True
     # Have already:
         # 8, 9, 10, 13, 14, 20, 21, 42, 101, 109, 119, 123, 129, 139, 404
             # A total of 16...
@@ -1315,15 +1316,15 @@ def run_single(args):
 if __name__ == "__main__":
     # Molecule: HF, H2O, CO, NH3, Li2
     # args_list = run_hf_vqe()  # HF,  Done 
-    args_list = run_h2o_vqe() # H2O, Done
-    # args_list = run_li2_vqe()   # 16...
+    # args_list = run_h2o_vqe() # H2O, Done
+    args_list = run_li2_vqe()   # 16...
 
     if False:
         # Set thetas to empty list... and thetas_bool to False
         args_list = [(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, [], False) for (atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed) in args_list]
 
         num_cores = os.cpu_count()
-        num_workers = 10
+        num_workers = 5
         
         print(f"\nSystem: {num_cores} cores available")
         print(f"Starting {num_workers} parallel VQE workers...")
@@ -1385,7 +1386,7 @@ if __name__ == "__main__":
             assert False, "No existing file found to determine theta length from first run. Please run one VQE optimization with random thetas first to generate the file with thetas for the correct length, then run this script again to use those thetas as initial guess for the rest of the runs."
 
         # Clean start
-        if True:
+        if False:
             np.random.seed(42)  # For reproducibility of random thetas
             thetas = (2*np.pi*np.random.random(len_thetas) - np.pi).tolist()       
             thetas = [thetas, thetas, thetas]  
@@ -1396,18 +1397,15 @@ if __name__ == "__main__":
             
             # Need to continue for Li2!!!!!!!!11 w. OO True...
 
-        if False: # Found for oo = Ture each dist takes a while, need to be able to start from thetas from a previous dist to avoid having to run all dists sequentially from the start...
+        if True: # Found for oo = Ture each dist takes a while, need to be able to start from thetas from a previous dist to avoid having to run all dists sequentially from the start...
             # Dist to get prev. from
-            oo_str = "False"
+            oo_str = "True"
 
                 # Li2
-            # prev_dist = 3.8
-
-                # HF
-            # prev_dist = 1.825
+            prev_dist = 4.3
 
                 # H2O
-            # prev_dist = 0.7
+            # prev_dist = 0.85
 
             # Get thetas from the file for the prev_dist
             file_name_prev = f"backup/data/{molecule_name}/{basis_name}/VQE/OVOS/{prev_dist}/UPS_OVOS_{molecule_name}_{basis_name}_{prev_dist}_opt_num_{num_opt_virtual_orbs}_{oo_str}_True.json"
@@ -1438,19 +1436,22 @@ if __name__ == "__main__":
             previous_thetas = thetas  # Use thetas from this run as initial guess for next run
 
 
+# In total each molecule should have...
+# - OO/Prev(random): 
+    # True/True   -  HF, Li2 | H2O
+    # True/False  -  HF, 
+    # False/True  -  HF, Li2, H2O
+    # False/False -  HF, Li2, H2O
 
 
 # TO DO:
-# - Run VQE PREV. THETAS w. OO False
-    # H2O
-
 # - Run VQE RANDOM for 5 seeds w. OO True
-    # H2O, HF, Li2
+    # H2O, Li2
 
 # - Run VQE PREV. THETAS w. OO True
-    # H2O, HF | continue
+    # H2O... running
 
-
+# Finish the random runs in OVOS for cc-pVDZ!!!!!!
 
 
 
