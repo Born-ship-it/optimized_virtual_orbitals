@@ -36,7 +36,7 @@
 %       - Antisymmetrised integrals: ⟨pq‖rs⟩ = (pr|qs) − (ps|qr).
 %
 %  2.4  Møller-Plesset Perturbation Theory (MP2)
-%       - Partitioning of H into H₀ (Fock) + V.
+%       - Partitioning of H into \hat{f} (Fock) + V.
 %       - First-order wavefunction: MP1 amplitudes.
 %         \[ t_{ij}^{ab} = -\frac{\langle ab \| ij \rangle}
 %            {\varepsilon_a + \varepsilon_b - \varepsilon_i - \varepsilon_j} \]
@@ -176,7 +176,7 @@ where \(\hat{H}_{el}\) is the electronic Hamiltonian, \(\Psi\) is the many-elect
 \[\hat{H}_{el} = \sum_{i=1}^N \left( -\frac{1}{2} \nabla_i^2 - \sum_{A=1}^M \frac{Z_A}{|\mathbf{r}_i - \mathbf{R}_A|} \right) + \sum_{i<j} \frac{1}{|\mathbf{r}_i - \mathbf{r}_j|}\]
 where the first term represents the kinetic energy of the electrons, the second term is the nuclear attraction, and the third term is the electron-electron repulsion.
 
-The electron-electron repulsion term couples all electrons together, making the exact solution of the Schrödinger equation computationally intractable for all but the smallest systems. This motivates the development of approximate methods that can capture the essential physics of electron correlation while remaining computationally feasible \cite{Szabo1989, Jensen2017}.
+The electron-electron repulsion term couples all electrons together, making the exact solution of the Schrödinger equation computationally intractable for all but the smallest systems. This motivates the development of approximate methods that can capture the essential physics of electron correlation while remaining computationally feasible \cite{SzaboOstlund1989, Jensen2017}.
 
 Hartree-Fock theory provides a mean-field approximation to the electronic structure problem \cite{SzaboOstlund1989, Jensen2017}. The residual correlation energy, defined as \(E_{corr} = E_{exact} - E_{HF}\), quantifies the error of the Hartree-Fock approximation, accurately capturing only a fraction of the total correlation energy \cite{Helgaker2000}. % \cite{Helgaker2000} – correlation energy definition and magnitude; \cite{Cao2019} – modern quantum chemistry perspective
 
@@ -189,7 +189,7 @@ Hartree-Fock theory provides a mean-field approximation to the electronic struct
     \label{fig:h2_pes}
 \end{figure}
 
-For small molecules, the correlation energy can on the order of tenths of a Hartree, and can be critical for accurately describing chemical phenomena such as bond dissociation and the properties of open-shell molecules \cite{Cao2019}. The following section introduces Hartree-Fock theory in more detail, setting the stage for the post-Hartree-Fock methods that are the focus of this thesis.
+For small molecules, the correlation energy can be on the order of tenths of a Hartree, and can be critical for accurately describing chemical phenomena such as bond dissociation and the properties of open-shell molecules \cite{Cao2019}. The following section introduces Hartree-Fock theory in more detail, setting the stage for the post-Hartree-Fock methods that are the focus of this thesis.
 
 
 \section{Hartree-Fock Theory}
@@ -232,17 +232,23 @@ For small molecules, the correlation energy can on the order of tenths of a Hart
 
 Hartree-Fock (HF) theory approximates the N-electron wavefunction as a single Slater determinant of N orthonormal spin-orbitals, treating electron-electron repulsion in a mean-field sense \cite{Helgaker2000}. Despite its simplicity, HF underpins virtually all post-HF correlated methods.
 
-Slater determinants are described by the Pauli exclusion principle, ensuring that no two electrons can occupy the same quantum state. This antisymmetry is crucial for accurately describing fermionic systems. The variational principle leads to the Fock equations, which can be expressed in matrix form as the Roothaan-Hall equations\cite{Helgaker2000}: \(FC = SC\epsilon\), where \(F\) is the Fock matrix, \(S\) is the overlap matrix, \(C\) is the coefficient matrix for the molecular orbitals, and \(\epsilon\) is the diagonal matrix of orbital energies. The Fock matrix incorporates the Coulomb ($J$) and exchange ($K$) operators, which represent the average electron-electron repulsion and the antisymmetry of the wavefunction, respectively. It is this equation that is solved iteratively in the self-consistent field (SCF) procedure. %, often accelerated by techniques that expedite convergence, like DIIS. %Footnote: "DIIS (Direct Inversion in the Iterative Subspace) is a common method for accelerating SCF convergence by extrapolating from previous iterations."
+Slater determinants are described by the Pauli exclusion principle, ensuring that no two electrons can occupy the same quantum state. This antisymmetry is crucial for accurately describing fermionic systems. The variational principle leads to the Fock equations, which can be expressed in matrix form as the Roothaan-Hall equations\cite{Helgaker2000}: \(FC = SC\epsilon\), where \(F\) is the Fock matrix, \(S\) is the overlap matrix, \(C\) is the coefficient matrix for the molecular orbitals, and \(\epsilon\) is the diagonal matrix of orbital energies. The Fock matrix incorporates the Coulomb ($J$) and exchange ($K$) operators, which represent the average electron-electron repulsion and the antisymmetry of the wavefunction, respectively. It is this equation that is solved iteratively in the self-consistent field (SCF) procedure. The Fock matrix depends on the molecular orbital coefficients (the solution itself), creating a circular dependency: the coefficients are needed to construct the Fock matrix, but solving the Fock matrix produces the coefficients. This self-consistent iteration continues until convergence, meaning the coefficients no longer change between iterations, hence the name "self-consistent field." (SCF). %, often accelerated by techniques that expedite convergence, like DIIS. %Footnote: "DIIS (Direct Inversion in the Iterative Subspace) is a common method for accelerating SCF convergence by extrapolating from previous iterations."
 The variational principle ensures that the HF energy is an upper bound to the exact ground state energy, \(E_{HF} = \langle \Phi_{HF} | \hat{H} | \Phi_{HF} \rangle \geq E_{exact}\) \cite{SzaboOstlund1989}. Which allows us to define that the correlation energy is negative: \(E_{corr} = E_{exact} - E_{HF} < 0\). The resulting orbital energies $\epsilon_p$ provide insight into the electronic structure, with occupied orbitals typically having negative energies and virtual orbitals having positive energies, as per Koopmans' theorem \cite{Helgaker2000}. % \cite{Jensen2017} – Koopmans' theorem and orbital energy interpretation 
 
 % Figure: Canonical MO energy level diagram for a small molecule, showing the occupied and virtual orbitals.
 
 \subsection{Restricted and Unrestricted Formalism}
 
-HF varying in its treatment of spin leads to two different formalisms: Restricted Hartree-Fock (RHF) and Unrestricted Hartree-Fock (UHF). Spin orbitals are constructed from spatial orbitals and spin functions, \[\chi_p(\mathbf{r}, \sigma) = \phi_p(\mathbf{r}) \alpha(\sigma) \quad \text{or} \quad \chi_p(\mathbf{r}, \sigma) = \phi_p(\mathbf{r}) \beta(\sigma)\]
-where $\alpha$ and $\beta$ are the spin functions for spin-up and spin-down electrons, respectively. 
-RHF assumes that each spatial orbital, $\phi_p$, is doubly occupied by electrons of opposite spin, making it suitable for closed-shell systems \cite{Helgaker2000}. Translating to spin-orbital language, this means that the same spatial orbital is used for both $\alpha$ and $\beta$ electrons, leading to a single set of molecular orbitals. RHF keeps the total spin of the system fixed, ensuring that the wavefunction is an eigenfunction of the total spin operator $\hat{S}^2$. However, RHF fails to describe open-shell systems and bond dissociation correctly, as it cannot capture the correct spin symmetry in these cases \cite{Jensen2017}. 
-In contrast, UHF allows for different spatial orbitals for $\alpha$ and $\beta$ spins, making it applicable to open-shell systems \cite{Helgaker2000}. UHF allows for spin deviation from pure spin states, leading to spin contamination where the expectation value of the total spin operator $\langle \hat{S}^2 \rangle$ deviates from the expected value for a pure spin state \cite{Jensen2017}. In bond breaking scenarios, UHF can provide a qualitatively correct description of the dissociation process, while RHF fails to capture the correct physics \cite{Helgaker2000}. For this reason, UHF is used throughout this thesis for generality, as it can handle both closed-shell and open-shell systems effectively. It is recognized that it comes with an increased computational cost compared to RHF. RHF and UHF have similar scaling with respect to the number of basis functions, but UHF takes on the additional degrees of freedom in the spin orbitals.
+Hartree-Fock theory varies in its treatment of spin, leading to two different formalisms: Restricted Hartree-Fock (RHF) and Unrestricted Hartree-Fock (UHF). Spin orbitals are constructed from spatial orbitals and spin functions:
+\begin{align}
+    \chi_p(\mathbf{r}, \sigma) = \phi_p(\mathbf{r}) \sigma
+    \label{eq:spin_orbital}
+\end{align}
+where $\sigma \in \{\alpha, \beta\}$ denotes the spin function for spin-up and spin-down electrons, respectively.
+
+In RHF, the same spatial orbital $\phi_p$ is used for both $\alpha$ and $\beta$ electrons, expressed as the constraint $\phi_\alpha = \phi_\beta$. Consequently, each spatial orbital is doubly occupied by electrons of opposite spin, forming a single set of molecular orbitals. This constraint makes RHF suitable for closed-shell systems and ensures that the wavefunction is an eigenfunction of the total spin operator $\hat{S}^2$, keeping the total spin of the system fixed \cite{Helgaker2000}. However, RHF fails to describe open-shell systems and bond dissociation correctly, as the spin-symmetry constraint cannot be satisfied in these cases \cite{Jensen2017}.
+
+In contrast, UHF allows different spatial orbitals for $\alpha$ and $\beta$ spins ($\phi_\alpha \neq \phi_\beta$), making it applicable to open-shell systems \cite{Helgaker2000}. This flexibility introduces spin contamination, where $\langle \hat{S}^2 \rangle$ deviates from the ideal value for a pure spin state \cite{Jensen2017}. In bond breaking and open-shell scenarios, UHF provides qualitatively correct descriptions where RHF fails \cite{Helgaker2000}. For this reason, UHF is used throughout this thesis for generality, as it handles both closed-shell and open-shell systems effectively. While UHF incurs higher computational cost due to separate $\alpha$ and $\beta$ orbital sets, incurring an additional degree of freedom, the scaling with the number of basis functions remains similar to RHF \cite{Helgaker2000}.
 
 
 \section{Molecular Orbital Integrals}
@@ -288,11 +294,11 @@ In contrast, UHF allows for different spatial orbitals for $\alpha$ and $\beta$ 
 %    core of the OVOS iteration."
 % ---------------------------------------------------------------
 
-At the core of electronic structure methods are the one- and two-electron integrals evaluated in the molecular orbital basis. These integrals form the building blocks of the Roothaan-Hall equations and the correlation energy expressions used in post-HF methods\cite{Helgaker2000}. This section defines these integrals and establishes the notation conventions applied consistently throughout this thesis, resolving an important ambiguity that arises when comparing PySCF output with the formulas of Adamowicz \& Bartlett\cite{Adamowicz1987}.
+At the core of electronic structure methods are the one- and two-electron integrals evaluated in the molecular orbital basis. These integrals form the building blocks of the Roothaan-Hall equations and the correlation energy expressions used in post-HF methods \cite{Helgaker2000}. This section defines these integrals and establishes the notation conventions applied consistently throughout this thesis, resolving an important ambiguity that arises when comparing PySCF output with the formulas of Adamowicz \& Bartlett \cite{Adamowicz1987}.
 
 \subsection{One-Electron Integrals}
 
-One-electron integrals reflect the kinetic energy of electrons and their attraction to the nuclei \cite{Helgaker2000} In an atomic orbital (AO) basis, the overlap integral is defined as:  $S_{\mu\nu} = \langle \mu | \nu \rangle = \int \phi_\mu^*(\mathbf{r}) \phi_\nu(\mathbf{r}) d\mathbf{r}$, the kinetic energy integral is: $T_{\mu\nu} = \langle \mu | -\frac{1}{2} \nabla^2 | \nu \rangle$, and the nuclear attraction integral is: $V_{\mu\nu} = \langle \mu | -\sum_A \frac{Z_A}{|\mathbf{r} - \mathbf{R}_A|} | \nu \rangle$. The core Hamiltonian in the AO basis is then given by: $h_{\mu\nu} = T_{\mu\nu} + V_{\mu\nu}$. To transform these integrals to the molecular orbital (MO) basis, we use the MO coefficients from the HF calculation: $h_{pq} = \sum_{\mu\nu} C_{\mu p}^* h_{\mu\nu} C_{\nu q}$, where $C$ is the coefficient matrix that transforms from the AO to MO basis. This transformation is essential for evaluating the Fock matrix and the correlation energy in the MO basis. The one-electron integrals are straightforward to compute\cite{Sun2020} and are typically stored in a dense matrix format.
+One-electron integrals reflect the kinetic energy of electrons and their attraction to the nuclei \cite{Helgaker2000} In an atomic orbital (AO) basis, the overlap integral is defined as:  $S_{\mu\nu} = \langle \mu | \nu \rangle = \int \phi_\mu^*(\mathbf{r}) \phi_\nu(\mathbf{r}) d\mathbf{r}$, the kinetic energy integral is: $T_{\mu\nu} = \langle \mu | -\frac{1}{2} \nabla^2 | \nu \rangle$, and the nuclear attraction integral is: $V_{\mu\nu} = \langle \mu | -\sum_A \frac{Z_A}{|\mathbf{r} - \mathbf{R}_A|} | \nu \rangle$. The core Hamiltonian in the AO basis is then given by: $h_{\mu\nu} = T_{\mu\nu} + V_{\mu\nu}$. To transform these integrals to the molecular orbital (MO) basis, we use the MO coefficients from the HF calculation: $h_{pq} = \sum_{\mu\nu} C_{\mu p}^* h_{\mu\nu} C_{\nu q}$, where $C$ is the coefficient matrix that transforms from the AO to MO basis. This transformation is essential for evaluating the Fock matrix and the correlation energy in the MO basis. The one-electron integrals are straightforward to compute \cite{Sun2020} and are typically stored in a dense matrix format.
 
 \subsection{Two-Electron Integrals}
 
@@ -315,7 +321,7 @@ The notation for two-electron integrals can differ between chemists and physicis
 %
 % [SUBSECTION COVERAGE]
 %   §MP2 Correlation Energy:
-%   - Partitioning: H = H₀ + λV, where H₀ = Σ_p ε_p p†p (Fock).
+%   - Partitioning: H = \hat{f} + λV, where \hat{f} = Σ_p ε_p p†p (Fock).
 %   - Zeroth-order: HF determinant |Φ₀⟩.
 %   - Brillouin's theorem: no first-order singles contribution.
 %   - First-order wavefunction = linear combination of doubly-excited dets.
@@ -362,13 +368,24 @@ Møller-Plesset perturbation theory (MPPT) treats electron correlation as a pert
 
 \subsection{MP2 Correlation Energy}
 
-The MP2 correlation energy is derived by partitioning the electronic Hamiltonian as $\hat{H} = \hat{H}_0 + \lambda \hat{V}$, where $\hat{H}_0$ is the Fock operator, which is diagonal in the canonical molecular orbital basis, and $\hat{V}$ is the fluctuation potential that accounts for electron correlation \cite{Helgaker2000}.
 
-The zeroth-order wavefunction is the Hartree-Fock determinant $|\Phi_0\rangle$, and Brillouin's theorem ensures that there are no first-order contributions from singly-excited determinants \cite{Helgaker2000, Jensen2017}.
+The MP2 correlation energy is derived by partitioning the electronic Hamiltonian as $\hat{H} = \hat{f} + \lambda \hat{V}$, where $\hat{f}$ is the Fock operator, which is diagonal in the canonical molecular orbital basis, and $\hat{V}$ is the fluctuation potential that accounts for electron correlation \cite{Helgaker2000}.
+The zeroth-order solution is the Hartree-Fock determinant $|\Phi_0\rangle$. Brillouin's theorem states that singly-excited determinants have zero coupling to $|\Phi_0\rangle$, consequently, first-order perturbation theory contributes no singles terms \cite{Helgaker2000, Jensen2017}. The first-order correction to the wavefunction is therefore a linear combination of doubly-excited determinants only. The associated MP1 amplitudes for these double excitations are:
+\begin{align}
+    t_{ij}^{ab} = -\frac{\langle ab \| ij \rangle}{\varepsilon_a + \varepsilon_b - \varepsilon_i - \varepsilon_j}
+\end{align}
 
-The first-order wavefunction is therefore a linear combination of doubly-excited determinants, and the MP1 amplitudes are given by: $t_{ij}^{ab} = -\frac{\langle ab \| ij \rangle}{\varepsilon_a + \varepsilon_b - \varepsilon_i - \varepsilon_j}$, where $\langle ab \| ij \rangle$ is the antisymmetrised two-electron integral in physicists' notation \cite{Helgaker2000, Jensen2017}. 
+where $\langle ab \| ij \rangle$ is the antisymmetrised two-electron integral in physicists' notation, and the denominator $\varepsilon_a + \varepsilon_b - \varepsilon_i - \varepsilon_j$ is the energy cost of exciting occupied orbitals $i,j$ to virtual orbitals $a,b$. \cite{Helgaker2000, Jensen2017}.
 
-The MP2 correlation energy is then computed as: $E_{corr}^{(2)} = \frac{1}{4} \sum_{i,j,a,b} t_{ij}^{ab} \langle ij \| ab \rangle$, where the sum runs over all occupied orbitals $i,j$ and virtual orbitals $a,b$ \cite{Helgaker2000}. In practice, the summation can be restricted to $i > j$ and $a > b$ to avoid double counting, leading to: $E_{corr}^{(2)} = \sum_{i>j,a>b} t_{ij}^{ab} \langle ij \| ab \rangle$. It is critical to make the distinction that this expression sums over the entire virtual orbital space, which is the full MP2 energy. In section 2.6, we will contrast this with the truncated MP2 energy used in OVOS, where the summation is restricted to a subset of active virtual orbitals.
+The MP2 correlation energy over all occupied and virtual orbitals is: 
+\begin{subequations}
+\begin{align}
+E_{corr}^{(2)} &= \frac{1}{4} \sum_{i,j,a,b} t_{ij}^{ab} \langle ij \| ab \rangle \label{eq:mp2_full_a} \\
+&= \sum_{i>j,a>b} t_{ij}^{ab} \langle ij \| ab \rangle \label{eq:mp2_full_b}
+\end{align}
+\end{subequations}
+where $i,j$ denotes occupied orbitals and virtual orbitals denoted by $a,b$ \cite{Helgaker2000}. In practice, the summation can be restricted to $i > j$ and $a > b$ to avoid double counting, leading to \ref{eq:mp2_full_b}.
+It is critical to make clear that both of these expressions sum over the entire orbital space, the full MP2 energy. In section 2.6, we will contrast this with the truncated MP2 energy used in OVOS, a constricted orbital space, reducing computational cost while retaining most correlation energy.
 
 
 \subsection{High-Order Amplitudes and T1 definition}
@@ -382,11 +399,11 @@ In the unrestricted Hartree-Fock (UHF) formalism, the indices $i,j$ run over all
 
 \subsection{MP2 Limitations and Applicability}
 
-MP2 is size-consistent\cite{Helgaker2000}, meaning that the correlation energy of non-interacting subsystems is additive, $E_{corr}^{(2)} = \sum_{i>j,a>b} t_{ij}^{ab} \langle ij \| ab \rangle$, which is a crucial property for accurately describing large systems and reaction energies \cite{Jensen2017}. For a truncated MP2 calculation, where the summation is restricted to a subset of orbitals. However, MP2 is a single-reference method and can fail in cases where the reference determinant is not a good approximation to the true wavefunction, such as in bond dissociation or transition states  \cite{Helgaker2000, Cao2019}. In such cases, higher-order methods or multi-reference approaches may be necessary to capture the correct physics \cite{Sherrill1999}.
+MP2 is size-consistent\cite{Helgaker2000}, meaning that the correlation energy of non-interacting subsystems is additive \ref{eq:mp2_full_b}, which is a crucial property for accurately describing large systems and reaction energies \cite{Jensen2017}. However, MP2 is a single-reference method and can fail in cases where the reference determinant is not a good approximation to the true wavefunction, such as in bond dissociation or transition states  \cite{Helgaker2000, Cao2019}. In such cases, higher-order methods or multi-reference approaches may be necessary to capture the correct physics \cite{Sherrill1999}.
 
 \subsection{Computational Scaling Motivation}
 
-The $\mathcal{O}(O^2V^2)$ computational scaling of MP2 presents a significant barrier for large systems and higher-order methods \cite{Jensen2017, Cao2019}. The Optimized Virtual Orbital Space (OVOS) method, detailed in Chapter~\ref{ch:theory}, applies a strategic solution: by restricting the correlation energy calculation to a small, actively-correlated subset of virtual orbitals, the effective scaling can be reduced to $\mathcal{O}(N_{occ}^2 {N'_{virt}}^2)$ or better, where $N'_{virt} \ll N_{virt}$ \cite{Adamowicz1987}. This active space reduction is particularly powerful when combined with higher-order methods like CCSD(T), which scale as $\mathcal{O}(O^3V^4)$ or worse in the full space. For which $V$ reflects the size of the virtual space, and reducing $V$ to $N'_{virt}$ can maybe make previously intractable calculations feasible while retaining much of the correlation energy. This is a key motivation for the development of OVOS and its application to larger systems and more accurate methods.
+The $\mathcal{O}(O^2V^2)$ computational scaling of MP2 presents a significant barrier for large systems and higher-order methods \cite{Jensen2017, Cao2019}. The Optimized Virtual Orbital Space (OVOS) method, detailed in Chapter~\ref{ch:theory}, applies a strategic solution: by restricting the correlation energy calculation to a small, actively-correlated subset of virtual orbitals, the effective scaling can be reduced to $\mathcal{O}(N_{occ}^2 {N'_{virt}}^2)$ or better, where $N'_{virt} \ll N_{virt}$ \cite{Adamowicz1987}. This active space reduction is particularly powerful when combined with higher-order methods like CCSD(T), which scale as $\mathcal{O}(O^3V^4)$ or worse in the full space. For which $V$ reflects the size of the virtual space, and reducing $V$ to $N'_{virt}$ can make previously intractable calculations feasible while retaining much of the correlation energy. This is a key motivation for the development of OVOS and its application to larger systems and more accurate methods.
 
 
 \section{Orbital Space}
@@ -440,8 +457,8 @@ The $\mathcal{O}(O^2V^2)$ computational scaling of MP2 presents a significant ba
 
 % Insert a introduction to the concept of orbital spaces...
 
-A quantum state in electronic structure theory is described by a wavefunction that depends on the coordinates of all electrons. Each quantum state, which can be represented by Slater determinants, is constructed from a set of spin-orbitals, which are themselves linear combinations of atomic orbitals\cite{Helgaker2000}: 
-$$\chi_p(\mathbf{r}, \sigma) = \phi_p(\mathbf{r}) \alpha(\sigma) = \sum_\mu C_{\mu p} \phi_\mu(\mathbf{r}) \sigma(\sigma)$$ where $\phi_\mu$ are the atomic orbitals, $C_{\mu p}$ are the MO coefficients, and $\sigma$ is the spin function. 
+A quantum state in electronic structure theory is described by a wavefunction that depends on the coordinates of all electrons, and can be represented by Slater determinants, which are products of spatial orbitals 
+and spin functions, see \ref{eq:spin_orbital}, where $\phi_p(\mathbf{r}) = \sum_\mu C_{\mu p} \phi_\mu(\mathbf{r})$ is the spatial orbital expanded in an atomic basis, $C_{\mu p}$ are the MO coefficients \cite{Helgaker2000}.
 
 The spatial part of the spin-orbitals come from basis sets, which are typically composed of Gaussian-type orbitals (GTOs) or Slater-type orbitals (STOs) \cite{Jensen2017}. The choice of basis set can significantly affect the accuracy and computational cost of electronic structure calculations. Commonly used basis sets include minimal basis sets like STO-3G, split-valence basis sets like 6-31G\cite{ditchfield1971a, hehre1972a, dill1975a}, and correlation-consistent basis sets like cc-pVDZ \cite{dunning1989}. The size and quality of the basis set determine the number of spin-orbitals available for constructing the wavefunction, which in turn affects the description of electron correlation and the convergence of post-HF methods \cite{Jensen2017, Helgaker2000}. In this thesis, we use 6-31G and cc-pVDZ basis sets for our test calculations, as they provide a good balance between accuracy and computational cost of the system.
 
@@ -472,10 +489,10 @@ Orbitals in electronic structure theory are often partitioned into different sub
     \label{tab:index_notation}
 \end{table}
 
-By this partitioning scheme, the OVOS method focuses on optimising the active virtual subspace to minimize the correlation energy, while the inactive virtuals provide a fixed reference that defines the complement space \cite{Adamowicz1987}. The truncated MP2 energy formula used in OVOS is given by: $E_{corr, trunc} = \sum_{i>j \in occ, a>b \in act. virt.} t_{ij}^{ab} \langle ij \| ab \rangle$, where the summation is restricted to the active virtuals, and the inactive virtuals do not appear in this explicit correlation energy sum \cite{Rolik2011, Pitonak2006}. This truncation reduces the computational cost from $\mathcal{O}(O^2V^2)$ to $\mathcal{O}(O^2N'^2)$, where $N'$ is the number of active virtuals, which is typically much smaller than the total number of virtuals. The choice of $N'_{virt}$ is a critical aspect of the OVOS method, as it involves a trade-off between accuracy and computational cost.
+By this partitioning scheme, the OVOS method focuses on optimising the active virtual subspace to minimize the correlation energy, while the inactive virtuals provide a fixed reference that defines the complement space \cite{Adamowicz1987}. This truncation reduces the computational cost from $\mathcal{O}(O^2V^2)$ to $\mathcal{O}(O^2N'^2)$, where $N'$ is the number of active virtuals, which is typically much smaller than the total number of virtuals $N'<V$. The choice of $N'$ is a critical aspect of the OVOS method, as it involves a trade-off between accuracy and computational cost.
 
 
-\section{Spin-Orbital Formalism}
+\section{Spin-Orbital Formalism - Maybe delete?}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 2.5] -> changed to 2.6 to fit better with the flow!!!!
 %   "Working in the spin-orbital basis — where each spatial orbital
@@ -511,7 +528,7 @@ By this partitioning scheme, the OVOS method focuses on optimising the active vi
 %    following section."
 % ---------------------------------------------------------------
 
-The spin-orbital formalism provides a framework for unrestricted calculations by treating each spatial orbital as giving rise to a pair of spin-orbitals, one for each spin projection ($\alpha$ and $\beta$) \cite{Helgaker2000}. A spin-orbital is defined as $\chi_p(x) = \phi_p(\mathbf{r}) \sigma(s)$, where $\phi_p(\mathbf{r})$ is the spatial part of the orbital and $\sigma(s)$ is the spin function, which can be either $\alpha$ (spin-up) or $\beta$ (spin-down). The total number of spin-orbitals is therefore $n_{spin} = 2 \times n_{spatial}$. In this implementation, an interleaved ordering convention is used for the spin-orbitals: even indices correspond to $\alpha$ spin-orbitals, while odd indices correspond to $\beta$ spin-orbitals, as illustrated in Figure \ref{fig:spin_orbital_ordering}. The total number of spatial orbitals is $n_{spatial} = n_{spin} / 2$, and the mapping is as follows: index 0 corresponds to spatial orbital 0 with $\alpha$ spin, index 1 corresponds to spatial orbital 0 with $\beta$ spin, index 2 corresponds to spatial orbital 1 with $\alpha$ spin, etc.
+The spin-orbital formalism provides a framework for unrestricted calculations by treating each spatial orbital as giving rise to a pair of spin-orbitals, one for each spin projection ($\alpha$ and $\beta$) \cite{Helgaker2000}. A spin-orbital is defined as $\chi_{p,\sigma}(\mathbf{r}, m_s) = \phi_p(\mathbf{r}) \sigma(m_s)$, where $\phi_p(\mathbf{r})$ is the spatial part of the orbital and $\sigma(m_s)$ is the spin function, which can be either $\alpha$ (spin-up) or $\beta$ (spin-down). The total number of spin-orbitals is therefore $n_{spin} = 2 \times n_{spatial}$. In this implementation, an interleaved ordering convention is used for the spin-orbitals: even indices correspond to $\alpha$ spin-orbitals, while odd indices correspond to $\beta$ spin-orbitals, as illustrated in Figure \ref{fig:spin_orbital_ordering}. The total number of spatial orbitals is $n_{spatial} = n_{spin} / 2$, and the mapping is as follows: index 0 corresponds to spatial orbital 0 with $\alpha$ spin, index 1 corresponds to spatial orbital 0 with $\beta$ spin, index 2 corresponds to spatial orbital 1 with $\alpha$ spin, etc.
 
 This interleaved ordering allows for a unified treatment of $\alpha$ and $\beta$ electrons in the construction of the Fock matrix and the evaluation of integrals. The Fock matrix in the spin-orbital basis is block-diagonal, with separate blocks for $\alpha$ and $\beta$ spins. $ F_{spin} = \begin{pmatrix}F_\alpha & 0 \\ 0 & F_\beta \end{pmatrix} $ where $F_\alpha$ and $F_\beta$ are the Fock matrices for the $\alpha$ and $\beta$ spin-orbitals, respectively \cite{Helgaker2000}.
 
@@ -540,7 +557,7 @@ The two-electron integrals in the spin-orbital basis are also constructed accord
 
 
 
-\section{Orbital Rotations and Stationarity}
+\section{Orbital Rotations and Stationarity -> In theory only?}
 % ------------------------------------------------------------------------------
 %  2.7  Orbital Rotations and Stationarity (NEW SECTION 2.7 – insert before Brueckner)
 %       CRITICAL: This section is ESSENTIAL for understanding OVOS optimization.
@@ -595,7 +612,7 @@ Several optimization strategies can be employed to find the optimal orbitals tha
 
 At convergence, when $\nabla_R E(R) = 0$, the stationarity condition becomes equivalent to the Brueckner condition $t_i^a = 0$ for all occupied-virtual pairs (i,a) \cite{Handy1989, Lee2018}. This fundamental connection shows that Brueckner orbitals are simply the stationary point of the orbital optimization for a chosen energy functional. The Brueckner orbitals are discussed in the following section.
 
-\section{Brueckner Orbitals}
+\section{Brueckner Orbitals -> In theory only?}
 \label{sec:brueckner_background}
 % ---------------------------------------------------------------
 % What are Brueckner orbitals?
@@ -675,11 +692,13 @@ Quantum computing is an emerging paradigm that has the potential to revolutionis
 In the context of quantum chemistry, the electronic structure problem is often formulated in second quantisation, where the Hamiltonian is expressed in terms of creation and annihilation operators acting on a reference state \cite{Helgaker2000}. To implement quantum algorithms on a quantum computer, the fermionic operators must be mapped to qubit operators using transformations such as the Jordan-Wigner or Bravyi-Kitaev mappings \cite{Seeley2012}. The second quantised electronic Hamiltonian can be written as \cite{Cao2019}:
 $$\hat{H} = \sum_{pq} h_{pq} a_p^\dagger a_q + \frac{1}{2} \sum_{pqrs} g_{pqrs} a_p^\dagger a_q^\dagger a_r a_s, \qquad a_p^\dagger a_q \rightarrow \mathcal{O}_{pq}, \quad a_p^\dagger a_q^\dagger a_r a_s \rightarrow \mathcal{O}_{pqrs}$$
 
-This mapping allows us to represent the electronic Hamiltonian as a sum of Pauli operators, which can then be implemented as quantum circuits \cite{Cao2019}. The choice of molecular orbitals used in the second quantised Hamiltonian can significantly impact the efficiency of the quantum algorithm, as it affects the structure of the Hamiltonian and the overlap of the reference state with the true ground state. In particular, using OVOS-optimised orbitals as the basis for the second quantised Hamiltonian might lead to a more compact representation and improved convergence properties in quantum algorithms such as the Variational Quantum Eigensolver (VQE)  \cite{Adamowicz1987, Cao2019}. 
+This mapping allows us to represent the electronic Hamiltonian as a sum of Pauli operators, which can then be implemented as quantum circuits \cite{Cao2019}. The choice of molecular orbitals used in the second quantised Hamiltonian can significantly impact the efficiency of the quantum algorithm, as it affects the structure of the Hamiltonian and the overlap of the reference state with the true ground state. In particular, using OVOS-optimised orbitals as the basis for the second quantised Hamiltonian might lead to a more compact representation and improved convergence properties in quantum algorithms such as the VQE  \cite{Adamowicz1987, Cao2019}. 
 
 \subsection{The Variational Quantum Eigensolver}
 
-The Variational Quantum Eigensolver (VQE) \cite{Peruzzo2014} is a hybrid quantum-classical algorithm designed to find the ground-state energy of a quantum system \cite{Cao2019} . VQE uses a parameterised quantum circuit, known as an ansatz, to prepare trial wavefunctions on a quantum computer. A classical outer loop optimises the parameters of the ansatz to minimise the energy expectation value, which is measured on the quantum device \cite{Peruzzo2014, Cao2019}.
+The VQE \cite{Peruzzo2014} is a hybrid quantum-classical algorithm designed to find the ground-state energy of a quantum system \cite{Cao2019}. VQE uses a parameterised quantum circuit, known as an ansatz, to prepare trial wavefunctions on a quantum computer. A classical outer loop optimises the parameters of the ansatz to minimise the energy expectation value, which is measured on the quantum device \cite{Peruzzo2014, Cao2019}.
+
+INSERT DIAGRAM of vqe workflow here (see notes for details)
 
 % Diagram of VQE workflow:
 % 1. Start with a reference state |Φ_ref⟩ (e.g., HF or OVOS).
