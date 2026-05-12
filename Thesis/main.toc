@@ -103,10 +103,10 @@
 \contentsline {section}{\numberline {6.2}Energy Recovery as a Function of Active Virtual Orbital Count}{38}{section.6.2}%
 \contentsline {section}{\numberline {6.3}Effect of Initialization Strategy}{43}{section.6.3}%
 \contentsline {section}{\numberline {6.4}Basis Set Dependence}{45}{section.6.4}%
-\contentsline {subsection}{\numberline {6.4.1}Comparison with Adamowicz and Bartlett (1987) - "Skip?"}{46}{subsection.6.4.1}%
-\contentsline {section}{\numberline {6.5}Computational Cost - "Skip?"}{47}{section.6.5}%
-\contentsline {section}{\numberline {6.6}T1 Amplitudes and the Brueckner Orbital Connection}{47}{section.6.6}%
-\contentsline {section}{\numberline {6.7}OVOS Orbitals as a VQE Reference State}{48}{section.6.7}%
+\contentsline {subsection}{\numberline {6.4.1}Comparison with Adamowicz and Bartlett (1987) - "Skip?"}{47}{subsection.6.4.1}%
+\contentsline {section}{\numberline {6.5}Computational Cost - "Skip?"}{48}{section.6.5}%
+\contentsline {section}{\numberline {6.6}T1 Amplitudes and the Brueckner Orbital Connection}{48}{section.6.6}%
+\contentsline {section}{\numberline {6.7}OVOS Orbitals as a VQE Reference State}{49}{section.6.7}%
 \contentsline {chapter}{\numberline {7}Conclusion}{51}{chapter.7}%
 \contentsline {section}{\numberline {7.1}Summary of Findings}{51}{section.7.1}%
 \contentsline {section}{\numberline {7.2}Critical Assessment}{51}{section.7.2}%

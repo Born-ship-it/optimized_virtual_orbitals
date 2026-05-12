@@ -440,11 +440,11 @@ As the OVOS algorithm optimises the orbitals to recover correlation energy, the 
 
 \subsubsection*{CO}
 
-Observing the energy recovery curves for CO in the 6--31G and cc--pVDZ basis sets, we see that the larger cc--pVDZ basis set, which has more virtual orbitals, allows for a higher fraction of correlation energy to be recovered at lower $N'_{\rm act.unocc}$. At $N'_{\rm act.unocc} = 25\%$ of the total active virtual orbitals, the cc--pVDZ basis recovers less than 6--31G basis, for which as $N'_{\rm act.unocc}$ increases, the two basis sets show similar trends. The energy recovery curves for CO in the 6--31G and cc--pVDZ basis sets are shown in Figure~\ref{fig:CO_basis_comparison}.
+Observing the correlated energy curves for CO in the 6--31G (11) and cc--pVDZ (21) basis sets, we see that the larger cc--pVDZ basis set, which has more virtual orbitals, allows for a higher fraction of correlation energy to be recovered at lower $N'_{\rm act.unocc}$. At $N'_{\rm act.unocc} = 25\%$ of the total active virtual orbitals, the cc--pVDZ basis recovers less than 6--31G basis, for which as $N'_{\rm act.unocc}$ increases, the two basis sets show similar trends. The energy recovery curves for CO in the 6--31G and cc--pVDZ basis sets are shown in Figure~\ref{fig:CO_basis_comparison}.
 
+If instead we looked at an fixed number of active virtual orbitals, $N'_{\rm act.unocc} = 5$, their procentages of the total active virtual orbitals are different for the two basis sets, with 6--31G having a higher percentage than cc--pVDZ. We can find this point by counting 5 points along the line for each basis set in Figure~\ref{fig:CO_basis_comparison}. At this fixed number of active virtual orbitals, the 6--31G basis recovers a higher fraction of correlation energy than the cc--pVDZ basis, as the total number of virtual orbitals is smaller in 6--31G. 
 
-
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/CO/ovos_basis_set_CO_['6-31G', 'cc-pVDZ'].png}
     \caption{Basis set dependence of energy recovery for CO. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
@@ -454,9 +454,9 @@ Observing the energy recovery curves for CO in the 6--31G and cc--pVDZ basis set
 
 \subsubsection*{H2O}
 
-"Comment on the resulting data illustrated in Figure~\ref{fig:H2O_basis_comparison}..."
+The correlated energy curves for H2O in the 6--31G (8) and cc--pVDZ (19) basis sets show a stronger trend in the larger cc--pVDZ basis set, beating the smaller 6--31G basis set at most points along the curve, see Figure~\ref{fig:H2O_basis_comparison}. At $N'_{\rm act.unocc} = 25\%$ of the total active virtual orbitals, the cc--pVDZ basis recovers more correlation energy than the 6--31G basis. As $N'_{\rm act.unocc}$ increases, the two basis sets show similar trends, with the cc--pVDZ basis meeting the 6--31G basis. At a fixed number of active virtual orbitals, $N'_{\rm act.unocc} = 5$, the 6--31G basis recovers a higher correlation energy than the cc--pVDZ basis, as the total number of virtual orbitals is smaller in 6--31G.
 
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/H2O/ovos_basis_set_H2O_['6-31G', 'cc-pVDZ'].png}
     \caption{Basis set dependence of energy recovery for H2O. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
@@ -466,10 +466,9 @@ Observing the energy recovery curves for CO in the 6--31G and cc--pVDZ basis set
 
 \subsubsection*{HF}
 
-"Comment on the resulting data illustrated in Figure~\ref{fig:HF_basis_comparison}..."
+The correlated energy curves for HF in the 6--31G (6) and cc--pVDZ (14) basis sets show a stronger trend in the larger cc--pVDZ basis set, beating the smaller 6--31G basis set at most points along the curve, see Figure~\ref{fig:HF_basis_comparison}. At $N'_{\rm act.unocc} = 25\%$ of the total active virtual orbitals, the cc--pVDZ basis recovers more correlation energy than the 6--31G basis. As $N'_{\rm act.unocc}$ increases, the two basis sets show similar trends, with the cc--pVDZ basis meeting the 6--31G basis. At a fixed number of active virtual orbitals, $N'_{\rm act.unocc} = 5$, the 6--31G basis recovers a higher correlation energy than the cc--pVDZ basis, as the total number of virtual orbitals is smaller in 6--31G.
 
-
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/HF/ovos_basis_set_HF_['6-31G', 'cc-pVDZ'].png}
     \caption{Basis set dependence of energy recovery for HF. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
@@ -478,9 +477,11 @@ Observing the energy recovery curves for CO in the 6--31G and cc--pVDZ basis set
 
 \subsubsection*{NH3}
 
-"Comment on the resulting data illustrated in Figure~\ref{fig:NH3_basis_comparison}..."
+% 6-31G (10) and cc--pVDZ (24) 
 
-\begin{figure}[ht]
+The correlated energy curves for NH3 in the 6--31G (10) and cc--pVDZ (24) basis sets show a stronger trend in the larger cc--pVDZ basis set, beating the smaller 6--31G basis set at most points along the curve, see Figure~\ref{fig:NH3_basis_comparison}. At $N'_{\rm act.unocc} = 25\%$ of the total active virtual orbitals, the cc--pVDZ basis recovers more correlation energy than the 6--31G basis. As $N'_{\rm act.unocc}$ increases, the two basis sets show similar trends, with the cc--pVDZ basis meeting the 6--31G basis. At a fixed number of active virtual orbitals, $N'_{\rm act.unocc} = 5$, the 6--31G basis recovers a higher correlation energy than the cc--pVDZ basis, as the total number of virtual orbitals is smaller in 6--31G.
+
+\begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/NH3/ovos_basis_set_NH3_['6-31G', 'cc-pVDZ'].png}
     \caption{Basis set dependence of energy recovery for NH3. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
@@ -489,9 +490,12 @@ Observing the energy recovery curves for CO in the 6--31G and cc--pVDZ basis set
 
 \subsubsection*{Li2}
 
-"Comment on the resulting data illustrated in Figure~\ref{fig:Li2_basis_comparison}..."
+% 6-31G (15) and cc--pVDZ (25) 
 
-\begin{figure}[ht]
+The correlated energy curves for Li2 in the 6--31G (15) and cc--pVDZ (25) basis sets show a similar trend, with the cc--pVDZ basis set generally recovering more correlation energy than the 6--31G basis set. This is consistent with the observations for previous molecules, where larger basis sets tend to perform better in terms of energy recovery, especially at lower $N'_{\rm act.unocc}$. At $N'_{\rm act.unocc} = 25\%$ of the total active virtual orbitals, the cc--pVDZ basis recovers more correlation energy than the 6--31G basis. As $N'_{\rm act.unocc}$ increases, the two basis sets show similar trends, with the cc--pVDZ basis meeting the 6--31G basis. Where when they get to the bad points of cc--pVDZ, the 6--31G basis performs better. At a fixed number of active virtual orbitals, $N'_{\rm act.unocc} = 5$, the 6--31G basis recovers a higher correlation energy than the cc--pVDZ basis, as the total number of virtual orbitals is smaller in 6--31G.
+
+
+\begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/Li2/ovos_basis_set_Li2_['6-31G', 'cc-pVDZ'].png}
     \caption{Basis set dependence of energy recovery for Li2. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
@@ -502,13 +506,13 @@ Observing the energy recovery curves for CO in the 6--31G and cc--pVDZ basis set
 
 ...
 
-For the bigger basis set cc--pVDZ, at the number of virtual space of the smaller 6--31G set for active virtual space, we can recover a better correlation energy than at full space in 6--31G...
+% For the bigger basis set cc--pVDZ, at the number of virtual space of the smaller 6--31G set for active virtual space, we can recover a better correlation energy than at full space in 6--31G...
 
-If instead we fix the absolute number of active unoccupied orbitals, we can recover a higher fraction of correlation energy in a smaller basis set, as the total number of virtual orbitals is smaller...
+% If instead we fix the absolute number of active unoccupied orbitals, we can recover a higher fraction of correlation energy in a smaller basis set, as the total number of virtual orbitals is smaller...
 
-Instead we flip it and make a sat procentage of the active unoccupied orbitals, we can recover a better correlation energy in a bigger basis set, as the total number of virtual orbitals is smaller, as seen in ... 
+% Instead we flip it and make a sat procentage of the active unoccupied orbitals, we can recover a better correlation energy in a bigger basis set, as the total number of virtual orbitals is smaller, as seen in ... 
 
-These results indicate that the choice of basis set has a significant impact on the energy recovery behaviour of the OVOS algorithm, a larger basis set means more mixing options translating to a better correlation energy...
+% These results indicate that the choice of basis set has a significant impact on the energy recovery behaviour of the OVOS algorithm, a larger basis set means more mixing options translating to a better correlation energy...
 
 
 \subsection{Comparison with Adamowicz and Bartlett (1987) - "Skip?"}
@@ -544,7 +548,7 @@ Adamowicz \& Bartlett's 1987 paper presents OVOS results for the CH\textsubscrip
 
 % Wanting to compare results for the same molecule, but not being able to replicate their geometrical setup and basis set, I instead compare the energy recovery curves for CH\textsubscript{2} in the 6--31G and cc--pVDZ basis sets with the RHF reference. The results are plotted in Table~\ref{tab:comparison_AB}.
 
-% \begin{table}[ht]
+% \begin{table}[h]
 %     \centering
 %     \begin{tabular}{cccc}
 %         \hline

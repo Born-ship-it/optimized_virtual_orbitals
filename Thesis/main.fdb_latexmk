@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1778080207.41757 "main.aux" "main.bbl" "main" 1778080222.7822 0
+["bibtex main"] 1778158346.66547 "main.aux" "main.bbl" "main" 1778158361.51172 0
   "./bibliography.bib" 1777579825 13222 eff74678dfbd825d8984c561f2030ed9 ""
   "d:/Programs/texlive/2026/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1775563050 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
-  "main.aux" 1778080220 51822 b0b9bd4152063ac8c264dfa5ac54c017 "pdflatex"
+  "main.aux" 1778158358 51822 d54351839c7ffec8922f52546cda90a8 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1778080208.40072 "d:/Programs/Git Clones/optimized_virtual_orbitals/Thesis/main.tex" "main.pdf" "main" 1778080222.7837 0
+["pdflatex"] 1778158347.71325 "d:/Programs/Git Clones/optimized_virtual_orbitals/Thesis/main.tex" "main.pdf" "main" 1778158361.51348 0
   "appendices/appendix_a.tex" 1774731725 3271 935cdd3a8a7b16c19cb83c0dcc9dafc3 ""
   "appendices/appendix_b.tex" 1774731725 2020 f5e8a7d80a487f923a09624eb822ea40 ""
   "appendices/appendix_c.tex" 1774731725 3583 a7a7c9efbfc2a1cfee5a3a77585abf1d ""
@@ -16,11 +16,11 @@
   "chapters/acronyms.tex" 1774731725 2772 221ed26c0bae1f0fb372495c7dde72b0 ""
   "chapters/background.tex" 1777971825 66382 d105a6ab671d28039ea6e71b0ad48ba3 ""
   "chapters/computational_details.tex" 1777581445 20554 1558e7c49a95f7db2a51e7f88bab910d ""
-  "chapters/conclusion.tex" 1778080161 8309 db4d2f80286442e08007f2d1844495d0 ""
+  "chapters/conclusion.tex" 1778158331 9179 ee1f564a48d6bef41d57cc72c4854579 ""
   "chapters/introduction.tex" 1777966636 18881 14d46db8d6971430490a7af621c030db ""
   "chapters/method.tex" 1776948136 17482 f36a66ce4e33cd9e4e5ee0c8b5497505 ""
   "chapters/outlook.tex" 1777555628 10479 f43118acdd1e63eaaa62fa52140c251a ""
-  "chapters/results.tex" 1778080159 53805 d6398f0bdd25ccd998baa40adaeb6a80 ""
+  "chapters/results.tex" 1778158329 57258 9c4a49712d9f839728dd2de6d456fa5f ""
   "chapters/theory.tex" 1777586865 76678 ad745b0ef1c9229ef290f97fb3c829fc ""
   "d:/Programs/Git Clones/optimized_virtual_orbitals/Thesis/main.tex" 1774731725 1556 dce1740a2851f0c8941b7e61b14df8ad ""
   "d:/Programs/texlive/2026/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1775562491 2375 baa924870cfb487815765f9094cf3728 ""
@@ -319,13 +319,13 @@
   "figures/OVOS_PLOTS/NH3/ovos_basis_set_NH3_['6-31G', 'cc-pVDZ'].png" 1777973227 126803 b58f0b98528d7235c80199c2fa67f557 ""
   "figures/Placeholder.png" 1774731725 45282 6c4f0306b95f9f6351449c9b25cef20e ""
   "frontpage.tex" 1774731725 2213 9fa8577cbf823929a64abbaed1f95aa5 ""
-  "main.aux" 1778080220 51822 b0b9bd4152063ac8c264dfa5ac54c017 "pdflatex"
-  "main.bbl" 1778080208 8396 4e379a157b95a871c28793e615585b10 "bibtex main"
-  "main.lof" 1778080220 7857 69d7fd2b9edfb410de027ac9e6a3f21f "pdflatex"
-  "main.lot" 1778080220 1447 3ae14da52d869afeefaae865bd7b297d "pdflatex"
-  "main.out" 1778080220 28038 b6a494398e3fe00244b56fe7bc137944 "pdflatex"
+  "main.aux" 1778158358 51822 d54351839c7ffec8922f52546cda90a8 "pdflatex"
+  "main.bbl" 1778158347 8396 4e379a157b95a871c28793e615585b10 "bibtex main"
+  "main.lof" 1778158358 7857 69d7fd2b9edfb410de027ac9e6a3f21f "pdflatex"
+  "main.lot" 1778158358 1447 3ae14da52d869afeefaae865bd7b297d "pdflatex"
+  "main.out" 1778158358 28038 b6a494398e3fe00244b56fe7bc137944 "pdflatex"
   "main.tex" 1774731725 1556 dce1740a2851f0c8941b7e61b14df8ad ""
-  "main.toc" 1778080220 12895 8d928335d0a3f0598586b4b53b5bee71 "pdflatex"
+  "main.toc" 1778158358 12895 151ebe6f98da274132cbad88a306fd07 "pdflatex"
   "preamble.tex" 1777582613 5192 270df82b44b1e5ba4a2b89cf68dd9b2f ""
   (generated)
   "main.aux"
