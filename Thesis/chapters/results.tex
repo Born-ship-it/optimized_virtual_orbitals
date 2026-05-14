@@ -395,15 +395,37 @@ Between the three strategies, we can pick the best result at each $N'_{\rm act.u
 
 "Comment on the resulting data illustrated in Figure~\ref{fig:H2O_cc-pVDZ_ovos_init_comparison}..."
 
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ.png}
+    \caption{Comparison of final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$ orbitals, and best-of-1000 random unitary samples, for [molecule]/[basis]. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
+    \label{fig:H2O_cc-pVDZ_ovos_init_comparison}
+\end{figure}
+
 
 \subsubsection*{HF}
 
 "Comment on the resulting data illustrated in Figure~\ref{fig:HF_cc-pVDZ_ovos_init_comparison}..."
 
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/OVOS_PLOTS/HF/cc-pVDZ/ovos_convergence_HF_cc-pVDZ.png}
+    \caption{Comparison of final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$ orbitals, and best-of-1000 random unitary samples, for [molecule]/[basis]. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
+    \label{fig:HF_cc-pVDZ_ovos_init_comparison}
+\end{figure}
+
 
 \subsubsection*{NH3}
 
 "Comment on the resulting data illustrated in Figure~\ref{fig:NH3_cc-pVDZ_ovos_init_comparison}..."
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/OVOS_PLOTS/NH3/cc-pVDZ/ovos_convergence_NH3_cc-pVDZ.png}
+    \caption{Comparison of final OVOS correlation energies for three initialisation strategies: default SCF (RHF), warm-start from previous $N'$ orbitals, and best-of-1000 random unitary samples, for [molecule]/[basis]. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed light blue line marks the OOMP2 correlation energy at full space, PySCF reference. Dashed purple line marks the FCI correlation energy at full space, PySCF reference. The points for each $N'_{\rm act.unocc}$ show the change in correlation energy achieved by OVOS at each active virtual orbital count. A line is drawn to connect the points for visualization purposes, at which the number of iterations to convergence is annotated.}
+    \label{fig:NH3_cc-pVDZ_ovos_init_comparison}
+\end{figure}
+
 
 % We see a relative agreement between the three initialisation strategies, with the best-of-random sampling sometimes finding a slightly lower energy than the default and warm-start approaches. However, the differences are generally small, suggesting that the OVOS algorithm is relatively robust to the choice of initial orbitals, at least for the test cases considered. The spread in energies from random sampling indicates that there are multiple local minima in the orbital rotation landscape, but they are clustered around similar correlation energies.
 
@@ -447,7 +469,7 @@ If instead we looked at an fixed number of active virtual orbitals, $N'_{\rm act
 \begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/CO/ovos_basis_set_CO_['6-31G', 'cc-pVDZ'].png}
-    \caption{Basis set dependence of energy recovery for CO. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
+    \caption{Basis set dependence of energy recovery for CO. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}
     \label{fig:CO_basis_comparison}
 \end{figure}
 
@@ -459,7 +481,7 @@ The correlated energy curves for H2O in the 6--31G (8) and cc--pVDZ (19) basis s
 \begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/H2O/ovos_basis_set_H2O_['6-31G', 'cc-pVDZ'].png}
-    \caption{Basis set dependence of energy recovery for H2O. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
+    \caption{Basis set dependence of energy recovery for H2O. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}
     \label{fig:H2O_basis_comparison}
 \end{figure}
 
@@ -471,7 +493,7 @@ The correlated energy curves for HF in the 6--31G (6) and cc--pVDZ (14) basis se
 \begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/HF/ovos_basis_set_HF_['6-31G', 'cc-pVDZ'].png}
-    \caption{Basis set dependence of energy recovery for HF. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
+    \caption{Basis set dependence of energy recovery for HF. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}
     \label{fig:HF_basis_comparison}
 \end{figure}
 
@@ -484,7 +506,7 @@ The correlated energy curves for NH3 in the 6--31G (10) and cc--pVDZ (24) basis 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/NH3/ovos_basis_set_NH3_['6-31G', 'cc-pVDZ'].png}
-    \caption{Basis set dependence of energy recovery for NH3. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
+    \caption{Basis set dependence of energy recovery for NH3. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}
     \label{fig:NH3_basis_comparison}
 \end{figure}
 
@@ -498,7 +520,7 @@ The correlated energy curves for Li2 in the 6--31G (15) and cc--pVDZ (25) basis 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{figures/OVOS_PLOTS/Li2/ovos_basis_set_Li2_['6-31G', 'cc-pVDZ'].png}
-    \caption{Basis set dependence of energy recovery for Li2. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line. A larger basis set, with more virtual orbitals, shifts the curve to the right and down, indicating that a smaller fraction of active virtuals is required to achieve the same recovery rate for the bigger the basis set.}
+    \caption{Basis set dependence of energy recovery for Li2. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}
     \label{fig:Li2_basis_comparison}
 \end{figure}
 
@@ -566,62 +588,62 @@ Adamowicz \& Bartlett's 1987 paper presents OVOS results for the CH\textsubscrip
 
 Looking past not being able to replicate the exact setup of Adamowicz \& Bartlett, the basis sets behaviour shows some similarities with their findings, the energy recovery curve showing a rapid increase in correlation energy recovered as $N'_{\rm act.unocc}$ increases \ref{sec:energy-recovery}, the increase in basis set size leading to a higher correlation energy recovery at the same $N'_{\rm act.unocc}$. 
 
-\section{Computational Cost - "Skip?"}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 6.7]
-%   "The practical value of OVOS depends on its computational overhead
-%    relative to a full-space MP2 calculation. This section reports
-%    wall-clock timings, identifies the algorithmic bottleneck,
-%    and assesses empirical scaling with $N'_{\rm act.unocc}$."
-%
-% [WHAT TO COVER]
-%   - Timing data from \texttt{branch/profil/} profiling results.
-%   - Identify bottleneck: is it integral transformation, Hessian assembly,
-%     or matrix inversion? (profil/ .txt files reveal this.)
-%   - Theoretical scaling: Hessian assembly $\mathcal{O}(N'^2 N_{\rm inact}^2 N_{\rm occ}^2)$;
-%     integral transform $\mathcal{O}(N_{\rm basis}^4)$.
-%   - Plot empirical scaling: log-log fit to extract exponent.
-%   - Compare: OVOS overhead vs.~savings from reduced subsequent correlation steps.
-%
-% [FIGURE]
-%   x-axis: $N_{\rm act.unocc}$ (log scale) | y-axis: Wall-clock time / s (log scale)
-%   Points for each molecule/basis; log-log linear fit.
-%   Caption: ``Empirical scaling of OVOS wall-clock time with virtual
-%   orbital count $N_{\rm act.unocc}$. The line shows a power-law fit;
-%   the exponent is compared to the theoretical prediction.''
-%
-% [LEAD-IN TO §6.8 (Brueckner)]
-%   "Having established the energy performance and cost of OVOS,
-%    the following section examines whether the converged orbitals
-%    exhibit the Brueckner property (reduced T1 amplitudes) predicted
-%    by theory."
-% ---------------------------------------------------------------
+% \section{Computational Cost - "Skip?"}
+% % ---------------------------------------------------------------
+% % [SECTION INTRO – 6.7]
+% %   "The practical value of OVOS depends on its computational overhead
+% %    relative to a full-space MP2 calculation. This section reports
+% %    wall-clock timings, identifies the algorithmic bottleneck,
+% %    and assesses empirical scaling with $N'_{\rm act.unocc}$."
+% %
+% % [WHAT TO COVER]
+% %   - Timing data from \texttt{branch/profil/} profiling results.
+% %   - Identify bottleneck: is it integral transformation, Hessian assembly,
+% %     or matrix inversion? (profil/ .txt files reveal this.)
+% %   - Theoretical scaling: Hessian assembly $\mathcal{O}(N'^2 N_{\rm inact}^2 N_{\rm occ}^2)$;
+% %     integral transform $\mathcal{O}(N_{\rm basis}^4)$.
+% %   - Plot empirical scaling: log-log fit to extract exponent.
+% %   - Compare: OVOS overhead vs.~savings from reduced subsequent correlation steps.
+% %
+% % [FIGURE]
+% %   x-axis: $N_{\rm act.unocc}$ (log scale) | y-axis: Wall-clock time / s (log scale)
+% %   Points for each molecule/basis; log-log linear fit.
+% %   Caption: ``Empirical scaling of OVOS wall-clock time with virtual
+% %   orbital count $N_{\rm act.unocc}$. The line shows a power-law fit;
+% %   the exponent is compared to the theoretical prediction.''
+% %
+% % [LEAD-IN TO §6.8 (Brueckner)]
+% %   "Having established the energy performance and cost of OVOS,
+% %    the following section examines whether the converged orbitals
+% %    exhibit the Brueckner property (reduced T1 amplitudes) predicted
+% %    by theory."
+% % ---------------------------------------------------------------
 
-Practically speaking, the computational cost of the OVOS algorithm is an important consideration for its applicability to larger systems. In this section, I report timings, bottlenecks, and assesses empirical scaling with $N'$.
+% Practically speaking, the computational cost of the OVOS algorithm is an important consideration for its applicability to larger systems. In this section, I report timings, bottlenecks, and assesses empirical scaling with $N'$.
 
-"Having detailed each steps computational cost in earliere chapter, I present here the wall-clock timings for the OVOS algorithm for a test molecule in a low, medium and high number of active unoccupied orbitals, for cc--pVDZ basis set..."
+% "Having detailed each steps computational cost in earliere chapter, I present here the wall-clock timings for the OVOS algorithm for a test molecule in a low, medium and high number of active unoccupied orbitals, for cc--pVDZ basis set..."
 
-% It is worth mentioning that it is relatively inexpensive to compute the MP2 correlation energy for bigger basis sets, in software packages like PySCF... CITE????
+% % It is worth mentioning that it is relatively inexpensive to compute the MP2 correlation energy for bigger basis sets, in software packages like PySCF... CITE????
 
-% I highlight here PySCF MP2 for the test molecule H\textsubscript{2}O in the cc--pVTZ basis, takes ... seconds, while the OVOS algorithm takes ... seconds at $25\%$, $N'_{\rm act.unocc} = ...$ (Recovers ...\%) and at $50\%$, $N'_{\rm act.unocc} = ....$ (Recovers ...\%). Ran on the device detailed in Chapter~\ref{ch:computational}. For which the OVOS algorthm is ... times more  expensive than the MP2 calculation at $25\%$ and ... times more expensive at $50\%$.
+% % I highlight here PySCF MP2 for the test molecule H\textsubscript{2}O in the cc--pVTZ basis, takes ... seconds, while the OVOS algorithm takes ... seconds at $25\%$, $N'_{\rm act.unocc} = ...$ (Recovers ...\%) and at $50\%$, $N'_{\rm act.unocc} = ....$ (Recovers ...\%). Ran on the device detailed in Chapter~\ref{ch:computational}. For which the OVOS algorthm is ... times more  expensive than the MP2 calculation at $25\%$ and ... times more expensive at $50\%$.
 
-% Profilling the OVOS code for a test molecule in a few active unoccupied orbitals for two different basis sets reveals that the bottleneck steps in the OVOS algorithm are the ..., which scales as ..., and the ..., which scales as ..., see Table~\ref{tab:profiling}.
+% % Profilling the OVOS code for a test molecule in a few active unoccupied orbitals for two different basis sets reveals that the bottleneck steps in the OVOS algorithm are the ..., which scales as ..., and the ..., which scales as ..., see Table~\ref{tab:profiling}.
 
-% \begin{table}[ht]
-%     \centering
-%     \begin{tabular}{lcc}
-%         \hline
-%         Step & Time (s) & Scaling \\
-%         \hline
-%         Integral transformation & ... & $\mathcal{O}(N_{\rm basis}^4)$ \\
-%         Hessian assembly & ... & $\mathcal{O}(N'^2 N_{\rm inact}^2 N_{\rm occ}^2)$ \\
-%         Matrix inversion & ... & $\mathcal{O}(N'^3)$ \\
-%         Other steps & ... & ... \\
-%         \hline
-%     \end{tabular}
-%     \caption{Profiling of OVOS algorithm steps for [molecule]/[basis] with $N'_{\rm act.unocc} = ...$. The integral transformation and Hessian assembly are identified as the bottlenecks, with their respective theoretical scalings.}
-%     \label{tab:profiling}
-% \end{table}
+% % \begin{table}[ht]
+% %     \centering
+% %     \begin{tabular}{lcc}
+% %         \hline
+% %         Step & Time (s) & Scaling \\
+% %         \hline
+% %         Integral transformation & ... & $\mathcal{O}(N_{\rm basis}^4)$ \\
+% %         Hessian assembly & ... & $\mathcal{O}(N'^2 N_{\rm inact}^2 N_{\rm occ}^2)$ \\
+% %         Matrix inversion & ... & $\mathcal{O}(N'^3)$ \\
+% %         Other steps & ... & ... \\
+% %         \hline
+% %     \end{tabular}
+% %     \caption{Profiling of OVOS algorithm steps for [molecule]/[basis] with $N'_{\rm act.unocc} = ...$. The integral transformation and Hessian assembly are identified as the bottlenecks, with their respective theoretical scalings.}
+% %     \label{tab:profiling}
+% % \end{table}
 
 
 
@@ -652,6 +674,12 @@ Practically speaking, the computational cost of the OVOS algorithm is an importa
 % THIS!!! : https://link.springer.com/content/pdf/10.1007/bf00549693.pdf
 % EH... : https://fy.chalmers.se/~f3ail/Publications/LowdinFinal.pdf
 % ---------------------------------------------------------------
+
+
+% I am finding that for lower $N'$ values, the T1 amplitudes for the OVOS-optimised orbitals are significantly smaller than those for the canonical HF orbitals, finding the lowest of values on the order of $10^{-17}$ to $10^{-18}$, compared to "larger" values on the order of $10^{-16}$ for $N'$ values close to the full space. Comparedly the T1 amplitudes for the canonical HF orbitals are typically on the order of $10^{-16}$, and do not show a clear trend as $N'$ increases. This suggests that the OVOS-optimised orbitals are indeed closer to Brueckner orbitals than the canonical HF orbitals, especially for lower values of $N'$, and therefore can be expected to capture more correlation energy in subsequent calculations.
+
+% Reference appendix for code when it would show the T1 amplitudes for the OVOS-optimised orbitals and the canonical HF orbitals for all the test molecules and basis sets considered, as a function of $N'_{\rm act.unocc}$.
+
 
 
 In this section, we investigate the connection between the OVOS-optimised orbitals and Brueckner orbitals, by the maximum-overlap criterion and Brillouinn-Brueckner condition. Brueckner orbitals are defined as the orbitals for which the single excitation amplitudes (T1) vanish, i.e. the excited determinants with one electron promoted from an occupied to a virtual orbital do not contribute to the wavefunction, see Section~\ref{sec:brueckner}. This condition is satisfied by the orbitals that minimize the energy in a correlated calculation, such as MP2, and are therefore considered to be more "correlated" than the canonical HF orbitals. 
