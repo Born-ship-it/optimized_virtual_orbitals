@@ -231,30 +231,362 @@ def run_ucc_and_get_stats(wf, str_, orbital_optimization, atol=1e-6):
 
 
 
+# def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas, thetas_bool=False):
+#     # name_out = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/OVOS_{molecule}_{dist}_{basis}_VQE_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}_output.txt"
+#     # if not os.path.exists(os.path.dirname(name_out)):
+#     #     os.makedirs(os.path.dirname(name_out))
+
+#     # with open(name_out, "w") as f:
+#     #     # sys.stdout = Dee(sys.__stdout__, f)
+#     #     original_stdout = sys.stdout
+
+#         # Setup logging
+#     logger, name_out = setup_logging_in_function(seed, dist, molecule, basis, num_opt_virtual_orbs, oo)
+#     set_logger(logger)
+
+#     # Change seed to True if thetas_boll is True to use thetas as input instead of random initialization
+#     if thetas_bool == True:
+#         log_print(f"Using provided thetas for seed {seed} instead of random initialization.")
+#         seed = "True"  # Just to indicate in the logs that we are using provided thetas instead of random initialization
+
+
+#     if True:  # Just capture to list and write at the end to avoid issues with multiprocessing
+#         try:    
+#             log_print(f"\nRunning VQE with OVOS optimization for {molecule} w. bond length {dist} in basis {basis} with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
+
+#             # Water molecule, minimal basis
+#             mol = gto.Mole()
+#             mol.atom = atom
+#             mol.basis = basis
+#             mol.unit = 'Angstrom'
+#             mol.spin = 0
+#             mol.charge = 0
+#             mol.symmetry = False
+#             mol.verbose = 0
+#             mol.build()
+#             log_print(f"Built molecule {molecule} with basis {basis} and bond length {dist} Angstrom.")
+#                 # Get one- and two-electron integrals
+#             h_core = mol.intor("int1e_kin") + mol.intor("int1e_nuc")
+#             # print("Calculated one-electron integrals (kinetic + nuclear).")
+#             g_eri = mol.intor("int2e")
+#             # print("Calculated two-electron integrals.")
+
+#                 # Number of electrons and orbitals
+#             num_electrons = mol.nelectron
+#             num_orbitals = mol.nao_nr() 
+#             log_print(f"Number of electrons: {num_electrons}, Number of orbitals: {num_orbitals}")
+
+#             # Create OVOS object and run
+#                 # RHF reference for OVOS
+#             mf = scf.RHF(mol)
+#             mf.verbose = 0
+#             mf.kernel()
+
+#                 # Initial data (RHF orbitals)
+#             Fao = [mf.get_fock(), mf.get_fock()]
+#             mo_coeffs = [mf.mo_coeff, mf.mo_coeff]
+#                     # Check if mo_coeffs are unrestricted or restricted
+#             if np.isclose(mo_coeffs[0], mo_coeffs[1], atol=1e-12).all():
+#                 log_print("Initial MO coefficients are restricted (RHF-like).")
+#             else:
+#                 log_print("Initial MO coefficients are unrestricted (UHF-like).")
+
+#                 # Set up OVOS
+#             num_opt_virtual_orbs = int(num_opt_virtual_orbs * (num_orbitals - num_electrons//2))  # Convert fraction to actual number of orbitals
+#             log_print(f"Optimizing {num_opt_virtual_orbs} active virtual orbitals (out of {num_orbitals - num_electrons//2} total virtual orbitals).")
+#             ovos = OVOS(
+#                 mol=mol,
+#                 scf=mf,
+#                 Fao=Fao,
+#                 num_opt_virtual_orbs=num_opt_virtual_orbs*2,      # active virtual spin‑orbitals
+#                 mo_coeff=mo_coeffs,
+#                 init_orbs="RHF",
+#                 verbose=1,
+#                 max_iter=1000,
+#                 conv_energy=1e-15,
+#                 conv_grad=1e-4,
+#                 keep_track_max=50
+#             )
+#                 # Run OVOS
+#             E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
+#             E_corr = E_corr  # Final correlation energy
+#             E_tot = E_corr + mf.e_tot
+#             log_print(f"\nOptimization finished. Final MP2 energy = {E_tot} Hartree. (ΔE_corr = {E_corr} Hartree)")
+#             # Check if mo_coeffs are unrestricted or restricted
+#             if np.isclose(E_corr_mo[0], E_corr_mo[1], atol=1e-12).all():
+#                 log_print("OVOS optimized orbitals are restricted (RHF-like).")
+#             else:
+#                 log_print("OVOS optimized orbitals are unrestricted (UHF-like).")
+#             log_print()
+
+#             # # Kill for debug here
+#             # assert False, "Debug stop after OVOS optimization to check results before proceeding to VQE optimizations with different references. Remove this line to run the full script."
+
+#             # SlowQuant
+#             log_print()
+#             log_print("Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...")
+#                 # Initialize for UPS wave function with OVOS-optimized orbitals
+#             WF_ovos = UnrestrictedWaveFunctionUPS(
+#                 mol.nelectron,
+#                 ((mol.nelectron//2,mol.nelectron//2), num_electrons//2+num_opt_virtual_orbs),                   # CAS(2,2) for H2O in 6-31G
+#                 E_corr_mo,  # Use OVOS-optimized orbitals
+#                 h_core,
+#                 g_eri,
+#                 "utups",
+#                 {"n_layers":1},
+#                 include_active_kappa=False,
+#             )
+#             atol = 1e-6
+#                 # Use same random seed and initial thetas for fair comparison
+#                     # Initialize thetas randomly for reproducibility
+#             if thetas_bool == False:
+#                 np.random.seed(seed)
+#                 thetas = (2*np.pi*np.random.random(len(WF_ovos.thetas)) - np.pi).tolist()       
+
+#             if thetas_bool == False:
+#                 WF_ovos.thetas = thetas
+#             else:
+#                 WF_ovos.thetas = thetas[0]
+            
+            
+#                 # Optimize WF
+#             stats_ovos_opt = run_ucc_and_get_stats(WF_ovos, "BFGS", oo, atol)
+#                     # Get optimization iterations/evaluations
+#             iter_ovos_opt = stats_ovos_opt['iterations']
+#             eval_ovos_opt = [stats_ovos_opt['function_evaluations'], stats_ovos_opt['gradient_evaluations']]
+#                     # Get optimized energy
+#             E_ovos_opt = stats_ovos_opt['final_energy']
+#             E_ovos_hist = stats_ovos_opt['iter_energies']
+#             log_print(f"OVOS optimized energy = {E_ovos_opt} Hartree @ iterations {iter_ovos_opt}.")
+
+#                 # Save w. OVOS-optimized orbitals for later comparison
+#             file_out_ovos = f"backup/data/{molecule}/{basis}/VQE/OVOS/{dist}/UPS_OVOS_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}.json"
+#             if not os.path.exists(os.path.dirname(file_out_ovos)):
+#                 os.makedirs(os.path.dirname(file_out_ovos))
+#             with open(file_out_ovos, "w") as f:
+#                 json.dump({
+#                     "dist": dist,
+#                     "thetas": thetas,
+#                     "oo": oo,
+#                     "E_corr_OVOS": E_corr,
+#                     "mo": E_corr_mo,
+#                     "iterations": iter_ovos_opt,
+#                     "final_energy": E_ovos_opt,
+#                     "iter_energies": E_ovos_hist,
+#                     "function_evaluations": eval_ovos_opt[0],
+#                     "gradient_evaluations": eval_ovos_opt[1],
+#                 }, f, indent=4, default=lambda x: x.tolist() if isinstance(x, np.ndarray) else x)
+
+
+#             # Compare with UHF reference
+#             log_print()
+#             log_print("Calculating UHF reference for comparison...")
+#                 # UHF reference for comparison
+#             mf_uhf = scf.UHF(mol)
+#             mf_uhf.verbose = 0
+#             mf_uhf.kernel()
+
+#             #     # Initualize for UPS wave function with UHF orbitals
+#             WF_uhf = UnrestrictedWaveFunctionUPS(
+#                 mol.nelectron, 
+#                 ((mol.nelectron//2, mol.nelectron//2), num_electrons//2+num_opt_virtual_orbs),                   # CAS(2,2) for H2O in 6-31G
+#                 mf_uhf.mo_coeff,  
+#                 h_core,
+#                 g_eri,
+#                 "utups",
+#                 {"n_layers":1},
+#                 include_active_kappa=False,
+#             )
+#             if thetas_bool == False:
+#                 WF_uhf.thetas = thetas
+#             else:
+#                 WF_uhf.thetas = thetas[1]
+
+#                 # Optimize WF
+#             stats_uhf_opt = run_ucc_and_get_stats(WF_uhf, "BFGS", oo, atol)
+#                     # Get optimization iterations/evaluations
+#             iter_uhf_opt = stats_uhf_opt['iterations']
+#             eval_uhf_opt = [stats_uhf_opt['function_evaluations'], stats_uhf_opt['gradient_evaluations']]
+#                     # Get optimized energy
+#             E_uhf_opt = stats_uhf_opt['final_energy']
+#             E_uhf_hist = stats_uhf_opt['iter_energies']
+#             log_print(f"UHF energy = {E_uhf_opt} Hartree @ iterations {iter_uhf_opt}.")
+
+#                 # Save w. UHF orbitals for later comparison
+#             file_out_uhf = f"backup/data/{molecule}/{basis}/VQE/UHF/{dist}/UPS_UHF_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}.json"
+#             if not os.path.exists(os.path.dirname(file_out_uhf)):
+#                 os.makedirs(os.path.dirname(file_out_uhf))
+#             with open(file_out_uhf, "w") as f:
+#                 json.dump({
+#                     "dist": dist,
+#                     "thetas": thetas,
+#                     "oo": oo,
+#                     "mo": mf_uhf.mo_coeff,
+#                     "iterations": iter_uhf_opt,
+#                     "final_energy": E_uhf_opt,
+#                     "iter_energies": E_uhf_hist,
+#                     "function_evaluations": eval_uhf_opt[0],
+#                     "gradient_evaluations": eval_uhf_opt[1],
+#                 }, f, indent=4, default=lambda x: x.tolist() if isinstance(x, np.ndarray) else x)
+
+
+#             # Compare with UMP2 natural orbital reference
+#             log_print()
+#             log_print("Calculating UMP2 natural orbitals for comparison...")
+#                 # UMP2 natural orbitals for comparison
+#             mf_ump2 = mol.UHF(verbose=0).run()
+#             ump2_obj = mp.UMP2(mf_ump2).run()
+#             noons, mp2_no_coeff = mcscf.addons.make_natural_orbitals(ump2_obj)
+
+#                 # Energies for reference
+#             uhf_energy = mf_ump2.e_tot
+#             ump2_energy = ump2_obj.e_tot
+
+#             # Convert to full spin-orbital basis by duplicating alpha and beta orbitals
+#                 # If rhf-like, just duplicate the same orbitals for alpha and beta
+#             if isinstance(mp2_no_coeff, np.ndarray) and mp2_no_coeff.ndim == 2:
+#                 # Restricted case: duplicate the same orbitals for alpha and beta
+#                 mp2_no_coeff = [mp2_no_coeff, mp2_no_coeff.copy()]
+#             elif isinstance(mp2_no_coeff, (list, tuple)) and len(mp2_no_coeff) == 2:
+#                 # Already unrestricted, so we can use the alpha and beta orbitals as they are
+#                 pass
+#             else:
+#                 raise ValueError("Unexpected case for UMP2 natural orbitals: neither RHF-like nor UHF-like. Please check the orbitals.")
+
+#             # check if mp2_no_coeff are unrestricted or restricted
+#             if np.isclose(mp2_no_coeff[0], mp2_no_coeff[1], atol=1e-12).all():
+#                 log_print("UMP2 natural orbitals are restricted (RHF-like).")
+#             else:
+#                 log_print("UMP2 natural orbitals are unrestricted (UHF-like).")
+
+#             #     # Initialize for UPS wave function with UMP2 natural orbitals
+#             WF_ump2_no = UnrestrictedWaveFunctionUPS(
+#                 mol.nelectron, 
+#                 ((mol.nelectron//2, mol.nelectron//2), num_electrons//2+num_opt_virtual_orbs),                   # CAS(2,2) for H2O in 6-31G
+#                 mp2_no_coeff, 
+#                 h_core,
+#                 g_eri,
+#                 "utups",
+#                 {"n_layers":1},
+#                 include_active_kappa=False,
+#             )
+#             if thetas_bool == False:
+#                 WF_ump2_no.thetas = thetas
+#             else:
+#                 WF_ump2_no.thetas = thetas[2]
+
+#                 # Optimize WF
+#             stats_ump2_no_opt = run_ucc_and_get_stats(WF_ump2_no, "BFGS", oo, atol)
+#                     # Get optimization iterations/evaluations
+#             iter_ump2_no_opt = stats_ump2_no_opt['iterations']
+#             eval_ump2_no_opt = [stats_ump2_no_opt['function_evaluations'], stats_ump2_no_opt['gradient_evaluations']]
+#                     # Get optimized energy
+#             E_ump2_no_opt = stats_ump2_no_opt['final_energy']
+#             E_ump2_no_hist = stats_ump2_no_opt['iter_energies']
+#             log_print(f"UHF natural orbital energy = {E_ump2_no_opt} Hartree @ iterations {iter_ump2_no_opt}.")
+
+#                 # Save w. UMP2 natural orbitals for later comparison
+#             file_out_ump2_no = f"backup/data/{molecule}/{basis}/VQE/UMP2/{dist}/UPS_UMP2_NO_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}.json"
+#             if not os.path.exists(os.path.dirname(file_out_ump2_no)):
+#                 os.makedirs(os.path.dirname(file_out_ump2_no))
+#             with open(file_out_ump2_no, "w") as f:
+#                 json.dump({
+#                     "dist": dist,
+#                     "thetas": thetas,
+#                     "oo": oo,
+#                     "mo": mp2_no_coeff,
+#                     "uhf_energy": uhf_energy,
+#                     "ump2_energy": ump2_energy,
+#                     "ump2_no_energy": E_ump2_no_hist[0],
+#                     "iterations": iter_ump2_no_opt,
+#                     "final_energy": E_ump2_no_opt,
+#                     "iter_energies": E_ump2_no_hist,
+#                     "function_evaluations": eval_ump2_no_opt[0],
+#                     "gradient_evaluations": eval_ump2_no_opt[1],
+#                 }, f, indent=4, default=lambda x: x.tolist() if isinstance(x, np.ndarray) else x)
+
+#             # Summary of results
+#             log_print("\nSummary of results:")
+#             log_print(f"Molecule: {atom} with basis set {basis} for a total of {num_electrons} electrons and {num_orbitals} orbitals.")
+#             log_print(f"OVOS correlation energy: {E_tot:.6f} Hartree (Active unocc. orbitals: {num_opt_virtual_orbs})")
+#             log_print(f"OVOS energy: {E_ovos_opt:.6f} Hartree  @ iterations {iter_ovos_opt} (Eval. func. {eval_ovos_opt[0]}, grad. {eval_ovos_opt[0]}")
+#             log_print(f"UHF energy: {E_uhf_opt:.6f} Hartree  @ iterations {iter_uhf_opt} (Eval. func. {eval_uhf_opt[0]}, grad. {eval_uhf_opt[0]}")
+#             log_print(f"UMP2 natural orbital energy: {E_ump2_no_opt:.6f} Hartree  @ iterations {iter_ump2_no_opt} (Eval. func. {eval_ump2_no_opt[0]}, grad. {eval_ump2_no_opt[0]}")
+
+#             data_out = {
+#                 "molecule": atom,
+#                 "basis": basis,
+#                 "num_electrons": num_electrons,
+#                 "num_orbitals": num_orbitals,
+#                 "num_opt_virtual_orbs": num_opt_virtual_orbs,
+#                 "thetas": thetas,
+#                 "thetas_final": [WF_ovos.thetas, WF_uhf.thetas, WF_ump2_no.thetas], 
+#                 "oo": oo,
+#                 "E_corr_OVOS": E_tot,
+#                 "E_ovos_opt": E_ovos_opt,
+#                 "iter_ovos_opt": iter_ovos_opt,
+#                 "eval_ovos_opt": eval_ovos_opt,
+#                 "E_uhf_opt": E_uhf_opt,
+#                 "iter_uhf_opt": iter_uhf_opt,
+#                 "eval_uhf_opt": eval_uhf_opt,
+#                 "E_ump2_no_opt": E_ump2_no_opt,
+#                 "iter_ump2_no_opt": iter_ump2_no_opt,
+#                 "eval_ump2_no_opt": eval_ump2_no_opt,
+#             }
+        
+#             # At end:
+#             log_print(f"✓ Completed. Output saved to {name_out}")
+        
+#             return data_out
+        
+#         # finally:
+#         except Exception as e:
+#             logger.error(f"✗ ERROR in seed {seed}: {e}", exc_info=True)
+#             raise
+#         finally:
+#             set_logger(None)  # Clear logger reference
+
+
+
+from concurrent.futures import ProcessPoolExecutor, as_completed
+import psutil
+
+def get_physical_cores():
+    """Get physical core count (not logical)"""
+    return psutil.cpu_count(logical=False)
+
+def get_core_assignments(num_workers):
+    """
+    For Intel 13th Gen (i7-13620H):
+    - 6 P-cores with hyperthreading (logical 0-11)
+    - 4 E-cores without HT (logical 12-15)
+    
+    Select one logical core from each P-core (skip the HT twin)
+    """
+    # Use only the first logical core of each P-core pair
+    # This skips the hyperthreaded twin
+    p_core_single = [0, 2, 4, 6, 8, 10]  # One per P-core
+    
+    if num_workers > len(p_core_single):
+        raise ValueError(f"Only {len(p_core_single)} P-cores available")
+    
+    return p_core_single[:num_workers]
+
 def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas, thetas_bool=False):
-    # name_out = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/OVOS_{molecule}_{dist}_{basis}_VQE_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}_output.txt"
-    # if not os.path.exists(os.path.dirname(name_out)):
-    #     os.makedirs(os.path.dirname(name_out))
-
-    # with open(name_out, "w") as f:
-    #     # sys.stdout = Dee(sys.__stdout__, f)
-    #     original_stdout = sys.stdout
-
-        # Setup logging
+    # Setup logging
     logger, name_out = setup_logging_in_function(seed, dist, molecule, basis, num_opt_virtual_orbs, oo)
     set_logger(logger)
 
-    # Change seed to True if thetas_boll is True to use thetas as input instead of random initialization
+    # Change seed to True if thetas_bool is True to use thetas as input instead of random initialization
     if thetas_bool == True:
         log_print(f"Using provided thetas for seed {seed} instead of random initialization.")
         seed = "True"  # Just to indicate in the logs that we are using provided thetas instead of random initialization
-
 
     if True:  # Just capture to list and write at the end to avoid issues with multiprocessing
         try:    
             log_print(f"\nRunning VQE with OVOS optimization for {molecule} w. bond length {dist} in basis {basis} with {num_opt_virtual_orbs*100:.0f}% active virtual orbitals and orbital opt. = {oo}...")
 
-            # Water molecule, minimal basis
+            # Build molecule
             mol = gto.Mole()
             mol.atom = atom
             mol.basis = basis
@@ -265,40 +597,40 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas
             mol.verbose = 0
             mol.build()
             log_print(f"Built molecule {molecule} with basis {basis} and bond length {dist} Angstrom.")
-                # Get one- and two-electron integrals
+            
+            # Get one- and two-electron integrals
             h_core = mol.intor("int1e_kin") + mol.intor("int1e_nuc")
-            # print("Calculated one-electron integrals (kinetic + nuclear).")
             g_eri = mol.intor("int2e")
-            # print("Calculated two-electron integrals.")
 
-                # Number of electrons and orbitals
+            # Number of electrons and orbitals
             num_electrons = mol.nelectron
             num_orbitals = mol.nao_nr() 
             log_print(f"Number of electrons: {num_electrons}, Number of orbitals: {num_orbitals}")
 
-            # Create OVOS object and run
-                # RHF reference for OVOS
+            # RHF reference for OVOS
             mf = scf.RHF(mol)
             mf.verbose = 0
             mf.kernel()
 
-                # Initial data (RHF orbitals)
+            # Initial data (RHF orbitals)
             Fao = [mf.get_fock(), mf.get_fock()]
             mo_coeffs = [mf.mo_coeff, mf.mo_coeff]
-                    # Check if mo_coeffs are unrestricted or restricted
+            
+            # Check if mo_coeffs are unrestricted or restricted
             if np.isclose(mo_coeffs[0], mo_coeffs[1], atol=1e-12).all():
                 log_print("Initial MO coefficients are restricted (RHF-like).")
             else:
                 log_print("Initial MO coefficients are unrestricted (UHF-like).")
 
-                # Set up OVOS
+            # Set up OVOS
             num_opt_virtual_orbs = int(num_opt_virtual_orbs * (num_orbitals - num_electrons//2))  # Convert fraction to actual number of orbitals
             log_print(f"Optimizing {num_opt_virtual_orbs} active virtual orbitals (out of {num_orbitals - num_electrons//2} total virtual orbitals).")
+            
             ovos = OVOS(
                 mol=mol,
                 scf=mf,
                 Fao=Fao,
-                num_opt_virtual_orbs=num_opt_virtual_orbs*2,      # active virtual spin‑orbitals
+                num_opt_virtual_orbs=num_opt_virtual_orbs*2,      # active virtual spin-orbitals
                 mo_coeff=mo_coeffs,
                 init_orbs="RHF",
                 verbose=1,
@@ -307,143 +639,64 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas
                 conv_grad=1e-4,
                 keep_track_max=50
             )
-                # Run OVOS
+            
+            # Run OVOS
             E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
             E_corr = E_corr  # Final correlation energy
             E_tot = E_corr + mf.e_tot
             log_print(f"\nOptimization finished. Final MP2 energy = {E_tot} Hartree. (ΔE_corr = {E_corr} Hartree)")
-            # Check if mo_coeffs are unrestricted or restricted
+            
+            # Check if optimized orbitals are unrestricted or restricted
             if np.isclose(E_corr_mo[0], E_corr_mo[1], atol=1e-12).all():
                 log_print("OVOS optimized orbitals are restricted (RHF-like).")
             else:
                 log_print("OVOS optimized orbitals are unrestricted (UHF-like).")
             log_print()
 
-            # # Kill for debug here
-            # assert False, "Debug stop after OVOS optimization to check results before proceeding to VQE optimizations with different references. Remove this line to run the full script."
-
-            # SlowQuant
+            # SlowQuant - Initialize for UPS wave function with OVOS-optimized orbitals
             log_print()
             log_print("Running VQE optimization with SlowQuant using OVOS-optimized orbitals as reference...")
-                # Initialize for UPS wave function with OVOS-optimized orbitals
             WF_ovos = UnrestrictedWaveFunctionUPS(
                 mol.nelectron,
-                ((mol.nelectron//2,mol.nelectron//2), num_electrons//2+num_opt_virtual_orbs),                   # CAS(2,2) for H2O in 6-31G
+                ((mol.nelectron//2, mol.nelectron//2), num_electrons//2+num_opt_virtual_orbs),
                 E_corr_mo,  # Use OVOS-optimized orbitals
                 h_core,
                 g_eri,
                 "utups",
-                {"n_layers":1},
+                {"n_layers": 1},
                 include_active_kappa=False,
             )
-            atol = 1e-6
-                # Use same random seed and initial thetas for fair comparison
-                    # Initialize thetas randomly for reproducibility
-            if thetas_bool == False:
-                np.random.seed(seed)
-                thetas = (2*np.pi*np.random.random(len(WF_ovos.thetas)) - np.pi).tolist()       
 
-            if thetas_bool == False:
-                WF_ovos.thetas = thetas
-            else:
-                WF_ovos.thetas = thetas[0]
-            
-            
-                # Optimize WF
-            stats_ovos_opt = run_ucc_and_get_stats(WF_ovos, "BFGS", oo, atol)
-                    # Get optimization iterations/evaluations
-            iter_ovos_opt = stats_ovos_opt['iterations']
-            eval_ovos_opt = [stats_ovos_opt['function_evaluations'], stats_ovos_opt['gradient_evaluations']]
-                    # Get optimized energy
-            E_ovos_opt = stats_ovos_opt['final_energy']
-            E_ovos_hist = stats_ovos_opt['iter_energies']
-            log_print(f"OVOS optimized energy = {E_ovos_opt} Hartree @ iterations {iter_ovos_opt}.")
-
-                # Save w. OVOS-optimized orbitals for later comparison
-            file_out_ovos = f"backup/data/{molecule}/{basis}/VQE/OVOS/{dist}/UPS_OVOS_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}.json"
-            if not os.path.exists(os.path.dirname(file_out_ovos)):
-                os.makedirs(os.path.dirname(file_out_ovos))
-            with open(file_out_ovos, "w") as f:
-                json.dump({
-                    "dist": dist,
-                    "thetas": thetas,
-                    "oo": oo,
-                    "E_corr_OVOS": E_corr,
-                    "mo": E_corr_mo,
-                    "iterations": iter_ovos_opt,
-                    "final_energy": E_ovos_opt,
-                    "iter_energies": E_ovos_hist,
-                    "function_evaluations": eval_ovos_opt[0],
-                    "gradient_evaluations": eval_ovos_opt[1],
-                }, f, indent=4, default=lambda x: x.tolist() if isinstance(x, np.ndarray) else x)
-
-
-            # Compare with UHF reference
+            # UHF reference for comparison
             log_print()
             log_print("Calculating UHF reference for comparison...")
-                # UHF reference for comparison
             mf_uhf = scf.UHF(mol)
             mf_uhf.verbose = 0
             mf_uhf.kernel()
 
-            #     # Initualize for UPS wave function with UHF orbitals
             WF_uhf = UnrestrictedWaveFunctionUPS(
                 mol.nelectron, 
-                ((mol.nelectron//2, mol.nelectron//2), num_electrons//2+num_opt_virtual_orbs),                   # CAS(2,2) for H2O in 6-31G
+                ((mol.nelectron//2, mol.nelectron//2), num_electrons//2+num_opt_virtual_orbs),
                 mf_uhf.mo_coeff,  
                 h_core,
                 g_eri,
                 "utups",
-                {"n_layers":1},
+                {"n_layers": 1},
                 include_active_kappa=False,
             )
-            if thetas_bool == False:
-                WF_uhf.thetas = thetas
-            else:
-                WF_uhf.thetas = thetas[1]
 
-                # Optimize WF
-            stats_uhf_opt = run_ucc_and_get_stats(WF_uhf, "BFGS", oo, atol)
-                    # Get optimization iterations/evaluations
-            iter_uhf_opt = stats_uhf_opt['iterations']
-            eval_uhf_opt = [stats_uhf_opt['function_evaluations'], stats_uhf_opt['gradient_evaluations']]
-                    # Get optimized energy
-            E_uhf_opt = stats_uhf_opt['final_energy']
-            E_uhf_hist = stats_uhf_opt['iter_energies']
-            log_print(f"UHF energy = {E_uhf_opt} Hartree @ iterations {iter_uhf_opt}.")
-
-                # Save w. UHF orbitals for later comparison
-            file_out_uhf = f"backup/data/{molecule}/{basis}/VQE/UHF/{dist}/UPS_UHF_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}.json"
-            if not os.path.exists(os.path.dirname(file_out_uhf)):
-                os.makedirs(os.path.dirname(file_out_uhf))
-            with open(file_out_uhf, "w") as f:
-                json.dump({
-                    "dist": dist,
-                    "thetas": thetas,
-                    "oo": oo,
-                    "mo": mf_uhf.mo_coeff,
-                    "iterations": iter_uhf_opt,
-                    "final_energy": E_uhf_opt,
-                    "iter_energies": E_uhf_hist,
-                    "function_evaluations": eval_uhf_opt[0],
-                    "gradient_evaluations": eval_uhf_opt[1],
-                }, f, indent=4, default=lambda x: x.tolist() if isinstance(x, np.ndarray) else x)
-
-
-            # Compare with UMP2 natural orbital reference
+            # UMP2 natural orbital reference
             log_print()
             log_print("Calculating UMP2 natural orbitals for comparison...")
-                # UMP2 natural orbitals for comparison
             mf_ump2 = mol.UHF(verbose=0).run()
             ump2_obj = mp.UMP2(mf_ump2).run()
             noons, mp2_no_coeff = mcscf.addons.make_natural_orbitals(ump2_obj)
 
-                # Energies for reference
+            # Energies for reference
             uhf_energy = mf_ump2.e_tot
             ump2_energy = ump2_obj.e_tot
 
-            # Convert to full spin-orbital basis by duplicating alpha and beta orbitals
-                # If rhf-like, just duplicate the same orbitals for alpha and beta
+            # Convert to full spin-orbital basis by duplicating alpha and beta orbitals if needed
             if isinstance(mp2_no_coeff, np.ndarray) and mp2_no_coeff.ndim == 2:
                 # Restricted case: duplicate the same orbitals for alpha and beta
                 mp2_no_coeff = [mp2_no_coeff, mp2_no_coeff.copy()]
@@ -453,65 +706,157 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas
             else:
                 raise ValueError("Unexpected case for UMP2 natural orbitals: neither RHF-like nor UHF-like. Please check the orbitals.")
 
-            # check if mp2_no_coeff are unrestricted or restricted
+            # Check if mp2_no_coeff are unrestricted or restricted
             if np.isclose(mp2_no_coeff[0], mp2_no_coeff[1], atol=1e-12).all():
                 log_print("UMP2 natural orbitals are restricted (RHF-like).")
             else:
                 log_print("UMP2 natural orbitals are unrestricted (UHF-like).")
 
-            #     # Initialize for UPS wave function with UMP2 natural orbitals
             WF_ump2_no = UnrestrictedWaveFunctionUPS(
                 mol.nelectron, 
-                ((mol.nelectron//2, mol.nelectron//2), num_electrons//2+num_opt_virtual_orbs),                   # CAS(2,2) for H2O in 6-31G
+                ((mol.nelectron//2, mol.nelectron//2), num_electrons//2+num_opt_virtual_orbs),
                 mp2_no_coeff, 
                 h_core,
                 g_eri,
                 "utups",
-                {"n_layers":1},
+                {"n_layers": 1},
                 include_active_kappa=False,
             )
+
+            # Initialize thetas AFTER all WF objects are created
+            atol = 1e-6
             if thetas_bool == False:
-                WF_ump2_no.thetas = thetas
-            else:
-                WF_ump2_no.thetas = thetas[2]
-
-                # Optimize WF
-            stats_ump2_no_opt = run_ucc_and_get_stats(WF_ump2_no, "BFGS", oo, atol)
-                    # Get optimization iterations/evaluations
+                np.random.seed(seed)
+                thetas = (2*np.pi*np.random.random(len(WF_ovos.thetas)) - np.pi).tolist()
+            
+            # Assign thetas to all wave functions
+            print("Assigning thetas to wave functions...")
+            print(f"Length of thetas: {len(thetas)}")
+            WF_ovos.thetas = thetas if thetas_bool == False else thetas[0]
+            WF_uhf.thetas = thetas if thetas_bool == False else thetas[1]
+            WF_ump2_no.thetas = thetas if thetas_bool == False else thetas[2]
+            
+                        # Convert WF objects to serializable data for worker processes
+            mo_ovos_alpha = np.array(E_corr_mo[0])
+            mo_ovos_beta = np.array(E_corr_mo[1])
+            mo_uhf_alpha = np.array(mf_uhf.mo_coeff[0]) if isinstance(mf_uhf.mo_coeff[0], np.ndarray) else np.array([mf_uhf.mo_coeff])
+            mo_uhf_beta = np.array(mf_uhf.mo_coeff[1]) if isinstance(mf_uhf.mo_coeff[1], np.ndarray) else np.array([mf_uhf.mo_coeff])
+            mo_ump2_alpha = np.array(mp2_no_coeff[0])
+            mo_ump2_beta = np.array(mp2_no_coeff[1])
+            
+            h_core_array = np.array(h_core)
+            g_eri_array = np.array(g_eri)
+            
+            active_space_tuple = ((num_electrons//2, num_electrons//2), num_electrons//2+num_opt_virtual_orbs)
+            
+            # Import worker function
+            from vqe_worker import vqe_optimize_worker
+            
+            results_dict = {}
+            core_assignments = get_core_assignments(3)
+            
+            with ProcessPoolExecutor(max_workers=3) as executor:
+                # Submit workers with ONLY serializable arguments
+                future_ovos = executor.submit(
+                    vqe_optimize_worker,
+                    "OVOS", num_electrons, active_space_tuple,
+                    mo_ovos_alpha, mo_ovos_beta,
+                    h_core_array, g_eri_array,
+                    oo, atol, core_id=core_assignments[0]
+                )
+                
+                future_uhf = executor.submit(
+                    vqe_optimize_worker,
+                    "UHF", num_electrons, active_space_tuple,
+                    mo_uhf_alpha, mo_uhf_beta,
+                    h_core_array, g_eri_array,
+                    oo, atol, core_id=core_assignments[1]
+                )
+                
+                future_ump2 = executor.submit(
+                    vqe_optimize_worker,
+                    "UMP2", num_electrons, active_space_tuple,
+                    mo_ump2_alpha, mo_ump2_beta,
+                    h_core_array, g_eri_array,
+                    oo, atol, core_id=core_assignments[2]
+                )
+                
+                # Collect results as they complete
+                for future in as_completed([future_ovos, future_uhf, future_ump2]):
+                    wf_type, stats = future.result()
+                    results_dict[wf_type] = {"stats": stats}
+            
+            # Extract results
+            stats_ovos_opt = results_dict["OVOS"]["stats"]
+            stats_uhf_opt = results_dict["UHF"]["stats"]
+            stats_ump2_no_opt = results_dict["UMP2"]["stats"]
+            
+            iter_ovos_opt = stats_ovos_opt['iterations']
+            iter_uhf_opt = stats_uhf_opt['iterations']
             iter_ump2_no_opt = stats_ump2_no_opt['iterations']
-            eval_ump2_no_opt = [stats_ump2_no_opt['function_evaluations'], stats_ump2_no_opt['gradient_evaluations']]
-                    # Get optimized energy
-            E_ump2_no_opt = stats_ump2_no_opt['final_energy']
-            E_ump2_no_hist = stats_ump2_no_opt['iter_energies']
-            log_print(f"UHF natural orbital energy = {E_ump2_no_opt} Hartree @ iterations {iter_ump2_no_opt}.")
 
-                # Save w. UMP2 natural orbitals for later comparison
+            # Save w. OVOS-optimized orbitals for later comparison
+            file_out_ovos = f"backup/data/{molecule}/{basis}/VQE/OVOS/{dist}/UPS_OVOS_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}.json"
+            os.makedirs(os.path.dirname(file_out_ovos), exist_ok=True)
+            with open(file_out_ovos, "w") as f:
+                json.dump({
+                    "dist": dist,
+                    "thetas": thetas,
+                    "thetas_final": [WF_ovos.thetas, WF_uhf.thetas, WF_ump2_no.thetas],
+                    "oo": oo,
+                    "E_corr_OVOS": E_corr,
+                    "mo": E_corr_mo,
+                    "iterations": iter_ovos_opt,
+                    "final_energy": stats_ovos_opt['final_energy'],
+                    "iter_energies": stats_ovos_opt.get('iter_energies', []),
+                    "function_evaluations": stats_ovos_opt['function_evaluations'],
+                    "gradient_evaluations": stats_ovos_opt['gradient_evaluations'],
+                }, f, indent=4, default=lambda x: x.tolist() if isinstance(x, np.ndarray) else x)
+
+            # Save w. UHF orbitals for later comparison
+            file_out_uhf = f"backup/data/{molecule}/{basis}/VQE/UHF/{dist}/UPS_UHF_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}.json"
+            os.makedirs(os.path.dirname(file_out_uhf), exist_ok=True)
+            with open(file_out_uhf, "w") as f:
+                json.dump({
+                    "dist": dist,
+                    "thetas": thetas,
+                    "thetas_final": [WF_ovos.thetas, WF_uhf.thetas, WF_ump2_no.thetas],
+                    "oo": oo,
+                    "mo": mf_uhf.mo_coeff,
+                    "iterations": iter_uhf_opt,
+                    "final_energy": stats_uhf_opt['final_energy'],
+                    "iter_energies": stats_uhf_opt.get('iter_energies', []),
+                    "function_evaluations": stats_uhf_opt['function_evaluations'],
+                    "gradient_evaluations": stats_uhf_opt['gradient_evaluations'],
+                }, f, indent=4, default=lambda x: x.tolist() if isinstance(x, np.ndarray) else x)
+
+            # Save w. UMP2 natural orbitals for later comparison
             file_out_ump2_no = f"backup/data/{molecule}/{basis}/VQE/UMP2/{dist}/UPS_UMP2_NO_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbs}_{oo}_{seed}.json"
-            if not os.path.exists(os.path.dirname(file_out_ump2_no)):
-                os.makedirs(os.path.dirname(file_out_ump2_no))
+            os.makedirs(os.path.dirname(file_out_ump2_no), exist_ok=True)
             with open(file_out_ump2_no, "w") as f:
                 json.dump({
                     "dist": dist,
                     "thetas": thetas,
+                    "thetas_final": [WF_ovos.thetas, WF_uhf.thetas, WF_ump2_no.thetas],
                     "oo": oo,
                     "mo": mp2_no_coeff,
                     "uhf_energy": uhf_energy,
                     "ump2_energy": ump2_energy,
-                    "ump2_no_energy": E_ump2_no_hist[0],
+                    "ump2_no_energy": stats_ump2_no_opt.get('iter_energies', [None])[0],
                     "iterations": iter_ump2_no_opt,
-                    "final_energy": E_ump2_no_opt,
-                    "iter_energies": E_ump2_no_hist,
-                    "function_evaluations": eval_ump2_no_opt[0],
-                    "gradient_evaluations": eval_ump2_no_opt[1],
+                    "final_energy": stats_ump2_no_opt['final_energy'],
+                    "iter_energies": stats_ump2_no_opt.get('iter_energies', []),
+                    "function_evaluations": stats_ump2_no_opt['function_evaluations'],
+                    "gradient_evaluations": stats_ump2_no_opt['gradient_evaluations'],
                 }, f, indent=4, default=lambda x: x.tolist() if isinstance(x, np.ndarray) else x)
 
             # Summary of results
             log_print("\nSummary of results:")
             log_print(f"Molecule: {atom} with basis set {basis} for a total of {num_electrons} electrons and {num_orbitals} orbitals.")
             log_print(f"OVOS correlation energy: {E_tot:.6f} Hartree (Active unocc. orbitals: {num_opt_virtual_orbs})")
-            log_print(f"OVOS energy: {E_ovos_opt:.6f} Hartree  @ iterations {iter_ovos_opt} (Eval. func. {eval_ovos_opt[0]}, grad. {eval_ovos_opt[0]}")
-            log_print(f"UHF energy: {E_uhf_opt:.6f} Hartree  @ iterations {iter_uhf_opt} (Eval. func. {eval_uhf_opt[0]}, grad. {eval_uhf_opt[0]}")
-            log_print(f"UMP2 natural orbital energy: {E_ump2_no_opt:.6f} Hartree  @ iterations {iter_ump2_no_opt} (Eval. func. {eval_ump2_no_opt[0]}, grad. {eval_ump2_no_opt[0]}")
+            log_print(f"OVOS energy: {stats_ovos_opt['final_energy']:.6f} Hartree  @ iterations {iter_ovos_opt} (Eval. func. {stats_ovos_opt['function_evaluations']}, grad. {stats_ovos_opt['gradient_evaluations']})")
+            log_print(f"UHF energy: {stats_uhf_opt['final_energy']:.6f} Hartree  @ iterations {iter_uhf_opt} (Eval. func. {stats_uhf_opt['function_evaluations']}, grad. {stats_uhf_opt['gradient_evaluations']})")
+            log_print(f"UMP2 natural orbital energy: {stats_ump2_no_opt['final_energy']:.6f} Hartree  @ iterations {iter_ump2_no_opt} (Eval. func. {stats_ump2_no_opt['function_evaluations']}, grad. {stats_ump2_no_opt['gradient_evaluations']})")
 
             data_out = {
                 "molecule": atom,
@@ -520,37 +865,28 @@ def VQE_OVOS(atom, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, thetas
                 "num_orbitals": num_orbitals,
                 "num_opt_virtual_orbs": num_opt_virtual_orbs,
                 "thetas": thetas,
-                "thetas_final": [WF_ovos.thetas, WF_uhf.thetas, WF_ump2_no.thetas], 
+                "thetas_final": [WF_ovos.thetas, WF_uhf.thetas, WF_ump2_no.thetas],
                 "oo": oo,
                 "E_corr_OVOS": E_tot,
-                "E_ovos_opt": E_ovos_opt,
+                "E_ovos_opt": stats_ovos_opt['final_energy'],
                 "iter_ovos_opt": iter_ovos_opt,
-                "eval_ovos_opt": eval_ovos_opt,
-                "E_uhf_opt": E_uhf_opt,
+                "eval_ovos_opt": [stats_ovos_opt['function_evaluations'], stats_ovos_opt['gradient_evaluations']],
+                "E_uhf_opt": stats_uhf_opt['final_energy'],
                 "iter_uhf_opt": iter_uhf_opt,
-                "eval_uhf_opt": eval_uhf_opt,
-                "E_ump2_no_opt": E_ump2_no_opt,
+                "eval_uhf_opt": [stats_uhf_opt['function_evaluations'], stats_uhf_opt['gradient_evaluations']],
+                "E_ump2_no_opt": stats_ump2_no_opt['final_energy'],
                 "iter_ump2_no_opt": iter_ump2_no_opt,
-                "eval_ump2_no_opt": eval_ump2_no_opt,
+                "eval_ump2_no_opt": [stats_ump2_no_opt['function_evaluations'], stats_ump2_no_opt['gradient_evaluations']],
             }
-        
-            # At end:
+            
             log_print(f"✓ Completed. Output saved to {name_out}")
-        
             return data_out
         
-        # finally:
         except Exception as e:
             logger.error(f"✗ ERROR in seed {seed}: {e}", exc_info=True)
             raise
         finally:
             set_logger(None)  # Clear logger reference
-
-
-
-
-
-
 
 
 
@@ -1196,7 +1532,7 @@ def run_li2_vqe():
             # which we can vary around the equilibrium bond length of 1.6 Angstrom.
     
     # Trial dist list
-    dist_list = np.arange(2.4, 6.1, 0.1).round(1).tolist()  # Trial
+    dist_list = np.arange(2.6, 6.1, 0.1).round(1).tolist()  # Trial
 
     print("\nGenerated Li2 geometries with varying Li-Li bond lengths:")
     for dist in dist_list:
@@ -1281,7 +1617,10 @@ def run_li2_vqe():
 
     # Run the VQE optimizations for Li2 for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
-    seed_list = [42]
+    # Five best seeds!!! for True|False
+    seed_list = [111, 10, 14, 123, 152]
+
+    # seed_list = [42]
         # Done: 8, 9, 10, 13, 14, 20, 21, 42, 101, 123, 404, 32, 72, 111, 128, 64, 91, 256, 152, 303
             # Total seeds done:
 
@@ -1315,9 +1654,9 @@ def run_single(args):
 # Run
 if __name__ == "__main__":
     # Molecule: HF, H2O, CO, NH3, Li2
-    # args_list = run_hf_vqe()  # HF,  Done 
-    # args_list = run_h2o_vqe() # H2O, Done
-    args_list = run_li2_vqe()   # 16...
+    # args_list = run_hf_vqe()  # Done !!!!!
+    args_list = run_h2o_vqe() # H2O To do!!!
+    # args_list = run_li2_vqe()   # running ...
 
     if False:
         # Set thetas to empty list... and thetas_bool to False
@@ -1402,10 +1741,10 @@ if __name__ == "__main__":
             oo_str = "True"
 
                 # Li2
-            prev_dist = 4.3
+            # prev_dist = 4.3<
 
                 # H2O
-            # prev_dist = 0.85
+            prev_dist = 1.625
 
             # Get thetas from the file for the prev_dist
             file_name_prev = f"backup/data/{molecule_name}/{basis_name}/VQE/OVOS/{prev_dist}/UPS_OVOS_{molecule_name}_{basis_name}_{prev_dist}_opt_num_{num_opt_virtual_orbs}_{oo_str}_True.json"
@@ -1446,7 +1785,7 @@ if __name__ == "__main__":
 
 # TO DO:
 # - Run VQE RANDOM for 5 seeds w. OO True
-    # H2O, Li2
+    # H2O, Li2... running
 
 # - Run VQE PREV. THETAS w. OO True
     # H2O... running
