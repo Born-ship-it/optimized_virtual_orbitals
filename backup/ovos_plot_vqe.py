@@ -1192,7 +1192,7 @@ def plot_iterations_to_convergence_statistics(molecule, basis, iterations_data_a
     plt.savefig(output_path, dpi=300)
     print(f"VQE iterations to convergence statistics plot saved to {output_path}")
 
-if True:
+if False:
     # Gather data to plot iterations to convergence for 
         # Each: oo True/false and prev True/False, 
         # any trends in the number of iterations to convergence
@@ -1282,6 +1282,152 @@ assert len(plt.get_fignums()) == 0, "Some figures still open!"
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Reference-state overlap
+# For small molecules (Li2, HF, H2O) and a small basis set (6-31G), compute the overlap of the OVOS-optimised reference state with the FCI ground state.
+# At a specific geometry... and varying the number of optimised virtual orbitals N'_virt to see how the overlap changes as we include more optimised virtual orbitals in the reference state.
+#       - compute the FCI ground state using PySCF fci.FCI().
+#       - Compute the overlap F = |⟨Φ_ref|Ψ_FCI⟩|² for:
+#           * |Φ_HF⟩ (standard HF reference)
+#           * |Φ_OVOS⟩ (OVOS-optimised reference, varying N'_virt)
+#       - Plot F_OVOS vs N'_virt/N_virt^max and compare to F_HF.
+#       - Table: molecule | basis | N'_virt | F_HF | F_OVOS | ΔF
+#
+# Now the data structure for OVOS files is like:
+    # backup/data/{molecule}/{basis}/OVOS/lst_MP2_different_virt_orbs_{init}.json
+        # For init in ["prev", "random", "RHF"]
+
+
+def compute_overlap_full_ci(ci_ref, ci_fci):
+    """
+    Compute overlap using full CI vectors.
+    
+    Args:
+        ci_ref: CI vector for reference state
+        ci_fci: CI vector for FCI ground state
+    
+    Returns:
+        overlap: Float value of |⟨Ψ_ref|Ψ_FCI⟩|²
+    """    
+    # Direct dot product of CI vectors
+    overlap_amplitude = np.dot(ci_ref.ravel().conj(), ci_fci.ravel())
+    overlap = abs(overlap_amplitude) ** 2
+    
+    return overlap
+    
+
+if True:
+    # For each molecule and basis, gather the mo_coefficients for the OVOS-optimised reference state for each number of optimised virtual orbitals, and compute the overlap with the FCI ground state, and print out the results in a table format
+    molecule = "HF"
+    basis = "cc-pVDZ"
+    init = "prev"  # or "random" or "RHF"
+
+    filename = f"backup/data/{molecule}/{basis}/OVOS/lst_MP2_OVOS_virt_orbs_{init}.json"
+    try:
+        with open(filename, 'r') as f:
+            data = json.load(f)
+            # data[0]: energy iterations for all the different numbers of optimised virtual orbitals
+            # data[1]: number of optimised virtual orbitals for each entry in data[0]
+            # data[2]: iteration numbered for each entry in data[0]
+            # ...
+            # data[4]: MO coefficients for the OVOS-optimised reference state for each entry in data[0]
+            # data[5]: Convergence status for each entry in data[0]
+            # End
+
+            N_virt_opt_lst = data[1]
+            energy_lst = data[0]
+            mo_coefficients_lst = data[4]
+                
+    except FileNotFoundError:
+        print(f"Warning: Overlap data file not found {filename} for {molecule} {basis} init {init}")
+
+    # Molecule geometry
+    if molecule == "HF":
+        mol_geo = "H .0 .0 .0; F .0 .0 0.917"
+    if molecule == "Li2":
+        mol_geo = "Li .0 .0 .0; Li .0 .0 2.673"
+    if molecule == "H2O":
+        mol_geo = "O .0 .0  0.1173; H .0 0.7572 -0.4692; H .0 -0.7572 -0.4692"
+    if molecule == "NH3":
+        mol_geo = "N .0 .0 .0; H .0 .0 1.012; H .0 0.926 -0.239; H .0 -0.926 -0.239"
+    if molecule == "CO":
+        mol_geo = "C .0 .0 .0; O .0 .0 1.128"
+
+    # Get the mol of the molecule and basis from PySCF
+    import pyscf.gto as gto
+    import pyscf.fci as fci
+    import pyscf.scf as scf
+
+    mol = gto.Mole()
+    mol.atom = mol_geo
+    mol.basis = basis
+    mol.unit = 'Angstrom'
+    mol.spin = 0
+    mol.charge = 0
+    mol.symmetry = False
+    mol.verbose = 0
+    mol.build()
+    
+    # RHF calculation
+    rhf = scf.RHF(mol)
+    rhf.verbose = 0
+    rhf.kernel()
+
+    # Get the FCI from PySCF
+    print("Computing FCI (Full Configuration Interaction)...")
+    try:
+        cisolver = fci.FCI(mol, rhf.mo_coeff)
+        cisolver.verbose = 4
+        fci_data = cisolver.kernel()
+        # MO coefficients for the FCI ground state
+        mo_coefficients_fci = cisolver.mo_coeff
+        # FCI ground state energy
+        FCI_e_corr = fci_data[0] - rhf.e_tot
+        print(f"FCI correlation energy: {FCI_e_corr:.6f} Hartree")
+    except Exception as e:
+        print(f"⚠️  FCI computation failed: {e}")
+        FCI_e_corr = None
+
+    # Overlap list for each number of optimised virtual orbitals
+    overlap_lst = []
+    for mo_coefficients in mo_coefficients_lst:
+        if FCI_e_corr is not None:
+            # Compute the overlap F = |⟨Φ_ref|Ψ_FCI⟩|²
+            overlap = compute_overlap_full_ci(mo_coefficients, mo_coefficients_fci)
+            overlap_lst.append(overlap)
+        else:
+            overlap_lst.append(None)
+
+    print(f"Overlap of OVOS-optimised reference state with FCI ground state for {molecule} {basis} init {init}:")
+    print(f"{'N_virt_opt':>12} | {'Overlap F':>10}")
+    print("-" * 25)
+    for N_virt_opt, overlap in zip(N_virt_opt_lst, overlap_lst):
+        print(f"{N_virt_opt:>12} | {overlap:>10.6f}")
+
+    
 
 
 
