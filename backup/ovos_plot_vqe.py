@@ -8,6 +8,7 @@ import numpy as np
 import json
 import os
 
+
 def get_num_opt_virtual_orbitals(molecule, basis, dist, oo):
     # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
     # We can get it from the filename of the VQE results files, which is like:
@@ -851,19 +852,28 @@ def gather_and_print_vqe_final_energy_spread(molecule, basis, method, dist, num_
 
 if False:
     # Plot the OO True but prev False ie 5 Random...
-    for molecule in ["HF"]: #["Li2", "HF", "H2O"]:
+    for molecule in ["Li2", "HF", "H2O"]:
         # molecule = "Li2"
         basis = "6-31G"
         method = "OVOS" # Placeholder for getting dist and seed list
         for oo in [False, True]:  
 
+            print(f"  \n Processing molecule {molecule} with basis {basis} and method {method} with optimized orbitals = {oo}...")
+
+            # I know i have yet to run oo == True
+                # Skip
+            if oo == True and molecule in ["Li2", "H2O"]:
+                print(f"Skipping molecule {molecule} with basis {basis} and method {method} with optimized orbitals = {oo} since I have not run it yet...")
+                continue
+
+
                 # Get dist list from the folder
             # dist_list = gather_dist_lst(molecule, basis, method)
             dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
                 # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
-            num_opt_virtual_orbitals = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], oo)
+            num_opt_virtual_orbitals = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], False)
                     # Set dist list with negatives floats first and then positive floats, and sorted by absolute value
-            
+
             # dist_list = sorted(dist_list, key=lambda x: abs(4.0-float(x)))[::-1]
             dist_list_save = []
             for num_opt_virtual_orbital in num_opt_virtual_orbitals:
@@ -910,24 +920,26 @@ if False:
             plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, True, False, oo)
             plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, False, False, oo)
         
-
 if False:
     # Need to plot the VQE curve for one seed = "True", and both oo = True and False...
         # So we can see the difference in using prev. final thetas and keep trying to find best from random...
     
-    for molecule in ["HF"]: # ["Li2", "HF", "H2O"]:
+    for molecule in ["Li2", "HF", "H2O"]:
         basis = "6-31G"
         method = "OVOS" # Placeholder for getting dist and seed list
         
-        for oo in [True, False]:
+        for oo in [False, True]:
+
+            print(f"  \n Processing molecule {molecule} with basis {basis} and method {method} with optimized orbitals = {oo}...")
 
             # Get dist list from the folder
             dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
             # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
-            num_opt_virtual_orbital = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], oo)[0]
+            num_opt_virtual_orbital = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], False)[0]
             
             # for num_opt_virtual_orbital in num_opt_virtual_orbitals:
             dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
+            print(f"Dist list for {molecule} {basis} method {method} num_opt_virtual_orbital {num_opt_virtual_orbital}: {dist_list}")
             if molecule == "Li2":
                 dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
             else:
@@ -955,7 +967,8 @@ if False:
 
 
 
-
+plt.close('all')  # Close all open figures
+assert len(plt.get_fignums()) == 0, "Some figures still open!"
 
 
 
@@ -1089,6 +1102,8 @@ def plot_iterations_to_convergence_statistics(molecule, basis, iterations_data_a
     
     avg_iterations = {"OVOS": [], "UHF": [], "UMP2": []}
     std_iterations = {"OVOS": [], "UHF": [], "UMP2": []}
+    median_iterations = {"OVOS": [], "UHF": [], "UMP2": []}
+    methods_iterations = {"OVOS": [], "UHF": [], "UMP2": []}
 
     methods = ["OVOS", "UHF", "UMP2"]
     method_labels = {"OVOS": "OVOS", "UHF": "UHF", "UMP2": "UMP2"}
@@ -1102,15 +1117,26 @@ def plot_iterations_to_convergence_statistics(molecule, basis, iterations_data_a
             for method in methods:
                 method_iterations = [iterations_data[dist][method] for dist in iterations_data if iterations_data[dist][method] is not None]
                 if method_iterations:
+                    methods_iterations[method].append(method_iterations)
+
                     avg_iterations[method].append(np.mean(method_iterations))
                     std_iterations[method].append(np.std(method_iterations))
+                    median_iterations[method].append(np.median(method_iterations))
+
+                    # print(f"Combination: {combination_label}, Method: {method}, Iterations to Convergence: {method_iterations}, Average: {avg_iterations[method][-1]:.2f}, Std Dev: {std_iterations[method][-1]:.2f}")
                 else:
+                    methods_iterations[method].append(None)
+
                     avg_iterations[method].append(None)
                     std_iterations[method].append(None)
+                    median_iterations[method].append(None)
         else:
             for method in methods:
+                methods_iterations[method].append(None)
+                
                 avg_iterations[method].append(None)
                 std_iterations[method].append(None)
+                median_iterations[method].append(None)
     
     x = np.arange(len(combinations))
     width = 0.2
@@ -1118,8 +1144,39 @@ def plot_iterations_to_convergence_statistics(molecule, basis, iterations_data_a
     plt.figure(figsize=(10, 6))
     
     for i, method in enumerate(methods):
-        plt.bar(x + i*width, avg_iterations[method], width=width, yerr=std_iterations[method], capsize=5, label="tUPS "+method_labels[method], color=colors[method], alpha=0.7)
-    
+        # As avg_iterations[method] e.g = [None, None, 68.08333333333333, 92.13888888888889]
+            # And i want to skip the None values for the method when plotting
+            # I need to plot each separately
+        positions = x + (i - 1) * width  # This offsets each method left/right
+        boxplot_data = [methods_iterations[method][j] for j in range(len(combinations)) if avg_iterations[method][j] is not None]
+        positions = [positions[j] for j in range(len(combinations)) if avg_iterations[method][j] is not None]
+         
+        print(f"Length of boxplot data for method {method}: {len(boxplot_data)}, Positions: {len(positions)}")
+
+        plt.boxplot(boxplot_data,
+                    positions=positions,
+                    widths=width * 0.8,
+                    patch_artist=True,
+                    medianprops=dict(color='darkred', linewidth=2.5),
+                    boxprops=dict(facecolor=colors[method], alpha=0.7),
+                    whiskerprops=dict(color=colors[method], linewidth=1.5),
+                    capprops=dict(color=colors[method], linewidth=1.5),
+                    flierprops=dict(marker='o', markerfacecolor=colors[method], markersize=5, alpha=0.5),
+                    label=f"tUPS {method_labels[method]}"
+            )
+                        
+
+        # for j, avg_iter in enumerate(avg_iterations[method]):
+        #     # Skip the none values for the method when plotting
+        #     if avg_iter is not None:
+        #         # plt.bar(x[j] + i*width, avg_iter, width=width, yerr=std_iterations[method][j], capsize=5, label=f"tUPS {method_labels[method]}" if j==0 else "", color=colors[method], alpha=0.7)
+                
+            # plt.bar(x + i*width, avg_iterations[method], width=width, yerr=std_iterations[method], capsize=5, label="tUPS "+method_labels[method], color=colors[method], alpha=0.7)
+        
+    plt.xticks(x, combinations)
+    # Set only lower y-axis limit to 0, since we cannot have negative iterations to convergence, but we can have a wide range of values for the upper y-axis limit depending on the molecule and basis, so we can set it to auto
+    plt.ylim(bottom=0)
+
     plt.xlabel("Combination of Optimal Orbitals and Previous Thetas (oo, prev)", fontsize=12)
     plt.ylabel("Iterations to Convergence", fontsize=12)
     
@@ -1135,23 +1192,36 @@ def plot_iterations_to_convergence_statistics(molecule, basis, iterations_data_a
     plt.savefig(output_path, dpi=300)
     print(f"VQE iterations to convergence statistics plot saved to {output_path}")
 
-if False:
+if True:
     # Gather data to plot iterations to convergence for 
         # Each: oo True/false and prev True/False, 
         # any trends in the number of iterations to convergence
     
     # Make a file for the number of iterations to convergence for each molecule
         # Need to make the files or do they already exist? 
-    if False:
-        for molecule in ["HF"]: #["Li2", "HF", "H2O"]:
+    
+
+
+    # check if file
+        #     output_filename = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_iter_to_conv_oo_{oo}_prev_{seed_lst}.json"
+            # exists for each combination of oo and prev, if not make the file by gathering the number of iterations to convergence for each method and dist for this molecule, basis, num_opt_virtual_orbital, and oo, and save it as a json file
+    if True:
+        for molecule in ["Li2", "HF", "H2O"]:
             basis = "6-31G"
             method = "OVOS" # Placeholder for getting dist and seed list
-            
+
             for oo in [True, False]:
                 for prev in [True, False]:
+
                     # Number of optimal virtual orbitals 
                     dist_list = [1.0] 
-                    num_opt_virtual_orbital = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], oo)[0]
+                    num_opt_virtual_orbital = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], False)
+
+                    # I have yet to run True oo and False Prev
+                    if oo == True and prev == False and molecule in ["Li2", "H2O"]:
+                        print(f"Warning: No optimal virtual orbitals found for {molecule} {basis} with oo {oo}. Skipping this combination.")
+                        continue
+                    num_opt_virtual_orbital = num_opt_virtual_orbital[0]
 
                     # Geometries
                     dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
@@ -1167,7 +1237,12 @@ if False:
                         seed_lst = gather_seeds_lst(molecule, basis, method, dist_list[0], num_opt_virtual_orbital, oo) # Get seeds list from the first dist, assuming it's the same for all dists
                         seed_lst = seed_lst[:-1]  # Remove the last seed from the seeds_lst
                     
-                    make_vqe_iterations_to_convergence_file(molecule, basis, dist_list, seed_lst, num_opt_virtual_orbital, oo)
+
+                    output_filename = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_iter_to_conv_oo_{oo}_prev_{seed_lst}.json"
+                    if not os.path.exists(output_filename):
+                        make_vqe_iterations_to_convergence_file(molecule, basis, dist_list, seed_lst, num_opt_virtual_orbital, oo)
+                    else:
+                        print(f"File {output_filename} already exists, skipping data gathering for this combination of oo and prev.")
 
     # With a .json file for each
         # oo True/false and prev True/False 
@@ -1182,7 +1257,7 @@ if False:
             # }
     
     # want to plot statistics for each molecule and basis
-    for molecule in ["HF"]: #["Li2", "HF", "H2O"]:
+    for molecule in ["Li2", "HF", "H2O"]:
         basis = "6-31G"
 
         # Gather the data for all combinations of oo and prev for this molecule and basis
@@ -1201,10 +1276,8 @@ if False:
         plot_iterations_to_convergence_statistics(molecule, basis, iterations_data_all)
 
 
-
-
-
-
+plt.close('all')  # Close all open figures
+assert len(plt.get_fignums()) == 0, "Some figures still open!"
 
 
 

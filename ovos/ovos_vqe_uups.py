@@ -1777,7 +1777,7 @@ if __name__ == "__main__":
 
 # In total each molecule should have...
 # - OO/Prev(random): 
-    # True/True   -  HF, Li2 | H2O
+    # True/True   -  HF, Li2, H2O
     # True/False  -  HF, 
     # False/True  -  HF, Li2, H2O
     # False/False -  HF, Li2, H2O
