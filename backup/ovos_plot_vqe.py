@@ -1320,67 +1320,35 @@ assert len(plt.get_fignums()) == 0, "Some figures still open!"
     # backup/data/{molecule}/{basis}/OVOS/lst_MP2_different_virt_orbs_{init}.json
         # For init in ["prev", "random", "RHF"]
 
+if False:
+    import json
+    import numpy as np
+    from pyscf import gto, scf, fci, ao2mo
+    from pyscf.fci.cistring import num_strings, str2addr
+    from pyscf.fci.addons import transform_ci
+    from pyscf.fci import direct_uhf
 
-def compute_overlap_full_ci(ci_ref, ci_fci):
-    """
-    Compute overlap using full CI vectors.
-    
-    Args:
-        ci_ref: CI vector for reference state
-        ci_fci: CI vector for FCI ground state
-    
-    Returns:
-        overlap: Float value of |⟨Ψ_ref|Ψ_FCI⟩|²
-    """    
-    # Direct dot product of CI vectors
-    overlap_amplitude = np.dot(ci_ref.ravel().conj(), ci_fci.ravel())
-    overlap = abs(overlap_amplitude) ** 2
-    
-    return overlap
-    
-
-if True:
-    # For each molecule and basis, gather the mo_coefficients for the OVOS-optimised reference state for each number of optimised virtual orbitals, and compute the overlap with the FCI ground state, and print out the results in a table format
+    # ------------------------------------------------------------
+    # 1. Load OVOS data
+    # ------------------------------------------------------------
     molecule = "HF"
-    basis = "cc-pVDZ"
-    init = "prev"  # or "random" or "RHF"
+    basis = "6-31G"
+    init = "RHF"
 
     filename = f"backup/data/{molecule}/{basis}/OVOS/lst_MP2_OVOS_virt_orbs_{init}.json"
-    try:
-        with open(filename, 'r') as f:
-            data = json.load(f)
-            # data[0]: energy iterations for all the different numbers of optimised virtual orbitals
-            # data[1]: number of optimised virtual orbitals for each entry in data[0]
-            # data[2]: iteration numbered for each entry in data[0]
-            # ...
-            # data[4]: MO coefficients for the OVOS-optimised reference state for each entry in data[0]
-            # data[5]: Convergence status for each entry in data[0]
-            # End
+    with open(filename, 'r') as f:
+        data = json.load(f)
+        N_virt_opt_lst = data[1]
+        energy_lst = data[0]
+        mo_coefficients_lst = data[4]          # list of (2, nao, norb_full) arrays
 
-            N_virt_opt_lst = data[1]
-            energy_lst = data[0]
-            mo_coefficients_lst = data[4]
-                
-    except FileNotFoundError:
-        print(f"Warning: Overlap data file not found {filename} for {molecule} {basis} init {init}")
+    energy_final_lst = [energy[-1] for energy in energy_lst]
+    diff_energy_final_lst = [energy[-1] - energy[0] for energy in energy_lst]
 
-    # Molecule geometry
-    if molecule == "HF":
-        mol_geo = "H .0 .0 .0; F .0 .0 0.917"
-    if molecule == "Li2":
-        mol_geo = "Li .0 .0 .0; Li .0 .0 2.673"
-    if molecule == "H2O":
-        mol_geo = "O .0 .0  0.1173; H .0 0.7572 -0.4692; H .0 -0.7572 -0.4692"
-    if molecule == "NH3":
-        mol_geo = "N .0 .0 .0; H .0 .0 1.012; H .0 0.926 -0.239; H .0 -0.926 -0.239"
-    if molecule == "CO":
-        mol_geo = "C .0 .0 .0; O .0 .0 1.128"
-
-    # Get the mol of the molecule and basis from PySCF
-    import pyscf.gto as gto
-    import pyscf.fci as fci
-    import pyscf.scf as scf
-
+    # ------------------------------------------------------------
+    # 2. Build molecule and run UHF
+    # ------------------------------------------------------------
+    mol_geo = "H .0 .0 .0; F .0 .0 0.917"
     mol = gto.Mole()
     mol.atom = mol_geo
     mol.basis = basis
@@ -1390,58 +1358,412 @@ if True:
     mol.symmetry = False
     mol.verbose = 0
     mol.build()
-    
-    # RHF calculation
-    rhf = scf.RHF(mol)
-    rhf.verbose = 0
-    rhf.kernel()
 
-    # Get the FCI from PySCF
-    print("Computing FCI (Full Configuration Interaction)...")
-    try:
-        cisolver = fci.FCI(mol, rhf.mo_coeff)
-        cisolver.verbose = 4
-        fci_data = cisolver.kernel()
-        # MO coefficients for the FCI ground state
-        mo_coefficients_fci = cisolver.mo_coeff
-        # FCI ground state energy
-        FCI_e_corr = fci_data[0] - rhf.e_tot
-        print(f"FCI correlation energy: {FCI_e_corr:.6f} Hartree")
-    except Exception as e:
-        print(f"⚠️  FCI computation failed: {e}")
-        FCI_e_corr = None
+    n_alpha, n_beta = mol.nelec          # (5,5)
+    nocc = n_alpha
 
-    # Overlap list for each number of optimised virtual orbitals
-    overlap_lst = []
-    for mo_coefficients in mo_coefficients_lst:
-        if FCI_e_corr is not None:
-            # Compute the overlap F = |⟨Φ_ref|Ψ_FCI⟩|²
-            overlap = compute_overlap_full_ci(mo_coefficients, mo_coefficients_fci)
-            overlap_lst.append(overlap)
+    mf_uhf = scf.UHF(mol)
+    mf_uhf.kernel()
+    mo_alpha = mf_uhf.mo_coeff[0]        # (nao, nmo)
+    mo_beta  = mf_uhf.mo_coeff[1]
+    nmo = mo_alpha.shape[1]
+    S = mol.intor('int1e_ovlp')
+
+    # ------------------------------------------------------------
+    # 3. Full CI in the UHF MO basis using direct_uhf
+    # ------------------------------------------------------------
+    # Using direct_uhf.kernel ensures the correct integral format is passed
+    # Alternatively, the high-level FCI object can be used:
+    cisolver = fci.FCI(mf_uhf)
+    e_fci, ci_fci = cisolver.kernel()
+    print(f"FCI energy: {e_fci:.8f} Hartree")
+    print(f"FCI correlation energy: {e_fci - mf_uhf.e_tot:.6f} Hartree\n")
+
+    # ------------------------------------------------------------
+    # 4. HF reference CI vector in the full UHF basis (unit vector)
+    # ------------------------------------------------------------
+    n_str_full = num_strings(nmo, n_alpha)
+    ref_hf_full = np.zeros((n_str_full, n_str_full))
+    occ_mask = (1 << n_alpha) - 1
+    addr_alpha = str2addr(nmo, n_alpha, occ_mask)
+    addr_beta  = str2addr(nmo, n_beta, occ_mask)
+    ref_hf_full[addr_alpha, addr_beta] = 1.0
+    amp_hf_fci = np.dot(ci_fci.conj().ravel(), ref_hf_full.ravel())
+    overlap_hf_fci = abs(amp_hf_fci)**2
+
+    # ------------------------------------------------------------
+    # 5. Process each OVOS orbital set
+    # ------------------------------------------------------------
+    overlap_ovos_fci = []
+    overlap_ovos_hf  = []
+
+    for N_virt, mo_full in zip(N_virt_opt_lst, mo_coefficients_lst):
+        mo_full = np.asarray(mo_full)          # shape (2, nao, nmo_full)
+        if mo_full.ndim == 3:
+            mo_alpha_full = mo_full[0]
+            mo_beta_full  = mo_full[1]
         else:
-            overlap_lst.append(None)
+            mo_alpha_full = mo_full
+            mo_beta_full  = mo_full
 
-    print(f"Overlap of OVOS-optimised reference state with FCI ground state for {molecule} {basis} init {init}:")
-    print(f"{'N_virt_opt':>12} | {'Overlap F':>10}")
-    print("-" * 25)
-    for N_virt_opt, overlap in zip(N_virt_opt_lst, overlap_lst):
-        print(f"{N_virt_opt:>12} | {overlap:>10.6f}")
+        # Truncate to occupied + first N_virt virtuals
+        mo_alpha_trunc = mo_alpha_full[:, :nocc + N_virt]
+        mo_beta_trunc  = mo_beta_full[:, :nocc + N_virt]
+        norb_ovos = mo_alpha_trunc.shape[1]
 
-    
+        # Transformation matrices from UHF basis to truncated OVOS basis
+        u_alpha = mo_alpha.T @ S @ mo_alpha_trunc   # (nmo, norb_ovos)
+        u_beta  = mo_beta.T  @ S @ mo_beta_trunc
+
+        # Transform FCI vector to OVOS basis
+        ci_ovos = transform_ci(ci_fci, (n_alpha, n_beta), (u_alpha, u_beta))
+
+        # Overlap with FCI (the OVOS reference is the first configuration)
+        overlap_amplitude = ci_ovos[0, 0]
+        overlap_ovos_fci.append(abs(overlap_amplitude)**2)
+
+        # Overlap with HF determinant (transform HF reference to OVOS basis)
+        ref_hf_ovos = transform_ci(ref_hf_full, (n_alpha, n_beta), (u_alpha, u_beta))
+        overlap_hf = abs(np.dot(ref_hf_ovos.conj().ravel(), ci_ovos.ravel()))**2
+        overlap_ovos_hf.append(overlap_hf)
+
+    # ------------------------------------------------------------
+    # 6. Print results
+    # ------------------------------------------------------------
+    print(f"\nResults for {molecule} / {basis} (init = {init})")
+    print(f"HF–FCI overlap (reference): {overlap_hf_fci:.8f}\n")
+    print(f"{'N_virt_opt':>12} | {'F_OVOS_FCI':>12} | {'F_OVOS_HF':>12} | {'Energy (Hartree)':>16} | {'ΔE from initial':>16}")
+    print("-" * 80)
+    for n, ov_fci, ov_hf, e, de in zip(N_virt_opt_lst, overlap_ovos_fci, overlap_ovos_hf, energy_final_lst, diff_energy_final_lst):
+        print(f"{n//2:>12} | {ov_fci:>12.8f} | {ov_hf:>12.8f} | {e:>16.8f} | {de:>16.6f}")
+
+    # ------------------------------------------------------------
+    # 7. Detailed orbital contributions in the largest OVOS space
+    # ------------------------------------------------------------
+    max_idx = np.argmax(N_virt_opt_lst)   # index of the largest OVOS set
+    N_max = N_virt_opt_lst[max_idx]
+    mo_full = mo_coefficients_lst[max_idx]
+
+    # Build the truncated orbitals for the largest set
+    mo_full = np.asarray(mo_full)
+    if mo_full.ndim == 3:
+        mo_alpha_full = mo_full[0]
+        mo_beta_full  = mo_full[1]
+    else:
+        mo_alpha_full = mo_full
+        mo_beta_full  = mo_full
+
+    mo_alpha_trunc = mo_alpha_full[:, :nocc + N_max]
+    mo_beta_trunc  = mo_beta_full[:, :nocc + N_max]
+    norb_trunc = mo_alpha_trunc.shape[1]
+
+    # Transform the FCI vector to this largest truncated space
+    u_alpha = mo_alpha.T @ S @ mo_alpha_trunc
+    u_beta  = mo_beta.T  @ S @ mo_beta_trunc
+    ci_ovos_max = transform_ci(ci_fci, (n_alpha, n_beta), (u_alpha, u_beta))
+
+    # Normalize the transformed CI vector (fixes small numerical deviations)
+    norm = np.linalg.norm(ci_ovos_max.ravel())
+    ci_ovos_max /= norm
+
+    # Create the FCI solver again (or reuse the existing `cisolver`)
+    # to have access to the `make_rdm1` method.
+    # We need to pass the new number of orbitals (`norb_trunc`) to the solver.
+    cisolver_new = fci.FCI(mf_uhf, mo=(mo_alpha_trunc, mo_beta_trunc))
+
+    # Build the 1‑RDM using the spin‑resolved method
+    # Note: `make_rdm1s` returns (dm1_alpha, dm1_beta) directly
+    rdm1_alpha, rdm1_beta = cisolver_new.make_rdm1s(ci_ovos_max, norb_trunc, (n_alpha, n_beta))
+
+    # Natural orbital occupations (sum of alpha and beta)
+    occ_alpha = np.diag(rdm1_alpha)
+    occ_beta  = np.diag(rdm1_beta)
+    occ_total = occ_alpha + occ_beta
+
+    # Separate occupied (first n_alpha) and virtual (next N_max) parts
+    occ_occupied = occ_total[:n_alpha]
+    occ_virtual  = occ_total[n_alpha:n_alpha+N_max]
+
+    print("\n--- Natural orbital occupations in the largest OVOS space ---")
+    print(f"Orbital space: {norb_trunc} orbitals (occupied + {N_max//2} virtuals)")
+    print("\nOccupied orbitals (HF reference = 2.0):")
+    for i, occ in enumerate(occ_occupied):
+        dev = occ - 2.0
+        print(f"  occ-{i+1:2d} : total occ = {occ:.6f}  (Δ = {dev:+.6f})")
+
+    print("\nVirtual orbitals (HF reference = 0.0):")
+    for i, occ in enumerate(occ_virtual):
+        print(f"  virt-{i+1:2d} : total occ = {occ:.6f}  (correlation contribution = {occ:.6f})")
+
+    # Optionally, sort virtual orbitals by occupation (largest first)
+    sorted_idx = np.argsort(occ_virtual)[::-1]
+    print("\nVirtual orbitals ranked by occupation (most important first):")
+    for rank, idx in enumerate(sorted_idx, 1):
+        occ_val = occ_virtual[idx]
+        print(f"  rank {rank:2d} : orbital {idx+1:2d}  total occ = {occ_val:.6f}")
 
 
 
+if False:
+    import json
+    import numpy as np
+    from pyscf import gto, scf, fci
+    from pyscf.fci.cistring import make_strings
 
+    # Initialize data structure to store results for all molecules
+        # "basis": {
+        #     "Molecule": {
+        #         "HF_FCI_overlap": value,
+        #         "N_virt_opt": {
+        #             "F_OVOS_FCI": value,
+        #             }
+        #        }
+        #    }
 
+    data_basis_molecules = {"6-31G": {
+        "Li2": {
+            "HF_FCI_overlap": None,
+            "N_virt_opt": [],
+            "F_OVOS_FCI": [],
+            "MP2_corr_energy": [],
+        }, "HF": {
+            "HF_FCI_overlap": None,
+            "N_virt_opt": [],
+            "F_OVOS_FCI": [],
+            "MP2_corr_energy": [],
+        }, "H2O": {
+            "HF_FCI_overlap": None,
+            "N_virt_opt": [],
+            "F_OVOS_FCI": [],
+            "MP2_corr_energy": [],
+        }, "NH3": {
+            "HF_FCI_overlap": None,
+            "N_virt_opt": [],
+            "F_OVOS_FCI": [],
+            "MP2_corr_energy": [],
+        }, "CO": {
+            "HF_FCI_overlap": None,
+            "N_virt_opt": [],
+            "F_OVOS_FCI": [],
+            "MP2_corr_energy": [],
+        }}}
 
+    for molecule in ["Li2", "HF", "H2O", "NH3"]:
+        print(f"\nProcessing molecule {molecule} for reference state overlap analysis...")
 
+        # ------------------------------------------------------------
+        # 1. Load OVOS data (as in your snippet)
+        # ------------------------------------------------------------
+        molecule = molecule
+        basis = "6-31G"
+        init = "RHF"
 
+        filename = f"backup/data/{molecule}/{basis}/OVOS/lst_MP2_OVOS_virt_orbs_{init}.json"
+        with open(filename, 'r') as f:
+            data = json.load(f)
+            N_virt_opt_lst = data[1]
+            energy_lst = data[0]
+            mo_coefficients_lst = data[4]      # list of (2, nao, norb_full) arrays
 
+        energy_final_lst = [energy[-1] for energy in energy_lst]
+        diff_energy_final_lst = [energy[-1] - energy[0] for energy in energy_lst]
 
+        # --------------------------------------------
+        # Get mol_geo from molecule
+        # --------------------------------------------
+        if molecule == "Li2":
+            mol_geo = "Li 0 0 0; Li 0 0 2.673"
+        elif molecule == "HF":
+            mol_geo = "H .0 .0 .0; F .0 .0 0.917"
+        elif molecule == "H2O":
+            mol_geo = 'O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692' 
+        elif molecule == "NH3":
+            mol_geo = 'N 0 0 0; H 0 0 1.012; H 0 0.935 -0.262; H 0 -0.935 -0.262'
+        elif molecule == "CO":
+            mol_geo = 'C 0 0 0; O 0 0 1.128'
+        else:
+            raise ValueError(f"Unknown molecule: {molecule}")
 
+        # ------------------------------------------------------------
+        # 2. Build molecule and run UHF (the basis for FCI)
+        # ------------------------------------------------------------
+        mol_geo = mol_geo
+        mol = gto.Mole()
+        mol.atom = mol_geo
+        mol.basis = basis
+        mol.unit = 'Angstrom'
+        mol.spin = 0
+        mol.charge = 0
+        mol.symmetry = False
+        mol.verbose = 0
+        mol.build()
 
+        mf_uhf = scf.UHF(mol)
+        mf_uhf.kernel()
+        mo_alpha_uhf = mf_uhf.mo_coeff[0]    # (nao, nmo)
+        mo_beta_uhf  = mf_uhf.mo_coeff[1]
+        nmo = mo_alpha_uhf.shape[1]
+        S = mol.intor('int1e_ovlp')            # AO overlap matrix
 
+        # ------------------------------------------------------------
+        # 3. Full CI in the UHF MO basis
+        # ------------------------------------------------------------
+        try:
+            cisolver = fci.FCI(mf_uhf)
+            cisolver.verbose = 4
+            e_fci, ci_fci = cisolver.kernel()
+            print(f"FCI energy: {e_fci:.8f} Hartree")
+            print(f"FCI correlation energy: {e_fci - mf_uhf.e_tot:.6f} Hartree\n")
+        except Exception as e:
+            print(f"Error running FCI for {molecule} with basis {basis}: {e}")
+            continue
 
+        # ------------------------------------------------------------
+        # 4a. Overlap between the OVOS determinant and the FCI vector
+        # ------------------------------------------------------------
+        lst_overlaps = []
+        lst_fidelities = []
+        
+        # Occupied orbitals in the OVOS determinant (first n_alpha / n_beta columns)
+        n_alpha, n_beta = mol.nelec                # (5,5) for HF
+        occ_ovos_a = list(range(n_alpha))
+        occ_ovos_b = list(range(n_beta))
+
+        # Generate all UHF occupation strings (bit‑strings) for alpha and beta
+        strs_a = make_strings(range(nmo), n_alpha)   # list of ints
+        strs_b = make_strings(range(nmo), n_beta)
+
+        def occ_indices(bitstr, nmo):
+            """Return list of orbital indices where bit is 1."""
+            return [i for i in range(nmo) if (bitstr >> i) & 1]
+
+        for mo_coeff in mo_coefficients_lst:
+            # Pick the optimized OVOS MO coefficients (last entry)
+            mo_ovos = mo_coeff          # shape (2, nao, nmo)
+            C_ovos_a = np.asarray(mo_ovos[0])                      # (nao, nmo)
+            C_ovos_b = np.asarray(mo_ovos[1])
+
+            # Transformation from UHF basis to OVOS basis (unitary)
+            U_a = C_ovos_a.T @ S @ mo_alpha_uhf        # (nmo, nmo)
+            U_b = C_ovos_b.T @ S @ mo_beta_uhf
+
+            # Precompute <UHF_det|OVOS_det> = det( U[occ_uhf, occ_ovos] ) for each string
+            det_a = {}
+            for bit_a in strs_a:
+                occ_a = occ_indices(bit_a, nmo)
+                submat = U_a[np.ix_(occ_a, occ_ovos_a)]
+                det_a[bit_a] = np.linalg.det(submat)
+
+            det_b = {}
+            for bit_b in strs_b:
+                occ_b = occ_indices(bit_b, nmo)
+                submat = U_b[np.ix_(occ_b, occ_ovos_b)]
+                det_b[bit_b] = np.linalg.det(submat)
+
+            # Dot product with the FCI vector (real, so no complex conjugation)
+            overlap = 0.0
+            for i, bit_a in enumerate(strs_a):
+                for j, bit_b in enumerate(strs_b):
+                    amp = det_a[bit_a] * det_b[bit_b]   # <UHF_det|OVOS_det>
+                    overlap += amp * ci_fci[i, j]
+
+            fidelity = overlap**2
+
+            lst_overlaps.append(overlap)
+            lst_fidelities.append(fidelity)
+
+        # ------------------------------------------------------------
+        # 4b. Overlap between the UHF determinant and the FCI vector
+        # ------------------------------------------------------------
+        uhf_a_str = 0
+        for i in range(n_alpha):
+            uhf_a_str |= (1 << i)
+        uhf_b_str = 0
+        for i in range(n_beta):
+            uhf_b_str |= (1 << i)
+
+        idx_a = np.where(strs_a == uhf_a_str)[0][0]
+        idx_b = np.where(strs_b == uhf_b_str)[0][0]
+        
+        overlap_hf = ci_fci[idx_a, idx_b]
+        fidelity_hf = overlap_hf**2
+
+        # ------------------------------------------------------------
+        # 5. print results
+        # ------------------------------------------------------------
+        print(f"\nResults for {molecule} / {basis} (init = {init})")
+        print(f"\n   UHF |FCI> fidelity: {fidelity_hf:.8f}\n")
+        print(f"   {'N_virt_opt':>12} | {'F_OVOS_FCI':>12} | {'Energy (Hartree)':>16}")
+        print("-" * 60)
+        for n, ov_fci, e in zip(N_virt_opt_lst, lst_fidelities, energy_final_lst):
+            print(f"   {n//2:>12} | {ov_fci:>12.8f} | {e:>16.8f}")
+
+        # ------------------------------------------------------------
+        # 6. Store results in the data structure
+        # ------------------------------------------------------------
+        data_basis_molecules[basis][molecule]["HF_FCI_overlap"] = fidelity_hf
+        data_basis_molecules[basis][molecule]["N_virt_opt"] = N_virt_opt_lst
+        data_basis_molecules[basis][molecule]["F_OVOS_FCI"] = lst_fidelities
+        data_basis_molecules[basis][molecule]["MP2_corr_energy"] = energy_final_lst
+
+    # Save the data structure to a JSON file for later analysis
+    output_filename = f"backup/data/reference_state_overlaps.json"
+    with open(output_filename, 'w') as f:
+        json.dump(data_basis_molecules, f, indent=4)
+    print(f"\nReference state overlap data saved to {output_filename}")
+
+if True:
+    # Get the file and data therefrom
+    output_filename = f"backup/data/reference_state_overlaps.json"
+    with open(output_filename, 'r') as f:
+        data_basis_molecules = json.load(f)
+    print(f"\nReference state overlap data loaded from {output_filename}")
+
+    # ------------------------------------------------------------
+    # Plotting
+    # ------------------------------------------------------------
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    basis = "6-31G"
+    data_mol = data_basis_molecules[basis]
+
+    fig, (ax1) = plt.subplots(1, 1, figsize=(10, 6))
+    colors = plt.cm.tab10(np.linspace(0, 1, len(data_mol)))
+
+    for (mol_name, mol_data), color in zip(data_mol.items(), colors):
+        if not mol_data["N_virt_opt"]:   # skip if no data (e.g., CO)
+            continue
+        N = mol_data["N_virt_opt"]
+        fid = mol_data["F_OVOS_FCI"]
+        uhf_fid = mol_data["HF_FCI_overlap"]
+        mp2_energy = mol_data["MP2_corr_energy"]
+        
+        ax1.plot(N, fid, 'o-', color=color, label=f"{mol_name}")
+        ax1.axhline(y=uhf_fid, linestyle='--', color=color, alpha=0.6,
+                    label="")
+        
+    # Set label for legend entry for UHF reference fidelity
+    ax1.axhline(y=0, linestyle='--', color="black", alpha=0.6,
+                    label="UHF")
+
+    # Set the y-axis limit to [0, 1] since fidelity cannot exceed 1
+    ax1.set_ylim(0.9, 1.0)
+
+    ax1.set_xlabel("Number of optimised virtual orbitals", fontsize=12)
+    ax1.set_ylabel("Fidelity with FCI ground state", fontsize=12)
+    ax1.set_title(f"Overlap of OVOS determinant with FCI ({basis} basis)", fontsize=14)
+    ax1.legend(loc='best')
+    ax1.grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.savefig(f"backup/data/ovos_fidelity_mp2_{basis}.png", dpi=300, bbox_inches='tight')
+
+    # Save the plot to png file
+    output_plot_filename = f"backup/data/ovos_fidelity_mp2_{basis}.png"
+    plt.savefig(output_plot_filename, dpi=300, bbox_inches='tight')
+    print(f"OVOS fidelity and MP2 energy plot saved to {output_plot_filename}")
+    plt.close()  # Close the figure to free memory
 
 
 
