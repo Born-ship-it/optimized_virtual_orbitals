@@ -662,11 +662,6 @@ INPUT chapters/outlook.tex
 INPUT ./main.bbl
 INPUT ./main.bbl
 INPUT main.bbl
-INPUT ./appendices/appendix_a.tex
-INPUT ./appendices/appendix_a.tex
-INPUT ./appendices/appendix_a.tex
-INPUT ./appendices/appendix_a.tex
-INPUT appendices/appendix_a.tex
 INPUT ./appendices/appendix_b.tex
 INPUT ./appendices/appendix_b.tex
 INPUT ./appendices/appendix_b.tex

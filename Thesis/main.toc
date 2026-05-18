@@ -120,19 +120,13 @@
 \contentsline {section}{\numberline {8.4}Larger Molecular Systems}{55}{section.8.4}%
 \contentsline {section}{\numberline {8.5}Benchmarking and Validation}{55}{section.8.5}%
 \contentsline {chapter}{Bibliography}{57}{section.8.5}%
-\contentsline {chapter}{\numberline {A}Mathematical Derivations}{59}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Spin-Orbital MP2 Energy from the Hylleraas Functional}{59}{section.A.1}%
-\contentsline {section}{\numberline {A.2}Derivation of the Orbital Rotation Gradient}{59}{section.A.2}%
-\contentsline {section}{\numberline {A.3}Derivation of the Orbital Rotation Hessian}{59}{section.A.3}%
-\contentsline {section}{\numberline {A.4}Matrix Exponential for the Rotation Matrix}{59}{section.A.4}%
-\contentsline {section}{\numberline {A.5}Notation Conventions for Two-Electron Integrals}{59}{section.A.5}%
-\contentsline {chapter}{\numberline {B}Additional Data and Figures}{61}{appendix.B}%
-\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{61}{section.B.1}%
-\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{61}{section.B.2}%
-\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{61}{section.B.3}%
-\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{63}{appendix.C}%
-\contentsline {section}{\numberline {C.1}Repository and Version Information}{63}{section.C.1}%
-\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{63}{section.C.2}%
-\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{63}{section.C.3}%
-\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{63}{section.C.4}%
-\contentsline {section}{\numberline {C.5}Profiling Results}{63}{section.C.5}%
+\contentsline {chapter}{\numberline {A}Additional Data and Figures}{59}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Full MP2 Reference Energies}{59}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Complete OVOS Energy Recovery Tables}{59}{section.A.2}%
+\contentsline {section}{\numberline {A.3}Convergence Plots for All Systems}{59}{section.A.3}%
+\contentsline {chapter}{\numberline {B}Implementation Details and Source Code}{61}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Repository and Version Information}{61}{section.B.1}%
+\contentsline {section}{\numberline {B.2}Spin-Orbital Integral Conversion}{61}{section.B.2}%
+\contentsline {section}{\numberline {B.3}MP2 Energy and Amplitude Computation}{61}{section.B.3}%
+\contentsline {section}{\numberline {B.4}Orbital Optimisation: Gradient and Hessian}{61}{section.B.4}%
+\contentsline {section}{\numberline {B.5}Profiling Results}{61}{section.B.5}%
