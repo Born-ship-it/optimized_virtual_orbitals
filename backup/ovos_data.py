@@ -288,11 +288,13 @@ def plot_OVOS_convergence_from_data(molecule, basis, methods=None):
     for i in range(len(conv_virtual_orbs_data['RHF']['num_virtual_orbitals'])):
         best_energy = None
         best_x = None
+
+        print(i)
         
         for method in methods:
             if method in conv_virtual_orbs_data:
                 data_dict = conv_virtual_orbs_data[method]
-                # print(method, data_dict['num_virtual_orbitals'])
+                print(method, data_dict['num_virtual_orbitals'])
                 num_virt_orbs = data_dict['num_virtual_orbitals'][i]
                 MP2_vorb = data_dict['MP2_final_energies'][i]
                 
@@ -1413,7 +1415,7 @@ def run_ovos_for_virtual_orbs(molecule, basis, method, num_opt_virtual_orbs,
         init_orbs="RHF",
         verbose=0, max_iter=1000,
         conv_energy=conv_energy, conv_grad=conv_grad,
-        keep_track_max=keep_track_max
+        keep_track_max="None"
     )
 
     E_corr, E_corr_hist, E_corr_iter, E_corr_mo, _, stop_reason = ovos.run(
@@ -1762,7 +1764,34 @@ def ovos_object(molecule, basis, method="RHF"):
 
                 # After executor closes, check flag
                 if skip_to_next_virtual_orbs:
-                    print(f"  Skipped all attempts for {2*num_opt_virtual_orbs} spin-orbitals\n")
+                    # ← ADD THIS: Save best result before skipping
+                    if best_attempt_idx is not None:
+                        best_result = attempt_results[best_attempt_idx]
+                        
+                        E_corr_hist = best_result['E_corr_hist']
+                        E_corr_iter = best_result['E_corr_iter']
+                        E_corr_mo = best_result['E_corr_mo']
+                        stop_reason = best_result['stop_reason']
+                        
+                        # Store results
+                        diff_alpha_beta = np.max(np.abs(E_corr_mo[0] - E_corr_mo[1]))
+                        alpha_beta_check = "True" if diff_alpha_beta > 1e-4 else "False"
+                        
+                        lst_E_corr_virt_orbs[0].append(E_corr_hist)
+                        lst_E_corr_virt_orbs[1].append(2*num_opt_virtual_orbs)
+                        lst_E_corr_virt_orbs[2].append(E_corr_iter)
+                        lst_E_corr_virt_orbs[3].append(alpha_beta_check)
+                        lst_E_corr_virt_orbs[4].append(E_corr_mo)
+                        lst_E_corr_virt_orbs[5].append(stop_reason)
+                        
+                        print(f"  ✅ Saved best result before skip: Corr. energy = {best_result['final_energy']:.6f} Ha, "
+                            f"ratio to MP2 = {best_result['final_energy']/E_corr_MP2:.4f}, "
+                            f"iter = {best_iter}, attempt = {best_attempt_idx}/{num_random_attempts}\n")
+                    else:
+                        print(f"  ⚠️  No results to save before skipping for {2*num_opt_virtual_orbs} spin-orbitals\n")
+                    
+                    print(f"  Skipped remaining attempts for {2*num_opt_virtual_orbs} spin-orbitals\n")
+    
                     continue  # ← Skip to next while iteration (next virtual orbital count)
 
                 # Only process best result if we didn't skip
@@ -2228,9 +2257,20 @@ if __name__ == "__main__":
     # Debug run
     # run_ovos_for_virtual_orbs(molecules[2], basis_sets[0], method="RHF", num_opt_virtual_orbs=6)
 
-    if True:
+    if False:
         for basis in basis_sets[1:2]:   # Done: 6-31G
-            for molecule in molecules[0:1]:  # Done: HF, H2O | Todo: Li2, CO, NH3
+            for molecule in molecules[0:1]:  # TO DO: Li2, CO, NH3, 
+                for method in methods[0:1]:  # "RHF"
+                    ovos_object(molecule, basis, method)
+
+                try:
+                    save_molecule_reference_data(molecule, basis)
+                except Exception as e:
+                    print(f"❌ Failed for {molecule}/{basis}: {e}\n")
+
+    if False:
+        for basis in basis_sets[1:2]:   # Done: 6-31G
+            for molecule in molecules[4:5]:  # TO DO: CO, NH3, 
                 for method in methods[2:3]:  # "random"
                     ovos_object(molecule, basis, method)
 
@@ -2239,7 +2279,7 @@ if __name__ == "__main__":
                 except Exception as e:
                     print(f"❌ Failed for {molecule}/{basis}: {e}\n")
     if False:
-        for basis in basis_sets:   # Done: 6-31G
+        for basis in basis_sets[1:2]:   # Done: 6-31G | Todo: cc-pVDZ
             for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
 
                 # After running ovos_object(), plot the results
@@ -2248,7 +2288,7 @@ if __name__ == "__main__":
                     # Plot convergence histories for all methods on the same plot for comparison
                 # plot_OVOS_convergence_histories(molecule, basis, methods=["RHF", "prev", "random"])
 
-    if False:
+    if True:
         for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
 
             # After running ovos_object(), plot the results
