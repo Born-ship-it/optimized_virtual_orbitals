@@ -842,6 +842,11 @@ class OVOS:
         else:
             self.eps = np.diag(fock_spin)
 
+        # Get HF ||T1|| for convergence comparison
+        eri_as_initial = self._eri_vovo_antisym(mo_coeffs)
+        t1_initial = self._mp1_t1_amplitudes(self.eps, eri_as_initial)
+        t1_norm_initial = self._t1_norm(t1_initial)
+
         while iter_count < self.max_iter:
             iter_count += 1
 
@@ -887,6 +892,7 @@ class OVOS:
             fock_hist.append(fock_spin)
 
             if self.verbose:
+                nocc = len(self.active_occ_indices)
                 nact = len(self.active_inocc_indices)
                 ntot = nact + len(self.inactive_indices)
                 self._print(f"    [{nact}/{ntot}]: MP2 energy = {E_corr:.12f}")
@@ -910,7 +916,8 @@ class OVOS:
 
                 if self.verbose and dgrad is not None:
                     flag = "(energy increased!)" if self.dE > 0 else ""
-                    self._print(f"            ΔE = {self.dE:.2e}  ‖grad‖ = {grad_norm:.2e}  ‖T1‖ = {t1_norm:.2e} {flag}")
+                    self._print(f"            ΔE = {self.dE:.2e}  ‖grad‖ = {grad_norm:.2e} {flag}")
+                    self._print(f"            ‖T1‖ = {t1_norm:.2e}  OVOS < HF = {t1_norm<t1_norm_initial}  (||T1||^HF = {t1_norm_initial:.2e})")
                 
                 if (dE < self.conv_energy and grad_norm < self.conv_grad and t1_norm < self.t1_conv):
                     stop_reasons.append("Convergence")
@@ -1034,7 +1041,7 @@ if __name__ == "__main__":
 
     # Water molecule, minimal basis
     mol = gto.Mole()
-    mol.atom = 'O 0 0 0; H 0 0 1; H 0 1 0'
+    mol.atom = 'O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692'
     mol.basis = '6-31G'
     mol.unit = 'Angstrom'
     mol.spin = 0

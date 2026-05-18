@@ -8,6 +8,7 @@ import numpy as np
 import json
 import os
 
+
 def get_num_opt_virtual_orbitals(molecule, basis, dist, oo):
     # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
     # We can get it from the filename of the VQE results files, which is like:
@@ -139,7 +140,7 @@ def make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual
                 with open(file_name, 'w') as f:
                     json.dump(data, f, indent=4)
 
-    else:
+    elif type(seeds_lst) is not bool:
         for oo in [oo]: #[True, False]:
             for num_opt_virtual_orbital in [num_opt_virtual_orbitals]:
                 data = {}
@@ -163,7 +164,7 @@ def make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual
                         method_data[dist] = [energies_initial[energies.index(energy_min)], energy_min, seed_min]  # Save the initial energy, lowest energy, and seed for this method and dist in the method_data dictionary
                     data[method] = method_data
                 
-                file_name = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_results_{num_opt_virtual_orbital}_{oo}_True.json"
+                file_name = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_results_{num_opt_virtual_orbital}_{oo}_False.json"
                 with open(file_name, 'w') as f:
                     json.dump(data, f, indent=4)
 
@@ -251,7 +252,7 @@ def make_vqe_dist_results_file(molecule, basis, dist, seeds_lst, num_opt_virtual
                 iteratoins_min = energies_iterations[energies.index(energy_min)]
                 data[method] = [energies_initial[energies.index(energy_min)], energy_min, iteratoins_min, mo_type_by_seed[energies.index(energy_min)], seed_min]  # Save the initial energy, lowest energy, and MO type for this method and dist in the data dictionary
 
-            file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbitals}_{oo}.json"
+            file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbitals}_{oo}_False.json"
             if not os.path.exists(f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/"):
                 os.makedirs(f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/")
             with open(file_name, 'w') as f:
@@ -337,7 +338,7 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
         if plot_prev == True:
             file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbital}_{oo}_True.json"
         else:
-            file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbital}_{oo}.json"
+            file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbital}_{oo}_False.json"
         
         try:
             with open(file_name, 'r') as f:
@@ -851,100 +852,111 @@ def gather_and_print_vqe_final_energy_spread(molecule, basis, method, dist, num_
 
 if False:
     # Plot the OO True but prev False ie 5 Random...
-    for molecule in ["HF"]: #["Li2", "HF", "H2O"]:
+    for molecule in ["Li2", "HF", "H2O"]:
         # molecule = "Li2"
         basis = "6-31G"
         method = "OVOS" # Placeholder for getting dist and seed list
-        oo = True  
+        for oo in [False, True]:  
+
+            print(f"  \n Processing molecule {molecule} with basis {basis} and method {method} with optimized orbitals = {oo}...")
+
+            # I know i have yet to run oo == True
+                # Skip
+            if oo == True and molecule in ["Li2", "H2O"]:
+                print(f"Skipping molecule {molecule} with basis {basis} and method {method} with optimized orbitals = {oo} since I have not run it yet...")
+                continue
+
+
+                # Get dist list from the folder
+            # dist_list = gather_dist_lst(molecule, basis, method)
+            dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
+                # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
+            num_opt_virtual_orbitals = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], False)
+                    # Set dist list with negatives floats first and then positive floats, and sorted by absolute value
+
+            # dist_list = sorted(dist_list, key=lambda x: abs(4.0-float(x)))[::-1]
+            dist_list_save = []
+            for num_opt_virtual_orbital in num_opt_virtual_orbitals:
+                dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
+                print(f"Dist list for {molecule} {basis} method {method} num_opt_virtual_orbital {num_opt_virtual_orbital}: {dist_list}")
+
+                    # If the molecule is Li2, we only want to the range above 2.5 Angstrom, so we can filter the dist_list to only include dist that are above 2.5 Angstrom, and we can use this filtered dist_list for the rest of the code
+                if molecule == "Li2":
+                    dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
+                else:
+                    dist_list = [dist for dist in dist_list if float(dist) >= 0.7]
+
+                    # Save dist_list
+                dist_list_save.append(dist_list)
+                    # For each dist, get seeds list and make VQE results file for that dist
+                if len(dist_list) < 3:
+                    seeds_lst = [9] # Only seed 9 or 8
+                else:
+                    seeds_lst = gather_seeds_lst(molecule, basis, method, dist_list[0], num_opt_virtual_orbital, oo) # Get seeds list from the first dist, assuming it's the same for all dists
+                    # Remove the last seed from the seeds_lst
+                    seeds_lst = seeds_lst[:-1]
+                
+                print(f"Seeds list for {molecule} {basis} method {method} dist {dist_list[0]}: {seeds_lst}")
+
+                for dist in dist_list:
+                        # ... and make the VQE results file for that dist
+                    make_vqe_dist_results_file(molecule, basis, dist, seeds_lst, num_opt_virtual_orbital, oo)
+
+                # Get the dist list again for full file generation
+                make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual_orbital, oo)
+
+                # Check the correlation energy of OVOS vs. UMP2 for this molecule, basis, dist, and num_opt_virtual_orbitals as a sanity check
+                # for dist in dist_list:
+                #     print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbital, seeds_lst)
+
+                # Check the spread of VQE final energies for all seeds for this molecule, basis, method, dist, and num_opt_virtual_orbitals to see if there are convergence issues
+                # We can do this by gathering the final energies for all seeds for this molecule, basis, method, dist, and num_opt_virtual_orbitals, and then print the range and standard deviation of the final energies to see if there is a lot of variance in the final energies for different seeds, which might indicate convergence issues
+                # for dist in dist_list:
+                #     for method in ["OVOS", "UHF", "UMP2"]:
+                #         gather_and_print_vqe_final_energy_spread(molecule, basis, method, dist, num_opt_virtual_orbital, seeds_lst)
+
+            # for oo in [oo]: # [True, False]:
+            # plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals, plot_init, plot_prev, oo):    
+            plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, True, False, oo)
+            plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, False, False, oo)
+        
+if False:
+    # Need to plot the VQE curve for one seed = "True", and both oo = True and False...
+        # So we can see the difference in using prev. final thetas and keep trying to find best from random...
+    
+    for molecule in ["Li2", "HF", "H2O"]:
+        basis = "6-31G"
+        method = "OVOS" # Placeholder for getting dist and seed list
+        
+        for oo in [False, True]:
+
+            print(f"  \n Processing molecule {molecule} with basis {basis} and method {method} with optimized orbitals = {oo}...")
 
             # Get dist list from the folder
-        # dist_list = gather_dist_lst(molecule, basis, method)
-        dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
+            dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
             # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
-        num_opt_virtual_orbitals = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], oo)
-                # Set dist list with negatives floats first and then positive floats, and sorted by absolute value
-        
-        # dist_list = sorted(dist_list, key=lambda x: abs(4.0-float(x)))[::-1]
-        dist_list_save = []
-        for num_opt_virtual_orbital in num_opt_virtual_orbitals:
+            num_opt_virtual_orbital = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], False)[0]
+            
+            # for num_opt_virtual_orbital in num_opt_virtual_orbitals:
             dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
             print(f"Dist list for {molecule} {basis} method {method} num_opt_virtual_orbital {num_opt_virtual_orbital}: {dist_list}")
-
-                # If the molecule is Li2, we only want to the range above 2.5 Angstrom, so we can filter the dist_list to only include dist that are above 2.5 Angstrom, and we can use this filtered dist_list for the rest of the code
             if molecule == "Li2":
                 dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
             else:
                 dist_list = [dist for dist in dist_list if float(dist) >= 0.7]
-
-                # Save dist_list
-            dist_list_save.append(dist_list)
-                # For each dist, get seeds list and make VQE results file for that dist
-            if len(dist_list) < 3:
-                seeds_lst = [9] # Only seed 9 or 8
-            else:
-                seeds_lst = gather_seeds_lst(molecule, basis, method, dist_list[0], num_opt_virtual_orbital, oo) # Get seeds list from the first dist, assuming it's the same for all dists
-                # Remove the last seed from the seeds_lst
-                seeds_lst = seeds_lst[:-1]
-            
-            print(f"Seeds list for {molecule} {basis} method {method} dist {dist_list[0]}: {seeds_lst}")
+                
+            # Here i need to designate the seed to "True" as i do not use a specific seed but the prev.
+            seed_lst = True
 
             for dist in dist_list:
-                    # ... and make the VQE results file for that dist
-                make_vqe_dist_results_file(molecule, basis, dist, seeds_lst, num_opt_virtual_orbital, oo)
+                make_vqe_dist_results_file(molecule, basis, dist, seed_lst, num_opt_virtual_orbital, oo)
 
-            # Get the dist list again for full file generation
-            make_vqe_results_file(molecule, basis, dist_list, seeds_lst, num_opt_virtual_orbital, oo)
+            make_vqe_results_file(molecule, basis, dist_list, seed_lst, num_opt_virtual_orbital, oo)
 
-            # Check the correlation energy of OVOS vs. UMP2 for this molecule, basis, dist, and num_opt_virtual_orbitals as a sanity check
-            for dist in dist_list:
-                print_e_corr_ovos_vs_ump2(molecule, basis, dist, num_opt_virtual_orbital, seeds_lst)
+            print(f"\nFinished gathering VQE results for {molecule} {basis} for all dists and num_opt_virtual_orbitals, now plotting the curves...")    
+            print(f"Number of optimal virtual orbitals: {num_opt_virtual_orbital}")
+            print(f"Dist list for plotting: {dist_list}")
 
-            # Check the spread of VQE final energies for all seeds for this molecule, basis, method, dist, and num_opt_virtual_orbitals to see if there are convergence issues
-            # We can do this by gathering the final energies for all seeds for this molecule, basis, method, dist, and num_opt_virtual_orbitals, and then print the range and standard deviation of the final energies to see if there is a lot of variance in the final energies for different seeds, which might indicate convergence issues
-            # for dist in dist_list:
-            #     for method in ["OVOS", "UHF", "UMP2"]:
-            #         gather_and_print_vqe_final_energy_spread(molecule, basis, method, dist, num_opt_virtual_orbital, seeds_lst)
-
-        # for oo in [oo]: # [True, False]:
-        # plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals, plot_init, plot_prev, oo):    
-        plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, True, False, oo)
-        plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, False, False, oo)
-        
-
-if True:
-    # Need to plot the VQE curve for one seed = "True", and both oo = True and False...
-        # So we can see the difference in using prev. final thetas and keep trying to find best from random...
-    
-    for molecule in ["HF"]: # ["Li2", "HF", "H2O"]:
-        basis = "6-31G"
-        method = "OVOS" # Placeholder for getting dist and seed list
-        oo = True
-
-        # Get dist list from the folder
-        dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
-        # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
-        num_opt_virtual_orbital = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], oo)[0]
-        
-        # for num_opt_virtual_orbital in num_opt_virtual_orbitals:
-        dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
-        if molecule == "Li2":
-            dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
-        else:
-            dist_list = [dist for dist in dist_list if float(dist) >= 0.7]
-            
-        # Here i need to designate the seed to "True" as i do not use a specific seed but the prev.
-        seed_lst = True
-
-        for dist in dist_list:
-            make_vqe_dist_results_file(molecule, basis, dist, seed_lst, num_opt_virtual_orbital)
-
-        make_vqe_results_file(molecule, basis, dist_list, seed_lst, num_opt_virtual_orbital)
-
-        print(f"\nFinished gathering VQE results for {molecule} {basis} for all dists and num_opt_virtual_orbitals, now plotting the curves...")    
-        print(f"Number of optimal virtual orbitals: {num_opt_virtual_orbital}")
-        print(f"Dist list for plotting: {dist_list}")
-
-        for oo in [True]: # [True, False]:
             # plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals, plot_init, plot_prev, oo):    
             plot_vqe_curve_results(molecule, basis, dist_list, [num_opt_virtual_orbital], True, True, oo)
             plot_vqe_curve_results(molecule, basis, dist_list, [num_opt_virtual_orbital], False, True, oo)
@@ -955,10 +967,803 @@ if True:
 
 
 
+plt.close('all')  # Close all open figures
+assert len(plt.get_fignums()) == 0, "Some figures still open!"
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def make_vqe_iterations_to_convergence_file(molecule, basis, dist_list, seed_lst, num_opt_virtual_orbital, oo):
+    # Make a file that gathers the number of iterations to convergence for each method and dist for this molecule, basis, num_opt_virtual_orbital, and oo, and save it as a json file
+    iterations_to_convergence = {}
+    for dist in dist_list:
+        iterations_to_convergence[dist] = {}
+        for method in ["OVOS", "UHF", "UMP2"]:
+            if method == "UMP2":
+                method_name = "UMP2_NO"
+            else:
+                method_name = method
+
+            if seed_lst != True:
+                # We need the best seed ... and not the list for filename
+                # need to look at .json 
+                    # backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_results_{num_opt_virtual_orbital}_{oo}_False.json
+                    # to get the best seed for this molecule, basis, num_opt_virtual_orbital, and oo
+
+                best_seed = None
+                best_final_energy = float('inf')
+                filename_results = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_results_{num_opt_virtual_orbital}_{oo}_False.json"
+                try:
+                    with open(filename_results, 'r') as f:
+                        results_data = json.load(f)
+                        # Structure of results_data should be like:
+                            # {
+                            #     "OVOS": {
+                            #         "0.7": [
+                            #             -105.84748652645231,
+                            #             -106.696834,
+                            #             "1024"
+                            #         ],
+                            #         ...
+                            #     },
+                            #     "UHF": ...
+                            #     "UMP2": ...
+                            # }
+                        if method in results_data and dist in results_data[method]:
+                            seed_for_dist = results_data[method][dist][2]  # Get the seed for this method and dist
+                            seed_lst = seed_for_dist
+                        else:
+                            print(f"Warning: Method {method} or dist {dist} not found in results data for {molecule} {basis} num_opt_virtual_orbital {num_opt_virtual_orbital} oo {oo}")
+                except FileNotFoundError:
+                    print(f"Warning: VQE results file not found {filename_results} for {molecule} {basis} num_opt_virtual_orbital {num_opt_virtual_orbital} oo {oo}")
+                    seed_lst = None            
+
+            filename = f"backup/data/{molecule}/{basis}/VQE/{method}/{dist}/UPS_{method_name}_{molecule}_{basis}_{dist}_opt_num_{num_opt_virtual_orbital}_{oo}_{seed_lst}.json"
+            try:
+                with open(filename, 'r') as f:
+                    result = json.load(f)
+                    iterations_to_convergence[dist][method] = result['iterations']
+            except FileNotFoundError:
+                print(f"Warning: VQE result file not found {filename} for method {method}, dist {dist}, seed {seed_lst}")
+                iterations_to_convergence[dist][method] = None  # Set to None if VQE result file is missing
+
+    if seed_lst != True:
+        seed_lst = False # Convert seed_lst to False for the filename if it's not True, since we use "True" in the filename to indicate using previous thetas instead of specific seeds
+
+    output_filename = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_iter_to_conv_oo_{oo}_prev_{seed_lst}.json"
+    with open(output_filename, 'w') as f_out:
+        json.dump(iterations_to_convergence, f_out, indent=4)
+    print(f"Iterations to convergence data saved to {output_filename}")
+
+def plot_iterations_to_convergence_statistics(molecule, basis, iterations_data_all):
+    # Plot the statistics for the number of iterations to convergence for each method across different dists for each combination of oo and prev to see if there are any trends in the number of iterations to convergence based on using previous thetas or not, and based on using optimal orbitals or not
+    
+    # Make a plot
+        # x-axis: combination of oo and prev (e.g., "OO True, Prev True", "OO True, Prev False", "OO False, Prev True", "OO False, Prev False")
+            # Each tick should hold a point for each method (OVOS, UHF, UMP2) that represents the number of iterations to convergence for that method for this molecule and basis 
+                # the point should show the average number of iterations to convergence across different dists for this method and combination of oo and prev, and the error bar should show the standard deviation of the number of iterations to convergence across different dists for this method and combination of oo and prev
+        # y-axis: number of iterations to convergence
+    
+    combinations = []
+    
+    avg_iterations = {"OVOS": [], "UHF": [], "UMP2": []}
+    std_iterations = {"OVOS": [], "UHF": [], "UMP2": []}
+    median_iterations = {"OVOS": [], "UHF": [], "UMP2": []}
+    methods_iterations = {"OVOS": [], "UHF": [], "UMP2": []}
+
+    methods = ["OVOS", "UHF", "UMP2"]
+    method_labels = {"OVOS": "OVOS", "UHF": "UHF", "UMP2": "UMP2"}
+    colors = {'OVOS': 'blue', 'UHF': 'purple', 'UMP2': 'green'}
+    marker = {'OVOS':'D', 'UHF': 'X', 'UMP2': 'P'}
+
+    for (oo, prev), iterations_data in iterations_data_all.items():
+        combination_label = f"{oo}, {prev}"
+        combinations.append(combination_label)
+        if iterations_data is not None:
+            for method in methods:
+                method_iterations = [iterations_data[dist][method] for dist in iterations_data if iterations_data[dist][method] is not None]
+                if method_iterations:
+                    methods_iterations[method].append(method_iterations)
+
+                    avg_iterations[method].append(np.mean(method_iterations))
+                    std_iterations[method].append(np.std(method_iterations))
+                    median_iterations[method].append(np.median(method_iterations))
+
+                    # print(f"Combination: {combination_label}, Method: {method}, Iterations to Convergence: {method_iterations}, Average: {avg_iterations[method][-1]:.2f}, Std Dev: {std_iterations[method][-1]:.2f}")
+                else:
+                    methods_iterations[method].append(None)
+
+                    avg_iterations[method].append(None)
+                    std_iterations[method].append(None)
+                    median_iterations[method].append(None)
+        else:
+            for method in methods:
+                methods_iterations[method].append(None)
+                
+                avg_iterations[method].append(None)
+                std_iterations[method].append(None)
+                median_iterations[method].append(None)
+    
+    x = np.arange(len(combinations))
+    width = 0.2
+    
+    plt.figure(figsize=(10, 6))
+    
+    for i, method in enumerate(methods):
+        # As avg_iterations[method] e.g = [None, None, 68.08333333333333, 92.13888888888889]
+            # And i want to skip the None values for the method when plotting
+            # I need to plot each separately
+        positions = x + (i - 1) * width  # This offsets each method left/right
+        boxplot_data = [methods_iterations[method][j] for j in range(len(combinations)) if avg_iterations[method][j] is not None]
+        positions = [positions[j] for j in range(len(combinations)) if avg_iterations[method][j] is not None]
+         
+        print(f"Length of boxplot data for method {method}: {len(boxplot_data)}, Positions: {len(positions)}")
+
+        plt.boxplot(boxplot_data,
+                    positions=positions,
+                    widths=width * 0.8,
+                    patch_artist=True,
+                    medianprops=dict(color='darkred', linewidth=2.5),
+                    boxprops=dict(facecolor=colors[method], alpha=0.7),
+                    whiskerprops=dict(color=colors[method], linewidth=1.5),
+                    capprops=dict(color=colors[method], linewidth=1.5),
+                    flierprops=dict(marker='o', markerfacecolor=colors[method], markersize=5, alpha=0.5),
+                    label=f"tUPS {method_labels[method]}"
+            )
+                        
+
+        # for j, avg_iter in enumerate(avg_iterations[method]):
+        #     # Skip the none values for the method when plotting
+        #     if avg_iter is not None:
+        #         # plt.bar(x[j] + i*width, avg_iter, width=width, yerr=std_iterations[method][j], capsize=5, label=f"tUPS {method_labels[method]}" if j==0 else "", color=colors[method], alpha=0.7)
+                
+            # plt.bar(x + i*width, avg_iterations[method], width=width, yerr=std_iterations[method], capsize=5, label="tUPS "+method_labels[method], color=colors[method], alpha=0.7)
+        
+    plt.xticks(x, combinations)
+    # Set only lower y-axis limit to 0, since we cannot have negative iterations to convergence, but we can have a wide range of values for the upper y-axis limit depending on the molecule and basis, so we can set it to auto
+    plt.ylim(bottom=0)
+
+    plt.xlabel("Combination of Optimal Orbitals and Previous Thetas (oo, prev)", fontsize=12)
+    plt.ylabel("Iterations to Convergence", fontsize=12)
+    
+    plt.title(f"VQE Iterations to Convergence for {molecule} ({basis})", fontsize=14)
+    
+    plt.xticks(x + width, combinations)
+    
+    plt.grid(True, alpha=0.3, axis='y')
+    plt.legend(loc="upper left", fontsize=10)
+    plt.tight_layout()
+    
+    output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_iterations_to_convergence_statistics.png"
+    plt.savefig(output_path, dpi=300)
+    print(f"VQE iterations to convergence statistics plot saved to {output_path}")
+
+if False:
+    # Gather data to plot iterations to convergence for 
+        # Each: oo True/false and prev True/False, 
+        # any trends in the number of iterations to convergence
+    
+    # Make a file for the number of iterations to convergence for each molecule
+        # Need to make the files or do they already exist? 
+    
+
+
+    # check if file
+        #     output_filename = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_iter_to_conv_oo_{oo}_prev_{seed_lst}.json"
+            # exists for each combination of oo and prev, if not make the file by gathering the number of iterations to convergence for each method and dist for this molecule, basis, num_opt_virtual_orbital, and oo, and save it as a json file
+    if True:
+        for molecule in ["Li2", "HF", "H2O"]:
+            basis = "6-31G"
+            method = "OVOS" # Placeholder for getting dist and seed list
+
+            for oo in [True, False]:
+                for prev in [True, False]:
+
+                    # Number of optimal virtual orbitals 
+                    dist_list = [1.0] 
+                    num_opt_virtual_orbital = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], False)
+
+                    # I have yet to run True oo and False Prev
+                    if oo == True and prev == False and molecule in ["Li2", "H2O"]:
+                        print(f"Warning: No optimal virtual orbitals found for {molecule} {basis} with oo {oo}. Skipping this combination.")
+                        continue
+                    num_opt_virtual_orbital = num_opt_virtual_orbital[0]
+
+                    # Geometries
+                    dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
+                    if molecule == "Li2":
+                        dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
+                    else:
+                        dist_list = [dist for dist in dist_list if float(dist) >= 0.7]
+                    
+                    # Seeds
+                    if prev == True:
+                        seed_lst = True
+                    else:
+                        seed_lst = gather_seeds_lst(molecule, basis, method, dist_list[0], num_opt_virtual_orbital, oo) # Get seeds list from the first dist, assuming it's the same for all dists
+                        seed_lst = seed_lst[:-1]  # Remove the last seed from the seeds_lst
+                    
+
+                    output_filename = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_iter_to_conv_oo_{oo}_prev_{seed_lst}.json"
+                    if not os.path.exists(output_filename):
+                        make_vqe_iterations_to_convergence_file(molecule, basis, dist_list, seed_lst, num_opt_virtual_orbital, oo)
+                    else:
+                        print(f"File {output_filename} already exists, skipping data gathering for this combination of oo and prev.")
+
+    # With a .json file for each
+        # oo True/false and prev True/False 
+        #w. structure like:
+            # {
+            #     "0.7": {
+            #         "OVOS": 157,
+            #         "UHF": 100,
+            #         "UMP2": 49
+            #     },
+            #     ...
+            # }
+    
+    # want to plot statistics for each molecule and basis
+    for molecule in ["Li2", "HF", "H2O"]:
+        basis = "6-31G"
+
+        # Gather the data for all combinations of oo and prev for this molecule and basis
+        iterations_data_all = {}
+        for oo in [True, False]:
+            for prev in [True, False]:
+                filename = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_iter_to_conv_oo_{oo}_prev_{prev}.json"
+                try:
+                    with open(filename, 'r') as f:
+                        iterations_data = json.load(f)
+                        iterations_data_all[(oo, prev)] = iterations_data
+                except FileNotFoundError:
+                    print(f"Warning: Iterations to convergence file not found {filename} for {molecule} {basis} oo {oo} prev {prev}")
+                    iterations_data_all[(oo, prev)] = None  # Set to None if file is missing
+        # Now we have the iterations data for all combinations of oo and prev for this molecule and basis in iterations_data_all, we can plot the statistics for each method across different dists for each combination of oo and prev to see if there are any trends in the number of iterations to convergence based on using previous thetas or not, and based on using optimal orbitals or not
+        plot_iterations_to_convergence_statistics(molecule, basis, iterations_data_all)
+
+
+plt.close('all')  # Close all open figures
+assert len(plt.get_fignums()) == 0, "Some figures still open!"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Reference-state overlap
+# For small molecules (Li2, HF, H2O) and a small basis set (6-31G), compute the overlap of the OVOS-optimised reference state with the FCI ground state.
+# At a specific geometry... and varying the number of optimised virtual orbitals N'_virt to see how the overlap changes as we include more optimised virtual orbitals in the reference state.
+#       - compute the FCI ground state using PySCF fci.FCI().
+#       - Compute the overlap F = |⟨Φ_ref|Ψ_FCI⟩|² for:
+#           * |Φ_HF⟩ (standard HF reference)
+#           * |Φ_OVOS⟩ (OVOS-optimised reference, varying N'_virt)
+#       - Plot F_OVOS vs N'_virt/N_virt^max and compare to F_HF.
+#       - Table: molecule | basis | N'_virt | F_HF | F_OVOS | ΔF
+#
+# Now the data structure for OVOS files is like:
+    # backup/data/{molecule}/{basis}/OVOS/lst_MP2_different_virt_orbs_{init}.json
+        # For init in ["prev", "random", "RHF"]
+
+if False:
+    import json
+    import numpy as np
+    from pyscf import gto, scf, fci, ao2mo
+    from pyscf.fci.cistring import num_strings, str2addr
+    from pyscf.fci.addons import transform_ci
+    from pyscf.fci import direct_uhf
+
+    # ------------------------------------------------------------
+    # 1. Load OVOS data
+    # ------------------------------------------------------------
+    molecule = "HF"
+    basis = "6-31G"
+    init = "RHF"
+
+    filename = f"backup/data/{molecule}/{basis}/OVOS/lst_MP2_OVOS_virt_orbs_{init}.json"
+    with open(filename, 'r') as f:
+        data = json.load(f)
+        N_virt_opt_lst = data[1]
+        energy_lst = data[0]
+        mo_coefficients_lst = data[4]          # list of (2, nao, norb_full) arrays
+
+    energy_final_lst = [energy[-1] for energy in energy_lst]
+    diff_energy_final_lst = [energy[-1] - energy[0] for energy in energy_lst]
+
+    # ------------------------------------------------------------
+    # 2. Build molecule and run UHF
+    # ------------------------------------------------------------
+    mol_geo = "H .0 .0 .0; F .0 .0 0.917"
+    mol = gto.Mole()
+    mol.atom = mol_geo
+    mol.basis = basis
+    mol.unit = 'Angstrom'
+    mol.spin = 0
+    mol.charge = 0
+    mol.symmetry = False
+    mol.verbose = 0
+    mol.build()
+
+    n_alpha, n_beta = mol.nelec          # (5,5)
+    nocc = n_alpha
+
+    mf_uhf = scf.UHF(mol)
+    mf_uhf.kernel()
+    mo_alpha = mf_uhf.mo_coeff[0]        # (nao, nmo)
+    mo_beta  = mf_uhf.mo_coeff[1]
+    nmo = mo_alpha.shape[1]
+    S = mol.intor('int1e_ovlp')
+
+    # ------------------------------------------------------------
+    # 3. Full CI in the UHF MO basis using direct_uhf
+    # ------------------------------------------------------------
+    # Using direct_uhf.kernel ensures the correct integral format is passed
+    # Alternatively, the high-level FCI object can be used:
+    cisolver = fci.FCI(mf_uhf)
+    e_fci, ci_fci = cisolver.kernel()
+    print(f"FCI energy: {e_fci:.8f} Hartree")
+    print(f"FCI correlation energy: {e_fci - mf_uhf.e_tot:.6f} Hartree\n")
+
+    # ------------------------------------------------------------
+    # 4. HF reference CI vector in the full UHF basis (unit vector)
+    # ------------------------------------------------------------
+    n_str_full = num_strings(nmo, n_alpha)
+    ref_hf_full = np.zeros((n_str_full, n_str_full))
+    occ_mask = (1 << n_alpha) - 1
+    addr_alpha = str2addr(nmo, n_alpha, occ_mask)
+    addr_beta  = str2addr(nmo, n_beta, occ_mask)
+    ref_hf_full[addr_alpha, addr_beta] = 1.0
+    amp_hf_fci = np.dot(ci_fci.conj().ravel(), ref_hf_full.ravel())
+    overlap_hf_fci = abs(amp_hf_fci)**2
+
+    # ------------------------------------------------------------
+    # 5. Process each OVOS orbital set
+    # ------------------------------------------------------------
+    overlap_ovos_fci = []
+    overlap_ovos_hf  = []
+
+    for N_virt, mo_full in zip(N_virt_opt_lst, mo_coefficients_lst):
+        mo_full = np.asarray(mo_full)          # shape (2, nao, nmo_full)
+        if mo_full.ndim == 3:
+            mo_alpha_full = mo_full[0]
+            mo_beta_full  = mo_full[1]
+        else:
+            mo_alpha_full = mo_full
+            mo_beta_full  = mo_full
+
+        # Truncate to occupied + first N_virt virtuals
+        mo_alpha_trunc = mo_alpha_full[:, :nocc + N_virt]
+        mo_beta_trunc  = mo_beta_full[:, :nocc + N_virt]
+        norb_ovos = mo_alpha_trunc.shape[1]
+
+        # Transformation matrices from UHF basis to truncated OVOS basis
+        u_alpha = mo_alpha.T @ S @ mo_alpha_trunc   # (nmo, norb_ovos)
+        u_beta  = mo_beta.T  @ S @ mo_beta_trunc
+
+        # Transform FCI vector to OVOS basis
+        ci_ovos = transform_ci(ci_fci, (n_alpha, n_beta), (u_alpha, u_beta))
+
+        # Overlap with FCI (the OVOS reference is the first configuration)
+        overlap_amplitude = ci_ovos[0, 0]
+        overlap_ovos_fci.append(abs(overlap_amplitude)**2)
+
+        # Overlap with HF determinant (transform HF reference to OVOS basis)
+        ref_hf_ovos = transform_ci(ref_hf_full, (n_alpha, n_beta), (u_alpha, u_beta))
+        overlap_hf = abs(np.dot(ref_hf_ovos.conj().ravel(), ci_ovos.ravel()))**2
+        overlap_ovos_hf.append(overlap_hf)
+
+    # ------------------------------------------------------------
+    # 6. Print results
+    # ------------------------------------------------------------
+    print(f"\nResults for {molecule} / {basis} (init = {init})")
+    print(f"HF–FCI overlap (reference): {overlap_hf_fci:.8f}\n")
+    print(f"{'N_virt_opt':>12} | {'F_OVOS_FCI':>12} | {'F_OVOS_HF':>12} | {'Energy (Hartree)':>16} | {'ΔE from initial':>16}")
+    print("-" * 80)
+    for n, ov_fci, ov_hf, e, de in zip(N_virt_opt_lst, overlap_ovos_fci, overlap_ovos_hf, energy_final_lst, diff_energy_final_lst):
+        print(f"{n//2:>12} | {ov_fci:>12.8f} | {ov_hf:>12.8f} | {e:>16.8f} | {de:>16.6f}")
+
+    # ------------------------------------------------------------
+    # 7. Detailed orbital contributions in the largest OVOS space
+    # ------------------------------------------------------------
+    max_idx = np.argmax(N_virt_opt_lst)   # index of the largest OVOS set
+    N_max = N_virt_opt_lst[max_idx]
+    mo_full = mo_coefficients_lst[max_idx]
+
+    # Build the truncated orbitals for the largest set
+    mo_full = np.asarray(mo_full)
+    if mo_full.ndim == 3:
+        mo_alpha_full = mo_full[0]
+        mo_beta_full  = mo_full[1]
+    else:
+        mo_alpha_full = mo_full
+        mo_beta_full  = mo_full
+
+    mo_alpha_trunc = mo_alpha_full[:, :nocc + N_max]
+    mo_beta_trunc  = mo_beta_full[:, :nocc + N_max]
+    norb_trunc = mo_alpha_trunc.shape[1]
+
+    # Transform the FCI vector to this largest truncated space
+    u_alpha = mo_alpha.T @ S @ mo_alpha_trunc
+    u_beta  = mo_beta.T  @ S @ mo_beta_trunc
+    ci_ovos_max = transform_ci(ci_fci, (n_alpha, n_beta), (u_alpha, u_beta))
+
+    # Normalize the transformed CI vector (fixes small numerical deviations)
+    norm = np.linalg.norm(ci_ovos_max.ravel())
+    ci_ovos_max /= norm
+
+    # Create the FCI solver again (or reuse the existing `cisolver`)
+    # to have access to the `make_rdm1` method.
+    # We need to pass the new number of orbitals (`norb_trunc`) to the solver.
+    cisolver_new = fci.FCI(mf_uhf, mo=(mo_alpha_trunc, mo_beta_trunc))
+
+    # Build the 1‑RDM using the spin‑resolved method
+    # Note: `make_rdm1s` returns (dm1_alpha, dm1_beta) directly
+    rdm1_alpha, rdm1_beta = cisolver_new.make_rdm1s(ci_ovos_max, norb_trunc, (n_alpha, n_beta))
+
+    # Natural orbital occupations (sum of alpha and beta)
+    occ_alpha = np.diag(rdm1_alpha)
+    occ_beta  = np.diag(rdm1_beta)
+    occ_total = occ_alpha + occ_beta
+
+    # Separate occupied (first n_alpha) and virtual (next N_max) parts
+    occ_occupied = occ_total[:n_alpha]
+    occ_virtual  = occ_total[n_alpha:n_alpha+N_max]
+
+    print("\n--- Natural orbital occupations in the largest OVOS space ---")
+    print(f"Orbital space: {norb_trunc} orbitals (occupied + {N_max//2} virtuals)")
+    print("\nOccupied orbitals (HF reference = 2.0):")
+    for i, occ in enumerate(occ_occupied):
+        dev = occ - 2.0
+        print(f"  occ-{i+1:2d} : total occ = {occ:.6f}  (Δ = {dev:+.6f})")
+
+    print("\nVirtual orbitals (HF reference = 0.0):")
+    for i, occ in enumerate(occ_virtual):
+        print(f"  virt-{i+1:2d} : total occ = {occ:.6f}  (correlation contribution = {occ:.6f})")
+
+    # Optionally, sort virtual orbitals by occupation (largest first)
+    sorted_idx = np.argsort(occ_virtual)[::-1]
+    print("\nVirtual orbitals ranked by occupation (most important first):")
+    for rank, idx in enumerate(sorted_idx, 1):
+        occ_val = occ_virtual[idx]
+        print(f"  rank {rank:2d} : orbital {idx+1:2d}  total occ = {occ_val:.6f}")
+
+
+
+if False:
+    import json
+    import numpy as np
+    from pyscf import gto, scf, fci
+    from pyscf.fci.cistring import make_strings
+
+    # Initialize data structure to store results for all molecules
+        # "basis": {
+        #     "Molecule": {
+        #         "HF_FCI_overlap": value,
+        #         "N_virt_opt": {
+        #             "F_OVOS_FCI": value,
+        #             }
+        #        }
+        #    }
+
+    data_basis_molecules = {"6-31G": {
+        "Li2": {
+            "HF_FCI_overlap": None,
+            "N_virt_opt": [],
+            "F_OVOS_FCI": [],
+            "MP2_corr_energy": [],
+        }, "HF": {
+            "HF_FCI_overlap": None,
+            "N_virt_opt": [],
+            "F_OVOS_FCI": [],
+            "MP2_corr_energy": [],
+        }, "H2O": {
+            "HF_FCI_overlap": None,
+            "N_virt_opt": [],
+            "F_OVOS_FCI": [],
+            "MP2_corr_energy": [],
+        }, "NH3": {
+            "HF_FCI_overlap": None,
+            "N_virt_opt": [],
+            "F_OVOS_FCI": [],
+            "MP2_corr_energy": [],
+        }, "CO": {
+            "HF_FCI_overlap": None,
+            "N_virt_opt": [],
+            "F_OVOS_FCI": [],
+            "MP2_corr_energy": [],
+        }}}
+
+    for molecule in ["Li2", "HF", "H2O", "NH3"]:
+        print(f"\nProcessing molecule {molecule} for reference state overlap analysis...")
+
+        # ------------------------------------------------------------
+        # 1. Load OVOS data (as in your snippet)
+        # ------------------------------------------------------------
+        molecule = molecule
+        basis = "6-31G"
+        init = "RHF"
+
+        filename = f"backup/data/{molecule}/{basis}/OVOS/lst_MP2_OVOS_virt_orbs_{init}.json"
+        with open(filename, 'r') as f:
+            data = json.load(f)
+            N_virt_opt_lst = data[1]
+            energy_lst = data[0]
+            mo_coefficients_lst = data[4]      # list of (2, nao, norb_full) arrays
+
+        energy_final_lst = [energy[-1] for energy in energy_lst]
+        diff_energy_final_lst = [energy[-1] - energy[0] for energy in energy_lst]
+
+        # --------------------------------------------
+        # Get mol_geo from molecule
+        # --------------------------------------------
+        if molecule == "Li2":
+            mol_geo = "Li 0 0 0; Li 0 0 2.673"
+        elif molecule == "HF":
+            mol_geo = "H .0 .0 .0; F .0 .0 0.917"
+        elif molecule == "H2O":
+            mol_geo = 'O 0.0000 0.0000  0.1173; H 0.0000    0.7572  -0.4692; H 0.0000   -0.7572 -0.4692' 
+        elif molecule == "NH3":
+            mol_geo = 'N 0 0 0; H 0 0 1.012; H 0 0.935 -0.262; H 0 -0.935 -0.262'
+        elif molecule == "CO":
+            mol_geo = 'C 0 0 0; O 0 0 1.128'
+        else:
+            raise ValueError(f"Unknown molecule: {molecule}")
+
+        # ------------------------------------------------------------
+        # 2. Build molecule and run UHF (the basis for FCI)
+        # ------------------------------------------------------------
+        mol_geo = mol_geo
+        mol = gto.Mole()
+        mol.atom = mol_geo
+        mol.basis = basis
+        mol.unit = 'Angstrom'
+        mol.spin = 0
+        mol.charge = 0
+        mol.symmetry = False
+        mol.verbose = 0
+        mol.build()
+
+        mf_uhf = scf.UHF(mol)
+        mf_uhf.kernel()
+        mo_alpha_uhf = mf_uhf.mo_coeff[0]    # (nao, nmo)
+        mo_beta_uhf  = mf_uhf.mo_coeff[1]
+        nmo = mo_alpha_uhf.shape[1]
+        S = mol.intor('int1e_ovlp')            # AO overlap matrix
+
+        # ------------------------------------------------------------
+        # 3. Full CI in the UHF MO basis
+        # ------------------------------------------------------------
+        try:
+            cisolver = fci.FCI(mf_uhf)
+            cisolver.verbose = 4
+            e_fci, ci_fci = cisolver.kernel()
+            print(f"FCI energy: {e_fci:.8f} Hartree")
+            print(f"FCI correlation energy: {e_fci - mf_uhf.e_tot:.6f} Hartree\n")
+        except Exception as e:
+            print(f"Error running FCI for {molecule} with basis {basis}: {e}")
+            continue
+
+        # ------------------------------------------------------------
+        # 4a. Overlap between the OVOS determinant and the FCI vector
+        # ------------------------------------------------------------
+        lst_overlaps = []
+        lst_fidelities = []
+        
+        # Occupied orbitals in the OVOS determinant (first n_alpha / n_beta columns)
+        n_alpha, n_beta = mol.nelec                # (5,5) for HF
+        occ_ovos_a = list(range(n_alpha))
+        occ_ovos_b = list(range(n_beta))
+
+        # Generate all UHF occupation strings (bit‑strings) for alpha and beta
+        strs_a = make_strings(range(nmo), n_alpha)   # list of ints
+        strs_b = make_strings(range(nmo), n_beta)
+
+        def occ_indices(bitstr, nmo):
+            """Return list of orbital indices where bit is 1."""
+            return [i for i in range(nmo) if (bitstr >> i) & 1]
+
+        for mo_coeff in mo_coefficients_lst:
+            # Pick the optimized OVOS MO coefficients (last entry)
+            mo_ovos = mo_coeff          # shape (2, nao, nmo)
+            C_ovos_a = np.asarray(mo_ovos[0])                      # (nao, nmo)
+            C_ovos_b = np.asarray(mo_ovos[1])
+
+            # Transformation from UHF basis to OVOS basis (unitary)
+            U_a = C_ovos_a.T @ S @ mo_alpha_uhf        # (nmo, nmo)
+            U_b = C_ovos_b.T @ S @ mo_beta_uhf
+
+            # Precompute <UHF_det|OVOS_det> = det( U[occ_uhf, occ_ovos] ) for each string
+            det_a = {}
+            for bit_a in strs_a:
+                occ_a = occ_indices(bit_a, nmo)
+                submat = U_a[np.ix_(occ_a, occ_ovos_a)]
+                det_a[bit_a] = np.linalg.det(submat)
+
+            det_b = {}
+            for bit_b in strs_b:
+                occ_b = occ_indices(bit_b, nmo)
+                submat = U_b[np.ix_(occ_b, occ_ovos_b)]
+                det_b[bit_b] = np.linalg.det(submat)
+
+            # Dot product with the FCI vector (real, so no complex conjugation)
+            overlap = 0.0
+            for i, bit_a in enumerate(strs_a):
+                for j, bit_b in enumerate(strs_b):
+                    amp = det_a[bit_a] * det_b[bit_b]   # <UHF_det|OVOS_det>
+                    overlap += amp * ci_fci[i, j]
+
+            fidelity = overlap**2
+
+            lst_overlaps.append(overlap)
+            lst_fidelities.append(fidelity)
+
+        # ------------------------------------------------------------
+        # 4b. Overlap between the UHF determinant and the FCI vector
+        # ------------------------------------------------------------
+        uhf_a_str = 0
+        for i in range(n_alpha):
+            uhf_a_str |= (1 << i)
+        uhf_b_str = 0
+        for i in range(n_beta):
+            uhf_b_str |= (1 << i)
+
+        idx_a = np.where(strs_a == uhf_a_str)[0][0]
+        idx_b = np.where(strs_b == uhf_b_str)[0][0]
+        
+        overlap_hf = ci_fci[idx_a, idx_b]
+        fidelity_hf = overlap_hf**2
+
+        # ------------------------------------------------------------
+        # 5. print results
+        # ------------------------------------------------------------
+        print(f"\nResults for {molecule} / {basis} (init = {init})")
+        print(f"\n   UHF |FCI> fidelity: {fidelity_hf:.8f}\n")
+        print(f"   {'N_virt_opt':>12} | {'F_OVOS_FCI':>12} | {'Energy (Hartree)':>16}")
+        print("-" * 60)
+        for n, ov_fci, e in zip(N_virt_opt_lst, lst_fidelities, energy_final_lst):
+            print(f"   {n//2:>12} | {ov_fci:>12.8f} | {e:>16.8f}")
+
+        # ------------------------------------------------------------
+        # 6. Store results in the data structure
+        # ------------------------------------------------------------
+        data_basis_molecules[basis][molecule]["HF_FCI_overlap"] = fidelity_hf
+        data_basis_molecules[basis][molecule]["N_virt_opt"] = N_virt_opt_lst
+        data_basis_molecules[basis][molecule]["F_OVOS_FCI"] = lst_fidelities
+        data_basis_molecules[basis][molecule]["MP2_corr_energy"] = energy_final_lst
+
+    # Save the data structure to a JSON file for later analysis
+    output_filename = f"backup/data/reference_state_overlaps.json"
+    with open(output_filename, 'w') as f:
+        json.dump(data_basis_molecules, f, indent=4)
+    print(f"\nReference state overlap data saved to {output_filename}")
+
+if True:
+    # Get the file and data therefrom
+    output_filename = f"backup/data/reference_state_overlaps.json"
+    with open(output_filename, 'r') as f:
+        data_basis_molecules = json.load(f)
+    print(f"\nReference state overlap data loaded from {output_filename}")
+
+    # ------------------------------------------------------------
+    # Plotting
+    # ------------------------------------------------------------
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    basis = "6-31G"
+    data_mol = data_basis_molecules[basis]
+
+    fig, (ax1) = plt.subplots(1, 1, figsize=(10, 6))
+    colors = plt.cm.tab10(np.linspace(0, 1, len(data_mol)))
+
+    for (mol_name, mol_data), color in zip(data_mol.items(), colors):
+        if not mol_data["N_virt_opt"]:   # skip if no data (e.g., CO)
+            continue
+        N = mol_data["N_virt_opt"]
+        fid = mol_data["F_OVOS_FCI"]
+        uhf_fid = mol_data["HF_FCI_overlap"]
+        mp2_energy = mol_data["MP2_corr_energy"]
+        
+        ax1.plot(N, fid, 'o-', color=color, label=f"{mol_name}")
+        ax1.axhline(y=uhf_fid, linestyle='--', color=color, alpha=0.6,
+                    label="")
+        
+    # Set label for legend entry for UHF reference fidelity
+    ax1.axhline(y=0, linestyle='--', color="black", alpha=0.6,
+                    label="UHF")
+
+    # Set the y-axis limit to [0, 1] since fidelity cannot exceed 1
+    ax1.set_ylim(0.9, 1.0)
+
+    ax1.set_xlabel("Number of optimised virtual orbitals", fontsize=12)
+    ax1.set_ylabel("Fidelity with FCI ground state", fontsize=12)
+    ax1.set_title(f"Overlap of OVOS determinant with FCI ({basis} basis)", fontsize=14)
+    ax1.legend(loc='best')
+    ax1.grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.savefig(f"backup/data/ovos_fidelity_mp2_{basis}.png", dpi=300, bbox_inches='tight')
+
+    # Save the plot to png file
+    output_plot_filename = f"backup/data/ovos_fidelity_mp2_{basis}.png"
+    plt.savefig(output_plot_filename, dpi=300, bbox_inches='tight')
+    print(f"OVOS fidelity and MP2 energy plot saved to {output_plot_filename}")
+    plt.close()  # Close the figure to free memory
 
 
 
