@@ -288,13 +288,11 @@ def plot_OVOS_convergence_from_data(molecule, basis, methods=None):
     for i in range(len(conv_virtual_orbs_data['RHF']['num_virtual_orbitals'])):
         best_energy = None
         best_x = None
-
-        print(i)
         
         for method in methods:
             if method in conv_virtual_orbs_data:
                 data_dict = conv_virtual_orbs_data[method]
-                print(method, data_dict['num_virtual_orbitals'])
+                # print(method, data_dict['num_virtual_orbitals'])
                 num_virt_orbs = data_dict['num_virtual_orbitals'][i]
                 MP2_vorb = data_dict['MP2_final_energies'][i]
                 
@@ -349,8 +347,8 @@ def plot_OVOS_convergence_from_data(molecule, basis, methods=None):
     ax_vo.set_xticks(x_ticks)
     ax_vo.set_xticklabels(x_labels)
     
-    ax_vo.set_xlabel('Number of Active Unoccupied Orbitals')
-    ax_vo.set_ylabel('Correlation Energy [Hartree]')
+    ax_vo.set_xlabel('Number of Active Unoccupied Orbitals', fontsize=14)
+    ax_vo.set_ylabel('Correlation Energy [Hartree]', fontsize=14)
     
     # Grid with colored intervals
     for i in range(1, active_space_size + 1):
@@ -363,7 +361,7 @@ def plot_OVOS_convergence_from_data(molecule, basis, methods=None):
     ax_vo.minorticks_on()
     ax_vo.grid(which='minor', axis='y', linestyle=':', alpha=0.5)
     
-    ax_vo.legend(loc='upper right')
+    ax_vo.legend(loc='upper right', fontsize=12)
     plt.tight_layout()
     
     # Save figure
@@ -633,8 +631,8 @@ def plot_OVOS_basis_set_best(molecule, basis_sets):
     # axis lims
     ax_vo.set_xlim(0, 1)
     ax_vo.set_ylim(y_max, 0)
-    ax_vo.set_xlabel('Number of Active Unoccupied Orbitals [%]')
-    ax_vo.set_ylabel('Correlation Energy [%]')
+    ax_vo.set_xlabel('Number of Active Unoccupied Orbitals [%]', fontsize=14)
+    ax_vo.set_ylabel('Correlation Energy [%]', fontsize=14)
     
     # Legend for markers
     methods = ["RHF", "prev", "random"]
@@ -653,7 +651,7 @@ def plot_OVOS_basis_set_best(molecule, basis_sets):
     ax_vo.minorticks_on()
     ax_vo.grid(which='minor', axis='y', linestyle=':', alpha=0.5)
     
-    ax_vo.legend(loc='upper right')
+    ax_vo.legend(loc='upper right', fontsize=12)
     plt.tight_layout()
     
     # Save figure
@@ -2278,8 +2276,8 @@ if __name__ == "__main__":
                     save_molecule_reference_data(molecule, basis)
                 except Exception as e:
                     print(f"❌ Failed for {molecule}/{basis}: {e}\n")
-    if False:
-        for basis in basis_sets[1:2]:   # Done: 6-31G | Todo: cc-pVDZ
+    if True:
+        for basis in basis_sets:   # Done: 6-31G | Todo: cc-pVDZ
             for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
 
                 # After running ovos_object(), plot the results

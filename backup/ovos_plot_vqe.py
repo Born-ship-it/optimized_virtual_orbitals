@@ -483,7 +483,7 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
 
 
     # A plot that is just the zoomed in region around the equilibrium bond length (e.g., 0.7 to 1.3 Angstrom)
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 7))
         # Line plot
     for method in methods:
         plt.plot(data_by_method_for_plotting[method]['distances'], 
@@ -494,7 +494,7 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
 
         # RHF Reference line
     plt.plot(data_by_method_for_plotting['UHF']['distances'], 
-                data_by_method_for_plotting['UHF']['rhf_ref_energies'],
+                data_by_method_for_plotting['UHF']['UHF reference'],
                 label="RHF Reference",
                 color="red",
                 linestyle='--',
@@ -610,20 +610,20 @@ def plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals
         # plt.ylim(-76,-75.6)
         # plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
         # plt.yticks(np.arange(-100.0, -99.8, 0.05))
-    plt.xlabel("Interatomic Distance (Angstrom)", fontsize=12)
-    plt.ylabel("Energy (Hartree)", fontsize=12)
+    plt.xlabel("Interatomic Distance (Angstrom)", fontsize=14)
+    plt.ylabel("Energy (Hartree)", fontsize=14)
 
     if oo == False and plot_prev == True:    
-        plt.title(f"Potential Energy Surface for {molecule}/{basis} w. Previous Thetas", fontsize=14)
+        plt.title(f"Potential Energy Surface for {molecule}/{basis} w. Previous Thetas", fontsize=16)
     elif oo == True and plot_prev == True:
-        plt.title(f"Potential Energy Surface for {molecule}/{basis} w. Previous Thetas and Optimized Orbitals", fontsize=14)
+        plt.title(f"Potential Energy Surface for {molecule}/{basis} w. Previous Thetas and Optimized Orbitals", fontsize=16)
     elif oo == True and plot_prev == False:
-        plt.title(f"Potential Energy Surface for {molecule}/{basis} w. Best of Random Thetas and Optimized Orbitals", fontsize=14)
+        plt.title(f"Potential Energy Surface for {molecule}/{basis} w. Best of Random Thetas and Optimized Orbitals", fontsize=16)
     else:
-        plt.title(f"Potential Energy Surface for {molecule}/{basis} w. Best of Random Thetas", fontsize=14)
+        plt.title(f"Potential Energy Surface for {molecule}/{basis} w. Best of Random Thetas", fontsize=16)
 
     plt.grid(True, alpha=0.3)
-    plt.legend(loc="upper left", fontsize=10)
+    plt.legend(loc="upper left", fontsize=12)
     plt.tight_layout()
 
     # Print the MO type for each method and dist
@@ -850,7 +850,7 @@ def gather_and_print_vqe_final_energy_spread(molecule, basis, method, dist, num_
         print(f"No final energies found for {method} at dist {dist} to calculate spread.")
 
 
-if False:
+if True:
     # Plot the OO True but prev False ie 5 Random...
     for molecule in ["Li2", "HF", "H2O"]:
         # molecule = "Li2"
@@ -920,7 +920,7 @@ if False:
             plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, True, False, oo)
             plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, False, False, oo)
         
-if False:
+if True:
     # Need to plot the VQE curve for one seed = "True", and both oo = True and False...
         # So we can see the difference in using prev. final thetas and keep trying to find best from random...
     
@@ -1141,7 +1141,7 @@ def plot_iterations_to_convergence_statistics(molecule, basis, iterations_data_a
     x = np.arange(len(combinations))
     width = 0.2
     
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 7))
     
     for i, method in enumerate(methods):
         # As avg_iterations[method] e.g = [None, None, 68.08333333333333, 92.13888888888889]
@@ -1177,22 +1177,22 @@ def plot_iterations_to_convergence_statistics(molecule, basis, iterations_data_a
     # Set only lower y-axis limit to 0, since we cannot have negative iterations to convergence, but we can have a wide range of values for the upper y-axis limit depending on the molecule and basis, so we can set it to auto
     plt.ylim(bottom=0)
 
-    plt.xlabel("Combination of Optimal Orbitals and Previous Thetas (oo, prev)", fontsize=12)
-    plt.ylabel("Iterations to Convergence", fontsize=12)
+    plt.xlabel("Combination of Optimal Orbitals and Previous Thetas (oo, prev)", fontsize=14)
+    plt.ylabel("Iterations to Convergence", fontsize=14)
     
-    plt.title(f"VQE Iterations to Convergence for {molecule} ({basis})", fontsize=14)
+    plt.title(f"VQE Iterations to Convergence for {molecule} ({basis})", fontsize=16)
     
     plt.xticks(x + width, combinations)
     
     plt.grid(True, alpha=0.3, axis='y')
-    plt.legend(loc="upper left", fontsize=10)
+    plt.legend(loc="upper left", fontsize=12)
     plt.tight_layout()
     
     output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_iterations_to_convergence_statistics.png"
     plt.savefig(output_path, dpi=300)
     print(f"VQE iterations to convergence statistics plot saved to {output_path}")
 
-if False:
+if True:
     # Gather data to plot iterations to convergence for 
         # Each: oo True/false and prev True/False, 
         # any trends in the number of iterations to convergence
@@ -1205,7 +1205,7 @@ if False:
     # check if file
         #     output_filename = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_iter_to_conv_oo_{oo}_prev_{seed_lst}.json"
             # exists for each combination of oo and prev, if not make the file by gathering the number of iterations to convergence for each method and dist for this molecule, basis, num_opt_virtual_orbital, and oo, and save it as a json file
-    if True:
+    if False:
         for molecule in ["Li2", "HF", "H2O"]:
             basis = "6-31G"
             method = "OVOS" # Placeholder for getting dist and seed list
@@ -1728,7 +1728,7 @@ if True:
     basis = "6-31G"
     data_mol = data_basis_molecules[basis]
 
-    fig, (ax1) = plt.subplots(1, 1, figsize=(10, 6))
+    fig, (ax1) = plt.subplots(1, 1, figsize=(12, 7))
     colors = plt.cm.tab10(np.linspace(0, 1, len(data_mol)))
 
     for (mol_name, mol_data), color in zip(data_mol.items(), colors):
@@ -1750,10 +1750,10 @@ if True:
     # Set the y-axis limit to [0, 1] since fidelity cannot exceed 1
     ax1.set_ylim(0.9, 1.0)
 
-    ax1.set_xlabel("Number of optimised virtual orbitals", fontsize=12)
-    ax1.set_ylabel("Fidelity with FCI ground state", fontsize=12)
-    ax1.set_title(f"Overlap of OVOS determinant with FCI ({basis} basis)", fontsize=14)
-    ax1.legend(loc='best')
+    ax1.set_xlabel("Number of optimised virtual orbitals", fontsize=14)
+    ax1.set_ylabel("Fidelity with FCI ground state", fontsize=14)
+    ax1.set_title(f"Overlap of OVOS determinant with FCI ({basis} basis)", fontsize=16)
+    ax1.legend(loc='best', fontsize=12)
     ax1.grid(True, alpha=0.3)
 
     plt.tight_layout()
