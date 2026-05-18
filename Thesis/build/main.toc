@@ -1,0 +1,132 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Motivation}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}The Virtual Orbital Space Problem}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Quantum Computing Context}{2}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Objectives}{3}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Thesis Outline}{3}{section.1.5}%
+\contentsline {section}{\numberline {1.6}Notation and Integral Conventions}{3}{section.1.6}%
+\contentsline {subsubsection}{Index Ordering and Orbital Partitioning}{3}{section.1.6}%
+\contentsline {subsubsection}{Integral Notation: Antisymmetrised vs Non-antisymmetrised}{4}{section.1.6}%
+\contentsline {subsubsection}{Integral Notation: Chemists' vs.\ Physicists' Conventions}{4}{section.1.6}%
+\contentsline {chapter}{\numberline {2}Theory}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}The Electronic Structure Problem}{5}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Molecular Orbital Integrals}{6}{subsection.2.1.1}%
+\contentsline {subsubsection}{One-Electron Integrals}{6}{subsection.2.1.1}%
+\contentsline {subsubsection}{Two-Electron Integrals}{7}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Orbital Space}{7}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Spin-Orbital Formalism}{7}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}Wavefunction Methods}{8}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Hartree-Fock Theory}{8}{subsection.2.2.1}%
+\contentsline {subsubsection}{Restricted and Unrestricted Formalism}{9}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Møller-Plesset Perturbation Theory}{9}{subsection.2.2.2}%
+\contentsline {subsubsection}{MP2 Correlation Energy}{9}{subsection.2.2.2}%
+\contentsline {subsubsection}{High-Order Amplitudes and T1 definition}{10}{equation.2.6b}%
+\contentsline {subsubsection}{MP2 Limitations and Applicability}{10}{equation.2.6b}%
+\contentsline {subsubsection}{Computational Scaling Motivation}{11}{equation.2.6b}%
+\contentsline {section}{\numberline {2.3}Background for understanding OVOS}{11}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Orbital Rotations and Stationarity}{11}{subsection.2.3.1}%
+\contentsline {subsubsection}{Partitioning and Index Notation}{11}{subsection.2.3.1}%
+\contentsline {subsubsection}{Orbital Rotation}{12}{table.caption.5}%
+\contentsline {subsubsection}{The Stationarity Principle}{13}{table.caption.5}%
+\contentsline {subsubsection}{Optimization Strategies}{13}{table.caption.5}%
+\contentsline {subsection}{\numberline {2.3.2}The Second-Order Hylleraas Functional}{13}{subsection.2.3.2}%
+\contentsline {subsubsection}{From Perturbation Theory to the Hylleraas Principle}{13}{subsection.2.3.2}%
+\contentsline {subsubsection}{Pair Decomposition and Explicit Form of $J_2$}{15}{equation.2.15}%
+\contentsline {subsubsection}{The Zero-Order Term}{15}{equation.2.16}%
+\contentsline {subsubsection}{Evaluation of the Perturbative Coupling}{15}{equation.2.21}%
+\contentsline {subsection}{\numberline {2.3.3}Orbital Rotation Parameterisation}{16}{subsection.2.3.3}%
+\contentsline {subsubsection}{Active and Inactive Virtual Subspaces}{16}{subsection.2.3.3}%
+\contentsline {subsubsection}{Unitary Transformation via Matrix Exponential}{16}{equation.2.27}%
+\contentsline {subsection}{\numberline {2.3.4}Gradient Expression}{17}{subsection.2.3.4}%
+\contentsline {subsubsection}{MP2 Virtual-Virtual Density Matrix}{17}{subsection.2.3.4}%
+\contentsline {subsubsection}{Gradient Expression}{17}{equation.2.31}%
+\contentsline {subsection}{\numberline {2.3.5}Hessian Expression}{19}{subsection.2.3.5}%
+\contentsline {subsubsection}{Derivation of the Hessian Expression}{19}{equation.2.45}%
+\contentsline {paragraph}{Two-electron integrals:}{19}{equation.2.48}%
+\contentsline {paragraph}{Fock matrix (canonical orbitals):}{19}{equation.2.49}%
+\contentsline {paragraph}{Amplitudes:}{19}{equation.2.50}%
+\contentsline {subsubsection}{Step 1: Differentiate First Gradient Term}{20}{equation.2.52}%
+\contentsline {subsubsection}{Step 2: Differentiate Second Gradient Term}{20}{equation.2.59}%
+\contentsline {subsubsection}{Final Hessian}{21}{equation.2.65}%
+\contentsline {subsubsection}{Block Structure of the Hessian}{21}{equation.2.68}%
+\contentsline {subsubsection}{Negative Eigenvalues and Level-Shift Stabilisation}{22}{equation.2.70}%
+\contentsline {subsection}{\numberline {2.3.6}Newton-Raphson}{22}{subsection.2.3.6}%
+\contentsline {subsection}{\numberline {2.3.7}Orbital Canonicalisation}{22}{subsection.2.3.7}%
+\contentsline {subsection}{\numberline {2.3.8}Computational Cost and Scaling}{23}{subsection.2.3.8}%
+\contentsline {subsubsection}{Per-Iteration Cost of OVOS Optimisation}{23}{subsection.2.3.8}%
+\contentsline {subsubsection}{Comparison: Full Virtual Space vs OVOS-Reduced}{24}{table.caption.6}%
+\contentsline {subsubsection}{Downstream Speedup Factors}{24}{table.caption.6}%
+\contentsline {subsubsection}{Breakeven Analysis and Practical Realisation}{24}{table.caption.6}%
+\contentsline {section}{\numberline {2.4}Relevance to Quantum Computing}{25}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Brueckner Orbitals and Connection to OVOS}{25}{subsection.2.4.1}%
+\contentsline {subsubsection}{Connection to Orbital-Optimised MP2 methods}{25}{subsection.2.4.1}%
+\contentsline {subsubsection}{OVOS Orbitals as Approximate Brueckner Orbitals}{26}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Quantum Computing and Orbital Space}{26}{subsection.2.4.2}%
+\contentsline {subsubsection}{Second Quantisation and Qubit Mapping}{26}{subsection.2.4.2}%
+\contentsline {subsubsection}{The Variational Quantum Eigensolver}{27}{subsection.2.4.2}%
+\contentsline {subsubsection}{OVOS Molecular Orbitals as a Trial State for VQE}{27}{subsection.2.4.2}%
+\contentsline {subsubsection}{Reference-State Overlap}{27}{subsection.2.4.2}%
+\contentsline {subsubsection}{Trial states}{28}{equation.2.76}%
+\contentsline {subsubsection}{Reduction of T1 Amplitudes and Circuit Depth}{28}{equation.2.78}%
+\contentsline {chapter}{\numberline {3}OVOS Implementation}{29}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Algorithm}{29}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Integral Transformation}{30}{subsection.3.1.1}%
+\contentsline {subsubsection}{AO-to-MO Transformation}{30}{subsection.3.1.1}%
+\contentsline {subsubsection}{Spin-Orbital Construction}{30}{subsection.3.1.1}%
+\contentsline {subsubsection}{Notation Convention: Chemists' vs.\ Physicists' Integrals}{30}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Initial Active Space Selection}{30}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}MP1 Amplitudes and MP2 Energy}{30}{subsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.1.4}Gradient and Hessian Assembly}{30}{subsection.3.1.4}%
+\contentsline {subsubsection}{Block Structure and Efficient Inversion}{30}{subsection.3.1.4}%
+\contentsline {subsubsection}{Level-Shift Stabilisation}{30}{subsection.3.1.4}%
+\contentsline {subsection}{\numberline {3.1.5}Orbital Rotation and Update}{30}{subsection.3.1.5}%
+\contentsline {subsection}{\numberline {3.1.6}Convergence and Iteration Control}{30}{subsection.3.1.6}%
+\contentsline {section}{\numberline {3.2}Initialisation Strategies}{30}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Default SCF Initialisation}{30}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Warm-Start from Previous Orbital Set}{30}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Random Unitary Sampling}{30}{subsection.3.2.3}%
+\contentsline {chapter}{\numberline {4}Computational Detail}{31}{chapter.4}%
+\contentsline {subsection}{\numberline {4.0.1}Software and Libraries}{31}{subsection.4.0.1}%
+\contentsline {subsection}{\numberline {4.0.2}Molecular Geometries}{31}{subsection.4.0.2}%
+\contentsline {subsection}{\numberline {4.0.3}Basis Sets}{32}{subsection.4.0.3}%
+\contentsline {section}{\numberline {4.1}OVOS Calculation Settings}{32}{section.4.1}%
+\contentsline {section}{\numberline {4.2}VQE Calculation Settings}{33}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Results}{35}{chapter.5}%
+\contentsline {section}{\numberline {5.1}OVOS}{35}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Energy Recovery as a Function of Active Virtual Orbital Count}{35}{subsection.5.1.1}%
+\contentsline {subsubsection}{Effect of Initialization Strategy -> Write it into above!!!}{41}{figure.caption.13}%
+\contentsline {subsection}{\numberline {5.1.2}Basis Set Dependence}{44}{subsection.5.1.2}%
+\contentsline {subsubsection}{Comparison with Adamowicz and Bartlett (1987) - "Skip?"}{48}{figure.caption.22}%
+\contentsline {section}{\numberline {5.2}VQE}{49}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}OVOS Orbitals as a VQE Reference State}{49}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}T1 Amplitudes and the Brueckner Orbital Connection}{49}{subsection.5.2.2}%
+\contentsline {section}{\numberline {5.3}ooVQE}{50}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Conclusion and Outlook}{51}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Conclusion}{51}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Summary of Findings}{51}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Critical Assessment}{51}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}Implications for Quantum Computing}{51}{subsection.6.1.3}%
+\contentsline {section}{\numberline {6.2}Outlook}{51}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Algorithmic Improvements}{51}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Method Extensions}{51}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Quantum Computing Applications}{51}{subsection.6.2.3}%
+\contentsline {subsubsection}{OVOS Orbitals as a VQE Reference State}{51}{subsection.6.2.3}%
+\contentsline {subsubsection}{Brueckner Orbitals and Circuit Depth on NISQ Devices}{52}{subsection.6.2.3}%
+\contentsline {subsubsection}{Qubit Count Reduction and Fault-Tolerant Perspectives}{52}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}Larger Molecular Systems}{52}{subsection.6.2.4}%
+\contentsline {subsection}{\numberline {6.2.5}Benchmarking and Validation}{52}{subsection.6.2.5}%
+\contentsline {chapter}{Bibliography}{53}{subsection.6.2.5}%
+\setcounter {tocdepth}{0}
+\contentsline {chapter}{\numberline {A}Implementation Validation}{55}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Validation of the Implementation}{55}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Additional Data and Figures}{57}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{57}{section.B.1}%
+\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{57}{section.B.2}%
+\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{57}{section.B.3}%
+\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{59}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Repository and Version Information}{59}{section.C.1}%
+\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{59}{section.C.2}%
+\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{59}{section.C.3}%
+\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{59}{section.C.4}%
+\contentsline {section}{\numberline {C.5}Profiling Results}{59}{section.C.5}%

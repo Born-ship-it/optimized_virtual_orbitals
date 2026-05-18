@@ -87,58 +87,14 @@ In this chapter, the results of the OVOS implementation are presented. The chapt
 %   Place exported .pdf or .pgf figures in figures/.
 % ---------------------------------------------------------------
 
-\section{Validation of the Implementation}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 6.1]
-%   "Before presenting OVOS results, the correctness of the implementation
-%    is established by comparing the full-space MP2 correlation energies
-%    produced by the custom code against PySCF's built-in \texttt{pyscf.mp.MP2}
-%    module and, where available, the benchmark values tabulated by
-%    Adamowicz \& Bartlett \cite{Adamowicz1987}."
-%
-% [WHAT TO COVER]
-%   - Side-by-side comparison of $E_{\rm corr}^{\rm MP2}$ values.
-%   - Deviation $\delta E = E_{\rm corr}^{\rm code} - E_{\rm corr}^{\rm PySCF}$;
-%     should be $|\delta E| < 10^{-8}$~Hartree for a correct implementation.
-%   - Also check that $E_{\rm corr}^{\rm OVOS}(N_{\rm act.unocc}^{\rm full}) = E_{\rm corr}^{\rm MP2}$
-%     (full active space must reproduce full MP2 exactly).
-%
-% [TABLE – INCLUDE IN TEXT]
-%   Columns: Molecule & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & $E_{\rm corr}^{\rm PySCF}$ (Hartree) & $\Delta E_{\rm corr}$ (Hartree)
-%   Caption: "Validation of the OVOS implementation against PySCF \texttt{mp.MP2}.
-%   Deviations $\delta E$ should not exceed numerical precision ($<1\,\mu E_h$)."
-%
-% [LEAD-IN TO §6.2]
-%   "Having verified the implementation, the central OVOS result ---
-%    energy recovery as a function of active virtual orbital count ---
-%    is presented in the following section."
-% ---------------------------------------------------------------
 
-PySCF gives me an opportunity to validate my implementation of full space MP2 by comparing with their built-in MP2 module, \code{pyscf.mp.MP2}. I present the deviation $\Delta E_{\rm corr} = E_{\rm corr}^{\rm code} - E_{\rm corr}^{\rm PySCF}$ is within numerical precision for all test molecules in cc--pVDZ, see Figure~\ref{tab:validation}. 
+\section{OVOS}
+\label{sec:results_ovos}
 
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{lccr}
-        \hline
-        Molecule & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & $E_{\rm corr}^{\rm PySCF}$ (Hartree) & $\Delta E_{\rm corr}$ (Hartree) \\
-        \hline  
-        CO       & -2.90778E-01 & -2.90778E-01    & 4.25617E-8   \\
-        H$_2$O   & -2.04003E-01 & -2.04003E-01    & 2.29192E-9   \\
-        HF       & -2.03781E-01 & -2.03781E-01    & 1.23463E-10  \\
-        NH3      & -1.88825E-01 & -1.88825E-01    & 8.31300E-10  \\
-        Li2      & -2.00076E-02 & -2.00076E-02    & 1.11200E-9   \\
-        \hline
-    \end{tabular}
-    \caption{Validation of the OVOS implementation against PySCF \code{mp.MP2}.
-    Deviations $\Delta E$ are within numerical precision ($|\delta E| <\eqsim 10^{-8}$~Hartree). All molecules are of the cc--pVDZ basis for this validation.}
-    \label{tab:validation}
-\end{table}
+...
 
-It is observed that CO's deviation is barely at acceptable range of $10^{-8}$~Hartree, on the other hand, the other molecules show deviations below the acceptable range, which confirms that my implementation of the MP2 correlation energy is correct, and that the OVOS code correctly reproduces the full-space MP2 limit when $N'_{\rm act.unocc} = N_{\rm act.unocc}$.
 
-Verifying that the full-space MP2 energies match PySCF's results, any differences observed in the OVOS results are due to the orbital optimization and active space truncation, rather than a bug in the MP2 implementation. 
-
-\section{Energy Recovery as a Function of Active Virtual Orbital Count}
+\subsection{Energy Recovery as a Function of Active Virtual Orbital Count}
 \label{sec:energy-recovery}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.2]
@@ -341,7 +297,7 @@ The most correlation energy recovered by OVOS for Li2 is at $N'_{\rm act.unocc} 
 %     \label{fig:HF_6-31G_convergence}
 % \end{figure}
 
-\section{Effect of Initialization Strategy}
+\subsubsection{Effect of Initialization Strategy -> Write it into above!!!}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.4]
 %   "Three initialisation strategies --- default SCF, warm-start from
@@ -431,7 +387,7 @@ Between the three strategies, we can pick the best result at each $N'_{\rm act.u
 
 % See appendix ? for the resulting plots of molecules ... 
 
-\section{Basis Set Dependence}
+\subsection{Basis Set Dependence}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.5]
 %   "The dimension of the virtual orbital space grows rapidly with
@@ -537,7 +493,7 @@ The correlated energy curves for Li2 in the 6--31G (15) and cc--pVDZ (25) basis 
 % These results indicate that the choice of basis set has a significant impact on the energy recovery behaviour of the OVOS algorithm, a larger basis set means more mixing options translating to a better correlation energy...
 
 
-\subsection{Comparison with Adamowicz and Bartlett (1987) - "Skip?"}
+\subsubsection{Comparison with Adamowicz and Bartlett (1987) - "Skip?"}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 6.6]
 %   "The benchmark test case of Adamowicz \& Bartlett \cite{Adamowicz1987}
@@ -647,7 +603,64 @@ Looking past not being able to replicate the exact setup of Adamowicz \& Bartlet
 
 
 
-\section{T1 Amplitudes and the Brueckner Orbital Connection}
+
+
+
+\section{VQE}
+\label{sec:results_veq}
+
+...
+
+
+\subsection{OVOS Orbitals as a VQE Reference State}
+\label{sec:results_vqe}
+% ---------------------------------------------------------------
+% OVOS Orbitals as a VQE Reference State
+% ---------------------------------------------------------------
+% Goal: Quantify the practical benefit of OVOS MOs for quantum
+%       computing by computing the reference-state overlap, 
+%       computing energy VQE optimization ... 
+%       and estimating qubit/circuit savings.
+%
+% Suggested analysis:
+%   (a) Reference-state overlap
+%       - For small molecules (H₂, LiH, H₂O in minimal/small basis),
+%         compute the FCI ground state using PySCF fci.FCI().
+%       - Compute the overlap F = |⟨Φ_ref|Ψ_FCI⟩|² for:
+%           * |Φ_HF⟩ (standard HF reference)
+%           * |Φ_OVOS⟩ (OVOS-optimised reference, varying N'_virt)
+%       - Plot F_OVOS vs N'_virt/N_virt^max and compare to F_HF.
+%       - Table: molecule | basis | N'_virt | F_HF | F_OVOS | ΔF
+%
+%   (b) VQE wavefunction optimizaton
+%       - does the energy landscape become easier 
+%       to navigate with OVOS orbitals?
+%       - In less iterations? 
+%       - With less energy fluctuations?
+%       - Better energy convergence?
+%
+%   (c) Resource estimate
+%       - Qubit count: Q = 2(N_occ + N'_virt) for JW encoding.
+%       - UCCSD parameter count: N_occ * N'_virt (singles) +
+%         N_occ^2 * N'_virt^2 / 4 (doubles).
+%       - Tabulate Q and n_params for HF vs OVOS at η = 90% for
+%         each test molecule.
+%
+% Notes:
+%   - This section is primarily theoretical/numerical estimation;
+%     actual VQE circuit runs are outside the scope of this thesis
+%     (discussed in Outlook §8.3).
+%   - Cite \cite{Peruzzo2014, Cao2019, deGracia2024, Seeley2012}
+%     for VQE and qubit encoding background.
+% ---------------------------------------------------------------
+
+"Comment on VQE results for ... in the ... basis, with the OVOS orbitals as reference state, compared to the UHF orbitals, and UMP2 natural orbitals as reference state. Comment on iteration and energy in VQE calculations using orbital optimization or not. Comment on random initialization of thetas vs previous geometry final values... Comment on the qubit savings and parameter savings... "
+
+
+
+
+
+\subsection{T1 Amplitudes and the Brueckner Orbital Connection}
 \label{sec:results_brueckner}
 % ---------------------------------------------------------------
 % T1 Amplitudes and the Brueckner Connection
@@ -704,51 +717,14 @@ I report here having observed computed T1 amplitudes for the OVOS-optimised orbi
 % OVERLAP, FIDELITY, OF FCI WAVEFUNCTION... HAVE ORBITALS HEATMAP REFERENCE TO Appendix
 
 
-\section{OVOS Orbitals as a VQE Reference State}
-\label{sec:results_vqe}
-% ---------------------------------------------------------------
-% OVOS Orbitals as a VQE Reference State
-% ---------------------------------------------------------------
-% Goal: Quantify the practical benefit of OVOS MOs for quantum
-%       computing by computing the reference-state overlap, 
-%       computing energy VQE optimization ... 
-%       and estimating qubit/circuit savings.
-%
-% Suggested analysis:
-%   (a) Reference-state overlap
-%       - For small molecules (H₂, LiH, H₂O in minimal/small basis),
-%         compute the FCI ground state using PySCF fci.FCI().
-%       - Compute the overlap F = |⟨Φ_ref|Ψ_FCI⟩|² for:
-%           * |Φ_HF⟩ (standard HF reference)
-%           * |Φ_OVOS⟩ (OVOS-optimised reference, varying N'_virt)
-%       - Plot F_OVOS vs N'_virt/N_virt^max and compare to F_HF.
-%       - Table: molecule | basis | N'_virt | F_HF | F_OVOS | ΔF
-%
-%   (b) VQE wavefunction optimizaton
-%       - does the energy landscape become easier 
-%       to navigate with OVOS orbitals?
-%       - In less iterations? 
-%       - With less energy fluctuations?
-%       - Better energy convergence?
-%
-%   (c) Resource estimate
-%       - Qubit count: Q = 2(N_occ + N'_virt) for JW encoding.
-%       - UCCSD parameter count: N_occ * N'_virt (singles) +
-%         N_occ^2 * N'_virt^2 / 4 (doubles).
-%       - Tabulate Q and n_params for HF vs OVOS at η = 90% for
-%         each test molecule.
-%
-% Notes:
-%   - This section is primarily theoretical/numerical estimation;
-%     actual VQE circuit runs are outside the scope of this thesis
-%     (discussed in Outlook §8.3).
-%   - Cite \cite{Peruzzo2014, Cao2019, deGracia2024, Seeley2012}
-%     for VQE and qubit encoding background.
-% ---------------------------------------------------------------
-
-"Comment on VQE results for ... in the ... basis, with the OVOS orbitals as reference state, compared to the UHF orbitals, and UMP2 natural orbitals as reference state. Comment on iteration and energy in VQE calculations using orbital optimization or not. Comment on random initialization of thetas vs previous geometry final values... Comment on the qubit savings and parameter savings... "
 
 
 
 
+\section{ooVQE}
+\label{sec:results_veq}
+% Only thing you can say here is convergence iterations/speed. You start with OVOS, UHF, UMP2, which convergence fastest.
+...
 
+
+% Convergence iteration plot!!!! for basis set ... 

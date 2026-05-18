@@ -242,3 +242,76 @@ The thesis will seek to achieve the following specific objectives:
 % ---------------------------------------------------------------
 
 "..."
+
+
+% Add Notation and convention here!
+
+\section{Notation and Integral Conventions}
+% \label{sec:notation}
+
+% [CROSS-REFERENCE MARKER] SECTION §3.0 – Notation and Integral Conventions:
+% ADD: "For a comprehensive treatment of molecular orbital integrals, index conventions,
+% and spin-orbital formalism, see Background Chapter~\ref{ch:background}, Sections~\ref{sec:notation_background}
+% through~\ref{sec:spin_orbital}. The present section assumes familiarity with those definitions
+% and focuses specifically on the notation required for OVOS derivations."
+
+% ---------------------------------------------------------------
+% [SECTION INTRO – 3.0 PRELIMINARIES]
+%   "To ensure clarity and consistency throughout this chapter,
+%    we establish the notation and integral conventions used in all
+%    OVOS derivations. This adopts the physicists' antisymmetrised
+%    notation unless otherLewise specified."
+%
+% [WHAT TO COVER]
+%   - Integral notation: <ab||ij> (antisymmetrised physicists')
+%     Definition: <ab||ij> = <ab|ij> - <ab|ji>
+%   - Index ordering:
+%     i,j,... occupied orbitals
+%     a,b,... virtual orbitals
+%     e,f inactive virtual; a,b active virtual (OVOS partition)
+%   - Molecular orbital basis: all quantities in MO basis unless AO noted
+%   - Spin summation: closed-shell RHF, spinless formula
+%   - Fock matrix: f_pq = h_pq + sum_i <pi||iq>
+%   - Orbital energies: epsilon_a from canonical MO transform
+%
+%   CITE: \cite{Szabo2012} \S 1-2 (integral conventions)
+%         \cite{Jensen2014} \S 2+ (physics vs chemistry notation)
+%         \cite{Adamowicz1987_OVOS} (state OVOS convention)
+% ---------------------------------------------------------------
+
+We establish the following specific notation and conventions for OVOS, maintaining consistency with the original Adamowicz \& Bartlett paper \cite{Adamowicz1987} . % (Note, for a comprehensive treatment see Background Chapter~\ref{ch:background}, Sections~\ref{sec:notation_background} through~\ref{sec:spin_orbital}):
+
+
+\subsubsection{Index Ordering and Orbital Partitioning}
+
+Orbital indices follows the standard convention:
+\begin{itemize}
+    \item $i,j,k,l,...$ for occupied orbitals
+    \item $a,b,c,d,...$ for unoccupied orbitals
+    \item $p,q,r,s,...$ for unrestricted orbitals
+\end{itemize}
+
+In OVOS, the virtual orbitals are further partitioned into active ($a,b,...$) and inactive ($e,f,...$) subsets, with the active space containing $N'$ orbitals optimised for correlation recovery.
+
+
+\subsubsection{Integral Notation: Antisymmetrised vs Non-antisymmetrised}
+% Transform (vir,occ|vir,occ) AO integrals to MO basis, assemble spin‑orbital
+% and antisymmetrize. Returns <ab||ij> in physicist notation (a,b,i,j).
+
+For integral notation, we distinguish between the antisymmetrised physicists' notation $\langle ab\|ij\rangle$ and the non-antisymmetrised chemists' notation $\langle ab|ij\rangle$. 
+The antisymmetrised integral is defined as:
+\begin{equation*}
+\langle ab\|ij\rangle = \langle ab|ij\rangle - \langle ab|ji\rangle
+\end{equation*}
+where $\langle ab|ij\rangle$ is the standard two-electron integral in the MO basis. 
+The physicists' notation is used throughout the OVOS derivations for consistency with the original literature and to simplify the expressions for the gradient and Hessian.
+
+
+\subsubsection{Integral Notation: Chemists' vs.\ Physicists' Conventions}
+
+The notation for two-electron integrals can differ between chemists and physicists, leading to potential confusion when comparing formulas from the literature with the output of quantum chemistry software. In chemists' notation, the integral is written as $(pq|rs)$, while in physicists' notation, it is written as $\langle pq | rs \rangle = (pr|qs)$ \cite{Helgaker2000}. The antisymmetrised integral, which is relevant for post-HF methods, is defined as:
+\begin{equation*}
+    \langle pq \| rs \rangle = \langle pq | rs \rangle - \langle pq | sr \rangle = (pr|qs) - (ps|qr)
+\end{equation*}
+The OVOS formulas in this thesis use the antisymmetrised physicists' notation, while PySCF returns integrals in the chemists' notation\cite{Sun2020}. The conversion between these notations is explicitly implemented in the code as: $\langle pq \| rs \rangle = (pr|qs) - (ps|qr)$. This establishes a clear and consistent framework for interpreting the integrals used in the OVOS method and ensures that the theoretical formulas align with the computational implementation.
+

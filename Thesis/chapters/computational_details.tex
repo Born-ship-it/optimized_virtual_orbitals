@@ -1,7 +1,7 @@
 %============================================================
 %  computational_details.tex  –  Chapter 5
 %============================================================
-\chapter{Computational Details}
+\chapter{Computational Detail}
 \label{ch:computational}
 
 % ---------------------------------------------------------------
@@ -77,7 +77,8 @@
 In this chapter, we provide a comprehensive account of the computational details underlying all calculations presented in this thesis. This includes the software and libraries used, the hardware enviroment, the molecular geometries and basis sets employed, the settings for the reference SCF calculations, and the specific hyperparameters of the OVOS optimisation. The goal is to ensure that all results are fully reproducible by any reader with access to similar computational resources.
 
 
-\section{Software and Libraries}
+\subsection{Software and Libraries}
+\label{subsec:calc_set_software}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 5.1]
 %   "All calculations in this thesis were performed using PySCF version X.Y
@@ -126,29 +127,32 @@ The OVOS method was implemented as a standalone Python class, with source code p
 
 The hardware environment on which all calculations were run is described in the following section.
 
-\section{Hardware}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 5.2]
-%   "Provide the CPU model, RAM, and operating system used for all
-%    calculations. This information allows the reader to interpret
-%    the timing data reported in Section~\ref{sec:cost}."
-%
-% [WHAT TO COVER]
-%   - CPU: model name, number of cores (even if only 1 thread used).
-%   - RAM: total available.
-%   - OS: Windows/Linux/macOS.
-%   - If cluster was used: name, queue system, number of cores requested.
-%   - Note: single-threaded execution means results are reproducible
-%     regardless of core count.
-%
-% [LEAD-IN TO §5.3]
-%   "The molecular test set and the geometries used for all calculations
-%    are specified in the following section."
-% ---------------------------------------------------------------
+% \section{Hardware}
+% % ---------------------------------------------------------------
+% % [SECTION INTRO – 5.2]
+% %   "Provide the CPU model, RAM, and operating system used for all
+% %    calculations. This information allows the reader to interpret
+% %    the timing data reported in Section~\ref{sec:cost}."
+% %
+% % [WHAT TO COVER]
+% %   - CPU: model name, number of cores (even if only 1 thread used).
+% %   - RAM: total available.
+% %   - OS: Windows/Linux/macOS.
+% %   - If cluster was used: name, queue system, number of cores requested.
+% %   - Note: single-threaded execution means results are reproducible
+% %     regardless of core count.
+% %
+% % [LEAD-IN TO §5.3]
+% %   "The molecular test set and the geometries used for all calculations
+% %    are specified in the following section."
+% % ---------------------------------------------------------------
 
-The hardware environment used for all calculations in this thesis consisted of a CPU model 13th Gen Intel(R) Core(TM) i7--13620H with 10 cores and 16 GB of RAM. The operating system was Windows 11 Home (A MSI KATANA 15 B13V laptop). All calculations were executed in a single-threaded mode, ensuring that the results are reproducible regardless of the number of cores available. 
+% The hardware environment used for all calculations in this thesis consisted of a CPU model 13th Gen Intel(R) Core(TM) i7--13620H with 10 cores and 16 GB of RAM. The operating system was Windows 11 Home (A MSI KATANA 15 B13V laptop). All calculations were executed in a single-threaded mode, ensuring that the results are reproducible regardless of the number of cores available. 
 
-\section{Molecular Geometries}
+
+
+\subsection{Molecular Geometries}
+\label{subsec:calc_set_geometries}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 5.3]
 %   "Nine molecules spanning a range of electronic structures
@@ -178,20 +182,21 @@ The thesis focuses on a test set of nine molecules that represent a variety of e
 \label{tab:geometries}
 \begin{tabular}{lllcc}
 \toprule
-Molecule & Geometry (Å) & Multiplicity & Charge & Symmetry \\
+Molecule & Geometry (Å)                               \\
 \midrule
-LiH      & $r(\mathrm{Li-H}) = 1.595$  & 1 & 0 & \code{False} \\
-\ce{H2O} & $r = 0.957$, $\angle = 104.5^\circ$ & 1 & 0 & \code{False} \\
-CO       & $r(\mathrm{C-O}) = 1.128$   & 1 & 0 & \code{False} \\
-HF       & $r(\mathrm{H-F}) = 0.917$   & 1 & 0 & \code{False} \\
-\ce{NH3} & $r(\mathrm{N-H}) = 1.012$   & 1 & 0 & \code{False} \\
+LiH      & $r(\mathrm{Li-H}) = 1.595$                 \\
+\ce{H2O} & $r = 0.957$, $\angle = 104.5^\circ$        \\
+CO       & $r(\mathrm{C-O}) = 1.128$                  \\
+HF       & $r(\mathrm{H-F}) = 0.917$                  \\
+\ce{NH3} & $r(\mathrm{N-H}) = 1.012$                  \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 The basis-set-specific orbital space dimensions for each molecule are given in the following section, along with a description of the basis sets employed.
 
-\section{Basis Sets}
+\subsection{Basis Sets}
+\label{subsec:calc_set_basis_sets}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 5.4]
 %   "The choice of basis set determines the size of the virtual orbital
@@ -225,59 +230,59 @@ The choice of basis set determines the size of the virtual orbital space and hen
 
 
 
-\section{Reference SCF Calculations}
-\label{sec:ref_scf}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 5.5]
-%   "All calculations use an unrestricted Hartree-Fock (UHF) reference
-%    obtained from PySCF with default convergence settings. This section
-%    records the reference HF and full-space MP2 energies that serve
-%    as benchmarks throughout the results."
-%
-% [WHAT TO COVER]
-%   - SCF convergence threshold: state value (e.g., $10^{-9}$ Hartree).
-%   - DIIS: used or not? (PySCF default: yes).
-%   - Symmetry: \texttt{mol.symmetry = False} to avoid symmetry-broken orbitals.
-%   - Spin state: explicit $2S+1$ for each molecule.
-%
-% [TABLE] Reference energies:
-%   Columns: Molecule | Basis | $E_{\rm HF}$ / Hartree |
-%            $E_{\rm corr}^{\rm MP2}$ / Hartree | $E_{\rm total}^{\rm MP2}$
-%   Caption: "Reference UHF and full-space MP2 energies for the test set.
-%   These are the values against which OVOS energy recovery is measured."
-%   TIP: use \texttt{pyscf.mp.MP2} to cross-check your own MP2 values.
-%
-% [LEAD-IN TO §5.6]
-%   "The specific settings used for the OVOS optimisation on top of
-%    these references are given in the following section."
-% ---------------------------------------------------------------
+% \section{Reference SCF Calculations}
+% \label{sec:ref_scf}
+% % ---------------------------------------------------------------
+% % [SECTION INTRO – 5.5]
+% %   "All calculations use an unrestricted Hartree-Fock (UHF) reference
+% %    obtained from PySCF with default convergence settings. This section
+% %    records the reference HF and full-space MP2 energies that serve
+% %    as benchmarks throughout the results."
+% %
+% % [WHAT TO COVER]
+% %   - SCF convergence threshold: state value (e.g., $10^{-9}$ Hartree).
+% %   - DIIS: used or not? (PySCF default: yes).
+% %   - Symmetry: \texttt{mol.symmetry = False} to avoid symmetry-broken orbitals.
+% %   - Spin state: explicit $2S+1$ for each molecule.
+% %
+% % [TABLE] Reference energies:
+% %   Columns: Molecule | Basis | $E_{\rm HF}$ / Hartree |
+% %            $E_{\rm corr}^{\rm MP2}$ / Hartree | $E_{\rm total}^{\rm MP2}$
+% %   Caption: "Reference UHF and full-space MP2 energies for the test set.
+% %   These are the values against which OVOS energy recovery is measured."
+% %   TIP: use \texttt{pyscf.mp.MP2} to cross-check your own MP2 values.
+% %
+% % [LEAD-IN TO §5.6]
+% %   "The specific settings used for the OVOS optimisation on top of
+% %    these references are given in the following section."
+% % ---------------------------------------------------------------
 
-Calculations on Hartree-Fock (HF) are obtained from PySCF with \code{gto} and \code{scf}. This section records the reference restricted HF (RHF), unrestricted (UHF) and MP2 calculations, that serve as benchmarks throughout the results.
+% Calculations on Hartree-Fock (HF) are obtained from PySCF with \code{gto} and \code{scf}. This section records the reference restricted HF (RHF), unrestricted (UHF) and MP2 calculations, that serve as benchmarks throughout the results.
 
-Equal for all molecule initialisation with PySCF is the use of \code{gto.Mole()} to set up the molecule, and \code{scf.RHF()} or \code{scf.UHF()} to compute the reference HF energy. The convergence threshold for SCF is set to $10^{-10}$ Hartree, and DIIS acceleration is enabled by default in PySCF \cite{Sun2020}. Symmetry is disabled (\code{mol.symmetry = False}) to avoid symmetry-broken orbitals, and the spin state is explicitly defined for each molecule using the \code{spin} parameter. At spin multiplicity $2S+1$, the number of unpaired electrons is $2S$, so for a singlet state ($S=0$) we set \code{spin = 0}.
+% Equal for all molecule initialisation with PySCF is the use of \code{gto.Mole()} to set up the molecule, and \code{scf.RHF()} or \code{scf.UHF()} to compute the reference HF energy. The convergence threshold for SCF is set to $10^{-10}$ Hartree, and DIIS acceleration is enabled by default in PySCF \cite{Sun2020}. Symmetry is disabled (\code{mol.symmetry = False}) to avoid symmetry-broken orbitals, and the spin state is explicitly defined for each molecule using the \code{spin} parameter. At spin multiplicity $2S+1$, the number of unpaired electrons is $2S$, so for a singlet state ($S=0$) we set \code{spin = 0}.
 
-The reference energies for each molecule and basis set combination are summarised in Table~\ref{tab:reference_energies}, including the HF energy, the MP2 correlation energy, and the total MP2 energy (HF + correlation). These values serve as benchmarks against which the performance of OVOS is measured in terms of energy recovery.
+% The reference energies for each molecule and basis set combination are summarised in Table~\ref{tab:reference_energies}, including the HF energy, the MP2 correlation energy, and the total MP2 energy (HF + correlation). These values serve as benchmarks against which the performance of OVOS is measured in terms of energy recovery.
 
-\begin{table}
-    \centering
-    \caption{Reference UHF and full-space MP2 energies for the test set.}
-    \label{tab:reference_energies}
-    \begin{tabular}{lcccc}
-        \toprule
-        Molecule & Basis & $E_{\rm HF}$ (Hartree) & $E_{\rm corr}^{\rm MP2}$ (Hartree) & $E_{\rm total}^{\rm MP2}$ (Hartree) \\
-        \midrule
-        H\textsubscript{2}O & 6-31G   & ... & ... & ... \\
-        CO       & 6-31G   & ... & ... & ... \\
-        HF       & 6-31G   & ... & ... & ... \\
-        NH\textsubscript{3} & 6-31G   & ... & ... & ... \\
-        H\textsubscript{2}O & cc-pVDZ & ... & ... & ... \\
-        CO       & cc-pVDZ & ... & ... & ... \\
-        HF       & cc-pVDZ & ... & ... & ... \\
-        NH\textsubscript{3} & cc-pVDZ & ... & ... & ... \\
-        % Add more rows as needed for all molecule/basis combinations.
-        \bottomrule
-    \end{tabular}
-\end{table}
+% \begin{table}
+%     \centering
+%     \caption{Reference UHF and full-space MP2 energies for the test set.}
+%     \label{tab:reference_energies}
+%     \begin{tabular}{lcccc}
+%         \toprule
+%         Molecule & Basis & $E_{\rm HF}$ (Hartree) & $E_{\rm corr}^{\rm MP2}$ (Hartree) & $E_{\rm total}^{\rm MP2}$ (Hartree) \\
+%         \midrule
+%         H\textsubscript{2}O & 6-31G   & ... & ... & ... \\
+%         CO       & 6-31G   & ... & ... & ... \\
+%         HF       & 6-31G   & ... & ... & ... \\
+%         NH\textsubscript{3} & 6-31G   & ... & ... & ... \\
+%         H\textsubscript{2}O & cc-pVDZ & ... & ... & ... \\
+%         CO       & cc-pVDZ & ... & ... & ... \\
+%         HF       & cc-pVDZ & ... & ... & ... \\
+%         NH\textsubscript{3} & cc-pVDZ & ... & ... & ... \\
+%         % Add more rows as needed for all molecule/basis combinations.
+%         \bottomrule
+%     \end{tabular}
+% \end{table}
 
     % Insert Python
 % from pyscf import gto, scf
@@ -300,6 +305,7 @@ The reference energies for each molecule and basis set combination are summarise
 
 
 \section{OVOS Calculation Settings}
+\label{sec:calc_set_ovos}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 5.6]
 %   "This section specifies all hyperparameters of the OVOS calculation,
@@ -353,7 +359,8 @@ Convergence is monitored via two criteria: a change in correlation energy $|\Del
 % )
 % E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
 
-\section{VQE}
+\section{VQE Calculation Settings}
+\label{sec:calc_set_vqe}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 5.7]
 %  "This section seek to specify the VQE claculations..."

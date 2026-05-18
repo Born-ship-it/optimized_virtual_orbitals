@@ -84,18 +84,6 @@ Frank Jensen.
 \newblock Wiley, 3rd edition, 2017.
 \newblock ISBN 978-1-118-82599-0.
 
-\bibitem[Handy et~al.(1989)Handy, Pople, Head-Gordon, Raghavachari, and Trucks]{Handy1989}
-Nicholas~C. Handy, John~A. Pople, Martin Head-Gordon, Krishnan Raghavachari, and Gary~W. Trucks.
-\newblock Size-consistent {B}rueckner theory limited to single and double substitutions.
-\newblock \emph{Chem. Phys. Lett.}, 164:\penalty0 185--192, 1989.
-\newblock \doi{10.1016/0009-2614(89)85013-4}.
-
-\bibitem[Brueckner(1954)]{Brueckner1954}
-Keith~A. Brueckner.
-\newblock Two-body forces and nuclear saturation. {III}. details of the structure of the nucleus.
-\newblock \emph{Phys. Rev.}, 97:\penalty0 1353--1366, 1954.
-\newblock \doi{10.1103/PhysRev.97.1353}.
-
 \bibitem[Ditchfield et~al.(1971)Ditchfield, Hehre, and Pople]{ditchfield1971a}
 R.~Ditchfield, W.~J. Hehre, and J.~A. Pople.
 \newblock Self-consistent molecular-orbital methods. ix. an extended gaussian-type basis for molecular-orbital studies of organic molecules.
@@ -119,6 +107,18 @@ Thom~H. Dunning.
 \newblock Gaussian basis sets for use in correlated molecular calculations. {I}. the atoms boron through neon and hydrogen.
 \newblock \emph{J. Chem. Phys.}, 90:\penalty0 1007--1023, 1989.
 \newblock \doi{10.1063/1.456153}.
+
+\bibitem[Handy et~al.(1989)Handy, Pople, Head-Gordon, Raghavachari, and Trucks]{Handy1989}
+Nicholas~C. Handy, John~A. Pople, Martin Head-Gordon, Krishnan Raghavachari, and Gary~W. Trucks.
+\newblock Size-consistent {B}rueckner theory limited to single and double substitutions.
+\newblock \emph{Chem. Phys. Lett.}, 164:\penalty0 185--192, 1989.
+\newblock \doi{10.1016/0009-2614(89)85013-4}.
+
+\bibitem[Brueckner(1954)]{Brueckner1954}
+Keith~A. Brueckner.
+\newblock Two-body forces and nuclear saturation. {III}. details of the structure of the nucleus.
+\newblock \emph{Phys. Rev.}, 97:\penalty0 1353--1366, 1954.
+\newblock \doi{10.1103/PhysRev.97.1353}.
 
 \bibitem[Purvis and Bartlett(1982)]{Purvis1982}
 George~D. Purvis and Rodney~J. Bartlett.

@@ -1,77 +1,60 @@
 %============================================================
-%  appendix_a.tex  –  Mathematical Derivations
+%  appendix_a.tex  –  Results extra...
 %============================================================
-\chapter{Mathematical Derivations}
+\chapter{Implementation Validation}
 \label{app:derivations}
 
+lead into appendix A ... 
+
+
+\section{Validation of the Implementation}
 % ---------------------------------------------------------------
-% WRITING TIPS – APPENDIX A
-% ---------------------------------------------------------------
-% Purpose: House the longer algebraic derivations that would
-%           interrupt the flow of the Theory chapter if placed there.
+% [SECTION INTRO – 6.1]
+%   "Before presenting OVOS results, the correctness of the implementation
+%    is established by comparing the full-space MP2 correlation energies
+%    produced by the custom code against PySCF's built-in \texttt{pyscf.mp.MP2}
+%    module and, where available, the benchmark values tabulated by
+%    Adamowicz \& Bartlett \cite{Adamowicz1987}."
 %
-% Suggested content:
+% [WHAT TO COVER]
+%   - Side-by-side comparison of $E_{\rm corr}^{\rm MP2}$ values.
+%   - Deviation $\delta E = E_{\rm corr}^{\rm code} - E_{\rm corr}^{\rm PySCF}$;
+%     should be $|\delta E| < 10^{-8}$~Hartree for a correct implementation.
+%   - Also check that $E_{\rm corr}^{\rm OVOS}(N_{\rm act.unocc}^{\rm full}) = E_{\rm corr}^{\rm MP2}$
+%     (full active space must reproduce full MP2 exactly).
 %
-%  A.1  Derivation of the MP2 Correlation Energy in Spin-Orbital Form
-%       - Start from the Hylleraas functional in second quantisation.
-%       - Evaluate the matrix element ⟨Φ₀|H|Φ_{ij}^{ab}⟩.
-%       - Arrive at the standard:
-%         E_corr = ¼ Σ_{ijab} |⟨ij‖ab⟩|² / (ε_i+ε_j−ε_a−ε_b)
-%       - Show equivalence to the amplitude form used in the code.
+% [TABLE – INCLUDE IN TEXT]
+%   Columns: Molecule & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & $E_{\rm corr}^{\rm PySCF}$ (Hartree) & $\Delta E_{\rm corr}$ (Hartree)
+%   Caption: "Validation of the OVOS implementation against PySCF \texttt{mp.MP2}.
+%   Deviations $\delta E$ should not exceed numerical precision ($<1\,\mu E_h$)."
 %
-%  A.2  Derivation of the Gradient G_{ea}
-%       - Differentiate J₂ w.r.t. R_{ae} using the chain rule.
-%       - Keep track of all terms from both the amplitude and
-%         the two-electron integral dependence.
-%       - Show that at convergence G = 0 is the optimality condition.
-%
-%  A.3  Derivation of the Hessian H_{ea,fb}
-%       - Second derivative of J₂.
-%       - Careful treatment of the Kronecker-δ terms.
-%       - Verify consistency with the Adamowicz & Bartlett expressions.
-%
-%  A.4  Matrix Exponential via Eigendecomposition
-%       - Prove U = exp(R) given the block-antisymmetric structure of R.
-%       - Derive the formula U = X cosh(d)X† + RX sinh(d)d⁻¹X†.
-%       - Verify U†U = I.
-%
-%  A.5  Antisymmetrised Two-Electron Integrals
-%       - Define ⟨pq‖rs⟩ = (pr|qs) − (ps|qr) (physicists' = antisym).
-%       - Show how this relates to the chemists' notation (pq|rs).
-%       - Tabulate the notation used in each formula in the thesis
-%         to remove all ambiguity (this fixes the open question in
-%         your code comments!).
-%
-% Tips:
-%   - Use the align environment for multi-line derivations.
-%   - Number every intermediate equation that you want to refer to.
-%   - Remind the reader at the start of each section what is being
-%     derived and where the result is used in the main text.
+% [LEAD-IN TO §6.2]
+%   "Having verified the implementation, the central OVOS result ---
+%    energy recovery as a function of active virtual orbital count ---
+%    is presented in the following section."
 % ---------------------------------------------------------------
 
-\section{Spin-Orbital MP2 Energy from the Hylleraas Functional}
+PySCF gives me an opportunity to validate my implementation of full space MP2 by comparing with their built-in MP2 module, \code{pyscf.mp.MP2}. I present the deviation $\Delta E_{\rm corr} = E_{\rm corr}^{\rm code} - E_{\rm corr}^{\rm PySCF}$ is within numerical precision for all test molecules in cc--pVDZ, see Figure~\ref{tab:validation}. 
 
-\section{Derivation of the Orbital Rotation Gradient}
-
-\section{Derivation of the Orbital Rotation Hessian}
-
-\section{Matrix Exponential for the Rotation Matrix}
-
-\section{Notation Conventions for Two-Electron Integrals}
-\label{sec:integral_notation}
-
-% Disambiguation table
-\begin{table}[H]
-\centering
-\caption{Summary of two-electron integral notation used in this thesis.}
-\label{tab:notation}
-\begin{tabular}{lll}
-\toprule
-Notation & Definition & Used where \\
-\midrule
-$(pq|rs)$  & $\int\!\int\phi_p^*(1)\phi_q(1)r_{12}^{-1}\phi_r^*(2)\phi_s(2)\,d1\,d2$ & PySCF output \\
-$\langle pr|qs\rangle$ & same as $(pq|rs)$ & Physicists' (non-antisym.) \\
-$\langle pq\|rs\rangle$ & $(pr|qs)-(ps|qr)$ & Antisymmetrised; used in all formulas \\
-\bottomrule
-\end{tabular}
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lccr}
+        \hline
+        Molecule & $E_{\rm corr}^{\rm OVOS}$ (Hartree) & $E_{\rm corr}^{\rm PySCF}$ (Hartree) & $\Delta E_{\rm corr}$ (Hartree) \\
+        \hline  
+        CO       & -2.90778E-01 & -2.90778E-01    & 4.25617E-8   \\
+        H$_2$O   & -2.04003E-01 & -2.04003E-01    & 2.29192E-9   \\
+        HF       & -2.03781E-01 & -2.03781E-01    & 1.23463E-10  \\
+        NH3      & -1.88825E-01 & -1.88825E-01    & 8.31300E-10  \\
+        Li2      & -2.00076E-02 & -2.00076E-02    & 1.11200E-9   \\
+        \hline
+    \end{tabular}
+    \caption{Validation of the OVOS implementation against PySCF \code{mp.MP2}.
+    Deviations $\Delta E$ are within numerical precision ($|\delta E| <\eqsim 10^{-8}$~Hartree). All molecules are of the cc--pVDZ basis for this validation.}
+    \label{tab:validation}
 \end{table}
+
+It is observed that CO's deviation is barely at acceptable range of $10^{-8}$~Hartree, on the other hand, the other molecules show deviations below the acceptable range, which confirms that my implementation of the MP2 correlation energy is correct, and that the OVOS code correctly reproduces the full-space MP2 limit when $N'_{\rm act.unocc} = N_{\rm act.unocc}$.
+
+Verifying that the full-space MP2 energies match PySCF's results, any differences observed in the OVOS results are due to the orbital optimization and active space truncation, rather than a bug in the MP2 implementation. 
+

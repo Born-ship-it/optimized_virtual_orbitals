@@ -1,7 +1,7 @@
 %============================================================
 %  method.tex  –  Chapter 4
 %============================================================
-\chapter{Method}
+\chapter{OVOS Implementation}
 \label{ch:method}
 
 % ---------------------------------------------------------------
@@ -77,7 +77,9 @@
 Here in this chapter we build on the theoretical foundation laid out in Chapter~\ref{ch:theory} to describe the practical implementation of the OVOS algorithm. The goal is to provide a clear and detailed overview of the algorithmic steps, the computational strategies employed, and the choices made in the implmenentation. 
 This chapter serves as a bridge between the abstract theoretical concepts and the concrete computational details, enabling readers to understand how the OVOS method is realised and how it can be reproduced or extended in future work.
 
-\section{Algorithm Overview}
+% Make it clear i coded up the OVOS algorithm
+
+\section{Algorithm}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 4.1]
 %   "This section presents the complete OVOS iterative algorithm as
@@ -126,7 +128,7 @@ Here we outline the full OVOS algorithm as implemented in this work, following t
 
 Below we provide a detailed description of each step in the algorithm.
 
-\section{Integral Transformation}
+\subsection{Integral Transformation}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 4.2]
 %   "Transforming the two-electron integrals from the AO basis to the
@@ -157,11 +159,11 @@ Below we provide a detailed description of each step in the algorithm.
 
 
 
-\subsection{AO-to-MO Transformation}
-\subsection{Spin-Orbital Construction}
-\subsection{Notation Convention: Chemists' vs.\ Physicists' Integrals}
+\subsubsection{AO-to-MO Transformation}
+\subsubsection{Spin-Orbital Construction}
+\subsubsection{Notation Convention: Chemists' vs.\ Physicists' Integrals}
 
-\section{Initial Active Space Selection}
+\subsection{Initial Active Space Selection}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 4.3]
 %   "Before the OVOS iteration begins, an initial set of $N'$ active
@@ -185,7 +187,7 @@ Below we provide a detailed description of each step in the algorithm.
 %    correlation energy are computed as described in the following section."
 % ---------------------------------------------------------------
 
-\section{MP1 Amplitudes and MP2 Energy}
+\subsection{MP1 Amplitudes and MP2 Energy}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 4.4]
 %   "At each iteration, the first-order MP (MP1) amplitudes are
@@ -212,7 +214,7 @@ Below we provide a detailed description of each step in the algorithm.
 %    in the following section."
 % ---------------------------------------------------------------
 
-\section{Gradient and Hessian Assembly}
+\subsection{Gradient and Hessian Assembly}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 4.5]
 %   "The gradient vector $\mathbf{G}$ and Hessian matrix $\mathbf{H}$
@@ -239,10 +241,10 @@ Below we provide a detailed description of each step in the algorithm.
 %    rotation step is computed and applied to the MO coefficients,
 %    as described in the following section."
 % ---------------------------------------------------------------
-\subsection{Block Structure and Efficient Inversion}
-\subsection{Level-Shift Stabilisation}
+\subsubsection{Block Structure and Efficient Inversion}
+\subsubsection{Level-Shift Stabilisation}
 
-\section{Orbital Rotation and Update}
+\subsection{Orbital Rotation and Update}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 4.6]
 %   "The Newton-Raphson step $\Delta\mathbf{R} = -\mathbf{H}^{-1}\mathbf{G}$
@@ -266,7 +268,7 @@ Below we provide a detailed description of each step in the algorithm.
 %    following section."
 % ---------------------------------------------------------------
 
-\section{Convergence and Iteration Control}
+\subsection{Convergence and Iteration Control}
 % ---------------------------------------------------------------
 % [SECTION INTRO – 4.7]
 %   "The OVOS iteration terminates when the MP2 correlation energy

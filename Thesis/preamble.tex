@@ -11,6 +11,10 @@
 \usepackage{lmodern}          % Better Computer Modern
 \usepackage{microtype}        % Microtypographic improvements
 
+% ---- DYSLEXIA-FRIENDLY SANS-SERIF -------------------------
+\usepackage{tgheros}          % TeXGyre Heros (Helvetica clone, sans-serif)
+\renewcommand{\familydefault}{\sfdefault}  % Use sans-serif as default font
+
 % ---- Page geometry ----------------------------------------
 \usepackage[
   a4paper,
@@ -34,6 +38,17 @@
 \usepackage{bm}               % Bold math \bm{}
 \usepackage{physics}          % Dirac notation \bra{}, \ket{}, \braket{}
 \usepackage{siunitx}          % SI units
+
+
+% ---- MATH FONT: Keep serif for equations ----
+\DeclareMathVersion{sans}
+\SetSymbolFont{operators}{sans}{OT1}{lmr}{m}{n}
+\SetSymbolFont{letters}{sans}{OML}{lmm}{m}{it}
+\SetSymbolFont{symbols}{sans}{OMS}{lmsy}{m}{n}
+\SetMathAlphabet{\mathbf}{sans}{OT1}{lmr}{bx}{n}
+\SetMathAlphabet{\mathsf}{sans}{OT1}{lmss}{m}{n}
+\SetMathAlphabet{\mathit}{sans}{OT1}{lmr}{m}{it}
+\SetMathAlphabet{\mathtt}{sans}{OT1}{lmtt}{m}{n}
 
 % ---- Code snippets ----------------------------------------
 \newcommand{\code}[1]{\lstinline[language=Python]|#1|}
