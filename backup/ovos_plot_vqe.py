@@ -850,7 +850,7 @@ def gather_and_print_vqe_final_energy_spread(molecule, basis, method, dist, num_
         print(f"No final energies found for {method} at dist {dist} to calculate spread.")
 
 
-if True:
+if False:
     # Plot the OO True but prev False ie 5 Random...
     for molecule in ["Li2", "HF", "H2O"]:
         # molecule = "Li2"
@@ -920,7 +920,7 @@ if True:
             plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, True, False, oo)
             plot_vqe_curve_results(molecule, basis, dist_list_save, num_opt_virtual_orbitals, False, False, oo)
         
-if True:
+if False:
     # Need to plot the VQE curve for one seed = "True", and both oo = True and False...
         # So we can see the difference in using prev. final thetas and keep trying to find best from random...
     
@@ -960,6 +960,43 @@ if True:
             # plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals, plot_init, plot_prev, oo):    
             plot_vqe_curve_results(molecule, basis, dist_list, [num_opt_virtual_orbital], True, True, oo)
             plot_vqe_curve_results(molecule, basis, dist_list, [num_opt_virtual_orbital], False, True, oo)
+
+
+
+
+
+
+def plot_vqe_curve_results_best_points(molecule, basis, dist_list, num_opt_virtual_orbitals, plot_init):
+        # I need to plot like plot_vqe_curve_results but the best point for each combo of oo and prev
+        # and also the number of iterations to convergence for each method and dist at the initial energy point
+
+
+
+
+
+
+
+
+if True:
+    # I need to plot like plot_vqe_curve_results but the best point for each combo of oo and prev
+        # and also the number of iterations to convergence for each method and dist at the initial energy point
+
+
+    # Need to write a new function that adapts from plot_vqe_curve_results...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

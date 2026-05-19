@@ -24,4 +24,5 @@ branch/
 
 # Large PDF files
 Thesis/articles/*.pdf
+Thesis/build/*.pdf
 
