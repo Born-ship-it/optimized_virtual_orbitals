@@ -637,7 +637,7 @@ class OVOS:
     # -------------------------------------------------------------------------
     # Block-diagonal RLE approximation and regularization
     # -------------------------------------------------------------------------
-    def _apply_block_diagonal_rle(self, H: np.ndarray, apply_regularization: bool = True) -> np.ndarray:
+    def _apply_block_diagonal_rle(self, H: np.ndarray) -> np.ndarray:
         """
         Apply block-diagonal RLE (Reduced Linear Equation) approximation to the Hessian.
         
@@ -651,9 +651,6 @@ class OVOS:
         ----------
         H : np.ndarray
             Full Hessian matrix, shape (nvir_act * ninact, nvir_act * ninact)
-        apply_regularization : bool, optional
-            If True, regularize ill-conditioned blocks to ensure invertibility.
-            Default: True
         
         Returns
         -------
@@ -691,9 +688,6 @@ class OVOS:
             
             block_eigvals.append((e_idx, min_eig, max_eig_abs, cond_H))
 
-            # Inverse block
-            # H_block = np.linalg.inv(H_block_orig) if H_block_orig.size > 0 else np.zeros_like(H_block_orig)
-            
             H_block_diag[start:end, start:end] = H_block
         
         # Store diagnostics for optional inspection
@@ -740,8 +734,7 @@ class OVOS:
 
         # ===== APPLY BLOCK-DIAGONAL RLE APPROXIMATION =====
         # Use block-diagonal approximation for better conditioning
-            # Returns the inversed block-diagonal matrix
-        H_block = self._apply_block_diagonal_rle(H, apply_regularization=False)
+        H_block = self._apply_block_diagonal_rle(H)
         
         cond_H_orig = np.linalg.cond(H) if H.size > 0 else np.inf
         cond_H_block = np.linalg.cond(H_block) if H_block.size > 0 else np.inf
@@ -750,46 +743,18 @@ class OVOS:
         n_neg_orig = np.sum(eigvals_orig < -1e-10)
         n_neg_block = np.sum(eigvals_block < -1e-10)
 
-        # if self.verbose:
-        #     self._print(f"        [RLE] Cond(H): {cond_H_orig:.2e} → {cond_H_block:.2e}, "
-        #                f"Neg eigvals: {n_neg_orig} → {n_neg_block}")
+        if self.verbose:
+            self._print(f"        [RLE] Cond(H): {cond_H_orig:.2e} → {cond_H_block:.2e}, "
+                       f"Neg eigvals: {n_neg_orig} → {n_neg_block}")
         
         H = H_block
         
-        # Track oscillation history
-        if not hasattr(self, '_grad_norm_history'):
-            self._grad_norm_history = []
-        if not hasattr(self, '_damping_boost'):
-            self._damping_boost = 1.0
-
         self._grad_norm_history.append(grad_norm)
         if len(self._grad_norm_history) > 20:
             self._grad_norm_history.pop(0)
 
-        # ===== ADAPTIVE DAMPING BASED ON GRADIENT NORM =====
-        try: 
-            # Pure Newton 
-            R = np.linalg.solve(H, -g_vec)
-            # R = H @ (-g_vec)
-            step_norm = np.linalg.norm(R)
-
-        except np.linalg.LinAlgError:
-            # Fallback: add damping
-            self._print(f"        [RLE] Hessian solve failed at iteration {iteration}. Applying damping.")
-            lambda_lm = self.lambda_init
-            for attempt in range(10):
-                try:
-                    H_reg = H_block + lambda_lm * np.eye(dim)
-                    R = np.linalg.solve(H_reg, -g_vec)
-                    # R = H_reg @ (-g_vec)
-                    step_norm = np.linalg.norm(R)
-                    break
-                except np.linalg.LinAlgError:
-                    lambda_lm *= 10.0
-            else:
-                # Ultimate fallback
-                scale = self.trust_radius / (grad_norm + 1e-14)
-                return -scale * g_vec
+        # Pure Newton 
+        R = np.linalg.solve(H, -g_vec)
 
         return R
                 

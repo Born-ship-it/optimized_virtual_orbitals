@@ -332,32 +332,31 @@ The choice of basis set determines the size of the virtual orbital space and hen
 %    all results are described in the following section."
 % ---------------------------------------------------------------
 
-For all calculations, the molecule is initialized using PySCF with \code{gto.Mole()} and the Hartree-Fock reference is computed as \code{mf} (see Section~\ref{sec:ref_scf}). This section specifies all hyperparameters of the OVOS calculation, ensuring reproducibility.
+Running OVOS concerns two main steps: the \code{OVOS} object and the \code{OVOS.run()} method. The \code{OVOS} object is initialized with arguments that specify the molecule, the SCF object, the Fock matrix in the AO basis, the number of active virtual spin-orbitals to optimize, the initial MO coefficients from SCF, the type of initial orbitals (RHF or UHF), verbosity level, maximum number of iterations, energy and gradient convergence thresholds, and the number of iterations to keep track of for consistent convergence checks. The initialization is shown in Code~\ref{lst:ovos_init}.
 
-Equal for all OVOS calculations, the orbital optimization parameters are specified, such that \code{num\_opt\_virtual\_orbs} specifies the number of active virtual spin-orbitals to optimize, \code{mo\_coeff} sets the orbital coefficients, and \code{init\_orbs} selects the initial orbital type (RHF or UHF).
+\begin{lstlisting}[style=python, caption={OVOS Object}, label=lst:ovos_init]
+ovos = OVOS(
+    mol=mol,
+    scf="scf",          
+    Fao="Fock matrix in AO basis", 
+    num_opt_virtual_orbs="number of active virtual spin-orbitals to optimize",  
+    mo_coeff="initial MO coefficients from SCF",   
+    init_orbs="RHF",         
+    verbose="verbosity level (0, 1)",
+    max_iter="maximum number of iterations",
+    conv_energy="energy convergence threshold (e.g., 1e-8)",
+    conv_grad="gradient convergence threshold (e.g., 1e-4)",
+    keep_track_max="maximum number of iterations to keep track of"
+)
+\end{lstlisting}
 
-Convergence is monitored via two criteria: a change in correlation energy $|\Delta E_{\rm corr}| < 10^{-8}$\,Hartree and a change in gradient norm $|\Delta G_{\rm corr}| < 10^{-6}$\,Hartree. Optimization proceeds for a maximum of 1000 iterations. Once convergence is achieved, consistent convergence is verified over \code{keep\_track\_max}~$= 50$ consecutive iterations to ensure stability.
+The \code{OVOS.run()} method is then called to execute the orbital optimisation, as shown in Code~\ref{lst:run_init}. This method takes the initial MO coefficients and an optional spin-specific Fock matrix as arguments.
 
+\begin{lstlisting}[style=python, caption={OVOS.run()}, label=lst:run_init]
+ovos.run("initial MO coefficients from SCF", fock_spin="optional Fock matrix for spin-specific calculations")
+\end{lstlisting}
 
-%\textcolor{KURed}{NEED TO CLEAN UP CODE PARAMETERS AND CODE IN ovos.py}
-
-
-% Refer to vode in appendix...
-    % Create OVOS object and run
-% ovos = OVOS(
-%     mol=mol,
-%     scf=mf,
-%     Fao=Fao,
-%     num_opt_virtual_orbs=2,      # active virtual spin‑orbitals
-%     mo_coeff=mo_coeffs,
-%     init_orbs="RHF",
-%     verbose=1,
-%     max_iter=1000,
-%     conv_energy=1e-8,
-%     conv_grad=1e-6,
-%     keep_track_max=50
-% )
-% E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
+For initialisation strategies see Section~\ref{sec:init_strategies}. 
 
 \section{VQE Calculation Settings}
 \label{sec:calc_set_vqe}
@@ -365,9 +364,28 @@ Convergence is monitored via two criteria: a change in correlation energy $|\Del
 % [SECTION INTRO – 5.7]
 %  "This section seek to specify the VQE claculations..."
 
-All VQE calculations were performed using the SlowQuant branch of the Unrestricted VQE codebase \cite{Kjellgren2026}. The same molecular geometries and basis sets as described in Sections~\ref{sec:geometries} and \ref{sec:basis} were used for all VQE calculations, ensuring a direct comparison with OVOS results. The VQE calculations were executed on the same hardware environment as the OVOS calculations.
+All VQE calculations were performed using the SlowQuant branch of the Unrestricted VQE codebase \cite{Kjellgren2026}, coded up by Pernille Volsgaard Christensen Ph D. student at Sauer Group UCPH. The VQE wave function is defined as an unrestricted wave function with the specific ansatz, here we use Tiled unitary product states (tUPS) with 1 layer, and no active kappa parameters. We change the number of electrons, the active space, the MO coefficients, and the integrals for each molecule/basis set combination, but keep the ansatz and hyperparameters fixed across all calculations. The specific implementation of the wave function is shown in Code~\ref{lst:vqe_wf}.
 
-"Detail ansatz used, number of parameters, optimisation method, convergence criteria, etc."
+\begin{lstlisting}[style=python, caption={VQE Wave Function}, label=lst:vqe_wf]
+UnrestrictedWaveFunctionUPS(
+        num_electrons,
+        active_space,
+        mo_coeff_list,
+        h_core_array,
+        g_eri_array,
+        "utups",
+        {"n_layers": 1},
+        include_active_kappa=False,
+    )
+\end{lstlisting}
 
-"Give a flowchart of the VQE calculation steps, from Hamiltonian construction to energy evaluation and parameter update."
+We then run the optimisation using the BFGS algorithm, with orbital optimisation either enabled or disabled, and the same energy convergence threshold as OVOS (10\textsuperscript{-8} Hartree). The specific implementation of the VQE run is shown in Code~\ref{lst:run_vqe}.
+
+\begin{lstlisting}[style=python, caption={Running VQE}, label=lst:run_vqe]
+run_ucc_and_get_stats("WaveFunction", "BFGS", "orbital optimisation", atol)
+\end{lstlisting}
+
+In results, we run VQE for different settings to better clarify these combinations of orbital optimisation and initialisation strategies, see Flowchart~\ref{fig:vqe_flowchart}.
+
+% "Give a flowchart of the VQE calculation steps, from Hamiltonian construction to energy evaluation and parameter update."
 

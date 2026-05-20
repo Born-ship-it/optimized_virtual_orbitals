@@ -461,14 +461,14 @@ E_{corr}^{(2)} &= \frac{1}{4} \sum_{i,j,a,b} t_{ij}^{ab} \langle ij \| ab \rangl
 &= \sum_{i>j,a>b} t_{ij}^{ab} \langle ij \| ab \rangle \label{eq:mp2_full_b}
 \end{align}
 \end{subequations}
-where $i,j$ denotes occupied orbitals and virtual orbitals denoted by $a,b$ \cite{Helgaker2000}. In practice, the summation can be restricted to $i > j$ and $a > b$ avoiding double counting, we drop the $1/4$ factor from \ref{eq:mp2_full_a}, leading to \ref{eq:mp2_full_b}. It is critical to make clear that both of these expressions sum over the entire orbital space, occupied and virtual, the full MP2 energy. In Section \ref{subsec:2nd_hylleraas}, we will build up \ref{eq:mp2_full_b} with truncating the MP2 energy used in OVOS, a constricted orbital space, reducing computational cost while retaining most correlation energy.
+where $i,j$ denotes occupied orbitals and virtual orbitals denoted by $a,b$ \cite{Helgaker2000}. In practice, the summation can be restricted to $i > j$ and $a > b$ avoiding double counting, we drop the $1/4$ factor from \ref{eq:mp2_full_a}, leading to \ref{eq:mp2_full_b}. It is critical to make clear that both of these expressions sum over the entire orbital space the full, occupied and virtual, MP2 energy. In Section \ref{subsec:2nd_hylleraas}, we will build \ref{eq:mp2_full_b} with a truncated virtual orbital space, the MP2 energy used in OVOS, reducing computational cost while retaining most correlation energy. In the code implementation in Chapter~\ref{ch:method}, we use the restricted summation convention of \ref{eq:mp2_full_b} to avoid double counting and ensure consistency with the amplitude definitions. 
 
 
 \subsubsection{Lower-Order Amplitudes}
 
-In MP2, the MP1 amplitudes correspond to double electron excitations (T2 amplitudes), defined in Equation \ref{eq:mp1_amps}. The single excitations, the T1 amplitudes, do not appear in the MP2 energy expression due to Brillouin's theorem, which states that the matrix elements of the Hamiltonian between the Hartree-Fock determinant and singly-excited determinants vanish \cite{Helgaker2000}. The presence of non-zero T1 amplitudes is an indicator that the reference determinant is not optimal, it suggests that the orbitals can be rotated to lower the energy \cite{Lee2018, Handy1989}. 
+In MP2, the MP1 amplitudes correspond to double electron excitations (T2 amplitudes), defined in Equation \ref{eq:mp1_amps}. The single excitations (S), the T1 amplitudes, do not appear in the MP2 energy expression due to Brillouin's theorem, which states that the matrix elements of the Hamiltonian between the Hartree-Fock determinant and singly-excited determinants vanish \cite{Helgaker2000}. The presence of non-zero T1 amplitudes is an indicator that the reference determinant is not optimal, it suggests that the orbitals can be rotated to lower the energy \cite{Lee2018, Handy1989}.
 
-T1, T2 excitations in methods are commonly referred to as Single-Double (SD) methods, e.g. Coupled Cluster SD (CCSD). Here, the stationarity condition $\nabla_R E(R) = 0$ defines optimal orbitals, which are formalized in quantum chemistry as Brueckner orbitals (named after Brueckner's self-consistency principle) where the T1 amplitudes vanish \cite{Brueckner1954}. This connection between orbital optimization and the nature of the excitation amplitudes is a key motivation for developing methods like OVOS that seek to optimize the virtual orbital space to minimize correlation energy, effectively minimizing the T1 amplitudes \cite{Adamowicz1987}.
+Including the T2 excitations, T1 and T2 excitations, in addition to the HF state, are commonly referred to as Single-Double (SD) space in regards to methods, e.g. Coupled Cluster SD (CCSD) \cite{Helgaker2000}. Here, the stationarity condition $\nabla_R E(R) = 0$ defines optimal orbitals, which are formalized in quantum chemistry as Brueckner orbitals (named after Brueckner's self-consistency principle) where the T1 amplitudes vanish \cite{Brueckner1954}. This connection between orbital optimization and the nature of the excitation amplitudes is a key motivation for developing methods like OVOS that seek to optimize the virtual orbital space to minimize correlation energy, effectively minimizing the T1 amplitudes \cite{Adamowicz1987}.
 
 \subsubsection{MP2 Limitations and Applicability}
 
@@ -477,6 +477,8 @@ MP2 is size-consistent \cite{Helgaker2000}, meaning that the correlation energy 
 \subsubsection{Computational Scaling Motivation}
 
 The $\mathcal{O}(O^2V^2)$ computational scaling of MP2 presents a significant barrier for large systems and higher-order methods \cite{Jensen2017, Cao2019}. The Optimized Virtual Orbital Space (OVOS) method, detailed in Chapter~\ref{ch:theory}, applies a strategic solution: by restricting the correlation energy calculation to a small, actively-correlated subset of virtual orbitals, the effective scaling can be reduced to $\mathcal{O}(N_{occ}^2 {N'_{virt}}^2)$ or better, where $N'_{virt} \ll N_{virt}$ \cite{Adamowicz1987}. This active space reduction is particularly powerful when combined with higher-order methods like CCSD(T), which scale as $\mathcal{O}(O^3V^4)$ or worse in the full space. For which $V$ reflects the size of the virtual space, and reducing $V$ to $N'_{virt}$ can make previously intractable calculations feasible while retaining much of the correlation energy. This is a key motivation for the development of OVOS and its application to larger systems and more accurate methods.
+
+
 
 
 
@@ -813,6 +815,9 @@ The final expression for $J_{ij}^{(2)}$ is then:
     J_{ij}^{(2)} = \sum_{a>b,c>d} t_{ij}^{ab} t_{ij}^{cd} (f_{ac}\delta_{bd} - f_{ad}\delta_{bc} + f_{bd}\delta_{ac} - f_{bc}\delta_{ad} - (\epsilon_i + \epsilon_j)(\delta_{ac}\delta_{bd} - \delta_{ad}\delta_{bc})) + 2\sum_{a>b} t_{ij}^{ab} \langle ij\|ab\rangle
 \end{equation}
 
+
+As such we derived the explicit form of the second-order Hylleraas functional $J_2$ in terms of the MP2 amplitudes $t_{ij}^{ab}$, the Fock matrix elements $f_{pq}$, and the antisymmetrised two-electron integrals $\langle ij\|ab\rangle$. This functional serves as the target for orbital optimization in OVOS, where the active virtual orbitals are rotated to minimize $J_2$.
+
 % [EVALUATION COMMENT – BROKEN NARRATIVE]
 % ISSUE: Conclusion is commented out, breaking continuity before Section 3.2 (Energy Functionals).
 % DECISION NEEDED:
@@ -916,7 +921,7 @@ we can express an active orbital after rotation as:
 \begin{equation}
     \phi'_a = \phi_a + \sum_e R_{ea}\phi_e - \frac{1}{2}\sum_{b,e} R_{ea}R_{eb}\phi_b + \ldots
 \end{equation}
-where the original active orbital is mixed with the inactive orbitals via the first-order term, and the second-order term accounts for the fact that the new active orbital is no longer orthogonal to the original active orbitals. These terms are redunctant in the face of applying the full matrix exponential instead, as it handles all terms, the expansion allows for a tractable expression for the gradient and Hessian of $J_2$ with respect to the rotation parameters, which are derived in the following sections.
+where the original active orbital is mixed with the inactive orbitals via the first-order term, and the second-order term accounts for the fact that the new active orbital is no longer orthogonal to the original active orbitals. These terms are redundant in the face of applying the full matrix exponential instead, as it handles all terms, the expansion allows for a tractable expression for the gradient and Hessian of $J_2$ with respect to the rotation parameters, which are derived in the following sections.
 
 
 
@@ -1012,7 +1017,7 @@ for which we have substituted the definition of the density matrix $D_{ab}$ and 
 
 \subsubsection{The Stationarity Principle}
 
- Optimal orbitals is reffered by the stationarity condition, the gradient goes to zero: $\nabla_R E(R) \rightarrow 0$. This condition implies that the energy is at a local extremum with respect to orbital rotations. The stationary point can correspond to a local minimum, maximum, or saddle point in the energy landscape, by examining the second derivative (Hessian) at the stationary point, we can determine the nature of the extremum, for such we derive the Hessian matrix in the following. % The connection between this stationarity principle and specific types of optimal orbitals, such as OO-MP2 and Brueckner orbitals, arises from the particular form of the energy functional being optimized \cite{Lee2018, Handy1989}. 
+ Optimal orbitals are referred by the stationarity condition that the gradient goes to zero: $\nabla_R E(R) \rightarrow 0$. This condition implies that the energy is at a local extremum with respect to orbital rotations. The stationary point can correspond to a local minimum, maximum, or saddle point in the energy landscape, by examining the second derivative (Hessian) at the stationary point, we can determine the nature of the extremum, for such we derive the Hessian matrix in the following. % The connection between this stationarity principle and specific types of optimal orbitals, such as OO-MP2 and Brueckner orbitals, arises from the particular form of the energy functional being optimized \cite{Lee2018, Handy1989}. 
 
 
 \subsection{Hessian Expression}
@@ -1296,7 +1301,8 @@ such that two orbitals $a,b$ would rotate to the same orbital. This translate to
 
 \subsubsection{Negative Eigenvalues and Level-Shift Stabilisation}
 
-As the Hessian expresses the curvature of the energy landscape, it may become indefinite (i.e., have negative eigenvalues) near saddle points or in cases with small virtual orbital energy gaps. This can lead to divergence or oscillations in the Newton-Raphson optimization. To address this, a level-shift strategy can be employed: if any diagonal block of the Hessian has negative eigenvalues, a positive shift $\lambda$ is added to the diagonal elements, effectively replacing $\mathbf{H}$ with $\mathbf{H} + \lambda\mathbf{I}$. The choice of $\lambda$ can be empirical or based on a dynamic threshold related to the smallest eigenvalue. This ensures that the modified Hessian is positive-definite, allowing for stable convergence towards a local minimum. Adamowicz \& Bartlett does not discuss this strategy. It is observed that the block approximation does get rid of most negative eigenvalues, but some may still remain, which may be in cases with small virtual gaps $\epsilon_a - \epsilon_i$ from basis sets with diffuse functions. The implementation of OVOS omits the level-shift strategy, but it is a potential avenue for future improvement to ensure robust convergence.
+As the Hessian expresses the curvature of the energy landscape, it may become indefinite (i.e., have negative eigenvalues) near saddle points or in cases with small virtual orbital energy gaps. This can lead to divergence or oscillations in the Newton-Raphson optimization, see next section. To address this, a level-shift strategy can be employed: if any diagonal block of the Hessian has negative eigenvalues, a positive shift $\lambda$ is added to the diagonal elements, effectively replacing $\mathbf{H}$ with $\mathbf{H} + \lambda\mathbf{I}$. The choice of $\lambda$ can be empirical or based on a dynamic threshold related to the smallest eigenvalue. This ensures that the modified Hessian is positive-definite, allowing for stable convergence towards a local minimum. Adamowicz \& Bartlett does not discuss this strategy. It is observed that the block approximation does get rid of most negative eigenvalues, but some may still remain, which may be in cases with small virtual gaps $\epsilon_a - \epsilon_i$ from basis sets with diffuse functions. The implementation of OVOS omits the level-shift strategy, but it is a potential avenue for future improvement to ensure robust convergence.
+
 
 
 \subsection{Newton-Raphson}
@@ -1338,7 +1344,7 @@ which is equivalent to:
 \end{equation}
 where $\mathbf{G}$ is the gradient vector and $\mathbf{H}$ is the Hessian matrix. The NR method has a quadratic convergence rate near the optimum, meaning that the error decreases quadratically with each iteration. In other words, if the current solution is close to the optimal orbitals, the next iteration will be significantly closer, leading to rapid convergence. However, if the energy landscape is flat or has multiple minima, convergence can be slow or may require damping of the update step. The block-diagonal structure of the Hessian allows for efficient inversion, as each block can be treated independently, which is equivalent to solving a reduced linear equation in each inactive-orbital block. To ensure numerical stability, especially in cases where the Hessian may have negative eigenvalues, a level-shift strategy can be applied, as discussed in the previous section. 
 
-The convergence criterion for the NR iterations is typically defined as $|J_2{(n)} - J_2{(n-1)}| < 10^{-8}$, indicating that the change in the Hylleraas functional between iterations is sufficiently small to consider the solution converged. Futher supplementing with the stationarity condition $\nabla_R E(R) < 10^{-8}$ ensures that the orbitals are at a local extremum of the energy landscape, which is the defining characteristic of optimal orbitals in this context. 
+The convergence criterion for the NR iterations is typically defined as $|J_2{(n)} - J_2{(n-1)}| < 10^{-8}$, indicating that the change in the Hylleraas functional between iterations is sufficiently small to consider the solution converged. Futher supplementing with the stationarity condition $\nabla_R E(R) < 10^{-8}$ ensures that the orbitals are at a local extremum of the energy landscape, which is the defining characteristic of optimal orbitals in this context.  
 % At convergence, when $\nabla_R E(R) = 0$, the stationarity condition becomes equivalent to the Brueckner condition $t_i^a = 0$ for all occupied-virtual pairs (i,a) \cite{Handy1989, Lee2018}. This fundamental connection shows that Brueckner orbitals are simply the stationary point of the orbital optimization for a chosen energy functional. The Brueckner orbitals are discussed in the following section.
 
 % \section{Generating the Unitary Rotation Matrix}
@@ -1623,6 +1629,57 @@ Despite a speedup seeming good, it would come at a cost of recovered correlation
 % ---------------------------------------------------------------
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Relevance to Quantum Computing}
 \label{sec:theory_relevance_qc}
 
@@ -1718,6 +1775,23 @@ While OVOS does not enforce stationarity with respect to occupied-virtual rotati
 % \subsection{Expected Reduction of T1 Amplitudes}
 
 % ---------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

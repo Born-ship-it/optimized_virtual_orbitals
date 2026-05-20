@@ -966,12 +966,329 @@ if False:
 
 
 
-def plot_vqe_curve_results_best_points(molecule, basis, dist_list, num_opt_virtual_orbitals, plot_init):
+def plot_vqe_curve_results_best_points(molecule, basis, dist_list, num_opt_virtual_orbitals, plot_init, oo):
         # I need to plot like plot_vqe_curve_results but the best point for each combo of oo and prev
         # and also the number of iterations to convergence for each method and dist at the initial energy point
 
+        # Make sure num_opt_virtual_orbitals is at least a list of one element, which is the number of optimal virtual orbitals for the OVOS method, and we can use it to get the dist_list for the correct number of optimal virtual orbitals
+    if not isinstance(num_opt_virtual_orbitals, list):
+        num_opt_virtual_orbitals = [num_opt_virtual_orbitals]
+    
+
+    methods = ["OVOS", "UHF", "UMP2"]
+    method_labels = {"OVOS": "OVOS", "UHF": "UHF", "UMP2": "UMP2"}
+    colors = {'OVOS': 'blue', 'UHF': 'purple', 'UMP2': 'green'}
+    marker = {'OVOS':'D', 'UHF': 'X', 'UMP2': 'P'}
+
+    oo_prev_combos = {f"{oo}_False": [], f"{oo}_True": []}
+
+    for plot_prev in [False, True]:
+
+        # Skip True_False for all except HF
+        if plot_prev == False and oo == True and molecule in ["Li2", "H2O"]:
+            print(f"\n Skipping combination of plot_prev = {plot_prev} and oo = {oo} for molecule {molecule} since I have not run it yet...")
+            continue
+        else:
+            print(f"\n Processing combination of plot_prev = {plot_prev} and oo = {oo} for molecule {molecule}...")
+
+        # Convert dist_list strings to floats for proper numeric plotting
+        # print(dist_list, dist_list_)
+        # if type(dist_list) is list:
+        # if plot_prev == False:
+        #     dist_list_ = dist_list_[0]
+        dist_list_float = [float(d) for d in dist_list]
+        dist_list = [dist_list_float]
+        # print(dist_list)
+        
+        # Collect data organized by method
+        data_by_method = {method: {'distances': [], 'energies': [], 'initial energies': [], 'iterations': [], 'UHF reference': [], 'RHF reference': [], 'nuclear repulsion': []} for method in methods}
+        
+        # Collect if the MOs are restricted or unrestricted for each dist and method, and print it out
+        mo_type_by_method_and_dist = {method: {} for method in methods}
+
+        dist_list = dist_list[0]
+        # print(f"\nDist list for plotting: {dist_list} for num_opt_virtual_orbitals: {num_opt_virtual_orbitals}")
+
+        for dist in dist_list:
+            num_opt_virtual_orbital = num_opt_virtual_orbitals[-1]
+            
+            if plot_prev == True:
+                file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbital}_{oo}_True.json"
+            else:
+                file_name = f"backup/data/{molecule}/{basis}/VQE/dist/{dist}/VQE_{molecule}_6-31G_{dist}_results_{num_opt_virtual_orbital}_{oo}_False.json"
+            
+            try:
+                with open(file_name, 'r') as f:
+                    data = json.load(f)
+                
+                for method in methods:
+                    if method in data:
+                        initial_energy, final_energy = data[method][0], data[method][1]
+                        data_by_method[method]['distances'].append(float(dist))
+                        data_by_method[method]['energies'].append(final_energy)
+                        data_by_method[method]['initial energies'].append(initial_energy)
+                        data_by_method[method]['iterations'].append(data[method][2])  # Save the number of iterations for this method and dist
+                        mo_type_by_method_and_dist[method][dist] = data[method][3]  # Save the MO type for this method and dist
+                        # print(f"Data for method {method} at dist {dist}: initial energy = {initial_energy}, final energy = {final_energy}")
+                    else:
+                        print(f"Warning: Method {method} not found in data for dist {dist}")
+            except FileNotFoundError:
+                print(f"(1) Warning: File not found {file_name}")
+                continue
+
+            file_name_uhf_ref = f"backup/data/{molecule}/6-31G/VQE/UHF/{dist}/UHF_{molecule}_6-31G_{dist}_reference_energy.txt"
+            try:
+                with open(file_name_uhf_ref, 'r') as f:
+                    uhf_reference_energy = float(f.read().strip())
+                    data_by_method['UHF']['UHF reference'].append(uhf_reference_energy)
+            except FileNotFoundError:
+                print(f"Warning: UHF reference energy file not found {file_name_uhf_ref}")
+                data_by_method['UHF']['UHF reference'].append(None)  # Append None if reference energy is missing
+        
+            file_name_rhf_ref = f"backup/data/{molecule}/6-31G/VQE/UHF/{dist}/RHF_{molecule}_6-31G_{dist}_reference_energy.txt"
+            try:
+                with open(file_name_rhf_ref, 'r') as f:
+                    rhf_reference_energy = float(f.read().strip())
+                    data_by_method['UHF']['RHF reference'].append(rhf_reference_energy)
+            except FileNotFoundError:
+                print(f"Warning: RHF reference energy file not found {file_name_rhf_ref}")
+                data_by_method['UHF']['RHF reference'].append(None)  # Append None if reference energy is missing
+
+            file_name_nuclear_repulsion = f"backup/data/{molecule}/6-31G/VQE/UHF/{dist}/nuclear_repulsion_{molecule}_6-31G_{dist}_energy.txt"
+            try:
+                with open(file_name_nuclear_repulsion, 'r') as f:
+                    nuclear_repulsion_energy = float(f.read().strip())
+                    data_by_method['UHF']['nuclear repulsion'].append(nuclear_repulsion_energy)
+            except FileNotFoundError:
+                print(f"Warning: Nuclear repulsion energy file not found {file_name_nuclear_repulsion}")
+                data_by_method['UHF']['nuclear repulsion'].append(None)  # Append None if nuclear repulsion energy is missing
+
+        # Redo the data collection for plotting to ensure it's sorted by distance and includes the nuclear repulsion energy in the final energies
+        data_by_method_for_plotting = {method: {'distances': [], "final_energies": [], "rhf_ref_energies": []} for method in methods}
+        for method in methods:
+            distances = data_by_method[method]['distances']
+            energies = data_by_method[method]['energies']
+            init_energies = data_by_method[method]['initial energies']
+            iterations = data_by_method[method]['iterations']
+            uhf_ref_energies = data_by_method['UHF']['UHF reference']
+            rhf_ref_energies = data_by_method['UHF']['RHF reference']
+            nuclear_repulsion_energy = data_by_method['UHF']['nuclear repulsion']
+
+            # Sort by distance for proper line connection
+            sorted_data = sorted(zip(distances, energies, init_energies, uhf_ref_energies, rhf_ref_energies, nuclear_repulsion_energy, iterations))
+            distances_sorted =          [d[0] for d in sorted_data]
+            energies_sorted =           [e[1] for e in sorted_data]
+            init_energies_sorted =      [e[2] for e in sorted_data]
+            uhf_ref_energies =          [f[3] for f in sorted_data]
+            rhf_ref_energies =          [g[4] for g in sorted_data]
+            nuclear_repulsion_energy =  [n[5] for n in sorted_data]
+            iterations_sorted =         [i[6] for i in sorted_data]
+
+            # Add a invisble point for zero distance if not already present
+            if 0.0 not in distances_sorted and any(d < 0 for d in distances_sorted):
+                print(f"Adding zero distance point for method {method} since negative distances are present but zero is missing.")
+                # Insert after the negative distances and before the positive distances
+                insert_index = next((i for i, d in enumerate(distances_sorted) if d > 0), len(distances_sorted))
+                distances_sorted.insert(insert_index, 0.0)
+                energies_sorted.insert(insert_index, energies_sorted[insert_index])  # Use the energy of the
+                init_energies_sorted.insert(insert_index, init_energies_sorted[insert_index])  # Use the initial energy of the same point
+                uhf_ref_energies.insert(insert_index, uhf_ref_energies[insert_index])  # Use the UHF reference energy of the same point
+                rhf_ref_energies.insert(insert_index, rhf_ref_energies[insert_index])  # Use the RHF reference energy of the same point
+                nuclear_repulsion_energy.insert(insert_index, nuclear_repulsion_energy[insert_index])  # Use the nuclear repulsion energy of the same point
+                iterations_sorted.insert(insert_index, iterations_sorted[insert_index])  # Use the number of iterations of the same point
+            
+            # Add nuclear repulsion energy to the energies_sorted
+            energies_sorted = [e + n if e is not None and n is not None else e for e, n in zip(energies_sorted, nuclear_repulsion_energy)]
+            energies_initial_sorted = [e + n if e is not None and n is not None else e for e, n in zip(init_energies_sorted, nuclear_repulsion_energy)]
+                # Add to energies_method for later 
+            data_by_method_for_plotting[method]['distances'] = distances_sorted
+            data_by_method_for_plotting[method]['initial energies'] = energies_initial_sorted
+            data_by_method_for_plotting[method]['final_energies'] = energies_sorted
+            data_by_method_for_plotting[method]['iterations'] = iterations_sorted
+            data_by_method_for_plotting[method]['rhf_ref_energies'] = rhf_ref_energies
+            data_by_method_for_plotting[method]['UHF reference'] = uhf_ref_energies
+
+        # Save to correct oo_prev_combos
+        combo_key = f"{oo}_{plot_prev}"
+        oo_prev_combos[combo_key] = data_by_method_for_plotting
+
+    # Get the best point at each interatomic distance of the oo/prev combos
+    # For each distance, compare the final energies of the 4 combos and take the lowest one as the best point for that distance, and save it to a new dictionary best_points_by_dist that has the same structure as data_by_method_for_plotting but only includes the best point for each distance
+    best_points_by_dist = {method: {'distances': [], "final_energies": [], "initial energies": [], "iterations": [], 'UHF reference': [], 'rhf_ref_energies': []} for method in methods}
+    for method in methods:
+        for dist in data_by_method_for_plotting[method]['distances']:
+            best_energy = float('inf')
+            best_initial_energy = None
+            best_iterations = None
+            best_uhf_ref_energy = None
+            best_rhf_ref_energy = None
+            for combo_key, combo_data in oo_prev_combos.items():
+                if combo_key == "True_False" and molecule in ["Li2", "H2O"]:
+                    continue
+                if dist in combo_data[method]['distances']:
+                    index = combo_data[method]['distances'].index(dist)
+                    energy = combo_data[method]['final_energies'][index]
+                    if energy is not None and energy < best_energy:
+                        best_energy = energy
+                        best_initial_energy = combo_data[method]['initial energies'][index]
+                        best_iterations = combo_data[method]['iterations'][index]
+                        best_uhf_ref_energy = combo_data[method]['UHF reference'][index]
+                        best_rhf_ref_energy = combo_data[method]['rhf_ref_energies'][index]
+            if best_energy != float('inf'):
+                best_points_by_dist[method]['distances'].append(dist)
+                best_points_by_dist[method]['final_energies'].append(best_energy)
+                best_points_by_dist[method]['initial energies'].append(best_initial_energy)
+                best_points_by_dist[method]['iterations'].append(best_iterations)
+                best_points_by_dist[method]['UHF reference'].append(best_uhf_ref_energy)
+                best_points_by_dist[method]['rhf_ref_energies'].append(best_rhf_ref_energy) 
+
+    # Set the data for plotting to be the best points by dist
+    data_by_method_for_plotting = best_points_by_dist
+
+    # A plot that is just the zoomed in region around the equilibrium bond length (e.g., 0.7 to 1.3 Angstrom)
+    plt.figure(figsize=(12, 7))
+        # Line plot
+    for method in methods:
+        plt.plot(data_by_method_for_plotting[method]['distances'], 
+                data_by_method_for_plotting[method]['final_energies'],
+                color=colors[method],
+                linestyle='-',
+                linewidth = 2)
+
+        # RHF Reference line
+    plt.plot(data_by_method_for_plotting['UHF']['distances'], 
+                data_by_method_for_plotting['UHF']['UHF reference'],
+                label="RHF Reference",
+                color="red",
+                linestyle='--',
+                linewidth=1.5)
+
+        # Point plot
+    for method in methods:
+        if plot_init:
+            if molecule == "Li2":
+                points_to_plot = [0, 5, 10, 15, 20, 25, 30, 35]  # Indices of the points to plot
+            else: # 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9
+                points_to_plot = [0, 8, 16, 24, 32, 40, 48]  # Indices of the points to plot for HF since there are less points
+
+            plt.scatter([data_by_method_for_plotting[method]['distances'][i] for i in points_to_plot], 
+                        [data_by_method_for_plotting[method]['final_energies'][i] for i in points_to_plot],
+                        color=colors[method],
+                        marker=marker[method],
+                        label=f"tUPS {method_labels[method]}")
+        else:
+            plt.scatter(data_by_method_for_plotting[method]['distances'], 
+                        data_by_method_for_plotting[method]['final_energies'],
+                        color=colors[method],
+                        marker=marker[method],
+                        label=f"tUPS {method_labels[method]}")
+
+        # Initial energy points
+    if plot_init:
+        loc_text = ["right", "center", "left"]  # Location of the text for each method, corresponding to the order of methods
+        for method in methods:
+            # Only do the following points [0, 5, 10, ...]
+                # Take the x,y data: data_by_method_for_plotting[method]['distances'], 
+                                # data_by_method_for_plotting[method]['initial energies'],
+            if molecule == "Li2":
+                points_to_plot = [0, 5, 10, 15, 20, 25, 30, 35]  # Indices of the points to plot
+            else: # 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9
+                points_to_plot = [0, 8, 16, 24, 32, 40, 48]  # Indices of the points to plot for HF since there are less points
+
+            data_to_plot_dist = [data_by_method_for_plotting[method]['distances'][i] for i in points_to_plot]
+            data_to_plot_initial = [data_by_method_for_plotting[method]['initial energies'][i] for i in points_to_plot]
+            data_to_plot_iterations = [data_by_method_for_plotting[method]['iterations'][i] for i in points_to_plot]
+            
+            # And seperate each method's point with a little distance s.t. OVOS in the middle on the point and UHF and UMP2 on the left and right of the point respectively, to make it easier to see the points and the text for each method
+            if molecule == "Li2":
+                dist_add_for_method = [-0.1, 0.0, 0.1] 
+            else:
+                dist_add_for_method = [-0.05, 0.0, 0.05]
+
+            if method == "UHF":
+                data_to_plot_dist = [d + dist_add_for_method[0] for d in data_to_plot_dist]
+            elif method == "OVOS":
+                data_to_plot_dist = [d + dist_add_for_method[1] for d in data_to_plot_dist]
+            elif method == "UMP2":
+                data_to_plot_dist = [d + dist_add_for_method[2] for d in data_to_plot_dist]
 
 
+            plt.scatter(data_to_plot_dist,
+                        data_to_plot_initial,
+                        color=colors[method],
+                        marker=marker[method],
+                        alpha=0.5)
+
+                # Text at initial energy points that shows the number of iterations it took to converge to the final energy for each method and dist, and make the text in the same color as the points for each method
+            for i, dist in enumerate(data_to_plot_dist):
+
+                if plot_prev == False:
+                    y_add = 0.01
+                else:
+                    y_add = 0.001
+
+                plt.text(dist, data_to_plot_initial[i]+y_add, f"{data_to_plot_iterations[i]} ", color=colors[method], fontsize=8, ha=loc_text[methods.index(method)], va='bottom')
+
+        # Color intervals over the plot grey and white for every 2.25-2.75, 2.75-3.25, 3.25-3.75, 3.75-4.25, 4.25-4.75, 4.75-5.25, 5.25-5.75, 5.75-6.25 for Li2, and for every 0.9-1.1, 1.1-1.3 for HF
+        if molecule == "Li2":
+            intervals = [2.25, 2.75, 3.25, 3.75, 4.25, 4.75, 5.25, 5.75, 6.25]
+        else:
+            intervals = [0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2]
+        for i in range(len(intervals)-1):
+            if i % 2 == 0:
+                plt.axvspan(intervals[i], intervals[i+1], color='grey', alpha=0.1)
+            else:
+                plt.axvspan(intervals[i], intervals[i+1], color='white', alpha=0.1)
+
+
+    if molecule == "Li2":
+        if plot_init:
+            plt.xlim(2.3, 6.2)     
+        else:
+            plt.xlim(2.5, 6.0)
+        if not plot_init:
+            plt.ylim(-14.885, -14.80) 
+    else: # HF, H2O
+        if plot_init:
+            plt.xlim(0.6, 2.0)
+        else:
+            plt.xlim(0.7, 2.0)
+        plt.xticks(np.arange(0.7, 2.1, 0.2))
+        # plt.ylim(-76,-75.6)
+        # plt.ylim(-100.0, -99.75)  # Adjust y-axis limits to zoom in on the region around the equilibrium bond length
+        # plt.yticks(np.arange(-100.0, -99.8, 0.05))
+    plt.xlabel("Interatomic Distance (Angstrom)", fontsize=14)
+    plt.ylabel("Energy (Hartree)", fontsize=14)
+
+    if oo == True:
+        plt.title(f"Potential Energy Surface for {molecule}/{basis} w. Obital Optimization", fontsize=16)
+    else:
+        plt.title(f"Potential Energy Surface for {molecule}/{basis}", fontsize=16)
+
+    plt.grid(True, alpha=0.3)
+    plt.legend(loc="upper left", fontsize=12)
+    plt.tight_layout()
+
+    # Print the MO type for each method and dist
+    for method in methods:
+        print(f"MO type for method {method}:")
+        # gather list for printing ranges of dist with the same MO type
+        mo_type_ranges = {}
+        for dist, mo_type in mo_type_by_method_and_dist[method].items():
+            if mo_type not in mo_type_ranges:
+                mo_type_ranges[mo_type] = []
+            mo_type_ranges[mo_type].append(float(dist))
+        for mo_type, dist_values in mo_type_ranges.items():
+            dist_values_sorted = sorted(dist_values)
+            print(f"  MO type {mo_type} for distances: {dist_values_sorted[0]} to {dist_values_sorted[-1]} Angstrom")
+
+    # Save the plot
+    if plot_init:
+        output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_best_of_oo_{oo}.png"
+    else:
+        output_path = f"backup/data/{molecule}/{basis}/VQE/VQE_{molecule}_6-31G_best_of_zoom_oo_{oo}.png"
+    plt.savefig(output_path, dpi=300)
+    print(f"Zoomed VQE dist results plot saved to {output_path}")
 
 
 
@@ -983,6 +1300,35 @@ if True:
 
 
     # Need to write a new function that adapts from plot_vqe_curve_results...
+    for molecule in ["Li2", "HF", "H2O"]:
+        basis = "6-31G"
+        method = "OVOS" # Placeholder for getting dist and seed list
+        
+        for oo in [True, False]:
+            print(f"  \n Processing molecule {molecule} with basis {basis} and method {method} with oo {oo}...")
+
+            # Get dist list from the folder
+            dist_list = [1.0] # For getting number of optimal virtual orbitals for this molecule and basis, which is the same for all dists and seeds, we can just use one dist, and we can use the same dist list for all num_opt_virtual_orbitals as well since they should be the same
+            # Get the number of optimal "virtual" orbitals for this molecule and basis, which is the same for all dists and seeds
+            num_opt_virtual_orbital = get_num_opt_virtual_orbitals(molecule, basis, dist_list[0], False)[0]
+            
+            # for num_opt_virtual_orbital in num_opt_virtual_orbitals:
+            dist_list = gather_dist_lst(molecule, basis, method, num_opt_virtual_orbital)
+            print(f"Dist list for {molecule} {basis} method {method} num_opt_virtual_orbital {num_opt_virtual_orbital}: {dist_list}")
+            if molecule == "Li2":
+                dist_list = [dist for dist in dist_list if float(dist) >= 2.5]
+            else:
+                dist_list = [dist for dist in dist_list if float(dist) >= 0.7]
+                
+
+            # print(f"\nFinished gathering VQE results for {molecule} {basis} for all dists and num_opt_virtual_orbitals, now plotting the curves...")    
+            # print(f"Number of optimal virtual orbitals: {num_opt_virtual_orbital}")
+            # print(f"Dist list for plotting: {dist_list}")
+
+            # plot_vqe_curve_results(molecule, basis, dist_list_, num_opt_virtual_orbitals, plot_init, plot_prev, oo):    
+            plot_vqe_curve_results_best_points(molecule, basis, dist_list, [num_opt_virtual_orbital], True, oo)
+            plot_vqe_curve_results_best_points(molecule, basis, dist_list, [num_opt_virtual_orbital], False, oo)
+
 
 
 
@@ -1229,7 +1575,7 @@ def plot_iterations_to_convergence_statistics(molecule, basis, iterations_data_a
     plt.savefig(output_path, dpi=300)
     print(f"VQE iterations to convergence statistics plot saved to {output_path}")
 
-if True:
+if False:
     # Gather data to plot iterations to convergence for 
         # Each: oo True/false and prev True/False, 
         # any trends in the number of iterations to convergence
@@ -1749,7 +2095,7 @@ if False:
         json.dump(data_basis_molecules, f, indent=4)
     print(f"\nReference state overlap data saved to {output_filename}")
 
-if True:
+if False:
     # Get the file and data therefrom
     output_filename = f"backup/data/reference_state_overlaps.json"
     with open(output_filename, 'r') as f:
