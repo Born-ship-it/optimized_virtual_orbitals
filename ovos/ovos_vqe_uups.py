@@ -1002,13 +1002,23 @@ def run_hf_vqe():
             
             # Get reference energies  
             if hf == "UHF":
-                hf_energy = mol.UHF().run().e_tot
+                # UHF reference
+                mf = scf.UHF(mol)
+                mf.verbose = 0
+                mf.kernel()
+                # UMP2 reference
+                hf_energy = mp.UMP2(mf).run().e_tot
             else:
-                hf_energy = mol.RHF().run().e_tot
+                # RHF reference
+                mf = scf.UHF(mol)
+                mf.verbose = 0
+                mf.kernel()
+                # RMP2 reference
+                hf_energy = mf.e_tot
 
             # Save HF reference energy for later comparison
             name_hf = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/{hf}_{molecule}_{basis_lst[0]}_{dist}_reference_energy.txt"
-            if not os.path.exists(name_hf):
+            if True: #not os.path.exists(name_hf):
                 with open(name_hf, "w") as f:
                     f.write(f"{hf_energy:.6f}\n")
                 print(f"HF reference energy for {atom} at dist {dist} saved to {name_hf}.")
@@ -1017,6 +1027,8 @@ def run_hf_vqe():
                 skip_hf_calculation = True
     if skip_hf_calculation == True:
         print(f"HF reference energy file already exists for {molecule}, skipping calculation.")
+
+    assert False, "Stop here, only do reference calculations for now to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations."
 
     # Run the VQE optimizations for HF for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
@@ -1145,35 +1157,36 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
             if not os.path.exists(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}"):
                 os.makedirs(f"backup/data/{atom}/{basis}/VQE/{method}/{dist}")
     
-    # Make the nuclear repulsion energy files for H2O if they don't exist
-    for i, atom_str in enumerate(dist_list_h2o):
-        dist = dist_list_h2o_bond_lengths[i]
-        dist = round(dist, 3)
-        # set up molecule
-        mol = gto.Mole()
-        mol.atom = atom_str
-        mol.basis = basis_lst[0]
-        mol.unit = 'Angstrom'
-        mol.spin = 0
-        mol.charge = 0
-        mol.symmetry = False
-        mol.verbose = 0
-        mol.build()
+    # # Make the nuclear repulsion energy files for H2O if they don't exist
+    # for i, atom_str in enumerate(dist_list_h2o):
+    #     dist = dist_list_h2o_bond_lengths[i]
+    #     dist = round(dist, 3)
+    #     # set up molecule
+    #     mol = gto.Mole()
+    #     mol.atom = atom_str
+    #     mol.basis = basis_lst[0]
+    #     mol.unit = 'Angstrom'
+    #     mol.spin = 0
+    #     mol.charge = 0
+    #     mol.symmetry = False
+    #     mol.verbose = 0
+    #     mol.build()
         
-        # Get nuclear repulsion energy  
-        nuc_rep_energy = mol.energy_nuc()
+    #     # Get nuclear repulsion energy  
+    #     nuc_rep_energy = mol.energy_nuc()
 
-        # Save nuclear repulsion energy for later comparison
-        name_nuc_rep = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/nuclear_repulsion_{molecule}_{basis_lst[0]}_{dist}_energy.txt"
-        if not os.path.exists(name_nuc_rep):
-            with open(name_nuc_rep, "w") as f:
-                f.write(f"{nuc_rep_energy:.6f}\n")
-            print(f"Nuclear repulsion energy for {atom_str} at dist {dist} saved to {name_nuc_rep}.")
-            skip_nuc_rep_calculation = False
-        else:
-            skip_nuc_rep_calculation = True
-    if skip_nuc_rep_calculation == True:       
-        print(f"Nuclear repulsion energy files already exists for {molecule} skipping calculation.")
+    #     # Save nuclear repulsion energy for later comparison
+    #     name_nuc_rep = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/nuclear_repulsion_{molecule}_{basis_lst[0]}_{dist}_energy.txt"
+    #     if True: # not os.path.exists(name_nuc_rep):
+    #         with open(name_nuc_rep, "w") as f:
+    #             f.write(f"{nuc_rep_energy:.6f}\n")
+    #         print(f"Nuclear repulsion energy for {atom_str} at dist {dist} saved to {name_nuc_rep}.")
+    #         skip_nuc_rep_calculation = False
+    #     else:
+    #         skip_nuc_rep_calculation = True
+    # if skip_nuc_rep_calculation == True:       
+    #     print(f"Nuclear repulsion energy files already exists for {molecule} skipping calculation.")
+
 
     # Make the UHF/RHF reference energy files for H2O if they don't exist
     for i, atom_str in enumerate(dist_list_h2o):
@@ -1193,9 +1206,19 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
             
             # Get reference energies  
             if hf == "UHF":
-                hf_energy = mol.UHF().run().e_tot
+                # UHF reference
+                mf = scf.UHF(mol)
+                mf.verbose = 0
+                mf.kernel()
+                # UMP2 reference
+                hf_energy = mp.UMP2(mf).run().e_tot
             else:
-                hf_energy = mol.RHF().run().e_tot
+                # RHF reference
+                mf = scf.UHF(mol)
+                mf.verbose = 0
+                mf.kernel()
+                # RMP2 reference
+                hf_energy = mf.e_tot
 
             # Save HF reference energy for later comparison
             name_hf = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/{hf}_{molecule}_{basis_lst[0]}_{dist}_reference_energy.txt"
@@ -1208,6 +1231,9 @@ def run_h2o_vqe(): # - at: 1.8501... start from here next time
                 skip_hf_calculation = True
     if skip_hf_calculation == True:
         print(f"HF reference energy file already exists for {molecule}, skipping calculation.")
+
+    assert False, "Stop here, only do reference calculations for now to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations."
+
 
     # Run the VQE optimizations for H2O for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
@@ -1583,37 +1609,49 @@ def run_li2_vqe():
     #     print(f"Nuclear repulsion energy files already exists for {molecule} skipping calculation.")
 
     # Make the UHF/RHF reference energy files for Li2 if they don't exist
-    # for dist in dist_list:
-    #     atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
-    #     for hf in ["UHF", "RHF"]:
-    #         # set up molecule
-    #         mol = gto.Mole()
-    #         mol.atom = atom_str
-    #         mol.basis = basis_lst[0]
-    #         mol.unit = 'Angstrom'
-    #         mol.spin = 0
-    #         mol.charge = 0
-    #         mol.symmetry = False
-    #         mol.verbose = 0
-    #         mol.build()
+    for dist in dist_list:
+        atom_str = f"Li 0 0 0; Li 0 0 {dist:.3f}"
+        for hf in ["UHF", "RHF"]:
+            # set up molecule
+            mol = gto.Mole()
+            mol.atom = atom_str
+            mol.basis = basis_lst[0]
+            mol.unit = 'Angstrom'
+            mol.spin = 0
+            mol.charge = 0
+            mol.symmetry = False
+            mol.verbose = 0
+            mol.build()
             
-    #         # Get reference energies  
-    #         if hf == "UHF":
-    #             hf_energy = mol.UHF().run().e_tot
-    #         else:
-    #             hf_energy = mol.RHF().run().e_tot
+            # Get reference energies  
+            if hf == "UHF":
+                # UHF reference
+                mf = scf.UHF(mol)
+                mf.verbose = 0
+                mf.kernel()
+                # UMP2 reference
+                hf_energy = mp.UMP2(mf).run().e_tot
+            else:
+                # UHF reference
+                mf = scf.UHF(mol)
+                mf.verbose = 0
+                mf.kernel()
+                # RMP2 reference
+                hf_energy = mf.e_tot
 
-    #         # Save HF reference energy for later comparison
-    #         name_hf = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/{hf}_{molecule}_{basis}_{dist}_reference_energy.txt"
-    #         if True: # not os.path.exists(name_hf):
-    #             with open(name_hf, "w") as f:
-    #                 f.write(f"{hf_energy:.6f}\n")
-    #             print(f"HF reference energy for {atom_str} at dist {dist} saved to {name_hf}.")
-    #             skip_hf_calculation = False
-    #         else:
-    #             skip_hf_calculation = True
-    # if skip_hf_calculation == True:
-    #     print(f"HF reference energy file already exists for {molecule}, skipping calculation.")
+            # Save HF reference energy for later comparison
+            name_hf = f"backup/data/{atom}/{basis}/VQE/UHF/{dist}/{hf}_{molecule}_{basis}_{dist}_reference_energy.txt"
+            if True: # not os.path.exists(name_hf):
+                with open(name_hf, "w") as f:
+                    f.write(f"{hf_energy:.6f}\n")
+                print(f"HF reference energy for {atom_str} at dist {dist} saved to {name_hf}.")
+                skip_hf_calculation = False
+            else:
+                skip_hf_calculation = True
+    if skip_hf_calculation == True:
+        print(f"HF reference energy file already exists for {molecule}, skipping calculation.")
+
+    assert False, "Stop here, only do reference calculations for now to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations."
 
     # Run the VQE optimizations for Li2 for all dist variations for one seed to verify the data looks correct for one seed before running the rest of the seeds in parallel over dist variations
     oo_lst = [True, False]
@@ -1655,7 +1693,7 @@ def run_single(args):
 if __name__ == "__main__":
     # Molecule: HF, H2O, CO, NH3, Li2
     # args_list = run_hf_vqe()  # Done !!!!!
-    args_list = run_h2o_vqe() # H2O To do!!!
+    # args_list = run_h2o_vqe() # H2O To do!!!
     # args_list = run_li2_vqe()   # running ...
 
     if False:
@@ -1663,7 +1701,7 @@ if __name__ == "__main__":
         args_list = [(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, [], False) for (atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed) in args_list]
 
         num_cores = os.cpu_count()
-        num_workers = 5
+        num_workers = 1
         
         print(f"\nSystem: {num_cores} cores available")
         print(f"Starting {num_workers} parallel VQE workers...")
@@ -1677,7 +1715,7 @@ if __name__ == "__main__":
         print(f"✓ Completed {len(results)} VQE runs")
         print(f"Performance: ~{len(args_list)/num_workers:.1f} runs per core on average")
     
-    if True:
+    if False:
         # Run in serial to allow for prev. thetas to be used as initial guess for next run
         args_list = [(atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed, [], True) for (atom_str, molecule, basis, dist, num_opt_virtual_orbs, oo, seed) in args_list]
                 # From the data file entry for "thetas" of the random runs

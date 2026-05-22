@@ -1157,11 +1157,19 @@ def plot_vqe_curve_results_best_points(molecule, basis, dist_list, num_opt_virtu
 
         # RHF Reference line
     plt.plot(data_by_method_for_plotting['UHF']['distances'], 
-                data_by_method_for_plotting['UHF']['UHF reference'],
-                label="RHF Reference",
+                data_by_method_for_plotting['UHF']['rhf_ref_energies'],
+                label="UHF Reference",
                 color="red",
-                linestyle='--',
+                linestyle='-.',
                 linewidth=1.5)
+
+    #     # UHF Reference line
+    # plt.plot(data_by_method_for_plotting['UHF']['distances'], 
+    #             data_by_method_for_plotting['UHF']['UHF reference'],
+    #             label="UMP2 Reference",
+    #             color="red",
+    #             linestyle='--',
+    #             linewidth=1.5)
 
         # Point plot
     for method in methods:

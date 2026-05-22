@@ -1,7 +1,7 @@
 {
   "num_electrons": 10,
   "full_space_size": 11,
-  "active_space_size": 7,
+  "active_space_size": 6,
   "MP2_e_corr": -0.12869421618795032,
   "OOMP2_e_corr": -0.12929742489050966,
   "FCI_e_corr": -0.13228898333439076

@@ -486,102 +486,105 @@ Below I present the potential energy surfaces for H2O, HF, and Li2 for the VQE c
 
 \subsubsection*{H2O}
 
-For H2O, the VQE calculations using the OVOS-optimised orbitals as reference states show a consistent small improvement over the UHF orbitals, with a slightly lower energy convergence. Both the OVOS-optimised orbitals and UHF orbitals show a smooth potential energy surface, along with correct dissociation behavior, with the OVOS-optimised orbitals showing a slightly better convergence to the true ground state energy across different geometries. The UMP2 natural orbitals, show a even lower energy convergence than the UHF orbitals and OVOS-optimised orbitals, which is expected given that they are typically considered to be better reference states for correlated calculations. The OVOS-optimised orbitals seems to catch up to the UMP2 natural orbitals in terms of energy convergence after dissociation. The potential energy surfaces for H2O using the OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states are shown in Figure~\ref{fig:H2O_VQE_false.png}. 
+For H2O, in 6-31G basis set, the VQE calculations using the OVOS-optimised orbitals as reference states show a consistent small improvement over the UHF orbitals, with a lower energy convergence. Both the OVOS-optimised orbitals and UHF orbitals show a smooth potential energy surface, along with correct dissociation behavior, with the OVOS-optimised orbitals showing a slightly better convergence to the true ground state energy across different geometries. The UMP2 natural orbitals, show a even lower energy convergence than the UHF orbitals and OVOS-optimised orbitals, which is expected given that they are typically considered to be better reference states for correlated calculations. The OVOS-optimised orbitals seems to catch up to the UMP2 natural orbitals in terms of energy convergence after dissociation. Observing the plots conmpared to the reference UHF curve, the VQE calculations all show improved convergence across the potential energy surface. The potential energy surfaces for H2O using the OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states are shown in Figure~\ref{fig:H2O_VQE_false.png}. 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/H2O/VQE_H2O_6-31G_best_of_zoom_oo_False.png}
-    \caption{...}
+    \caption{Potential energy surfaces for H2O in 6-31G basis set, using the OVOS-optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 10 electrons and 6 virtual orbitals (75\% of the full virtual space). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries.}
     \label{fig:H2O_VQE_false.png}
 \end{figure}
 
 \subsubsection*{HF}
 
-
+For HF, in 6-31G basis set, the VQE calculations using the OVOS-optimised orbitals as reference states show a consistent improvement over the UHF orbitals, with a lower energy convergence, up untill it shows dissociation behavior, where the UHF orbitals show a better convergence. Both the OVOS-optimised orbitals and UHF orbitals show a smooth potential energy surface, along with dissociation behavior occuring a interatomic distance later at $1.32$ Å. The UMP2 natural orbitals, are catched up by the UHF orbitals after dissociation, and show a better convergence than the OVOS-optimised orbitals across the potential energy surface. Observing the plots conmpared to the reference UHF curves, the VQE calculations, except for the UHF orbitals before dissociation, show improved convergence across the potential energy surface. The potential energy surfaces for HF using the OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states are shown in Figure~\ref{fig:HF_VQE_false.png}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/HF/VQE_HF_6-31G_best_of_zoom_oo_False.png}
-    \caption{...}
+    \caption{Potential energy surfaces for HF in 6-31G basis set, using the OVOS-optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 10 electrons and 5 virtual orbitals (75\% of the full virtual space rounded up). The dashed lines represent the reference energies from PySCF.  The plot shows the energy convergence across different geometries.}
     \label{fig:HF_VQE_false.png}
 \end{figure}
 
 \subsubsection*{Li2}
 
-...
+For Li2, in 6-31G basis set, the VQE calculations using the OVOS-optimised orbitals as reference states show a consistent improvement over the UHF orbitals, with a lower energy convergence. Both the OVOS-optimised orbitals and UHF orbitals does not show a smooth potential energy surface, still the UMP2 natural orbitals show a smooth potential energy surface. The UMP2 natural orbitals, show a better energy convergence than the UHF orbitals and OVOS-optimised orbitals, which is expected given that they are typically considered to be better reference states for correlated calculations. The OVOS-optimised orbitals never catches up to the UMP2 natural orbitals in terms of energy convergence after dissociation. Observing the plots conmpared to the reference UHF curve, all VQE calculations show improved convergence across the potential energy surface. The potential energy surfaces for Li2 using the OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states are shown in Figure~\ref{fig:Li2_VQE_false.png}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/Li2/VQE_Li2_6-31G_best_of_zoom_oo_False.png}
-    \caption{...}
+    \caption{Potential energy surfaces for Li2 in 6-31G basis set, using the OVOS-optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 6 electrons and 12 virtual orbitals (75\% of the full virtual space rounded up). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries.}
     \label{fig:Li2_VQE_false.png}
 \end{figure}
 
 
-\subsection{T1 Amplitudes and the Brueckner Orbital Connection}
-\label{sec:results_brueckner}
-% ---------------------------------------------------------------
-% T1 Amplitudes and the Brueckner Connection
-% ---------------------------------------------------------------
-% Goal: Provide numerical evidence that OVOS MOs satisfy the
-%       Brueckner condition (T1 → 0) better than canonical HF MOs.
-%
-% Suggested analysis:
-%   - For each (molecule, N_virt) after OVOS convergence, compute
-%     the MP1 single amplitudes t_i^a (occupied → active virtual)
-%     in the OVOS orbital basis and compare to the HF basis.
-%   - Plot ||T1||_F (Frobenius norm of T1 amplitude tensor) vs.
-%     N_virt/N_virt^max for HF and OVOS bases.
-%   - Expected: ||T1||^OVOS < ||T1||^HF, approaching zero as
-%     N'_virt → N_virt (recovering full-space OO-MP2 limit).
-%   - Tabulate the T1 diagnostic (||T1||_F / sqrt(n_occ * n_virt))
-%     for at least two molecules (e.g. H₂O and N₂).
-%   - Cite \cite{Lee2018} for the OO-MP2/Brueckner connection.
-% THIS!!!! : https://arxiv.org/pdf/1807.06185
-%
-% Note: If T1 amplitudes are not directly stored in your current
-%       implementation, this analysis can be done in a post-processing
-%       step using the converged MO coefficients and PySCF MP2.
-% THIS!!! : https://link.springer.com/content/pdf/10.1007/bf00549693.pdf
-% EH... : https://fy.chalmers.se/~f3ail/Publications/LowdinFinal.pdf
-% ---------------------------------------------------------------
+% \subsection{T1 Amplitudes and the Brueckner Orbital Connection}
+% \label{sec:results_brueckner}
+% % ---------------------------------------------------------------
+% % T1 Amplitudes and the Brueckner Connection
+% % ---------------------------------------------------------------
+% % Goal: Provide numerical evidence that OVOS MOs satisfy the
+% %       Brueckner condition (T1 → 0) better than canonical HF MOs.
+% %
+% % Suggested analysis:
+% %   - For each (molecule, N_virt) after OVOS convergence, compute
+% %     the MP1 single amplitudes t_i^a (occupied → active virtual)
+% %     in the OVOS orbital basis and compare to the HF basis.
+% %   - Plot ||T1||_F (Frobenius norm of T1 amplitude tensor) vs.
+% %     N_virt/N_virt^max for HF and OVOS bases.
+% %   - Expected: ||T1||^OVOS < ||T1||^HF, approaching zero as
+% %     N'_virt → N_virt (recovering full-space OO-MP2 limit).
+% %   - Tabulate the T1 diagnostic (||T1||_F / sqrt(n_occ * n_virt))
+% %     for at least two molecules (e.g. H₂O and N₂).
+% %   - Cite \cite{Lee2018} for the OO-MP2/Brueckner connection.
+% % THIS!!!! : https://arxiv.org/pdf/1807.06185
+% %
+% % Note: If T1 amplitudes are not directly stored in your current
+% %       implementation, this analysis can be done in a post-processing
+% %       step using the converged MO coefficients and PySCF MP2.
+% % THIS!!! : https://link.springer.com/content/pdf/10.1007/bf00549693.pdf
+% % EH... : https://fy.chalmers.se/~f3ail/Publications/LowdinFinal.pdf
+% % ---------------------------------------------------------------
 
 
-% I am finding that for lower $N'$ values, the T1 amplitudes for the OVOS-optimised orbitals are significantly smaller than those for the canonical HF orbitals, finding the lowest of values on the order of $10^{-17}$ to $10^{-18}$, compared to "larger" values on the order of $10^{-16}$ for $N'$ values close to the full space. Comparedly the T1 amplitudes for the canonical HF orbitals are typically on the order of $10^{-16}$, and do not show a clear trend as $N'$ increases. This suggests that the OVOS-optimised orbitals are indeed closer to Brueckner orbitals than the canonical HF orbitals, especially for lower values of $N'$, and therefore can be expected to capture more correlation energy in subsequent calculations.
+% % I am finding that for lower $N'$ values, the T1 amplitudes for the OVOS-optimised orbitals are significantly smaller than those for the canonical HF orbitals, finding the lowest of values on the order of $10^{-17}$ to $10^{-18}$, compared to "larger" values on the order of $10^{-16}$ for $N'$ values close to the full space. Comparedly the T1 amplitudes for the canonical HF orbitals are typically on the order of $10^{-16}$, and do not show a clear trend as $N'$ increases. This suggests that the OVOS-optimised orbitals are indeed closer to Brueckner orbitals than the canonical HF orbitals, especially for lower values of $N'$, and therefore can be expected to capture more correlation energy in subsequent calculations.
 
-% Reference appendix for code when it would show the T1 amplitudes for the OVOS-optimised orbitals and the canonical HF orbitals for all the test molecules and basis sets considered, as a function of $N'_{\rm act.unocc}$.
+% % Reference appendix for code when it would show the T1 amplitudes for the OVOS-optimised orbitals and the canonical HF orbitals for all the test molecules and basis sets considered, as a function of $N'_{\rm act.unocc}$.
 
 
  
-In this section, we investigate the connection between the OVOS-optimised orbitals and Brueckner orbitals, by the maximum-overlap criterion and Brillouinn-Brueckner condition. Brueckner orbitals are defined as the orbitals for which the single excitation amplitudes (T1) vanish, i.e. the excited determinants with one electron promoted from an occupied to a virtual orbital do not contribute to the wavefunction, see Section~\ref{sec:brueckner}. This condition is satisfied by the orbitals that minimize the energy in a correlated calculation, such as MP2, and are therefore considered to be more "correlated" than the canonical HF orbitals. 
+% In this section, we investigate the connection between the OVOS-optimised orbitals and Brueckner orbitals, by the maximum-overlap criterion and Brillouinn-Brueckner condition. Brueckner orbitals are defined as the orbitals for which the single excitation amplitudes (T1) vanish, i.e. the excited determinants with one electron promoted from an occupied to a virtual orbital do not contribute to the wavefunction, see Section~\ref{sec:brueckner}. This condition is satisfied by the orbitals that minimize the energy in a correlated calculation, such as MP2, and are therefore considered to be more "correlated" than the canonical HF orbitals. 
 
-I report here having observed computed T1 amplitudes for the OVOS-optimised orbitals that are significantly small, on the order of $10^{-16}$, for all the test molecules and basis sets considered, which is consistent with the Brueckner condition. In contrast, the T1 amplitudes for the canonical HF orbitals are typically ...
+% I report here having observed computed T1 amplitudes for the OVOS-optimised orbitals that are significantly small, on the order of $10^{-16}$, for all the test molecules and basis sets considered, which is consistent with the Brueckner condition. Similarly, the T1 amplitudes for the canonical HF orbitals are typically around the same order of magnitude. It is observed only for lower numbers of active virtual orbitals, are the T1 amplitudes for the OVOS-optimised orbitals smaller than those for the canonical HF orbitals at convergence, with values on the order of $10^{-16}$ to $10^{-17}$, compared to "larger" values on the order of $10^{-16}$ for $N'_{\rm act.unocc}$ values close to the full space.
 
-"Look at overlap of FCI wavefunction with the reference state, for both HF and OVOS orbitals, as a function of the number of active virtual orbitals, to see if the OVOS orbitals have a higher overlap with the FCI wavefunction than the HF orbitals, which would be another indication that they are closer to Brueckner orbitals. Refer to plot of orbitals as a heatmap in the appendix."
+% This suggests that the OVOS-optimised orbitals are not significantly closer to Brueckner orbitals than the canonical HF orbitals. It is examined further by looking at the overlap of the FCI wavefunction with the reference state, for both UHF and OVOS orbitals, as a function of the number of active virtual orbitals, to see if the OVOS orbitals have a higher overlap with the FCI wavefunction than the HF orbitals, which would be another indication that they are closer to Brueckner orbitals. It is found that the overlap of the FCI wavefunction with the reference state for both UHF and OVOS orbitals is of the same order of magnitude, and stays the same across the number of active virtual orbitals, which suggests that the OVOS-optimised orbitals do not have a higher overlap with the FCI wavefunction than the HF orbitals, and therefore are not significantly closer to Brueckner orbitals than the canonical HF orbitals. It is even observed that for NH3, the overlap of the FCI wavefunction with the reference state for the OVOS orbitals is lower than that for the HF orbitals, which further suggests that the OVOS-optimised orbitals are not closer to Brueckner orbitals than the canonical HF orbitals, it was not possible to run VQE calculations for NH3 with the OVOS-optimised orbitals as reference state, because of lack of computational resources, but it is expected that the energy convergence would be worse than that for the HF orbitals, given the lower overlap with the FCI wavefunction.
+% The plot of the overlap of the FCI wavefunction with the reference state for both HF and OVOS orbitals as a function of the number of active virtual orbitals is shown in Figure~\ref{fig:Li2_basis_comparison}, and a heatmap of the orbitals is shown in the appendix.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/ovos_fidelity_mp2_6-31G.png}
-    \caption{...}
-    \label{fig:Li2_basis_comparison}
-\end{figure}
+% % "Look at overlap of FCI wavefunction with the reference state, for both HF and OVOS orbitals, as a function of the number of active virtual orbitals, to see if the OVOS orbitals have a higher overlap with the FCI wavefunction than the HF orbitals, which would be another indication that they are closer to Brueckner orbitals. Refer to plot of orbitals as a heatmap in the appendix."
 
-
-
-% Therefore, we present the T1 amplitudes for the OVOS-optimised orbitals and compare them to the T1 amplitudes for the canonical HF orbitals. We compute the Frobenius norm of the T1 amplitude tensor, $||T1||_F$, for both sets of orbitals as a function of the number of active virtual orbitals $N'_{\rm act.unocc}$, and plot the results in Figure~\ref{fig:T1_comparison}.
-
-% \begin{figure}[ht]
+% \begin{figure}[H]
 %     \centering
-%     \includegraphics[width=1.0\textwidth]{figures/Placeholder.png}
-%     \caption{Comparison of the Frobenius norm of the T1 amplitude tensor, $||T1||_F$, for OVOS-optimised orbitals and canonical HF orbitals as a function of the number of active virtual orbitals $N'_{\rm act.unocc}$ for [molecule]/[basis].}
-%     \label{fig:T1_comparison} 
+%     \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/ovos_fidelity_mp2_6-31G.png}
+%     \caption{Overlap of the FCI wavefunction with the reference state for both HF and OVOS orbitals as a function of the number of active virtual orbitals in 6-31G. Dashed lines represent the overlap for the HF orbitals with their corresponding molecules tied by color matching. Solid lines represent the overlap for the OVOS orbitals with their corresponding molecules tied by color matching, with each dot noting the value for a different number of active virtual orbitals.}
+%     \label{fig:OVOS_fidelity}
 % \end{figure}
 
-% It results in the T1 amplitudes for the OVOS-optimised orbitals being significantly smaller than those for the canonical HF orbitals, and approaching zero as $N'_{\rm act.unocc}$ increases, consistent with the Brueckner condition. This provides numerical evidence that the OVOS-optimised orbitals are indeed closer to Brueckner orbitals than the canonical HF orbitals, and therefore can be expected to capture more correlation energy in subsequent calculations.
 
-% FOUND T1 AMPLITUDES ARE AT E-16 FOR ALL OVOS ...
 
-% OVERLAP, FIDELITY, OF FCI WAVEFUNCTION... HAVE ORBITALS HEATMAP REFERENCE TO Appendix
+% % Therefore, we present the T1 amplitudes for the OVOS-optimised orbitals and compare them to the T1 amplitudes for the canonical HF orbitals. We compute the Frobenius norm of the T1 amplitude tensor, $||T1||_F$, for both sets of orbitals as a function of the number of active virtual orbitals $N'_{\rm act.unocc}$, and plot the results in Figure~\ref{fig:T1_comparison}.
+
+% % \begin{figure}[ht]
+% %     \centering
+% %     \includegraphics[width=1.0\textwidth]{figures/Placeholder.png}
+% %     \caption{Comparison of the Frobenius norm of the T1 amplitude tensor, $||T1||_F$, for OVOS-optimised orbitals and canonical HF orbitals as a function of the number of active virtual orbitals $N'_{\rm act.unocc}$ for [molecule]/[basis].}
+% %     \label{fig:T1_comparison} 
+% % \end{figure}
+
+% % It results in the T1 amplitudes for the OVOS-optimised orbitals being significantly smaller than those for the canonical HF orbitals, and approaching zero as $N'_{\rm act.unocc}$ increases, consistent with the Brueckner condition. This provides numerical evidence that the OVOS-optimised orbitals are indeed closer to Brueckner orbitals than the canonical HF orbitals, and therefore can be expected to capture more correlation energy in subsequent calculations.
+
+% % FOUND T1 AMPLITUDES ARE AT E-16 FOR ALL OVOS ...
+
+% % OVERLAP, FIDELITY, OF FCI WAVEFUNCTION... HAVE ORBITALS HEATMAP REFERENCE TO Appendix
 
 
 
@@ -591,15 +594,43 @@ I report here having observed computed T1 amplitudes for the OVOS-optimised orbi
 \section{ooVQE}
 \label{sec:results_veq}
 % Only thing you can say here is convergence iterations/speed. You start with OVOS, UHF, UMP2, which convergence fastest.
-...
 
+% Similar plots to the ones in VQE can be found for turning on orbital optimization in VQE calculations in appendix
+
+Different to the VQE calculations presented in the previous section, here we present the results in regard to convergence iteration count for the orbital-optimized VQE (ooVQE) calculations, where the orbitals are optimized in the VQE loop, as detailed in Section~\ref{sec:methods_veq}. These results are compared to the non orbital-optimized VQE calculations, where the orbitals are not optimized in the VQE loop, and are instead fixed to the OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states. Futher we distinguish between using the previous geometry final thetas as initialization for the VQE calculations, and using random initialization of thetas, to see if there is a difference in convergence iteration count between these two approaches. These iteration counts are presented for all the geometries along the potential energy surface in a boxplot, to see the distribution of iteration counts across the potential energy surface. There is a lack of intry for the ooVQE random geometry final thetas initialization for H2O and Li2 as i ran out of time. The goal is to assess the improvement in convergence iteration count between using OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states in the non orbital-optimized VQE calculations.
+
+\subsubsection*{H2O}
+
+For H2O, in 6-31G basis set, the ooVQE calculations show a similar convergence iteration count to the non orbital-optimized VQE calculations when using the previous geometry final values as initialization. Against no orbital optimization and random initialization of thetas, the ooVQE calculations show a significantly faster convergence than the non orbital-optimized VQE calculations, with a much lower iteration count to reach convergence. There is a significant spread in the convergence iteration counts for OVOS orbitals, with some calculations showing a very fast convergence, and others showing a much slower convergence. 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/ovos_fidelity_mp2_6-31G.png}
+    \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/H2O/VQE_H2O_iterations_to_convergence_statistics.png}
     \caption{...}
-    \label{fig:Li2_basis_comparison}
+    \label{fig:H2O_convergence_statistics}
 \end{figure}
 
+
+\subsubsection*{HF}
+
+For 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/HF/VQE_HF_iterations_to_convergence_statistics.png}
+    \caption{...}
+    \label{fig:HF_convergence_statistics}
+\end{figure}
+
+\subsubsection*{Li2}
+
+...
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/Li2/VQE_Li2_iterations_to_convergence_statistics.png}
+    \caption{...}
+    \label{fig:Li2_convergence_statistics}
+\end{figure}
 
 % Convergence iteration plot!!!! for basis set ... 

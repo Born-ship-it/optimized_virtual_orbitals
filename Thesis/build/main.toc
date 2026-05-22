@@ -81,7 +81,7 @@
 \contentsline {subsection}{\numberline {3.2.1}Default SCF Initialisation}{40}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Warm-Start from Previous Orbital Set}{41}{subsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.2.3}Random Unitary Sampling}{41}{subsection.3.2.3}%
-\contentsline {chapter}{\numberline {4}Computational Detail}{43}{chapter.4}%
+\contentsline {chapter}{\numberline {4}Computational Details}{43}{chapter.4}%
 \contentsline {subsection}{\numberline {4.0.1}Software and Libraries}{43}{subsection.4.0.1}%
 \contentsline {subsection}{\numberline {4.0.2}Molecular Geometries}{43}{subsection.4.0.2}%
 \contentsline {subsection}{\numberline {4.0.3}Basis Sets}{44}{subsection.4.0.3}%
@@ -94,33 +94,32 @@
 \contentsline {subsubsection}{Comparison with Adamowicz and Bartlett (1987)}{56}{figure.caption.19}%
 \contentsline {section}{\numberline {5.2}VQE}{57}{section.5.2}%
 \contentsline {subsection}{\numberline {5.2.1}VQE potential energy surfaces plot}{57}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}T1 Amplitudes and the Brueckner Orbital Connection}{59}{subsection.5.2.2}%
-\contentsline {section}{\numberline {5.3}ooVQE}{60}{section.5.3}%
-\contentsline {chapter}{\numberline {6}Conclusion and Outlook}{63}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Conclusion}{63}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}Summary of Findings}{63}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}Critical Assessment}{63}{subsection.6.1.2}%
-\contentsline {subsection}{\numberline {6.1.3}Implications for Quantum Computing}{63}{subsection.6.1.3}%
-\contentsline {section}{\numberline {6.2}Outlook}{63}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Algorithmic Improvements}{63}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Method Extensions}{63}{subsection.6.2.2}%
-\contentsline {subsection}{\numberline {6.2.3}Quantum Computing Applications}{63}{subsection.6.2.3}%
-\contentsline {subsubsection}{OVOS Orbitals as a VQE Reference State}{63}{subsection.6.2.3}%
-\contentsline {subsubsection}{Brueckner Orbitals and Circuit Depth on NISQ Devices}{64}{subsection.6.2.3}%
-\contentsline {subsubsection}{Qubit Count Reduction and Fault-Tolerant Perspectives}{64}{subsection.6.2.3}%
-\contentsline {subsection}{\numberline {6.2.4}Larger Molecular Systems}{64}{subsection.6.2.4}%
-\contentsline {subsection}{\numberline {6.2.5}Benchmarking and Validation}{64}{subsection.6.2.5}%
-\contentsline {chapter}{Bibliography}{65}{subsection.6.2.5}%
+\contentsline {section}{\numberline {5.3}ooVQE}{61}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Conclusion and Outlook}{65}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Conclusion}{65}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Summary of Findings}{65}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Critical Assessment}{65}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}Implications for Quantum Computing}{65}{subsection.6.1.3}%
+\contentsline {section}{\numberline {6.2}Outlook}{65}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Algorithmic Improvements}{65}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Method Extensions}{65}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Quantum Computing Applications}{65}{subsection.6.2.3}%
+\contentsline {subsubsection}{OVOS Orbitals as a VQE Reference State}{65}{subsection.6.2.3}%
+\contentsline {subsubsection}{Brueckner Orbitals and Circuit Depth on NISQ Devices}{66}{subsection.6.2.3}%
+\contentsline {subsubsection}{Qubit Count Reduction and Fault-Tolerant Perspectives}{66}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}Larger Molecular Systems}{66}{subsection.6.2.4}%
+\contentsline {subsection}{\numberline {6.2.5}Benchmarking and Validation}{66}{subsection.6.2.5}%
+\contentsline {chapter}{Bibliography}{67}{subsection.6.2.5}%
 \setcounter {tocdepth}{0}
-\contentsline {chapter}{\numberline {A}Implementation Validation}{67}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Validation of the Implementation}{67}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Additional Data and Figures}{69}{appendix.B}%
-\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{69}{section.B.1}%
-\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{69}{section.B.2}%
-\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{69}{section.B.3}%
-\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{71}{appendix.C}%
-\contentsline {section}{\numberline {C.1}Repository and Version Information}{71}{section.C.1}%
-\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{71}{section.C.2}%
-\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{71}{section.C.3}%
-\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{71}{section.C.4}%
-\contentsline {section}{\numberline {C.5}Profiling Results}{71}{section.C.5}%
+\contentsline {chapter}{\numberline {A}Implementation Validation}{69}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Validation of the Implementation}{69}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Additional Data and Figures}{71}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{71}{section.B.1}%
+\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{71}{section.B.2}%
+\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{71}{section.B.3}%
+\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{73}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Repository and Version Information}{73}{section.C.1}%
+\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{73}{section.C.2}%
+\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{73}{section.C.3}%
+\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{73}{section.C.4}%
+\contentsline {section}{\numberline {C.5}Profiling Results}{73}{section.C.5}%
