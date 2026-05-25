@@ -597,40 +597,38 @@ For Li2, in 6-31G basis set, the VQE calculations using the OVOS-optimised orbit
 
 % Similar plots to the ones in VQE can be found for turning on orbital optimization in VQE calculations in appendix
 
-Different to the VQE calculations presented in the previous section, here we present the results in regard to convergence iteration count for the orbital-optimized VQE (ooVQE) calculations, where the orbitals are optimized in the VQE loop, as detailed in Section~\ref{sec:methods_veq}. These results are compared to the non orbital-optimized VQE calculations, where the orbitals are not optimized in the VQE loop, and are instead fixed to the OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states. Futher we distinguish between using the previous geometry final thetas as initialization for the VQE calculations, and using random initialization of thetas, to see if there is a difference in convergence iteration count between these two approaches. These iteration counts are presented for all the geometries along the potential energy surface in a boxplot, to see the distribution of iteration counts across the potential energy surface. There is a lack of intry for the ooVQE random geometry final thetas initialization for H2O and Li2 as i ran out of time. The goal is to assess the improvement in convergence iteration count between using OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states in the non orbital-optimized VQE calculations.
+Different to the VQE calculations presented in the previous section, here we present the results in regard to convergence iteration count for the orbital-optimized VQE (ooVQE) calculations, where the orbitals are optimized in the VQE loop, as detailed in Section~\ref{sec:methods_veq}. These results are compared to the non orbital-optimized VQE calculations, where the orbitals are not optimized in the VQE loop, and are instead fixed to the OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states. Futher we distinguish between using the previous geometry final thetas as initialization for the VQE calculations, and using random initialization of thetas, to see if there is a difference in convergence iteration count between these two approaches. These iteration counts are presented for all the geometries along the potential energy surface in a boxplot, to see the distribution of iteration counts across the potential energy surface. The energy convergence is disregarded but look to Section \ref{sec:results_veq} and appendix \ref{appb:ooVQE_results} for more details. There is a lack of intry for the ooVQE random geometry final thetas initialization for H2O and Li2 as i ran out of time. The goal is to assess the improvement in convergence iteration count between using OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states in the non orbital-optimized VQE calculations.
 
 \subsubsection*{H2O}
 
-For H2O, in 6-31G basis set, the ooVQE calculations show a similar convergence iteration count to the non orbital-optimized VQE calculations when using the previous geometry final values as initialization. Against no orbital optimization and random initialization of thetas, the ooVQE calculations show a significantly faster convergence than the non orbital-optimized VQE calculations, with a much lower iteration count to reach convergence. There is a significant spread in the convergence iteration counts for OVOS orbitals, with some calculations showing a very fast convergence, and others showing a much slower convergence. 
+For H2O, in 6-31G basis set, the ooVQE calculations show a similar convergence iteration count to the non orbital-optimized VQE calculations when using the previous geometry final values as initialization. Against no orbital optimization and random initialization of thetas, the ooVQE calculations show a significantly faster convergence, with a much lower iteration count to reach convergence. Within the no orbital optimization and random initialization of thetas, the mean convergence iteration count for the OVOS-optimised orbitals is lower than that for the UHF orbitals and UMP2 natural orbitals, with the UHF orbitals showing a lower mean convergence iteration count than the UMP2 natural orbitals. Overall, there is a significant spread in the convergence iteration counts for OVOS orbitals, with some geometries calculations showing a very fast convergence, and others showing a much slower convergence. The potential energy surfaces for H2O using the OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states are shown in Figure~\ref{fig:H2O_convergence_statistics}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/H2O/VQE_H2O_iterations_to_convergence_statistics.png}
-    \caption{...}
+    \caption{Convergence iteration count for H2O in 6-31G basis set, using the OVOS-optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state.}
     \label{fig:H2O_convergence_statistics}
 \end{figure}
 
-
 \subsubsection*{HF}
 
-For 
+For HF, in 6-31G basis set, the ooVQE calculations show a worse spread of convergence iteration counts compared to the non orbital-optimized VQE calculations when using the previous geometry final values as initialization. The best of the four combinations of orbital optimization and initialization, in terms of convergence iteration count, is the non orbital-optimized VQE calculations with the previous initialization of thetas, where the mean convergence iteration count is significantly lower than that for the other three combinations. For which we can observe that the OVOS-optimised orbitals show a similar to lower mean convergence iteration count than the UHF orbitals and UMP2 natural orbitals, in three of the four combinations of orbital optimization and initialization, with the non orbital-optimized VQE calculations with the random initialization of thetas being the only combination where the OVOS-optimised orbitals show a higher mean convergence iteration count than the UHF orbitals and UMP2 natural orbitals. Overall, there is a significant spread in the convergence iteration counts for OVOS orbitals, with some geometries calculations showing a very fast convergence, and others showing a much slower convergence. The potential energy surfaces for HF using the OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states are shown in Figure~\ref{fig:HF_convergence_statistics}.
+
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/HF/VQE_HF_iterations_to_convergence_statistics.png}
-    \caption{...}
+    \caption{Convergence iteration count for HF in 6-31G basis set, using the OVOS-optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state.}
     \label{fig:HF_convergence_statistics}
 \end{figure}
 
 \subsubsection*{Li2}
 
-...
+For Li2, in 6-31G basis set, all three combinations of orbital optimization and initialization show a similar small spread of convergence iteration counts, with the non orbital-optimized VQE calculations with the random initialization of thetas showing slightly more outliers than the other two combinations. The best of the three combinations of orbital optimization and initialization, in terms of convergence iteration count, is the non orbital-optimized VQE calculations with the previous initialization of thetas, where the mean convergence iteration count is a bit lower than that for the other two combinations. We observet the OVOS-optimised orbitals show a higher mean convergence iteration count than the UHF orbitals and UMP2 natural orbitals, in all two combinations of orbital optimization and initialization, with the non orbital-optimized VQE calculations with the random initialization of thetas being the only combination where the OVOS-optimised orbitals show a lower mean convergence iteration count than the UHF orbitals and UMP2 natural orbitals. Overall, there is a significant spread in the convergence iteration counts for OVOS orbitals, with some geometries calculations showing a very fast convergence, and others showing a much slower convergence. The potential energy surfaces for Li2 using the OVOS-optimised orbitals, UHF orbitals, and UMP2 natural orbitals as reference states are shown in Figure~\ref{fig:Li2_convergence_statistics}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/Li2/VQE_Li2_iterations_to_convergence_statistics.png}
-    \caption{...}
+    \caption{Convergence iteration count for Li2 in 6-31G basis set, using the OVOS-optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state.}
     \label{fig:Li2_convergence_statistics}
 \end{figure}
-
-% Convergence iteration plot!!!! for basis set ... 

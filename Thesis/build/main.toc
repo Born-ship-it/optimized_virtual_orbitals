@@ -98,28 +98,28 @@
 \contentsline {chapter}{\numberline {6}Conclusion and Outlook}{65}{chapter.6}%
 \contentsline {section}{\numberline {6.1}Conclusion}{65}{section.6.1}%
 \contentsline {subsection}{\numberline {6.1.1}Summary of Findings}{65}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}Critical Assessment}{65}{subsection.6.1.2}%
-\contentsline {subsection}{\numberline {6.1.3}Implications for Quantum Computing}{65}{subsection.6.1.3}%
-\contentsline {section}{\numberline {6.2}Outlook}{65}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Algorithmic Improvements}{65}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Method Extensions}{65}{subsection.6.2.2}%
-\contentsline {subsection}{\numberline {6.2.3}Quantum Computing Applications}{65}{subsection.6.2.3}%
-\contentsline {subsubsection}{OVOS Orbitals as a VQE Reference State}{65}{subsection.6.2.3}%
-\contentsline {subsubsection}{Brueckner Orbitals and Circuit Depth on NISQ Devices}{66}{subsection.6.2.3}%
-\contentsline {subsubsection}{Qubit Count Reduction and Fault-Tolerant Perspectives}{66}{subsection.6.2.3}%
-\contentsline {subsection}{\numberline {6.2.4}Larger Molecular Systems}{66}{subsection.6.2.4}%
-\contentsline {subsection}{\numberline {6.2.5}Benchmarking and Validation}{66}{subsection.6.2.5}%
-\contentsline {chapter}{Bibliography}{67}{subsection.6.2.5}%
+\contentsline {subsection}{\numberline {6.1.2}Critical Assessment}{66}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}Implications for Quantum Computing}{66}{subsection.6.1.3}%
+\contentsline {section}{\numberline {6.2}Outlook}{66}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Algorithmic Improvements}{66}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Method Extensions}{66}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Quantum Computing Applications}{67}{subsection.6.2.3}%
+\contentsline {subsubsection}{OVOS Orbitals as a VQE Reference State}{67}{subsection.6.2.3}%
+\contentsline {subsubsection}{Brueckner Orbitals and Circuit Depth on NISQ Devices}{67}{subsection.6.2.3}%
+\contentsline {subsubsection}{Qubit Count Reduction and Fault-Tolerant Perspectives}{67}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}Larger Molecular Systems}{67}{subsection.6.2.4}%
+\contentsline {subsection}{\numberline {6.2.5}Benchmarking and Validation}{67}{subsection.6.2.5}%
+\contentsline {chapter}{Bibliography}{69}{subsection.6.2.5}%
 \setcounter {tocdepth}{0}
-\contentsline {chapter}{\numberline {A}Implementation Validation}{69}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Validation of the Implementation}{69}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Additional Data and Figures}{71}{appendix.B}%
-\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{71}{section.B.1}%
-\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{71}{section.B.2}%
-\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{71}{section.B.3}%
-\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{73}{appendix.C}%
-\contentsline {section}{\numberline {C.1}Repository and Version Information}{73}{section.C.1}%
-\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{73}{section.C.2}%
-\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{73}{section.C.3}%
-\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{73}{section.C.4}%
-\contentsline {section}{\numberline {C.5}Profiling Results}{73}{section.C.5}%
+\contentsline {chapter}{\numberline {A}Implementation Validation}{71}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Validation of the Implementation}{71}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Additional Data and Figures}{73}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{73}{section.B.1}%
+\contentsline {section}{\numberline {B.2}Complete OVOS Energy Recovery Tables}{73}{section.B.2}%
+\contentsline {section}{\numberline {B.3}Convergence Plots for All Systems}{73}{section.B.3}%
+\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{75}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Repository and Version Information}{75}{section.C.1}%
+\contentsline {section}{\numberline {C.2}Spin-Orbital Integral Conversion}{75}{section.C.2}%
+\contentsline {section}{\numberline {C.3}MP2 Energy and Amplitude Computation}{75}{section.C.3}%
+\contentsline {section}{\numberline {C.4}Orbital Optimisation: Gradient and Hessian}{75}{section.C.4}%
+\contentsline {section}{\numberline {C.5}Profiling Results}{75}{section.C.5}%
