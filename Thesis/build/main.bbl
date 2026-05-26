@@ -5,6 +5,12 @@
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
+\bibitem[Szabo and Ostlund(1989)]{SzaboOstlund1989}
+Attila Szabo and Neil~S. Ostlund.
+\newblock \emph{Modern Quantum Chemistry: Introduction to Advanced Electronic Structure Theory}.
+\newblock Dover Publications, 1989.
+\newblock ISBN 978-0-486-69186-2.
+
 \bibitem[Sherrill and Schaefer(1999)]{Sherrill1999}
 C.~David Sherrill and Henry~F. Schaefer.
 \newblock The configuration interaction method: Advances in highly correlated approaches.
@@ -71,12 +77,6 @@ Joonho Lee and Martin Head-Gordon.
 \newblock \emph{J. Chem. Theory Comput.}, 14:\penalty0 5203--5219, 2018.
 \newblock \doi{10.1021/acs.jctc.8b00731}.
 \newblock arXiv:1807.06185.
-
-\bibitem[Szabo and Ostlund(1989)]{SzaboOstlund1989}
-Attila Szabo and Neil~S. Ostlund.
-\newblock \emph{Modern Quantum Chemistry: Introduction to Advanced Electronic Structure Theory}.
-\newblock Dover Publications, 1989.
-\newblock ISBN 978-0-486-69186-2.
 
 \bibitem[Jensen(2017)]{Jensen2017}
 Frank Jensen.

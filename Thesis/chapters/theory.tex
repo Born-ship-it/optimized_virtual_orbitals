@@ -1,47 +1,10 @@
-%============================================================
-%  theory.tex  –  Chapter 3
-%============================================================
 \chapter{Theory}
 \label{ch:theory}
 
 This chapter is meant to provide the theoretical background necessary to understand the OVOS method and its implementation, and how we extend it to Quantum computing. The content is structured to build from fundamental concepts in electronic structure theory to the specific mathematical formulations used in OVOS. The chapter is structured in four sections: (\ref{sec:theory_elec_struct_prob}) the electronic structure problem and the importance of electron correlation, (\ref{sec:theory_wavefunction_methods}) the wavefunction methods that are the basis for OVOS, (\ref{sec:theory_background_ovos}) the mathematical framework for OVOS, and (\ref{sec:theory_relevance_qc}) the relevant aspects of OVOS on quantum computers. 
 
-% This chapter presents the theoretical framework of the OVOS method, starting from the definition of the second-order Hylleraas functional to the energy recovery metric. The derivations are based on the original work of Adamowicz \& Bartlett (1987)\cite{Adamowicz1987} and are supplemented with modern prespectives.
-
 \section{The Electronic Structure Problem}
 \label{sec:theory_elec_struct_prob}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 2.1]
-%   Open with the fundamental challenge:
-%   "The central problem of quantum chemistry is to solve the non-relativistic,
-%    time-independent Schrödinger equation for N electrons moving in the
-%    electrostatic potential of M fixed nuclei (Born-Oppenheimer approximation)."
-%   State that exact solutions are computationally intractable beyond trivial
-%   systems; motivate the need for systematic approximate methods.
-%
-% [SUBSECTION COVERAGE]
-%   - Born-Oppenheimer approximation: justify physically
-%     (nuclear mass ≫ electron mass → timescale separation).
-%   - Write out the electronic Hamiltonian explicitly:
-%     Ĥ_el = T_e + V_{en} + V_{ee}  (kinetic + nuclear attraction + repulsion)
-%   - The V_{ee} term couples all electrons → exact wavefunction lives in
-%     3N dimensions → exponential wall.
-%   - Electron correlation defined as: E_corr = E_exact − E_HF < 0.
-%     Typical magnitudes: ~1–10 kcal/mol for small molecules.
-%   - Why correlation matters: bond dissociation, reaction barriers,
-%     open-shell species all require correlated treatments.
-%
-% [FIGURE] Potential energy curve for H₂: HF vs. MP2 vs. FCI.
-%   x-axis: r_{H-H} (Å) | y-axis: E (Hartree)
-%   Caption: "Potential energy curves for H₂ illustrating the failure of
-%   HF near dissociation and the importance of electron correlation."
-%   Place in figures/ as fig_h2_pes.pdf or .pgf.
-%
-% [LEAD-IN TO §2.2]
-%   "Hartree-Fock theory, introduced in the following section, provides
-%    the mean-field starting point whose residual correlation energy
-%    forms the target of the OVOS method developed in this thesis."
-% ---------------------------------------------------------------
 
 The electronic structure problem is the task of solving the non-relativistic, time-independent Schrödinger equation for a system of N electrons moving in the electrostatic potential of M fixed nuclei, reflecting the Born-Oppenheimer approximation.\footnote{The Born-Oppenheimer approximation assumes that the nuclei are stationary due to their much larger mass compared to electrons, allowing the electronic and nuclear motions to be separated.}
 Typically, the electronic system is expressed as the Schrödinger equation \cite{Helgaker2000}:
@@ -58,55 +21,8 @@ where the first term represents the kinetic energy of the electrons, the second 
 
 The electron-electron repulsion term couples all electrons together, making the exact solution of the Schrödinger equation computationally hard with increasing system size. While we can solve the Schrödinger equation exactly by Full Configuration Interaction (FCI), this approach is computationally infeasible for large systems, due to the exponential growth of the configuration space. This motivates the development of approximate methods that can capture the essential physics of electron correlation while remaining computationally feasible \cite{SzaboOstlund1989, Jensen2017}.
 
-% Hartree-Fock theory provides a mean-field approximation to the electronic structure problem \cite{SzaboOstlund1989, Jensen2017}. The residual correlation energy, defined as \(E_{corr} = E_{exact} - E_{HF}\), quantifies the error of the Hartree-Fock approximation, accurately capturing only a fraction of the total correlation energy \cite{Helgaker2000}. % \cite{Helgaker2000} – correlation energy definition and magnitude; \cite{Cao2019} – modern quantum chemistry perspective
-
-
-% For small molecules, the correlation energy can be on the order of tenths of a Hartree, and can be critical for accurately describing chemical phenomena such as bond dissociation and the properties of open-shell molecules \cite{Cao2019}. The following section introduces Hartree-Fock theory in more detail, setting the stage for the post-Hartree-Fock methods that are the focus of this thesis.
-
-
-
 \subsection{Molecular Orbital Integrals}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 2.3]
-%   "Correlated ab initio methods are formulated in terms of one- and
-%    two-electron integrals evaluated in the molecular orbital basis.
-%    This section defines these integrals and establishes the notation
-%    conventions applied consistently throughout the thesis — resolving
-%    an important ambiguity that arises when comparing PySCF output with
-%    the formulas of Adamowicz \& Bartlett."
-%
-% [SUBSECTION COVERAGE]
-%   §One-electron integrals:
-%   - Overlap: S_{μν} = ⟨μ|ν⟩; kinetic: T_{μν}; nuclear attraction: V_{μν}.
-%   - Core Hamiltonian: h_{pq} = T_{pq} + V_{pq} in MO basis.
-%   - AO-to-MO transformation: h_MO = C^T h_AO C.
-%
-%   §Two-electron integrals (ERIs):
-%   - Chemists' notation (used by PySCF):
-%     (pq|rs) = ∫∫ φ_p*(1)φ_q(1) (1/r_{12}) φ_r*(2)φ_s(2) d1 d2
-%   - 8-fold permutation symmetry of real orbitals.
-%   - Fock matrix: F_{pq} = h_{pq} + Σ_i [2(pi|qi) − (pq|ii)] (RHF).
-%
-%   §Notation convention subsection:
-%   - Physicists' notation: ⟨pq|rs⟩ = (pr|qs)  ← INDEX SWAP!
-%   - Antisymmetrised: ⟨pq‖rs⟩ = ⟨pq|rs⟩ − ⟨pq|sr⟩
-%                              = (pr|qs) − (ps|qr).
-%   - OVOS formulas use ⟨ab‖ij⟩ in PHYSICISTS' antisymmetrised notation.
-%   - PySCF returns (pq|rs) in CHEMISTS' notation.
-%   - Give the explicit conversion used in your code: ⟨pq‖rs⟩ = (pr|qs)−(ps|qr).
-%   - THIS RESOLVES the open question from the code comments!
-%
-% [TABLE] Notation cross-reference — put this in the text!
-%   Columns: Name | Symbol | Expression | PySCF array index order
-%   Rows: Chemists | Physicists | Antisymm. physicists
-%   Caption: "Two-electron integral notation conventions used in this thesis."
-%
-% [LEAD-IN TO §2.4]
-%   "Armed with these integral definitions and notation conventions,
-%    Section~\ref{sec:mp2} derives the MP2 correlation energy and
-%    the first-order amplitude equations that are the computational
-%    core of the OVOS iteration."
-% ---------------------------------------------------------------
+\label{subsec:theory_mo_integrals}
 
 At the core of electronic structure methods are the one- and two-electron integrals evaluated in the molecular orbital basis. These integrals form the building blocks of the Roothaan-Hall equations and the correlation energy expressions used in post-HF methods \cite{Helgaker2000}. This section defines these integrals and establishes the notation conventions applied consistently throughout this thesis, resolving an important ambiguity that arises when comparing PySCF output with the formulas of Adamowicz \& Bartlett \cite{Adamowicz1987}.
 
@@ -122,127 +38,23 @@ Two-electron integrals, also known as electron repulsion integrals (ERIs) are de
 
 
 \subsection{Orbital Space}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 2.6]
-%   "The Optimised Virtual Orbital Space method partitions the full spin-orbital
-%    basis into three non-overlapping subsets: occupied, active virtual, and
-%    inactive virtual. This partitioning lies at the heart of OVOS and must be
-%    defined precisely before any formulas can be stated. This section also
-%    introduces the index notation used consistently throughout the thesis."
-%
-% [WHAT TO COVER]
-%   - Occupied orbitals (i, j, k, l): spin-orbitals with indices 0 … n_elec−1.
-%   - Active virtual (a, b, c, d): indices n_elec … n_elec + N'_virt − 1.
-%     N'_virt is the number of active virtuals = the key OVOS parameter.
-%   - Inactive virtual (e, f, g, h): indices n_elec + N'_virt … n_spin − 1.
-%     These are NOT explicitly rotated; they set the complement space.
-%   - The OVOS rotation operates ONLY in the active_virt ↔ inactive_virt block.
-%   - Full virtual (a..e): all orbitals from n_elec to n_spin−1 (for full MP2).
-%   
-%   CRITICAL ADDITIONS (must include for OVOS comprehension):
-%   - Truncated MP2 energy formula: E_corr,trunc = Σ_{i>j ∈ occ, a>b ∈ active_virt}
-%     t_ij^ab ⟨ij||ab⟩. Emphasize that inactive virtuals do NOT appear in this sum.
-%   - Why truncate? Reduce computational cost from O(N^5) to O(N'^5) where N'<N.
-%   - How are inactive virtuals used? Appear in Fock matrix construction but not
-%     in explicit correlation energy sum.
-%   - Distinction between "full MP2" (§2.4) and "truncated MP2" (here in OVOS context).
-%   - Active space philosophy: choosing N'_virt is a science/art involving accuracy
-%     versus cost tradeoffs.
-%
-% [TABLE] Index notation cross-reference — INCLUDE IN TEXT (very helpful!):
-%   Columns: Label | Indices | Orbital space | Range | Count
-%   Row 1: Occupied    | i,j,k,l | occ          | [0, n_elec)              | n_elec
-%   Row 2: Active virt | a,b,c,d | act. virt     | [n_elec, n_elec+N')      | N'
-%   Row 3: Inact. virt | e,f,g,h | inact. virt   | [n_elec+N', n_spin)      | N_virt−N'
-%   Row 4: All virtual | a..h    | full virt     | [n_elec, n_spin)         | N_virt
-%   Caption: "Orbital subspace notation used throughout this thesis."
-%
-% [FIGURE] Orbital space partition bar diagram:
-%   A horizontal bar divided into:
-%   [ Occupied (i,j) | Active Virtual (a,b) | Inactive Virtual (e,f) ]
-%   Label each region with index letters, counts, and energy order.
-%   Caption: "Partitioning of spin-orbital space for OVOS. The dashed line
-%   separates the active and inactive virtual subspaces being optimised."
-%
-% [LEAD-IN TO §2.7]
-%   "The stationarity condition that defines the optimal rotation between
-%    active and inactive virtual subspaces has a deep connection to the
-%    concept of Brueckner orbitals, which is the focus of the next section."
-% ---------------------------------------------------------------
-
-% Insert a introduction to the concept of orbital spaces...
+\label{subsec:theory_orbital_space}
 
 A quantum state in electronic structure theory is described by a wavefunction that depends on the coordinates of all electrons, and can be represented by Slater determinants, which are products of spatial orbitals 
 and spin functions, 
 \begin{align}
     \chi_p(\mathbf{r}, m_s) = \phi_p(\mathbf{r}) \sigma(m_s)
 \end{align}
-where $\phi_p(\mathbf{r}) = \sum_\mu C_{\mu p} \phi_\mu(\mathbf{r})$ is the spatial orbital expanded in an atomic basis \cite{Helgaker2000}. The spatial part of the spin-orbitals come from basis sets, which are typically composed of Gaussian-type orbitals (GTOs) or Slater-type orbitals (STOs) \cite{Jensen2017}. The choice of basis set can significantly affect the accuracy and computational cost of electronic structure calculations. Commonly used basis sets include minimal basis sets like STO-3G, split-valence basis sets like 6-31G\cite{ditchfield1971a, hehre1972a, dill1975a}, and correlation-consistent basis sets like cc-pVDZ \cite{dunning1989}. The size and quality of the basis set determine the number of spin-orbitals available for constructing the wavefunction, which in turn affects the description of electron correlation and the convergence of post-HF methods \cite{Jensen2017, Helgaker2000}. % In this thesis, we use 6-31G and cc-pVDZ basis sets for our test calculations, as they provide a good balance between accuracy and computational cost of the system.
+where $\phi_p(\mathbf{r}) = \sum_\mu C_{\mu p} \phi_\mu(\mathbf{r})$ is the spatial orbital expanded in an atomic basis \cite{Helgaker2000}. The spatial part of the spin-orbitals come from basis sets, which are typically composed of Gaussian-type orbitals (GTOs) or Slater-type orbitals (STOs) \cite{Jensen2017}. The choice of basis set can significantly affect the accuracy and computational cost of electronic structure calculations. Commonly used basis sets include minimal basis sets like STO-3G, split-valence basis sets like 6-31G\cite{ditchfield1971a, hehre1972a, dill1975a}, and correlation-consistent basis sets like cc-pVDZ \cite{dunning1989}. The size and quality of the basis set determine the number of spin-orbitals available for constructing the wavefunction, which in turn affects the description of electron correlation and the convergence of post-HF methods \cite{Jensen2017, Helgaker2000}. 
 
 \subsection{Spin-Orbital Formalism}
 \label{subsec:theory_spin_orbitals}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 2.5] -> changed to 2.6 to fit better with the flow!!!!
-%   "Working in the spin-orbital basis — where each spatial orbital
-%    gives rise to a pair of spin-orbitals (one for each spin projection) —
-%    provides a unified, compact treatment of unrestricted calculations.
-%    This section describes the spin-orbital construction and the
-%    ordering convention employed throughout the implementation."
-%
-% [WHAT TO COVER]
-%   - Spin-orbital definition: χ_p(x) = φ_p(r) σ(s), σ ∈ {α, β}.
-%   - Total number: n_spin = 2 × n_spatial.
-%   - THIS IMPLEMENTATION uses INTERLEAVED ordering:
-%     index 0 = spatial 0 α, index 1 = spatial 0 β,
-%     index 2 = spatial 1 α, index 3 = spatial 1 β, …
-%     Even indices ↔ α; odd indices ↔ β.
-%   - Fock matrix in spin-orbital basis: block-diagonal 2n×2n matrix.
-%     F_spin[0::2, 0::2] = F_α;  F_spin[1::2, 1::2] = F_β.
-%   - ERI in spin-orbital basis: eri_spin[0::2, 0::2, 0::2, 0::2] = eri_aaaa,
-%     eri_spin[0::2, 0::2, 1::2, 1::2] = eri_aabb, etc.
-%   - After construction, spin-orbitals are RE-SORTED by orbital energy
-%     to form the canonical ordering used in all summations.
-%
-% [FIGURE] Schematic of α/β interleaving:
-%   Two rows: "Spatial α orbitals: 0, 1, 2, …" and
-%             "Spatial β orbitals: 0, 1, 2, …"
-%   Arrow → interleaved spin-orbital sequence: 0α, 0β, 1α, 1β, 2α, 2β, …
-%   Caption: "Interleaved α/β spin-orbital ordering used in the implementation."
-%
-% [LEAD-IN TO §2.6]
-%   "Given this spin-orbital basis, the OVOS method further partitions
-%    the virtual spin-orbitals into an optimised active subset and
-%    a complementary inactive subset, as introduced in the
-%    following section."
-% ---------------------------------------------------------------
 
 The spin-orbital formalism provides a framework for unrestricted calculations by treating each spatial orbital as giving rise to a pair of spin-orbitals, one for each spin projection ($\alpha$ and $\beta$) \cite{Helgaker2000}. A spin-orbital is defined as $\chi_{p,\sigma}(\mathbf{r}, m_s) = \phi_p(\mathbf{r}) \sigma(m_s)$, where $\phi_p(\mathbf{r})$ is the spatial part of the orbital and $\sigma(m_s)$ is the spin function, which can be either $\alpha$ (spin-up) or $\beta$ (spin-down). The total number of spin-orbitals is therefore $n_{spin} = 2 \times n_{spatial}$. In this implementation, an interleaved ordering convention is used for the spin-orbitals: even indices correspond to $\alpha$ spin-orbitals, while odd indices correspond to $\beta$ spin-orbitals, as illustrated in Table \ref{tab:spin_orbital_ordering}. The total number of spatial orbitals is $n_{spatial} = n_{spin} / 2$, and the mapping is as follows: index 0 corresponds to spatial orbital 0 with $\alpha$ spin, index 1 corresponds to spatial orbital 0 with $\beta$ spin, index 2 corresponds to spatial orbital 1 with $\alpha$ spin, etc.
 
 This interleaved ordering allows for a unified treatment of $\alpha$ and $\beta$ electrons in the construction of the Fock matrix and the evaluation of integrals. The Fock matrix in the spin-orbital basis is block-diagonal, with separate blocks for $\alpha$ and $\beta$ spins. $ F_{spin} = \begin{pmatrix}F_\alpha & 0 \\ 0 & F_\beta \end{pmatrix} $ where $F_\alpha$ and $F_\beta$ are the Fock matrices for the $\alpha$ and $\beta$ spin-orbitals, respectively \cite{Helgaker2000}.
 
-% [MISSING CONTENT MARKER] NEW SUBSECTION after "Spin-Orbital Fock Matrix" – Orbital Canonicalization:
-% Add subsection title: "\\subsection{Canonical Ordering of Spin-Orbitals}"
-% Content: "After constructing the Fock matrix and integrals in the spin-orbital basis, the spin-orbitals
-% are routinely re-sorted by their orbital energies to form the canonical (diagonal) ordering.
-% This canonicalization step ensures that the Fock matrix is diagonal in the MO basis, making
-% the orbital energy $\varepsilon_p$ a well-defined diagonal element. Why does this matter?
-% In perturbation-theory methods like MP2, the amplitude denominators $\varepsilon_a + \varepsilon_b - \varepsilon_i - \varepsilon_j$
-% appear in the energy expression. Canonical orbitals have the property that the occupied orbitals
-% (indices $i,j,...$) have the lowest energies, and virtual orbitals (indices $a,b,...$) have
-% higher energies, by construction. This ordering simplifies interpretation and ensures that
-% energy differences are correctly signed. In Chapter~\ref{ch:theory}, Section~\ref{sec:canon},
-% we discuss how OVOS re-canonicalizes the active virtual block after orbital rotations to
-% maintain this key property." 
-
 The two-electron integrals in the spin-orbital basis are also constructed according to this interleaved ordering, with specific blocks corresponding to different spin combinations (e.g., $\alpha\alpha$, $\beta\beta$, $\alpha\beta$) \cite{Helgaker2000}. After the construction of the Fock matrix and the integrals in the spin-orbital basis, the spin-orbitals are re-sorted by their orbital energies to form the canonical ordering used in all subsequent summations and calculations \cite{Helgaker2000}. This ensures that the occupied and virtual orbitals are correctly identified according to their energies, which is essential for the accurate evaluation of correlation energies and amplitudes in post-HF methods \cite{Jensen2017}.
-
-% \begin{figure}[ht]
-%     \centering
-%     \includegraphics[width=0.8\textwidth]{figures/Placeholder.png} % Replace with actual figure file
-%     \caption{Interleaved $\alpha/\beta$ spin-orbital ordering visualisation. Even indices correspond to $\alpha$ spin-orbitals, while odd indices correspond to $\beta$ spin-orbitals. }
-%     \label{fig:spin_orbital_ordering}
-% \end{figure}
-
 
 \begin{table}[ht]
     \centering
@@ -262,15 +74,6 @@ The two-electron integrals in the spin-orbital basis are also constructed accord
     while odd indices correspond to $\beta$ (spin-down) orbitals. The total number of spin-orbitals is $n_{\text{spin}} = 2n_{\text{spatial}}$.}
     \label{tab:spin_orbital_ordering}
 \end{table}
-
-
-% \subsubsection{Spin-Orbital Formulation}
-
-% In the unrestricted Hartree-Fock (UHF) formalism, the indices $i,j$ run over all $\alpha$ and $\beta$ occupied orbitals, while $a,b$ run over all $\alpha$ and $\beta$ virtual orbitals. The antisymmetrised integral form unifies the treatment of $\alpha\alpha$, $\beta\beta$, and $\alpha\beta$ pairs, and the spin-orbital Fock matrix is block-diagonal, with separate blocks for $\alpha$ and $\beta$ spins. The off-diagonal Fock elements vanish for canonical orbitals, ensuring that the orbital energies $\varepsilon_p$ are diagonal in the spin-orbital basis.
-
-
-
-
 
 
 

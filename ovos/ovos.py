@@ -15,25 +15,21 @@ Reference:
 
 import os
 from typing import List, Optional, Tuple
-
 import numpy as np
 import scipy.linalg
 import pyscf
 from pyscf import ao2mo
-
 # Module metadata
 import time
 _LOAD_TIME = time.time()
 _MODULE_VERSION = "dev_build"
-
 # Limit OpenBLAS threads to avoid oversubscription in parallel runs
 os.environ['NUMBA_THREADING_LAYER'] = 'omp'  # Use OpenMP (thread-safe)
 os.environ['NUMBA_NUM_THREADS'] = '1'
 os.environ['OPENBLAS_NUM_THREADS'] = '1'
 os.environ['OMP_NUM_THREADS'] = '1'
-
+# Set printoptions
 np.set_printoptions(precision=4, suppress=False, linewidth=200)
-
 
 class OVOS:
     """
@@ -489,10 +485,6 @@ class OVOS:
         
         return mo_rot, fock_rot, U_spin
 
-
-
-
-
     def _canonicalize_active(self, mo_coeffs: List[np.ndarray],
                             fock_spin: np.ndarray,
                             U_applied) -> Tuple[List[np.ndarray], np.ndarray]:
@@ -581,7 +573,6 @@ class OVOS:
         evals_beta_all = np.diag(fock_canon)[1::2]
         
         return mo_canon, fock_canon, [evals_alpha_all, evals_beta_all]
-
 
     # -------------------------------------------------------------------------
     # Initial T1 amplitudes and norm
@@ -997,7 +988,6 @@ class OVOS:
 
         return result
 
-
 # -----------------------------------------------------------------------------
 # Example usage
 # -----------------------------------------------------------------------------
@@ -1041,3 +1031,4 @@ if __name__ == "__main__":
     E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
 
     print("\nOptimization finished. Final MP2 energy =", E_corr, "Hartree (Stopping reason:", stop_reason, ")")
+    

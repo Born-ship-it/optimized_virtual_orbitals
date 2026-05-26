@@ -3,7 +3,7 @@
 %  Topic: Optimized Virtual Orbital Space (OVOS)
 %  Author: Tobias
 %============================================================
-\documentclass[12pt, a4paper, twoside, openright]{report}
+\documentclass[12pt, a4paper, twoside]{report}
 
 % ---- Preamble (packages, macros, settings) ----------------
 \input{preamble}
@@ -17,16 +17,16 @@
 % \input{frontpage}
 
 % \cleardoublepage
-% \input{chapters/abstract}
+\input{chapters/abstract}
 
-% \cleardoublepage
-% \input{chapters/acknowledgements}
+\clearpage
+\input{chapters/acknowledgements}
 
-% \cleardoublepage
-% \input{chapters/acronyms}
+\clearpage
+\input{chapters/acronyms}
 
-\cleardoublepage
-\setcounter{tocdepth}{2}
+\clearpage
+\setcounter{tocdepth}{1}
 \tableofcontents
 
 % \cleardoublepage
@@ -36,7 +36,7 @@
 % \listoftables
 
 % ---- Main matter ------------------------------------------
-\cleardoublepage
+\clearpage
 \pagenumbering{arabic}
 
 \input{chapters/introduction}
