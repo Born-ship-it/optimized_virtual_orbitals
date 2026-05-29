@@ -15,9 +15,9 @@ This challenge is not only relevant for classical computational chemistry but al
 
 The virtual orbital space, which consists of the unoccupied molecular orbitals, plays a critical role in post-Hartree-Fock methods as it defines the space of excited configurations that contribute to electron correlation. The number of virtual orbitals grows with the size of the basis set, and their contribution to the correlation energy is not uniform. This section surveys various strategies that have been developed to reduce or optimise the virtual orbital space, ultimately motivating the focus of this thesis on the Optimised Virtual Orbital Space (OVOS) method, originally proposed by Adamowicz and Bartlett in 1987 \cite{Adamowicz1987}.
 
-The standard approach to defining virtual orbitals is to use the canonical Hartree-Fock (HF) virtual orbitals, which are obtained by diagonalising the Fock matrix \cite{Helgaker2000}. These orbitals are optimal for describing the single-determinant HF state. However, when we extend to multi-determinantal post-HF methods such as configuration interaction (CI) or coupled cluster (CC), the HF orbitals are no longer optimal for capturing electron correlation. This motivates the need to optimize the orbital space for correlated wavefunctions.
+The standard approach to defining virtual orbitals is to use the canonical Hartree-Fock (HF) virtual orbitals, which are obtained by diagonalising the Fock matrix \cite{Helgaker2000}. These orbitals are optimal for describing the single-determinant HF state. However, when we extend to multi-determinantal post-HF methods such as configuration interaction (CI) or coupled cluster (CC), the HF orbitals are no longer optimal for capturing electron correlation. This motivates the need to optimize the orbital space for correlated wave functions.
 
-Natural orbitals, introduced by Löwdin in 1955 \cite{Lowdin1955}, are obtained by diagonalising the one-particle reduced density matrix (1-RDM) of an MP2 wavefunction. They are ordered by their occupation numbers, which can be used to truncate the virtual space. However, this approach requires an MP2 calculation to obtain the 1-RDM, creating a circular dependency.
+Natural orbitals, introduced by Löwdin in 1955 \cite{Lowdin1955}, are obtained by diagonalising the one-particle reduced density matrix (1-RDM) of an MP2 wave function. They are ordered by their occupation numbers, which can be used to truncate the virtual space. However, this approach requires an MP2 calculation to obtain the 1-RDM, creating a circular dependency.
 
 Frozen natural orbitals (FNO) are a practical solution to this problem. They are computed from a low-cost correlated calculation, such as MP2, and the virtual orbitals are truncated based on an occupation threshold \cite{Taube2005}. This method is widely used in practice and can significantly reduce the computational cost while retaining accuracy.
 
@@ -51,10 +51,11 @@ The structure of this thesis is follows. Chapter~\ref{ch:theory} reviews the the
 \section{Notation and Integral Conventions}
 \label{sec:int_notation}
 
-We establish the following specific notation and conventions for OVOS, maintaining consistency with the original Adamowicz \& Bartlett paper \cite{Adamowicz1987}. % (Note, for a comprehensive treatment see Background Chapter~\ref{ch:background}, Sections~\ref{sec:notation_background} through~\ref{sec:spin_orbital}):
+We establish the following specific notation and conventions for OVOS, maintaining consistency with the original Adamowicz \& Bartlett paper \cite{Adamowicz1987}.
 
 
 \subsubsection{Index Ordering and Orbital Partitioning}
+
 
 Orbital indices follows the standard convention:
 \begin{itemize}

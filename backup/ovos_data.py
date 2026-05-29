@@ -2281,12 +2281,12 @@ if __name__ == "__main__":
             for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
 
                 # After running ovos_object(), plot the results
-                plot_OVOS_convergence_from_data(molecule, basis, methods=["RHF", "prev", "random"])
+                # plot_OVOS_convergence_from_data(molecule, basis, methods=["RHF", "prev", "random"])
                 
                     # Plot convergence histories for all methods on the same plot for comparison
-                # plot_OVOS_convergence_histories(molecule, basis, methods=["RHF", "prev", "random"])
+                plot_OVOS_convergence_histories(molecule, basis, methods=["RHF", "prev", "random"])
 
-    if True:
+    if False:
         for molecule in molecules:  # Done: HF, H2O | Todo: Li2, CO, NH3
 
             # After running ovos_object(), plot the results

@@ -1,438 +1,55 @@
-%============================================================
-%  conclusion.tex  –  Chapter 7
-%============================================================
 \chapter{Conclusion and Outlook}
 \label{ch:conclusion}
 
-In this chapter, we present the main conclusions drawn from the results of this thesis, critically assess the limitations of the current work, and outline promising directions for future research in the area of optimized virtual orbitals and their applications in quantum computing.
+In this chapter, we present what the OVOS implementation achieved, critically assess the limitations of the current work, and outline promising directions for future research in the area of optimized virtual orbitals and their applications in quantum computing.
 
 
 \section{Conclusion}
 \label{sec:con_out_conclusion}
-% ---------------------------------------------------------------
-% WRITING TIPS – CONCLUSION
-% ---------------------------------------------------------------
-% Goal: Synthesise what was found, answer the research questions
-%       posed in the Introduction, and state the significance.
-%       NO new results here – only synthesis and interpretation.
-%
-% Suggested structure:
-%
-%  7.1  Summary
-%       - Restate the problem and goal in 2-3 sentences.
-%       - Walk through the main findings in the same order as the
-%         Results chapter, but at a higher level of abstraction.
-%       - Key quantitative takeaways:
-%         "With only X% of the virtual orbitals, OVOS recovers Y% of the
-%          MP2 correlation energy across all tested systems."
-%       - Comment on the agreement with Adamowicz & Bartlett.
-%
-%  7.2  Critical Assessment
-%       - What worked well?  (Fast convergence for small N_virt,
-%         transferability across different molecules.)
-%       - What were limitations?
-%         - Oscillatory convergence for large active spaces.
-%         - Negative Hessian eigenvalues requiring level-shifting.
-%         - UHF-reference artefacts for closed-shell molecules?
-%       - Be honest: point out where results differ from expectations
-%         and why.
-%
-%  7.3  Implications for Quantum Computing
-%       - Quantify the qubit saving enabled by OVOS.
-%         (E.g., for N₂/cc-pVDZ: full space = 56 spin-orbs = 56 qubits;
-%          with OVOS 50% recovery → 28 qubits for X% energy accuracy.)
-%       - This is the connection to the broader thesis motivation.
-%
-%  7.4  Answers to Research Questions
-%       - If you stated explicit research questions in the Introduction,
-%         answer each one explicitly here (some supervisors require this).
-%
-% Tips:
-%   - Do NOT introduce new data, citations, or results in the conclusion.
-%   - Aim for 2–4 pages.
-%   - Use past tense throughout ("We showed that…", "It was found that…").
-%   - End with a one-paragraph statement of the broader significance.
-% ---------------------------------------------------------------
-
-% 1.4 Objectives
-% The thesis will seek to achieve the following specific objectives:
-% 1. Implement and validate the OVOS algorithm of Adamowicz & Bartlett [6] using
-% the PySCF software package, for a representative set of molecules and basis
-% sets.
-% 2. Characterise the energy recovery as a function of the active virtual orbital count
-% for all test systems, quantifying the fraction of correlation energy recovered by
-% the OVOS-optimised orbitals.
-% 3. Investigate whether OVOS-optimised molecular orbitals satisfy the Brueckner
-% orbital condition at the MP2 level (vanishing T1 amplitudes), and assess the
-% theoretical connection between OVOS and orbital-optimised MP2 [11].
-% 4. Quantify the potential benefit of OVOS-optimised orbitals as a reference trial state
-% for VQE-type quantum computing algorithms: assess the expected improvement
-% in reference-state overlap and compare initialisation strategies (default UHF,
-% OVOS, UMP2 natural orbitals).
 
 In this thesis, we have implemented the Optimized Virtual Orbital Space (OVOS) method of Adamowicz \& Bartlett \cite{Adamowicz1987} by coding it up in Python. The following conclusions can be drawn from the results presented in Chapter~\ref{ch:results}. Below we further discuss the implications of these conclusions for quantum computing applications.
 
 
 \subsection{Summary of Findings}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 7.1]
-%   "This section summarises the principal results of the thesis,
-%    revisiting each research objective stated in the Introduction
-%    (\S~\ref{ch:introduction}) and reporting whether and to what extent
-%    it was achieved."
-%
-% [WHAT TO COVER]
-%   - Restate the OVOS problem and goal (2-3 sentences).
-%   - Walk through the main findings in Results chapter order:
-%     (1) Implementation validated against PySCF and Adamowicz \& Bartlett.
-%     (2) $\eta$ curves: describe the key quantitative result.
-%         Example: ``With $N'_{\rm virt} = N_{\rm virt}/2$, OVOS recovers
-%         $\eta \approx 0.9$ of the MP2 correlation energy across all
-%         test molecules and basis sets, consistent with Ref.~\cite{Adamowicz1987}.''
-%     (3) Initialisation: warm-start is robust; random sampling occasionally
-%         finds lower energy (evidence of local minima for large spaces).
-%     (4) Brueckner: T1 norms reduced in OVOS basis vs.~HF basis.
-%     (5) VQE resources: qubit savings quantified.
-%   - End with a succinct, one-sentence ``headline result''.
-%
-% [LEAD-IN TO §7.2]
-%   "A frank assessment of the limitations and caveats of these
-%    results is provided in the following section."
-% ---------------------------------------------------------------
 
-This section summarises the main findings of this thesis in relation to the research objectives outlined in the Introduction \ref{ch:introduction}. The implementation of the OVOS method was successfully validated against both PySCF and the original results of Adamowicz \& Bartlett, demonstrating that our code correctly captures the expected energy recovery behaviour. The key quantitative finding is that with only a fraction of the virtual orbitals (e.g., $N'_{\rm virt} \approx 50-60\% \text{ of } N_{\rm virt}$), OVOS can recover approximately 90\% of the MP2 correlation energy across all tested molecules and basis sets. With remarkable similarity to the original results achieved by Li2 in cc-pVDZ of 90\% at 28\% of $N_{\rm virt}$, this demonstrates the robustness of the OVOS approach and its variability in performance across different molecular systems. The size of basis set affecting the number of virtual orbitals available for optimization for the same molecule, showed no clear trend in relative MP2 recovery when choosing a relative higher number of virtual orbitals in OVOS compared to the observed difference in relative lower number of virtual orbitals in OVOS for the smaller basis set. This indicates that a larger basis set, with more virtual orbitals, despite offering more flexibility for orbital optimization and does not necessarily allow for a better recovery of correlation energy, especially as we approach the full virtual space. 
+This section summarises the main findings of this thesis in relation to the research objectives outlined in the Introduction \ref{ch:introduction}. The implementation of the OVOS method was successfully validated against both PySCF and the original results of Adamowicz \& Bartlett, demonstrating that our code correctly captures the expected energy recovery behaviour. The key quantitative finding is that with only a fraction of the virtual orbitals (e.g., $N'_{\rm virt} \approx 50-60\% \text{ of } N_{\rm virt}$), OVOS can recover approximately 90\% of the MP2 correlation energy across all tested molecules and basis sets. Li$_2$ reached 90\% recovery at only 28\% of virtuals, matching the efficiency seen in the original work. The size of basis set affecting the number of virtual orbitals available for optimization for the same molecule, showed no clear trend in relative MP2 recovery when choosing a relative higher number of virtual orbitals in OVOS compared to the observed difference in relative lower number of virtual orbitals in OVOS for the smaller basis set. This indicates that a larger basis set, with more virtual orbitals, despite offering more flexibility for orbital optimization and does not necessarily allow for a better recovery of correlation energy, especially as we approach the full virtual space. 
 
-The initialisation strategies for the OVOS optimization was found to mainly agree and convergence was generally robust, with cases where the number of active virtual orbitals starts approaching the full virtual space, the convergence becomes more prone to getting stuck in local minima. Here it was genereally observed across molecules that the different initialisation strategies (RHF, warm-start, random sampling) could lead to different convergence behaviours, with the random sampling and RHF, occasionally finding lower energy solutions than the warm-start. This suggests that while the OVOS method is generally robust, there may be cases where exploring multiple initialisations could yield better results, especially for larger active spaces.
+The initialisation strategies for the OVOS optimization was found to mainly agree and convergence was generally robust, with cases where the number of active virtual orbitals starts approaching the full virtual space, the convergence becomes more prone to getting stuck in local minima. Here it was genereally observed across molecules that the different initialisation strategies (RHF, warm-start, random sampling) could lead to different convergence behaviours, with the random sampling and RHF, occasionally finding lower energy solutions than the warm-start. This suggests that while the OVOS method is generally robust, there may be cases where exploring multiple initialisations could yield better results, especially for larger active spaces. Thus OVOS retains the essential physics while shrinking the virtual space by a factor of two.
 
-
-This result confirms the effectiveness of OVOS in reducing the virtual orbital space while retaining most of the correlation energy. 
-
-
-% Just to keep track
-% Procentage of total space it took to reach 90\% recovery for each molecule in cc--pVDZ:
-% HF: 64\%  (out of 14)
-% H2O: 68\% (out of 19)
-% CO: 62\%  (out of 21)
-% NH3: 50\% (out of 24)
-% Li2: 28\% (out of 25)
-% Li2 Wins -> more molecule dependent than just the number of virtual orbitals. 
-
-% All OVOS converge to correlation energies below to at full space MP2 correlation energy... Expected!
-
-% See OVOS convergence is not steady and need more work!!! 
-
-% Difficult to correlate convergence iteration count to number of virtual orbitals, because of the oscillatory convergence. Need to do more work on this.
-
-% This indicates that a larger basis set, with more virtual orbitals, despite offering more flexibility for orbital optimization and does not necessarily allow for a better recovery of correlation energy, especially as we approach the full virtual space.
-
-% The agreement with the results from Adamowicz \& Bartlett, despite differences in computational details, provides confidence in the correctness of the OVOS implementation and its ability to capture the expected energy recovery behaviour. Observe some molecules might need bigger basis sets before similar behaviour is observed, which is consistent with the fact that a larger basis set, with more virtual orbitals, offers more flexibility for orbital optimization and does not necessarily allow for a better recovery of correlation energy, especially as we approach the full virtual space.
-
-% The advantage in bigger basis sets is the procentage of full space, not flat out number of virtual orbitals. -> 100 virutal -> 20\% virtual orbitals to reach 90\% recovery, vs. 20 virtual orbitals to reach 90\% recovery in a smaller basis set with only 25 virtual orbitals. -> CO plot looks like an outlier for parts of the line...
-
-% Lower procentages of full space works better for the bigger the basis set, which is consistent with the fact that a larger basis set has more virtual orbitals, so the advantage of a larger basis set is more pronounced. 
-
-% For CO the two lines of basis sets cross the earliest, showing the least improvement. With HF the two lines cross the latest, showing the most improvement. This is consistent with the fact that HF has the least number of virtual orbitals, so the advantage of a larger basis set is more pronounced....
-
-% The OVOS-optimised orbitals seems to catch up to the UMP2 natural orbitals in terms of energy convergence after dissociation.
-
-% Iteration count of OVOS optimised orbitals seems to work the best for non ooVQE and random initialization... When disregarding the energy convergence...
-% While the OVOS-optimised orbitals seems to have the biggest spread in iteration count...
-
-...
+The OVOS optimised orbitals as VQE reference state was found to consistently reach a lower energy before the energy kink appeared, only for HF was it found that the converged energy was higher than the UHF orbitals. This suggests that the OVOS-optimised orbitals generally provide a better reference state for VQE-type algorithms compared to the default UHF orbitals, which is consistent with the theoretical expectation that OVOS should yield orbitals with better overlap with the correlated ground state. However, the fact that for HF the OVOS-optimised orbitals did not outperform the UHF orbitals indicates that there may be cases where OVOS does not provide a significant advantage, and further investigation into the factors influencing this behaviour would be valuable. It was found that UMP2 natural orbitals consistently reached a lower energy than the OVOS optimised orbitals, which is expected given that UMP2 natural orbitals are known to provide a good approximation to the correlated ground state. Only for H2O did we observe at some geometries a similar performance to the UMP2 natural orbitals. Observing the different configurations of VQE, the OVOS-optimised orbitals seems to show a bigger spread in iteration count, while the UHF and UMP2 natural orbitals seems to show a more consistent iteration count across different configurations. This suggests that while OVOS-optimised orbitals can provide a better reference state for VQE in some cases, their convergence behaviour may be more variable compared to UMP2 natural orbitals, which could have implications for the reliability of VQE calculations using OVOS orbitals. It was however observed that when regarding the mean iteration count, the OVOS-optimised orbitals seems to perform similar to the UHF and UMP2 natural orbitals, with cases where it performs better and cases where it performs worse across different configurations. So despite OVOS-optimised orbitals not beating the UMP2 natural orbitals in terms of energy convergence, it seems to perform similarly in terms of iteration count, which is an interesting result that suggests that OVOS-optimised orbitals may still be a viable option for VQE reference states, especially considering the potential qubit savings they offer.
 
 \subsection{Critical Assessment}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 7.2]
-%   "No method is without limitations. This section critically evaluates
-%    the assumptions, approximations, and numerical issues encountered
-%    in this work, providing perspective on the reliability and
-%    generalisability of the results."
-%
-% [WHAT TO COVER]
-%   Strengths:
-%   - Fast convergence for small $N'$ (few iterations needed).
-%   - Molecule-independent behaviour of $\eta$ curve.
-%   - Simple to implement on top of any HF code.
-%
-%   Limitations / caveats:
-%   - Oscillatory convergence for large active spaces or near-degenerate orbitals.
-%   - UHF reference introduces spin contamination for closed-shell molecules;
-%     a RHF reference would be cleaner.
-%   - Level-shifting introduces an ad hoc parameter;
-%     rigorous trust-region methods would be cleaner.
-%   - The Hessian block-inversion drops off-diagonal $(e \neq f)$ blocks;
-%     quantify the error introduced.
-%   - T1 / Brueckner analysis is at the MP2 level only;
-%     full CCD-level Brueckner test is left to future work.
-%
-% [LEAD-IN TO §7.3]
-%   "Despite these limitations, the results carry meaningful implications
-%    for the application of OVOS in quantum computing contexts,
-%    as discussed in the following section."
-% ---------------------------------------------------------------
 
-No method is without limitations, and it is important to critically assess the assumptions, approximations, and numerical issues encountered in this work to provide perspective on the reliability and generalisability of the results.
+Several practical limitations became apparent during implementation and testing, and they directly affect how much one can trust the present results.
 
 The OVOS method implementation was not one to one with the original implementation by Adamowicz \& Bartlett, here we took a different approach to their initial active space. More importantly, the lack of a direct comparison with their code and the differences in computational details (e.g., integral evaluation, convergence criteria, ill-conditioning) means that while the agreement in energy recovery behaviour is reassuring, it does not guarantee that the same local minima are being found. 
 
 Despite the overall success of the OVOS method in recovering a significant fraction of the correlation energy with a reduced virtual space, we observed some limitations and caveats. The convergence behaviour was found to be oscillatory for larger active spaces, which suggests that the optimization landscape may have multiple local minima. This could potentially be mitigated by implementing more robust optimization techniques, such as trust-region methods or line-search algorithms, rather than relying solely on the Newton-Raphson approach with level-shifting. The use of a UHF reference for closed-shell molecules introduces spin contamination, which could affect the quality of the optimized orbitals. A RHF reference would be cleaner and may lead to more stable convergence for closed-shell systems. Additionally, the block-diagonal approximation of the Hessian used in the optimization may introduce errors, especially for larger active spaces where off-diagonal coupling between different virtual orbitals could be significant.
 
+The VQE calculations in SlowQuant were performed using a one step optimization of the wave function, which may not fully capture the potential benefits of OVOS-optimized orbitals. A more thorough exploration of the VQE optimization on quantum simulators or hardware, including multiple optimization steps and different ansatz choices, would provide a more comprehensive assessment of the advantages of OVOS orbitals for quantum algorithms. Furthermore, the comparison with UMP2 natural orbitals highlights that while OVOS can provide a better reference state than UHF orbitals, it may not always outperform more sophisticated orbital choices, and understanding the conditions under which OVOS provides the most benefit would be an important area for future investigation.
 
-\subsection{Implications for Quantum Computing}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 7.3]
-%   "The reduction of the virtual orbital space enabled by OVOS translates
-%    directly into savings in quantum computational resources: fewer qubits,
-%    shallower circuits, and a better-prepared reference state for VQE.
-%    This section quantifies these savings and contextualises them within
-%    current quantum hardware capabilities."
-%
-% [WHAT TO COVER]
-%   - Qubit saving: $\Delta Q = 2(N_{\rm virt} - N'_{\rm virt})$ for JW encoding.
-%     Provide concrete example: N\textsubscript{2}/cc-pVDZ,
-%     full space = 56 spin-orbitals = 56 qubits;
-%     $\eta = 0.9$ achieved at $N'=28$ spin-orbs = 28 qubits.
-%   - UCCSD parameter reduction: scales as $\mathcal{O}(N_{\rm occ}^2 N'^2)$.
-%   - T1 suppression (Brueckner property): UCCSD \to UCCD for circuits;
-%     shallower and fewer parameters.
-%   - Contextualise against NISQ: 50-100 qubit devices in 2024; OVOS brings
-%     medium-sized molecules into range of current hardware.
-%
-% [TABLE] Quantum resource summary:
-%   Columns: Molecule | Basis | $Q_{\rm full}$ | $Q_{\rm OVOS@90\%}$ |
-%            $\Delta Q$ | UCCSD params (full) | UCCSD params (OVOS)
-%   Caption: ``Qubit counts and UCCSD parameter counts for full-space
-%   and OVOS-truncated calculations at 90\% energy recovery."
-%
-% [CLOSING PARAGRAPH FOR ENTIRE CONCLUSION]
-%   End with a broader significance statement:
-%   ``The combination of orbital-space optimisation and quantum algorithms
-%    represents a promising strategy for extending the reach of near-term
-%    quantum chemistry calculations beyond what either approach alone can
-%    achieve. This thesis provides a validated foundation for further
-%    exploration of OVOS-assisted quantum computation."
-% ---------------------------------------------------------------
-
-...
+The combination of orbital-space optimisation and quantum algorithms represents a promising strategy for extending the reach of near-term quantum chemistry calculations beyond what either approach alone can achieve. This thesis provides a validated foundation for further exploration of OVOS assisted quantum computation, and the insights gained here will inform future developments in this exciting area of research.
 
 
 \section{Outlook}
 \label{sec:con_out_outlook}
 
-% ---------------------------------------------------------------
-% WRITING TIPS – OUTLOOK
-% ---------------------------------------------------------------
-% Goal: Show you understand the field deeply enough to know what
-%       comes next. This chapter demonstrates scientific maturity.
-%       It should be forward-looking, speculative (but grounded),
-%       and inspiring.
-%
-% Suggested content (pick the most relevant):
-%
-%  8.1  Algorithmic Improvements
-%       - Implement the full RLE (Reduced Linear Equation) method of
-%         Purvis & Bartlett for more stable Hessian inversion.
-%       - Trust-region or line-search augmentation to Newton-Raphson
-%         to avoid overshooting.
-%       - Exploit sparsity of ⟨ij|ab⟩ integrals for large basis sets.
-%       - GPU acceleration for the 4-index integral transformation.
-%
-%  8.2  Method Extensions
-%       - Extension to CCSD or CCSD(T) reference (OVOS beyond MP2).
-%       - OVOS for excited states: optimise virtual space for EOM-CC.
-%       - Restricted (RHF) formalism for closed-shell molecules
-%         (simpler, avoids UHF spin contamination).
-%       - State-averaged OVOS for multi-reference problems.
-%       - Frozen natural orbitals (FNO) vs. OVOS: systematic comparison.
-%
-%  8.3  Quantum Computing Applications
-%       - Feed OVOS-reduced orbital set directly into VQE or QPE.
-%       - Benchmark qubit counts and circuit depths on real hardware.
-%       - Combine OVOS with active-space selection tools
-%         (e.g., AVAS, DMET).
-%       - Explore OVOS within quantum embedding theories.
-%
-%  8.4  Larger and More Complex Systems
-%       - Scale to transition-metal complexes, biological molecules.
-%       - Periodic systems (solids) using k-point sampling.
-%       - Basis set extrapolation combined with orbital truncation.
-%
-%  8.5  Validation and Benchmarking
-%       - Compare OVOS with pair natural orbitals (PNO) and
-%         domain-based local pair natural orbitals (DLPNO).
-%       - Benchmark against CCSD(T)/CBS as the gold standard.
-%       - Test robustness for molecules with strong correlation
-%         (e.g., stretched bonds, diradicals).
-%
-% Tips:
-%   - Be specific: "future work should…" is less compelling than
-%     "a promising direction is X because Y."
-%   - Cite recent papers that your work connects to.
-%   - Keep it to 2–3 pages: it is an outlook, not a new proposal.
-%   - Do NOT promise results you have not verified – use conditional
-%     language ("could", "may", "is expected to").
-% ---------------------------------------------------------------
-
-
-...
-
+This section outlines promising directions for future research building on the results of this thesis. The OVOS method has demonstrated significant potential for reducing the virtual orbital space while retaining most of the correlation energy, but there are many avenues for improving the algorithm, extending the method to new contexts, and applying it to larger and more complex systems. Below we discuss these opportunities in detail.
 
 
 \subsection{Algorithmic Improvements}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 8.1]
-%   "The current OVOS implementation is a correct but unoptimised
-%    proof-of-concept. This section identifies the most impactful
-%    algorithmic improvements that would increase numerical stability
-%    and computational efficiency."
-%
-% [WHAT TO COVER]
-%   - Full RLE (Reduced Linear Equation) method of Purvis \& Bartlett
-%     \cite{Purvis1982}: solves the Newton system iteratively with a
-%     Krylov subspace; avoids explicit Hessian inversion.
-%   - Trust-region or line-search augmentation: prevent overshooting
-%     in regions of large $|\Delta R|$.
-%   - Exploit 8-fold symmetry of ERIs: halve memory and integral transform cost.
-%   - GPU acceleration: Hessian assembly loops are embarrassingly parallel.
-%   - Direct OVOS: compute only the integrals needed at each iteration
-%     (avoids storing the full $N_4$ ERI tensor).
-%
-% [LEAD-IN TO §8.2]
-%   "Beyond algorithmic improvements, the method itself can be extended
-%    to higher levels of theory, as described in the following section."
-% ---------------------------------------------------------------
 
-HESSIAN
-
-NEWTON STEP VS DIIS
+The current OVOS implementation serves as a proof-of-concept, but there are several algorithmic improvements that could enhance its numerical stability and computational efficiency. The selection of initial active orbitals is crucial for the success of the optimization, therefore different non-trivial approaches to orbital selection could be explored. Additionally, augmenting the optimization with trust-region or line-search techniques could help prevent overshooting in regions where the rotation is large, leading to more robust convergence. Exploiting parallelism and GPU acceleration could significantly reduce the computational time, especially for larger basis sets. 
 
 \subsection{Method Extensions}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 8.2]
-%   "The OVOS framework developed here is formulated at the MP2 level
-%    within an unrestricted reference. This section surveys the most
-%    promising extensions to higher correlated levels and alternative
-%    electronic structure contexts."
-%
-% [WHAT TO COVER]
-%   - OVOS for CCSD/CCSD(T): minimise the CCSD energy over orbital
-%     rotations (\cite{Pitonak2009, Rolik2011} have explored this).
-%   - Restricted (RHF) OVOS: cleaner for closed-shell molecules;
-%     avoids UHF spin contamination; reduces N by factor of 2.
-%   - Excited states: optimise virtual space for EOM-CCSD or TDDFT responses.
-%   - Multi-reference: state-averaged OVOS for near-degenerate systems.
-%   - Comparison with FNO (frozen natural orbitals) and
-%     PNO (pair natural orbitals): systematic benchmark study.
-%
-% [LEAD-IN TO §8.3]
-%   "The most direct application of the results of this thesis is
-%    to quantum computing, where OVOS-reduced orbital spaces offer
-%    tangible qubit savings, as described in the following section."
-% ---------------------------------------------------------------
 
-AS Bartlett ALSO COVER TO HIGHER ORDER...
+The OVOS framework developed in this thesis is formulated at the MP2 level within an unrestricted reference, but there are several promising extensions to higher levels of theory and alternative electronic structure contexts. Extending OVOS to CCSD or CCSD(T) would allow for a more accurate description of correlation effects, and could be achieved by minimising the CCSD energy over orbital rotations. Implementing a restricted (RHF) formalism for closed-shell molecules would provide a cleaner approach that avoids UHF spin contamination and reduces the number of virtual orbitals by half. Additionally, extending OVOS to excited states, such as through EOM-CCSD or TDDFT response theory, would enable the optimisation of virtual spaces for excited-state properties. For systems with near-degeneracies, a state-averaged OVOS approach could be developed to optimise orbitals across multiple states simultaneously.
 
 
 \subsection{Quantum Computing Applications}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 8.3]
-%   "The truncation of the virtual orbital space by OVOS is directly
-%    relevant to quantum chemistry on near-term and fault-tolerant
-%    quantum devices. This section outlines three concrete directions
-%    for leveraging OVOS in quantum computing applications."
-%
-% [LEAD-IN TO §8.3.1] (already has detailed tips below)
-%   Start the section with 2-3 sentences contextualising why
-%   quantum computing and OVOS are natural partners, then introduce
-%   the three subsections.
-% ---------------------------------------------------------------
-% ---------------------------------------------------------------
-% WRITING TIPS – QUANTUM COMPUTING (expanded)
-% ---------------------------------------------------------------
-%  8.3.1  OVOS Orbitals as VQE Reference State
-%       - The thesis demonstrates (Theory §3.10) that OVOS MOs give
-%         better overlap with the correlated ground state than HF MOs.
-%       - Future work: run actual VQE(UCCSD) calculations in PySCF or
-%         Qiskit starting from OVOS vs HF orbitals; compare:
-%           * number of UCCSD parameters required for a target accuracy,
-%           * circuit depth,
-%           * barren-plateau susceptibility.
-%       - Benchmark on small molecules (H₂, LiH) accessible to current
-%         hardware or high-fidelity classical simulators.
-%
-%  8.3.2  Brueckner Orbitals and T1 Reduction for NISQ Devices
-%       - On NISQ devices, shallow circuits are essential.
-%       - If OVOS ≈ Brueckner orbitals, T1 amplitudes are suppressed
-%         → UCCSD reduces to UCCD → shallower circuit.
-%       - Quantify T1 reduction: compute the Frobenius norm of
-%         T1 amplitudes in HF vs OVOS basis for each test molecule.
-%       - This provides a concrete metric of how much OVOS helps NISQ.
-%
-%  8.3.3  Qubit Count Reduction and Fault-Tolerant Perspectives
-%       - State the qubit saving per molecule/basis as a table.
-%       - For fault-tolerant QPE, fewer logical qubits → fewer T gates
-%         → lower error-correction overhead.
-%       - Combine OVOS with AVAS or DMET for further active-space
-%         reduction.
-% ---------------------------------------------------------------
-\subsubsection{OVOS Orbitals as a VQE Reference State}
-\label{sec:outlook_vqe}
 
-ON QUANTUM HARDWARE!!!!!!!
-
-\subsubsection{Brueckner Orbitals and Circuit Depth on NISQ Devices}
-\label{sec:outlook_brueckner_nisq}
-
-\subsubsection{Qubit Count Reduction and Fault-Tolerant Perspectives}
+The truncation of the virtual orbital space by OVOS is directly relevant to quantum chemistry on near-term and fault-tolerant quantum devices. The reduction in the number of virtual orbitals translates into a reduction in the number of qubits required to represent the electronic structure problem, as well as a potential reduction in circuit depth for variational algorithms like VQE. Running actual VQE calculations using OVOS orbitals on quantum simulators or hardware would provide concrete evidence of the benefits of OVOS in a quantum computing context. If OVOS orbitals indeed approximate Brueckner orbitals, we would expect a significant reduction in T1 amplitudes, which would allow us to use a UCCD ansatz instead of UCCSD, further reducing circuit depth. Quantifying the T1 reduction and benchmarking the performance of VQE with OVOS orbitals against traditional HF orbitals would be an important next step in demonstrating the practical utility of OVOS for quantum chemistry on quantum devices. 
 
 \subsection{Larger Molecular Systems}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 8.4]
-%   "This thesis benchmarks OVOS on small molecules (up to 18 atoms);
-%    extending the method to larger and more complex systems would
-%    demonstrate its practical utility for real-world applications
-%    in catalysis, drug discovery, and materials science."
-%
-% [WHAT TO COVER]
-%   - Transition-metal complexes: strong correlation; test limits of
-%     single-reference OVOS.
-%   - Biological systems: amino acids, small peptides.
-%   - Periodic systems: solid-state MP2 (using k-point sampling);
-%     OVOS as a natural partner to plane-wave CC methods.
-%   - Basis-set extrapolation: combine OVOS truncation with CBS limit.
-%
-% [LEAD-IN TO §8.5]
-%   "Alongside scaling to larger systems, rigorous benchmarking
-%    against state-of-the-art methods is needed to establish
-%    the accuracy and reliability of OVOS, as discussed
-%    in the final section."
-% ---------------------------------------------------------------
 
-EXPAND TO LARGER BASIS SETS OR BIGGER MOLECULES - PROTEINS HOW DOES OVOS PERFORM...
-
-\subsection{Benchmarking and Validation}
-% ---------------------------------------------------------------
-% [SECTION INTRO – 8.5]
-%   "The ultimate test of OVOS is how well it compares to established
-%    orbital truncation methods and how reliably it performs across
-%    challenging chemical systems. This section outlines the most
-%    important benchmarking studies for future work."
-%
-% [WHAT TO COVER]
-%   - Compare OVOS with FNO (frozen natural orbitals): same N',
-%     which gives better energy recovery?
-%   - Compare with DLPNO-CCSD(T)/CBS: the practical gold standard.
-%   - Robustness at stretched geometries (bond-breaking):
-%     OVOS at the MP2 level may fail near conical intersections.
-%   - Conformational sampling: is OVOS stable across different geometries
-%     of the same molecule?
-%   - OpenMolcas, PySCF, ORCA: benchmarking against multiple codes
-%     removes implementation bias.
-%
-% [CLOSING SENTENCE FOR ENTIRE OUTLOOK]
-%   ``The methods introduced in this thesis represent an entry point
-%    into a rich programme of future research that bridges classical
-%    orbital optimisation and quantum computational chemistry."
-% ---------------------------------------------------------------
-
-EXPAND THE BENCHMARKING AGAINST OTHER METHODS ... 
+The OVOS method has been benchmarked on small molecules with up to 4 atoms, but extending the method to larger and more complex systems would demonstrate its practical utility for real-world applications in catalysis, drug discovery, and materials science. Transition-metal complexes, which often exhibit strong correlation effects, would be a particularly interesting test case for the limits of OVOS. Additionally, applying OVOS to biological systems such as amino acids and small peptides could provide insights into its performance in more realistic chemical environments. For periodic systems, implementing OVOS in the context of solid-state MP2 calculations would be a natural extension. Finally, combining OVOS truncation with basis-set extrapolation techniques to approach the complete basis set (CBS) limit could further enhance the accuracy of correlation energy estimates while keeping computational costs manageable.

@@ -98,7 +98,7 @@ def plot_OVOS_convergence(atom, basis):
             # print()
 
         # Get number of electrons, full space size, active space size, MP2 correlation energy, CCSD(T) correlation energy
-    with open(f"branch/data/{atom}/{basis}/molecule_data.json", "r") as f:
+    with open(f"backup/data/{atom}/{basis}/OVOS/molecule_data.json", "r") as f:
         molecule_data = json.load(f)
         num_electrons = molecule_data["num_electrons"]
         full_space_size = molecule_data["full_space_size"]
@@ -161,23 +161,23 @@ def plot_OVOS_convergence(atom, basis):
 
         # Load previous OVOS results
         if use_previous_ovos == True:
-            with open("branch/data/"+atom+"/"+basis+"/lst_MP2_different_virt_orbs_prev.json", "r") as f:
+            with open("backup/data/"+atom+"/"+basis+"/OVOS/lst_MP2_different_virt_orbs_prev.json", "r") as f:
                 lst_E_corr_prev = json.load(f)  
         # Load random rotation results
         if use_random_rotation == True:
-            with open("branch/data/"+atom+"/"+basis+"/lst_MP2_different_virt_orbs_random.json", "r") as f: 
+            with open("backup/data/"+atom+"/"+basis+"/OVOS/lst_MP2_different_virt_orbs_random.json", "r") as f: 
                 lst_E_corr_random = json.load(f)
         # Load RHF start guess results
         if use_rhf_start == True:
-            with open("branch/data/"+atom+"/"+basis+"/lst_MP2_different_virt_orbs_RHF_init.json", "r") as f:
+            with open("backup/data/"+atom+"/"+basis+"/OVOS/lst_MP2_different_virt_orbs_RHF_init.json", "r") as f:
                 lst_E_corr_RHF = json.load(f)
         # Load UHF start guess results
         if use_uhf_start == True:
-            with open("branch/data/"+atom+"/"+basis+"/lst_MP2_different_virt_orbs_UHF_init.json", "r") as f:
+            with open("backup/data/"+atom+"/"+basis+"/OVOS/lst_MP2_different_virt_orbs_UHF_init.json", "r") as f:
                 lst_E_corr_UHF = json.load(f)
         # Load UCASSCF results
         if use_UCASSCF == True:
-            with open("branch/data/"+atom+"/"+basis+"/lst_UCASSCF_results_RHF.json", "r") as f:
+            with open("backup/data/"+atom+"/"+basis+"/OVOS/lst_UCASSCF_results_RHF.json", "r") as f:
                 lst_E_corr_UCASSCF = json.load(f)
 
 
@@ -707,17 +707,17 @@ def plot_OVOS_convergence(atom, basis):
 
         # Save plot
         if rle_optimization == True and use_combine == False:
-            plt.savefig("branch/images/vorb/"+atom+"/ovos_conv_vs_vorb_"+atom+"_"+basis+"_RLE.png", dpi=150)
-            print("Plot saved to branch/images/vorb/.png with RLE")
+            plt.savefig("backup/images/vorb/"+atom+"/ovos_conv_vs_vorb_"+atom+"_"+basis+"_RLE.png", dpi=150)
+            print("Plot saved to backup/images/vorb/.png with RLE")
         elif use_previous_ovos == True and use_combine == False:
-            plt.savefig("branch/images/vorb/"+atom+"/ovos_conv_vs_vorb_"+atom+"_"+basis+"_prev.png", dpi=150)
-            print("Plot saved to branch/images/vorb/.png with previous OVOS results")
+            plt.savefig("backup/images/vorb/"+atom+"/ovos_conv_vs_vorb_"+atom+"_"+basis+"_prev.png", dpi=150)
+            print("Plot saved to backup/images/vorb/.png with previous OVOS results")
         elif use_previous_ovos == True and use_combine == True:
-            plt.savefig("branch/images/vorb/"+atom+"/ovos_conv_vs_vorb_"+atom+"_"+basis+"_comb.png", dpi=150)
-            print("Plot saved to branch/images/vorb/.png with combined standard and previous OVOS results")
+            plt.savefig("backup/images/vorb/"+atom+"/ovos_conv_vs_vorb_"+atom+"_"+basis+"_comb.png", dpi=150)
+            print("Plot saved to backup/images/vorb/.png with combined standard and previous OVOS results")
         else:
-            plt.savefig("branch/images/vorb/"+atom+"/ovos_conv_vs_vorb_"+atom+"_"+basis+"_RHF.png", dpi=150)
-            print("Plot saved to branch/images/vorb/.png standard")
+            plt.savefig("backup/images/vorb/"+atom+"/ovos_conv_vs_vorb_"+atom+"_"+basis+"_RHF.png", dpi=150)
+            print("Plot saved to backup/images/vorb/.png standard")
 
 # Example usage:   
 for basis in ["6-31G"]:         # Do: "6-31G", "cc-pVDZ"

@@ -8,7 +8,7 @@ This chapter serves as a bridge between the abstract theoretical concepts and th
 \section{Algorithm}
 \label{sec:method_algorithm}
 
-Here we outline the full OVOS algorithm as implemented in this work, following the general structure proposed by Adamowicz \& Bartlett \cite{Adamowicz1987}. The algorthm consists of an initialisation phase followed by an iterative loop that optimises the active virtual orbitals to maximise the MP2 correlation energy. The key steps are summarised as pseudocode in Algorithm~\ref{alg:ovos}, which serves as a roadmap for the detailed descriptions in the subsequent sections.
+Here we outline the full OVOS algorithm as implemented in this work, following the general structure proposed by Adamowicz \& Bartlett \cite{Adamowicz1987}. The algorithm consists of an initialisation phase followed by an iterative loop that optimises the active virtual orbitals to maximise the MP2 correlation energy. The key steps are summarised as pseudocode in Algorithm~\ref{alg:ovos}, which serves as a roadmap for the detailed descriptions in the subsequent sections.
 
 \begin{algorithm}[H]
 \caption{OVOS Iterative Optimisation}
@@ -72,51 +72,22 @@ With the integrals transformed to the MO basis, the next step is to select the i
 
 \subsection{Initial Active Space Selection}
 
-Before the iterative optimisation process can begin, an initial set of active virtual orbitals must be selected. In the original algorithm proposed by Adamowicz \& Bartlett, the selection is based on ranking the virtual orbitals according to their estimated contribution to the correlation energy, which involves evaluating both the diagonal and off-diagonal contributions from the MP2 amplitude equations. In the current implementation, we adopt a simpler approach where the active virtual orbitals are selected sequentially based on their spin-orbital indices. Specifically, after the occupied orbitals are assigned indices from 0 to $n_{\rm occ}-1$, the next $N'$ spin-orbitals are designated as active virtuals, and the remaining ones are considered inactive virtuals, see Code~\ref{lst:index_spaces}. This approach is straightforward and avoids the computational overhead of evaluating contributions for all virtuals at the initial stage. 
-
-\begin{lstlisting}[style=python, caption={Index space initialization (ovos.py, lines 122–146)}, label=lst:index_spaces]
-# Occupied: indices 0 to nelec-1
-self.active_occ_indices = list(range(self.nelec))
-
-# Active virtual: next num_opt_virtual_orbs after occupied
-self.active_inocc_indices = list(range(
-    self.active_occ_indices[-1] + 1,
-    self.nelec + self.num_opt_virtual_orbs))
-
-# Inactive virtual: remaining orbitals
-self.virtual_inocc_indices = list(range(
-    self.active_inocc_indices[-1] + 1,
-    self.tot_num_spin_orbs))
-  
-
-self.inactive_indices = self.virtual_inocc_indices
-self.full_indices = list(range(self.tot_num_spin_orbs))
-\end{lstlisting}
+Before the iterative optimisation process can begin, an initial set of active virtual orbitals must be selected. In the original algorithm proposed by Adamowicz \& Bartlett, the selection is based on ranking the virtual orbitals according to their estimated contribution to the correlation energy, which involves evaluating both the diagonal and off-diagonal contributions from the MP2 amplitude equations \cite{Adamowicz1987}. In the current implementation, we adopt a simpler approach where the active virtual orbitals are selected sequentially based on their spin-orbital indices. Specifically, after the occupied orbitals are assigned indices from 0 to $n_{\rm occ}-1$, the next $N'_{\rm virt}$ spin-orbitals are designated as active virtuals, and the remaining ones are considered inactive virtuals. This approach is straightforward and avoids the computational overhead at the initial stage.
 
 Once the active space is defined, the next step is to compute the MP1 amplitudes and the MP2 correlation energy. This process is described in detail in the following section.
 
 \subsection{MP1 Amplitudes and MP2 Energy}
 
-At each iteration, the first-order MP (MP1) amplitudes (T2 excitations, "D") are recomputed in the current MO basis and used to evaluate the second-order Hylleraas functional $J_2$. In the code, see Code~\ref{lst:mp1_amplitudes} and \ref{lst:mp2_energy}, the amplitudes are computed using the formulas derived in Chapter~\ref{ch:theory}, with explicit spin-orbital index labelling that matches the implementation. The amplitudes are stored in a tensor of shape $(n_{\rm occ}, n_{\rm occ}, N', N')$, where $N'$ is the number of active virtual orbitals. 
+At each iteration, the first-order MP (MP1) amplitudes (T2 excitations, "D") are recomputed in the current MO basis and used to evaluate the second-order Hylleraas functional $J_2$. In the code, see Code~\ref{lst:mp1_amplitudes} and \ref{lst:mp2_energy}, the amplitudes are computed using the formulas derived in Chapter~\ref{ch:theory}, with explicit spin-orbital index labelling that matches the implementation. The amplitudes are stored in a tensor of shape $(n_{\rm occ}, n_{\rm occ}, N'_{\rm virt}, N'_{\rm virt})$, where $N'_{\rm virt}$ is the number of active virtual orbitals. 
 
 \begin{lstlisting}[style=python, caption={MP1 amplitude computation}, label=lst:mp1_amplitudes]
 def _mp1_amplitudes(self, fock_diag: np.ndarray,
                      eri_as: np.ndarray) -> np.ndarray:
-    """Compute MP1 amplitudes t_ij^ab = -<ab||ij> / (f_aa + f_bb - f_ii - f_jj)."""
-    occ_idx, vir_idx = self.active_occ_indices, self.active_inocc_indices
-    eps_occ, eps_vir= fock_diag[occ_idx], fock_diag[vir_idx]
-    
-    # Denominator: eps_a + eps_b - eps_i - eps_j
-    denom = (eps_vir[:, None, None, None] +
-             eps_vir[None, :, None, None] -
-             eps_occ[None, None, :, None] -
-             eps_occ[None, None, None, :])
-    
-    # Only ACTIVE virtual block from antisymmetrized ERIs
+    ...
     return -eri_as[:nvir_act, :nvir_act, :, :] / denom
 \end{lstlisting}
 
-The MP2 correlation energy is then evaluated using these amplitudes and the antisymmetrized integrals, see Appendix~\ref{appa:code} for the full implementation. 
+The MP2 correlation energy is then evaluated using these amplitudes and the antisymmetrized integrals, see Appendix~\ref{appc:code} for the full implementation. 
 
 \begin{lstlisting}[style=python, caption={MP2 correlation energy}, label=lst:mp2_energy]
 def _mp2_energy(self, fock_spin: np.ndarray, t_abij: np.ndarray,
@@ -141,7 +112,6 @@ def _mp2_energy(self, fock_spin: np.ndarray, t_abij: np.ndarray,
         term_offdiag = ...
         
         energy += term_diag + term_offdiag
-    
     return energy
 \end{lstlisting}
 
@@ -150,7 +120,7 @@ Alongside the MP2 energy, the gradient and Hessian matrices required for the New
 
 \subsection{Gradient and Hessian Assembly}
 
-The gradient vector $\mathbf{G}$ and Hessian matrix $\mathbf{H}$ of the MP2 energy functional $J_2$ are computed at each iteration using the stored MP1 amplitudes and the antisymmetrized integrals. The gradient $G_{ea}$, as detailed in Section~\ref{sec:theory}, are implemented by looping over the inactive orbital index $e$ and the active orbital index $a$, summing contributions from the amplitudes and integrals, see Code~\ref{lst:gradient}. 
+The gradient vector $\mathbf{G}$ and Hessian matrix $\mathbf{H}$ of the MP2 energy functional $J_2$ are computed at each iteration using the stored MP1 amplitudes and the antisymmetrized integrals. The gradient $G_{ea}$, as detailed in Section~\ref{sec:theory}, is implemented by looping over the inactive orbital index $e$ and the active orbital index $a$, summing contributions from the amplitudes and integrals, see Code~\ref{lst:gradient}. 
 
 \begin{lstlisting}[style=python, caption={Gradient computation}, label=lst:gradient]
 def _gradient(self, t_abij: np.ndarray, eri_as: np.ndarray,
@@ -174,7 +144,7 @@ def _gradient(self, t_abij: np.ndarray, eri_as: np.ndarray,
     return G
 \end{lstlisting}
 
-The Hessian $H_{ea,fb}$ is assembled with a block structure that allows for efficient inversion. Specifically, for each inactive orbital $e$, we construct a diagonal block $\mathbf{H}^{(e)}$ of size $N' \times N'$ corresponding to the active virtual orbitals. This means that instead of inverting a large $(N' n_{\rm inact}) \times (N' n_{\rm inact})$ matrix, we only need to invert $n_{\rm inact}$ smaller blocks, which is computationally more tractable, see Code~\ref{lst:hessian}. Each index of the Hessian corresponds to a pair of active and inactive orbitals, and the contributions are computed according to the formulas derived in Chapter~\ref{ch:theory}.
+The Hessian $H_{ea,fb}$ is assembled with a block structure that allows for efficient inversion. Specifically, for each inactive orbital $e$, we construct a diagonal block $\mathbf{H}^{(e)}$ of size $N'_{\rm virt} \times N'_{\rm virt}$ corresponding to the active virtual orbitals. This means that instead of inverting a large $(N'_{\rm virt} \times n_{\rm inact}) \times (N'_{\rm virt} \times n_{\rm inact})$ matrix, we only need to invert $n_{\rm inact}$ smaller blocks, which is computationally more tractable, see Code~\ref{lst:hessian}. Each index of the Hessian corresponds to a pair of active and inactive orbitals, and the contributions are computed according to the formulas derived in Chapter~\ref{ch:theory}.
 
 \begin{lstlisting}[style=python, caption={Hessian computation with block structure}, label=lst:hessian]
 def _hessian(self, t_abij: np.ndarray, eri_as: np.ndarray,
@@ -209,11 +179,11 @@ def _hessian(self, t_abij: np.ndarray, eri_as: np.ndarray,
     return H
 \end{lstlisting}
 
-Having assembled the gradient and Hessian, this allows for the Newton-Raphson step to be computed, which is then used to generate the orbital rotation matrix. The details of this process are described in the following section.
+With the gradient and Hessian assembled, we compute the Newton-Raphson step. Which is then used to generate the orbital rotation matrix. The details of this process are described in the following section.
 
 \subsection{Orbital Rotation and Update}
 
-The Newton-Raphson step is computed by solving the linear equation $\Delta\mathbf{R} = -\mathbf{H}^{-1}\mathbf{G}$, where $\mathbf{H}$ is the Hessian matrix and $\mathbf{G}$ is the gradient vector. Utilizing the \code{numpy.linalg.solve()} function, we need not invert the Hessian matrix directly, as it is computationally more efficient to solve the linear system directly, see Code~\ref{lst:newton_raphson}. 
+The Newton-Raphson step is computed by solving the linear equation $\Delta\mathbf{R} = -\mathbf{H}^{-1}\mathbf{G}$, where $\mathbf{H}$ is the Hessian matrix and $\mathbf{G}$ is the gradient vector. To the Hessian a block diagonal approximation RLE is applied \code{_apply_block_diagonal_rle(H)}, see Appendix~\ref{appc:code}. Utilizing the \code{numpy.linalg.solve()} function, we need not invert the Hessian matrix directly, as it is computationally more efficient to solve the linear system directly, see Code~\ref{lst:newton_raphson}. 
 
 \begin{lstlisting}[style=python, caption={Newton-Raphson step and orbital rotation}, label=lst:newton_raphson]
 def _newton_step(self, G: np.ndarray, H: np.ndarray,
@@ -325,7 +295,7 @@ Having the new MO coefficients and orbital energies, the algorithm proceeds to t
 
 \subsection{Convergence and Iteration Control}
 
-The OVOS iteration continues until convergence is achieved or the maximum number of iterations is reached. The primary convergence criterion is based on the change in the MP2 correlation energy $J_2$ between successive iterations, which must be less than $10^{-8}$ Hartree. Additionally, we monitor the norm of the gradient and the magnitude of the T1 amplitudes to ensure that the solution is not only energetically converged but also corresponds to a stationary point in the orbital space. We aid in ensuring "true" convergence by requiring that the criteria are met for a set amount of iterations the \code{keep_track_max}. The specific implementation of these checks and controls is detailed in Code~\ref{lst:convergence}.
+The OVOS iteration continues until convergence is achieved or the maximum number of iterations is reached. The primary convergence criterion is based on the change in the MP2 correlation energy $J_2$ between successive iterations, which must be less than $10^{-8}$ Hartree. Additionally, we monitor the norm of the gradient and the magnitude of the T1 amplitudes to ensure that the solution is not only energetically converged but also corresponds to a stationary point in the orbital space. We aid in ensuring "true" convergence by requiring that the criteria are met for a set amount of iterations, specified by the \code{keep_track_max}. The specific implementation of these checks and controls is detailed in Code~\ref{lst:convergence}.
 
 \begin{lstlisting}[style=python, caption={Convergence checking loop}, label=lst:convergence]
 while iter_count < self.max_iter:
@@ -352,7 +322,15 @@ while iter_count < self.max_iter:
             keep_track = 0
 \end{lstlisting}
 
-The rate and value of convergence will vary depending on the initial orbital guess. The next section describes the different initialisation strategies implemented and their impact on convergence.
+The rate and value of convergence will vary depending on the initial orbital guess. An example of different convergence criteria, for the same system, with initial RHF orbitals is shown in Figure~\ref{fig:convergence_landscape}, in which the choice of criteria is illustrated by the red point. This plot explored the iteration count required for convergence across a grid of gradient norm and MP2 energy change criteria, showing how the choice of these parameters can affect the convergence behaviour of the algorithm. The landscape reveals regions where MP2 correlation energy convergence is negligible between different sets of criteria, but iteration counts vary significantly, highlighting the importance of selecting appropriate criteria for efficient optimisation. The relationship between the criteria is also evident, at a lower gradient norm threshold, the MP2 correlation energy change criterion needs to be multiple orders of magnitude tighter to achieve a noticeable change in the iteration count. At a fixed MP2 correlation energy change criterion, just one order of magnitude tightening of the gradient norm criterion leads to a significant increase in the iteration count, indicating that the gradient norm is a more sensitive criterion for convergence in this case.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/Ekstra/ovos_convergence_landscape.png}
+    \caption{Convergence iteration count landscape for OVOS with convergence criteria gradient norm and MP2 correlation energy. Explored for the HF molecule in the 6--31G basis with initial RHF orbitals. Active space of 7 molecular orbitals. The red point indicates the final converged solution with the default criteria. }
+\end{figure}
+
+The next section describes the different initialisation strategies implemented and their impact on convergence.
 
 \section{Initialisation Strategies}
 \label{sec:method_initialisation_strategies}
@@ -401,14 +379,14 @@ if fock_spin is None:
 
 \subsection{Warm-Start from Previous Orbital Set}
 
-For a systematic scan over different numbers of active virtual orbitals $N'_{\rm virt} = 2, 4, 6, \ldots$, we can adopt a warm-start strategy where the converged orbitals from a previous run with $N'=k$ active virtuals are used as the starting guess for the next run with $N'=k+2$ active virtuals. The rationale behind this approach is that nearby orbital spaces should have similar optimal MOs, and thus using the previously optimised orbitals can provide a better starting point for convergence, potentially improving the recovery fraction and reducing the iteration count. The pseudo-code for this strategy is shown in Code~\ref{lst:warmstart}.
+For a systematic scan over different numbers of active virtual orbitals $N'_{\rm virt} = 2, 4, 6, \ldots$, we can adopt a warm-start strategy where the converged orbitals from a previous run with $N'_{\rm virt}=k$ active virtuals are used as the starting guess for the next run with $N'_{\rm virt}=k+2$ active virtuals. The rationale behind this approach is that nearby orbital spaces should have similar optimal MOs, and thus using the previously optimised orbitals can provide a better starting point for convergence, potentially improving the recovery fraction and reducing the iteration count. The pseudo-code for this strategy is shown in Code~\ref{lst:warmstart}, see Appendix~\ref{appc:code} for the full implementation.
 
 \begin{lstlisting}[style=python, caption={Warm-start strategy (pseudo-code for expansion)}, label=lst:warmstart]
-# Previous run with N'=2 active virtuals
+# Previous run with N'_{\rm virt}=2 active virtuals
 ovos_prev = OVOS(mol, scf, Fao, num_opt_virtual_orbs=2, mo_coeff=..., ...)
 E_2, _, _, mo_prev, fock_prev, _ = ovos_prev.run(mo_coeff_scf, fock_spin=None)
 
-# Use optimized orbitals as starting guess for N'=4
+# Use optimized orbitals as starting guess for N'_{\rm virt}=4
 ovos_curr = OVOS(mol, scf, Fao, num_opt_virtual_orbs=4, 
                  mo_coeff=mo_prev,  # Start from previous optimum
                  ...)
@@ -418,7 +396,7 @@ E_4, _, _, mo_curr, fock_curr, _ = ovos_curr.run(mo_prev, fock_spin=fock_prev)
 
 \subsection{Random Unitary Sampling}
 
-To explore the orbital space landscape more thoroughly and potentially avoid local minima, we implement a random unitary sampling strategy. In this approach, we generate a number of random unitary rotations in the virtual orbital space by creating random matrices and orthogonalizing them using QR decomposition. Each random unitary is applied to the virtual orbital block of the initial MO coefficients, and the OVOS iteration is run from each of these starting points. The result with the lowest MP2 correlation energy $J_2$ at convergence is selected as the final output. This method is computationally expensive, as it requires running the full OVOS iteration \code{n_samples} times. The conceptual code for this strategy is shown in Code~\ref{lst:random_unitary}.
+To explore the orbital space landscape more thoroughly and potentially avoid local minima, we implement a random unitary sampling strategy. In this approach, we generate a number of random unitary rotations in the virtual orbital space by creating random matrices and orthogonalizing them using QR decomposition. Each random unitary is applied to the virtual orbital block of the initial MO coefficients, and the OVOS iteration is run from each of these starting points. The result with the lowest MP2 correlation energy $J_2$ at convergence is selected as the final output. This method is computationally expensive, as it requires running the full OVOS iteration \code{n_samples} times. The conceptual code for this strategy is shown in Code~\ref{lst:random_unitary}, see Appendix~\ref{appc:code} for the full implementation.
 
 \begin{lstlisting}[style=python, caption={Random unitary initialization}, label=lst:random_unitary]
 # Generate random unitary rotations in virtual space
