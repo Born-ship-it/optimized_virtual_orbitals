@@ -94,24 +94,24 @@
 \contentsline {section}{\numberline {5.1}OVOS}{47}{section.5.1}%
 \contentsline {subsection}{\numberline {5.1.1}correlation energy of OVOS}{47}{subsection.5.1.1}%
 \contentsline {subsection}{\numberline {5.1.2}Basis Set Dependence}{54}{subsection.5.1.2}%
-\contentsline {subsubsection}{Comparison with Adamowicz and Bartlett (1987)}{58}{figure.caption.24}%
-\contentsline {section}{\numberline {5.2}VQE}{59}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}VQE potential energy surfaces plot}{59}{subsection.5.2.1}%
-\contentsline {section}{\numberline {5.3}ooVQE}{63}{section.5.3}%
-\contentsline {chapter}{\numberline {6}Conclusion and Outlook}{67}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Conclusion}{67}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}Summary of Findings}{67}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}Critical Assessment}{68}{subsection.6.1.2}%
-\contentsline {section}{\numberline {6.2}Outlook}{69}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Algorithmic Improvements}{69}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Method Extensions}{69}{subsection.6.2.2}%
-\contentsline {subsection}{\numberline {6.2.3}Quantum Computing Applications}{70}{subsection.6.2.3}%
-\contentsline {subsection}{\numberline {6.2.4}Larger Molecular Systems}{70}{subsection.6.2.4}%
+\contentsline {subsubsection}{Comparison with Adamowicz and Bartlett (1987)}{57}{figure.caption.24}%
+\contentsline {section}{\numberline {5.2}VQE}{58}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}VQE potential energy surfaces plot}{58}{subsection.5.2.1}%
+\contentsline {section}{\numberline {5.3}ooVQE}{62}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Conclusion and Outlook}{66}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Conclusion}{66}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Summary of Findings}{66}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Critical Assessment}{67}{subsection.6.1.2}%
+\contentsline {section}{\numberline {6.2}Outlook}{68}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Algorithmic Improvements}{68}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Method Extensions}{68}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Quantum Computing Applications}{69}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}Larger Molecular Systems}{69}{subsection.6.2.4}%
 \contentsline {chapter}{Bibliography}{71}{subsection.6.2.4}%
 \setcounter {tocdepth}{0}
 \contentsline {chapter}{\numberline {A}Implementation Validation}{74}{appendix.A}%
 \contentsline {chapter}{\numberline {B}Additional Data and Figures}{75}{appendix.B}%
 \contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{75}{section.B.1}%
-\contentsline {section}{\numberline {B.2}Convergence Plots for All Systems}{75}{section.B.2}%
-\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{84}{appendix.C}%
-\contentsline {section}{\numberline {C.1}Repository and Version Information}{84}{section.C.1}%
+\contentsline {section}{\numberline {B.2}Convergence Plots for All Systems}{76}{section.B.2}%
+\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{86}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Repository and Version Information}{86}{section.C.1}%

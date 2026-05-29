@@ -1,7 +1,7 @@
 \chapter{OVOS Implementation}
 \label{ch:method}
 
-In this chapter we build on the theoretical foundation laid out in Chapter~\ref{ch:theory} to describe the practical implementation of the OVOS algorithm. The implementation was written up for this project in Python. The goal is to provide a clear and detailed overview of the algorithmic steps, the computational strategies employed, and the choices made in the implementation, for the full implementation details see Appendix~\ref{appa:code}. 
+In this chapter we build on the theoretical foundation laid out in Chapter~\ref{ch:theory} to describe the practical implementation of the OVOS algorithm. The implementation was written up for this project in Python. The goal is to provide a clear and detailed overview of the algorithmic steps, the computational strategies employed, and the choices made in the implementation, for the full implementation details see Appendix~\ref{appc:code}. 
 This chapter serves as a bridge between the abstract theoretical concepts and the concrete computational details, enabling readers to understand how the OVOS method is realised and how it can be reproduced or extended in future work. It is to be made clear here that the OVOS algorithm was coded up from scratch by myself, following the original proposal by Adamowicz \& Bartlett, but with some modifications and optimisations as described in the sections below.
 
 
@@ -120,7 +120,7 @@ Alongside the MP2 energy, the gradient and Hessian matrices required for the New
 
 \subsection{Gradient and Hessian Assembly}
 
-The gradient vector $\mathbf{G}$ and Hessian matrix $\mathbf{H}$ of the MP2 energy functional $J_2$ are computed at each iteration using the stored MP1 amplitudes and the antisymmetrized integrals. The gradient $G_{ea}$, as detailed in Section~\ref{sec:theory}, is implemented by looping over the inactive orbital index $e$ and the active orbital index $a$, summing contributions from the amplitudes and integrals, see Code~\ref{lst:gradient}. 
+The gradient vector $\mathbf{G}$ and Hessian matrix $\mathbf{H}$ of the MP2 energy functional $J_2$ are computed at each iteration using the stored MP1 amplitudes and the antisymmetrized integrals. The gradient $G_{ea}$, as detailed in Section~\ref{subsubsec:gradient}, is implemented by looping over the inactive orbital index $e$ and the active orbital index $a$, summing contributions from the amplitudes and integrals, see Code~\ref{lst:gradient}. 
 
 \begin{lstlisting}[style=python, caption={Gradient computation}, label=lst:gradient]
 def _gradient(self, t_abij: np.ndarray, eri_as: np.ndarray,
@@ -249,7 +249,7 @@ def _rotate_orbitals(self, mo_coeffs: List[np.ndarray],
     return mo_rot, fock_rot, U_spin
 \end{lstlisting}
 
-After applying the orbital rotation, we re-canonicalise the active Fock block by diagonalising it to obtain new orbital energies $\varepsilon_a$ for the active virtual orbitals. This step ensures that the orbitals remain orthogonal and that the Fock matrix is properly represented in the new basis, see Code~\ref{lst:canonicalize}.
+After applying the orbital rotation, we re-canonicalise the active Fock block by diagonalising it to obtain new orbital energies $\varepsilon_a$ for the active virtual orbitals. This step ensures that the orbitals remain orthogonal and that the Fock matrix is properly represented in the new basis, see Code~\ref{lst:lst_canonicalize}.
 
 \begin{lstlisting}[style=python, caption={Re-canonicalization of active virtual block}, label=lst_canonicalize]
 def _canonicalize_active(self, mo_coeffs: List[np.ndarray],
@@ -328,6 +328,7 @@ The rate and value of convergence will vary depending on the initial orbital gue
     \centering
     \includegraphics[width=0.9\textwidth]{figures/Ekstra/ovos_convergence_landscape.png}
     \caption{Convergence iteration count landscape for OVOS with convergence criteria gradient norm and MP2 correlation energy. Explored for the HF molecule in the 6--31G basis with initial RHF orbitals. Active space of 7 molecular orbitals. The red point indicates the final converged solution with the default criteria. }
+    \label{fig:convergence_landscape}
 \end{figure}
 
 The next section describes the different initialisation strategies implemented and their impact on convergence.

@@ -25,7 +25,7 @@ In this section we detail the software environment used for all calculations in 
     \end{tabular}
 \end{table}
 
-The OVOS method was implemented as a standalone Python class, with source code provided in Appendix~\ref{app:code}. All calculations were executed in a single-threaded mode to ensure reproducibility, with the environment variables \texttt{OPENBLAS\_NUM\_THREADS} and \texttt{OMP\_NUM\_THREADS} set to 1. The operating system used was Windows in Microsoft Visual Studio Code's WSL ubuntu virtual machine, as PySCF needs a Unix-like environment, and the Python distribution was standard Python version 3.11.
+The OVOS method was implemented as a standalone Python class, with source code provided in Appendix~\ref{appc:code}. All calculations were executed in a single-threaded mode to ensure reproducibility, with the environment variables \texttt{OPENBLAS\_NUM\_THREADS} and \texttt{OMP\_NUM\_THREADS} set to 1. The operating system used was Windows in Microsoft Visual Studio Code's WSL ubuntu virtual machine, as PySCF needs a Unix-like environment, and the Python distribution was standard Python version 3.11.
 
 The hardware environment on which all calculations were run is described in the following section.
 
@@ -33,7 +33,7 @@ The hardware environment on which all calculations were run is described in the 
 \subsection{Molecular Geometries}
 \label{subsec:comp_mo_geometries}
 
-The thesis focuses on a test set of five molecules that represent a variety of electronic structures, all abundantly used in quantum chemistry benchmarks, and found in nature. These include diatomic molecules (CO, HF), small polyatomic molecules (H\textsuperscript{2}O, NH\textsuperscript{3}), and a simple open-shell molecule (Li2). All geometries were kept fixed throughout the calculations, with no geometry optimisation performed. The specific coordinates used for each molecule are listed in Table~\ref{tab:geometries}, along with their spin multiplicity, charge, and point group symmetry. The bond lengths and angles were taken from experimental values reported in the literature, ensuring that the test set is representative of real molecular systems. The coordinate unit used is Ångström.
+The thesis focuses on a test set of five molecules that represent a variety of electronic structures, all abundantly used in quantum chemistry benchmarks, and found in nature. These include diatomic molecules (CO, HF), small polyatomic molecules (H\textsuperscript{2}O, NH\textsuperscript{3}), and a simple open-shell molecule (Li$_2$). All geometries were kept fixed throughout the calculations, with no geometry optimisation performed. The specific coordinates used for each molecule are listed in Table~\ref{tab:geometries}, along with their spin multiplicity, charge, and point group symmetry. The bond lengths and angles were taken from experimental values reported in the literature, ensuring that the test set is representative of real molecular systems. The coordinate unit used is Ångström.
 
 \begin{table}[H]
 \centering
@@ -43,11 +43,11 @@ The thesis focuses on a test set of five molecules that represent a variety of e
 \toprule
 Molecule & Geometry (Å)                               \\
 \midrule
-Li2      & $r(\mathrm{Li-Li}) = 2.673$               \\
-\ce{H2O} & $r = 0.957$, $\angle = 104.5^\circ$        \\
+Li$_2$      & $r(\mathrm{Li-Li}) = 2.673$               \\
+\ce{H$_2$O} & $r = 0.957$, $\angle = 104.5^\circ$        \\
 CO       & $r(\mathrm{C-O}) = 1.128$                  \\
 HF       & $r(\mathrm{H-F}) = 0.917$                  \\
-\ce{NH3} & $r(\mathrm{N-H}) = 1.012$                  \\
+\ce{NH$_3$} & $r(\mathrm{N-H}) = 1.012$                  \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -59,7 +59,7 @@ The basis-set-specific orbital space dimensions for each molecule are given in t
 
 The choice of basis set determines the size of the virtual orbital space and hence the difficulty and accuracy of the OVOS calculation. This section describes the basis sets employed and provides the resulting orbital space dimensions for each molecule. See Basis Set Exchange \cite{pritchard2019a} for the source of all basis sets used in this work.
 
-\textbf{6--31G:} A split-valence double-zeta basis set developed by Pople et. al. \cite{ditchfield1971a,dill1975a,hehre1972a}. It consists of a minimal basis for core electrons and a double-zeta basis for valence electrons, allowing for improved flexibility in describing electron correlation compared to minimal basis sets.
+\textbf{6--31G:} A split-valence double-zeta basis set developed by Pople et. al. \cite{ditchfield1971a, dill1975a, hehre1972a}. It consists of a minimal basis for core electrons and a double-zeta basis for valence electrons, allowing for improved flexibility in describing electron correlation compared to minimal basis sets.
 
 \textbf{cc--pVDZ:} The correlation-consistent polarized valence double-zeta basis set developed by Dunning \cite{dunning1989}. It includes polarization functions that allow for a better description of electron correlation effects, particularly important for accurate energy calculations.
 
@@ -95,9 +95,9 @@ For initialisation strategies see Section~\ref{sec:method_initialisation_strateg
 \section{VQE Calculation Settings}
 \label{sec:comp_calc_set_vqe}
 
-All VQE calculations were performed using the SlowQuant branch for unrestricted VQE \cite{Kjellgren2026}, coded up by Pernille Volsgaard Christensen Ph.D. student at Sauer Group UCPH. The VQE wave function is defined as an unrestricted wave function with a specific ansatz, here we use tiled unitary product states (tUPS) with 1 layer, and no active kappa parameters. These settings were chosen to ensure a manageable computational cost while still providing a meaningful comparison between different orbital optimisation strategies. 1 layer means that the ansatz consists of a single layer of unitary operations, which is a common choice for initial VQE studies. The decision to exclude active kappa parameters was made to simplify the wave function and focus on the effects of orbital optimisation. We change the number of electrons, the active space, the MO coefficients, and the integrals for each molecule/basis set combination, but keep the ansatz and hyperparameters fixed across all calculations. The specific implementation of the wave function is shown in Code~\ref{lst:vqe_wf}.
+All VQE calculations were performed using the SlowQuant branch for unrestricted VQE \cite{Kjellgren2026}, coded up by Pernille Volsgaard Christensen Ph.D. student at Sauer Group UCPH. The VQE wavefunction is defined as an unrestricted wavefunction with a specific ansatz, here we use tiled unitary product states (tUPS) with 1 layer, and no active kappa parameters. These settings were chosen to ensure a manageable computational cost while still providing a meaningful comparison between different orbital optimisation strategies. 1 layer means that the ansatz consists of a single layer of unitary operations, which is a common choice for initial VQE studies. The decision to exclude active kappa parameters was made to simplify the wavefunction and focus on the effects of orbital optimisation. We change the number of electrons, the active space, the MO coefficients, and the integrals for each molecule/basis set combination, but keep the ansatz and hyperparameters fixed across all calculations. The specific implementation of the wavefunction is shown in Code~\ref{lst:vqe_wf}.
 
-\begin{lstlisting}[style=python, caption={VQE Wave Function}, label=lst:vqe_wf]
+\begin{lstlisting}[style=python, caption={VQE Wavefunction}, label=lst:vqe_wf]
 UnrestrictedWaveFunctionUPS(
         num_electrons,
         active_space,

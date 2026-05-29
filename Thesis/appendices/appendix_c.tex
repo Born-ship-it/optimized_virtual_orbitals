@@ -1,52 +1,5 @@
-%============================================================
-%  appendix_c.tex  –  Implementation and Code
-%============================================================
 \chapter{Implementation Details and Source Code}
 \label{appc:code}
-
-% ---------------------------------------------------------------
-% WRITING TIPS – APPENDIX C
-% ---------------------------------------------------------------
-% Purpose: Provide enough implementation detail that the work is
-%           fully reproducible. At UCPH, you do not need to include
-%           every line, but key algorithmic functions should be shown.
-%
-% Suggested content:
-%
-%  C.1  Repository and Version Information
-%       - Git repository URL (or note that code is available on request).
-%       - Commit hash of the version used to produce thesis results.
-%       - Python and PySCF versions (repeat from Computational Details).
-%
-%  C.2  Key Implementation Choices
-%       - Explain any major departures from the "textbook" algorithm.
-%       - E.g., use of interleaved α/β spin-orbital ordering vs.
-%         blocked ordering.
-%       - How the gradient and Hessian indices are mapped to flat arrays.
-%       - Level-shifting strategy (code snippet + explanation).
-%
-%  C.3  Core Functions
-%       - Include listings (using the listings package, style=python) of:
-%         * MP2_energy() – the amplitude and energy calculation.
-%         * orbital_optimization() – gradient, Hessian, Newton step.
-%         * spatial_to_spin_eri() – the integral conversion.
-%       - Annotate the code with comments referencing equation numbers
-%         from the Theory chapter.
-%
-%  C.4  Profiling and Performance Notes
-%       - Summary of cProfile results (from branch/profil/).
-%       - Table: function | calls | cumtime | % of total runtime.
-%       - Recommendations (even if not implemented) for future speedup.
-%
-% Tips:
-%   - Use \lstset{style=python} and the \begin{lstlisting} environment.
-%   - Keep code listings < 60 lines each; split into meaningful units.
-%   - Comment the code in the listing if the thesis comments are better
-%     than the source file comments.
-%   - Do NOT put the entire ovos.py here – select the most important
-%     400–500 lines.
-%   - Acknowledge AI-assisted code writing per UCPH guidelines.
-% ---------------------------------------------------------------
 
 \section{Repository and Version Information}
 

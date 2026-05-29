@@ -1,39 +1,14 @@
-%============================================================
-%  appendix_b.tex  –  Additional Data and Figures
-%============================================================
 \chapter{Additional Data and Figures}
 \label{appb:data}
 
-% ---------------------------------------------------------------
-% WRITING TIPS – APPENDIX B
-% ---------------------------------------------------------------
-% Purpose: Present supplementary numerical results that support the
-%           main text but are too voluminous for Chapter 6.
-%
-% Suggested content:
-%
-%  B.2  OVOS...
-%
-%  B.3  Convergence Plots for All Systems
-%       - Energy vs. iteration plots for every (molecule, basis) run.
-%       - Only the representative ones go in Chapter 6; all go here.
-%
-%  B.4  Comparison of Initialisation Strategies (All Systems)
-%       - Extend the comparison of Section 6.4 to all molecules.
-%
-% Tips:
-%   - Label all tables and figures with \label{tab:app_B_...} so
-%     they can be cited from the main text.
-% ---------------------------------------------------------------
-
 \section{Full MP2 Reference Energies}
 
-Here we include the MP2 correlation energy OVOS plots for the smaller 6-31G basis set.
+Here we include the MP2 correlation energy OVOS plots for the smaller 6--31G basis set.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/Ekstra/OVOS_6-31G.png}
-    \caption{...}
+    \caption{Convergence of the MP2 correlation energy for CO, H$_2$, HF, NH$_3$, and Li$_2$ in 6--31G basis, at each number of active unoccupied orbitals $N'_{act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}
     \label{fig:appb_MP2_6-31G_ovos}
 \end{figure}
 
@@ -45,12 +20,12 @@ Here we include the MP2 correlation energy OVOS plots for the smaller 6-31G basi
 
 \section{Convergence Plots for All Systems}
 
-Here we include the convergence plots for all systems, which show the energy recovery as a function of iteration number for each (molecule, basis) combination. These plots provide insight into the convergence behavior of the OVOS algorithm across different systems and basis sets.
+Here we include the convergence plots for all systems, which show the energy recovery as a function of iteration number for each (molecule, basis) combination. These plots provide insight into the convergence behaviour of the OVOS algorithm across different systems and basis sets.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{figures/Ekstra/OVOS_conv_CO_6-31G.png}
-    \caption{...}
+    \caption{CO/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref{fig:appb_MP2_6-31G_ovos} and in Section~\ref{subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}
     \label{fig:appb_conv_CO_6-31G_ovos}
 \end{figure}
 
@@ -59,7 +34,7 @@ Here we include the convergence plots for all systems, which show the energy rec
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/Ekstra/OVOS_conv_CO_cc-pVDZ.png}
-    \caption{...}
+    \caption{CO/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref{fig:appb_MP2_6-31G_ovos} and in Section~\ref{subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}
     \label{fig:appb_conv_CO_cc-pVDZ_ovos}
 \end{figure}
 
@@ -68,7 +43,7 @@ Here we include the convergence plots for all systems, which show the energy rec
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/Ekstra/OVOS_conv_H2O_6-31G.png}
-    \caption{...}
+    \caption{H$_2$O/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref{fig:appb_MP2_6-31G_ovos} and in Section~\ref{subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}
     \label{fig:appb_conv_H2O_6-31G_ovos}
 \end{figure}
 
@@ -77,7 +52,7 @@ Here we include the convergence plots for all systems, which show the energy rec
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/Ekstra/OVOS_conv_H2O_cc-pVDZ.png}
-    \caption{...}
+    \caption{H$_2$O/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref{fig:appb_MP2_6-31G_ovos} and in Section~\ref{subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}
     \label{fig:appb_conv_H2O_cc-pVDZ_ovos}
 \end{figure}
 
@@ -86,7 +61,7 @@ Here we include the convergence plots for all systems, which show the energy rec
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/Ekstra/OVOS_conv_HF_6-31G.png}
-    \caption{...}
+    \caption{HF/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref{fig:appb_MP2_6-31G_ovos} and in Section~\ref{subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}
     \label{fig:appb_conv_HF_6-31G_ovos}
 \end{figure}
 
@@ -95,34 +70,34 @@ Here we include the convergence plots for all systems, which show the energy rec
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/Ekstra/OVOS_conv_HF_cc-pVDZ.png}
-    \caption{...}
+    \caption{HF/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref{fig:appb_MP2_6-31G_ovos} and in Section~\ref{subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}
     \label{fig:appb_conv_HF_cc-pVDZ_ovos}
 \end{figure}
 
 \newpage
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.9\textwidth]{figures/Ekstra/OVOS_conv_Li2_6-31G.png}
-%     \caption{...}
-%     \label{fig:appb_conv_Li2_6-31G_ovos}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/Ekstra/OVOS_conv_Li2_6-31G.png}
+    \caption{Li$_2$/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref{fig:appb_MP2_6-31G_ovos} and in Section~\ref{subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}
+    \label{fig:appb_conv_Li2_6-31G_ovos}
+\end{figure}
 
-% \newpage
+\newpage
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.9\textwidth]{figures/Ekstra/OVOS_conv_Li2_cc-pVDZ.png}
-%     \caption{...}
-%     \label{fig:appb_conv_Li2_cc-pVDZ_ovos}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/Ekstra/OVOS_conv_Li2_cc-pVDZ.png}
+    \caption{Li$_2$/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref{fig:appb_MP2_6-31G_ovos} and in Section~\ref{subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}
+    \label{fig:appb_conv_Li2_cc-pVDZ_ovos}
+\end{figure}
 
-% \newpage
+\newpage
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/Ekstra/OVOS_conv_NH3_6-31G.png}
-    \caption{...}
+    \caption{NH$_3$/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref{fig:appb_MP2_6-31G_ovos} and in Section~\ref{subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}
     \label{fig:appb_conv_NH3_6-31G_ovos}
 \end{figure}
 
@@ -130,8 +105,8 @@ Here we include the convergence plots for all systems, which show the energy rec
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/Ekstra/OVOS_conv_NH3_cc-pVDZ.png}
-    \caption{...}
+    \includegraphics[width=0.8\textwidth]{figures/Ekstra/OVOS_conv_NH3_cc-pVDZ.png}
+    \caption{NH$_3$/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref{fig:appb_MP2_6-31G_ovos} and in Section~\ref{subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}
     \label{fig:appb_conv_NH3_cc-pVDZ_ovos}
 \end{figure}
 
