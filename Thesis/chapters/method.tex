@@ -48,12 +48,10 @@ def _eri_vovo_antisym(self, mo_coeffs: List[np.ndarray]) -> np.ndarray:
         return ao2mo.kernel(self.eri_4fold_ao,
                            [C_left, C_row, C_right, C_col],
                            compact=False)
-    
 # Compute spatial blocks: (vir,occ|vir,occ)
     vovo_aaaa = _ao2mo(C_vir_a, C_occ_a, C_vir_a, C_occ_a)
     vovo_bbbb = _ao2mo(C_vir_b, C_occ_b, C_vir_b, C_occ_b)
     vovo_aabb = _ao2mo(C_vir_a, C_occ_a, C_vir_b, C_occ_b)
-
 # Assemble spin-orbital chemist tensor (interleaved alpha/beta)
     nvir_spin, nocc_spin = 2 * nvir_a, nocc_a + nocc_b
     vovo_spin = np.zeros((nvir_spin, nocc_spin, nvir_spin, nocc_spin))
@@ -61,7 +59,6 @@ def _eri_vovo_antisym(self, mo_coeffs: List[np.ndarray]) -> np.ndarray:
     vovo_spin[1::2, 1::2, 1::2, 1::2] = vovo_bbbb      
     vovo_spin[0::2, 0::2, 1::2, 1::2] = vovo_aabb      
     vovo_spin[1::2, 1::2, 0::2, 0::2] = vovo_aabb.T    
-    
 # Convert to physicist notation and antisymmetrise:
     eri_phys = vovo_spin.transpose(0, 2, 1, 3)
     return eri_phys - eri_phys.transpose(0, 1, 3, 2)
@@ -93,9 +90,7 @@ The MP2 correlation energy is then evaluated using these amplitudes and the anti
 def _mp2_energy(self, fock_spin: np.ndarray, t_abij: np.ndarray,
                 eri_as: np.ndarray) -> float:
     """MP2 correlation energy J_2"""
-    
     ...
-
     energy = 0.0
     for loc_i, loc_j in [(i, j) for i in range(nocc) for j in range(i)]:
         abs_i = occ_abs[loc_i]
@@ -126,9 +121,7 @@ The gradient vector $\mathbf{G}$ and Hessian matrix $\mathbf{H}$ of the MP2 ener
 def _gradient(self, t_abij: np.ndarray, eri_as: np.ndarray,
               D_ab: np.ndarray, fock_spin: np.ndarray) -> np.ndarray:
     """Gradient G[a,e] = 2*sum_{i>j,b} t_ab^ij <eb||ij> + 2*sum_b D_ab F_be"""
-    
     ...
-    
     # Extract <eb||ij> for e in inactive, b in active, i>j
     i_idx, j_idx = np.tril_indices(nocc, k=-1)
     eri_eb = eri_as[nvir:, :nvir, :, :][:, :, i_idx, j_idx]  # (ninact, nvir, pairs)
@@ -150,32 +143,25 @@ The Hessian $H_{ea,fb}$ is assembled with a block structure that allows for effi
 def _hessian(self, t_abij: np.ndarray, eri_as: np.ndarray,
              D_ab: np.ndarray, fock_spin: np.ndarray) -> np.ndarray:
     """Hessian H_{ae,bf} with separation by inactive orbital index."""
-    
     ...
-    
     fock_vir_diag = np.diag(fock_spin)[vir]
     fock_inact = fock_spin[np.ix_(inactive, inactive)]
-    
     i_idx, j_idx = np.tril_indices(nocc, k=-1)
     t_ij = t_abij[:, :, i_idx, j_idx]
     eri_ef = eri_as[nvir:, nvir:, i_idx, j_idx]
     eri_ab = eri_as[:nvir, :nvir, i_idx, j_idx]
-    
     # Term 1: 2 * t_ab^p <ef||ij>^p
     term1 = 2.0 * np.einsum('abp,efp->aebf', t_ij, eri_ef, optimize=True)
     H = term1.reshape(nvir * ninact, nvir * ninact)
-    
     # Terms 2-4: Fock matrix contributions (diagonal in e=f and mixed)
     term2 = -(np.einsum('acp,bcp->ab', t_ij, eri_ab, optimize=True) +
               np.einsum('cbp,cap->ab', t_ij, eri_ab, optimize=True))
     term3 = D_ab * (fock_vir_diag[:, None] + fock_vir_diag[None, :])
     H += np.kron(term2 + term3, np.eye(ninact)).reshape(...)
-    
     # Term 4: off-diagonal Fock terms (e != f)
     fock_inact_offdiag = fock_inact.copy()
     np.fill_diagonal(fock_inact_offdiag, 0.0)
     H += np.kron(D_ab, fock_inact_offdiag).reshape(...)
-    
     return H
 \end{lstlisting}
 
@@ -342,6 +328,8 @@ Here we detail the three distinct initialisation strategies implemented for the 
 
 We can utilise the canonical MO coefficients obtained from a preceding RHF or UHF SCF calculation as the initial guess for the OVOS iteration, like PySCF \code{scf.RHF()}. This is the default strategy and is computationally efficient, as it leverages the existing SCF machinery to provide a reasonable starting point. As seen in Code~\ref{lst:scf_init}, the initial MO coefficients, the SCF object, and the Fock matrices are passed directly to the OVOS constructor, and the iteration proceeds from there. 
 
+\newpage
+
 \begin{lstlisting}[style=python, caption={OVOS initialization with RHF/UHF starting guess}, label=lst:scf_init]
 ovos = OVOS(
     mol=mol,
@@ -403,25 +391,20 @@ To explore the orbital space landscape more thoroughly and potentially avoid loc
 # Generate random unitary rotations in virtual space
 n_samples = 500
 best_energy = np.inf
-
 for sample in range(n_samples):
     # Generate random matrix and orthogonalize via QR
     random_matrix = np.random.randn(nvir, nvir)
     Q, R = np.linalg.qr(random_matrix)
-    
     # Apply to virtual orbital block
     mo_rot = mo_coeff.copy()
     mo_rot[:, nelec:] = mo_coeff[:, nelec:] @ Q
-    
     # Run OVOS from this starting point
     ovos = OVOS(mol, scf, Fao, num_opt_virtual_orbs, mo_rot, ...)
     E, E_hist, _, mo_best, _, _ = ovos.run(mo_rot)
-    
     # Track lowest energy
     if E < best_energy:
         best_energy = E
         mo_best_overall = mo_best
-
 # Use best result across all 500 random starts
 return mo_best_overall, best_energy
 \end{lstlisting}

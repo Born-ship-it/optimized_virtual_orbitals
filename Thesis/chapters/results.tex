@@ -8,6 +8,8 @@ In this chapter, the results of the OVOS implementation are presented and analys
 
 This section presents the MP2 correlation energy recovered as a function of the number of active virtual orbitals for each test molecule and basis set. The results are presented for all test molecules in the cc--pVDZ basis. The convergence behaviour of the OVOS algorithm is also analysed, with a focus on cases where convergence issues arise. The effect of different initialization strategies on the convergence and energy recovery is explored. Lastly, the cc--pVDZ results are compared against the 6--31G results to assess the basis set dependence of the OVOS algorithm. Here we use $N'_{\rm act.unocc}$ to denote the number of active virtual orbitals, previously $N'_{\rm virt}$, here $N'$ will always denote the number of active virtual orbitals, as described in Notation and Integral Conventions~\ref{sec:int_notation}.
 
+The T1 amplitudes during the OVOS algorithm showed similar values to the T1 amplitudes of HF reference in orders of magnitude at each iteration at $10^{-16}$. For lower numbers of active virtual orbitals, the T1 amplitudes were generally smaller than those of HF, while for higher numbers of active virtual orbitals, the T1 amplitudes were generally larger than those of HF. This suggests that the OVOS algorithm is effectively optimizing the orbitals to minimize the T1 amplitudes, which is consistent with the goal of finding optimal orbitals for correlation energy recovery.
+
 \subsection{correlation energy of OVOS}
 \label{subsec:results_ovos_mp2}
 The results of the OVOS algorithm for all test molecules in the cc--pVDZ basis sets for start guess RHF, previous, and random are presented in this section. See Appendix~\ref{appb:data} for OVOS on the same molecules in the 6--31G basis. We explore the results of the correlation energy recovered by OVOS as a function of the number of active unoccupied orbitals $N'_{\rm act.unocc}$.  
@@ -202,7 +204,7 @@ For H$_2$O, in 6-31G basis set, the VQE calculations using the OVOS optimised or
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/VQE_PLOTS/H2O/VQE_H2O_6-31G_best_of_zoom_oo_False.png}
+    \includegraphics[width=0.8\textwidth]{figures/VQE_PLOTS/H2O/VQE_H2O_6-31G_best_of_zoom_oo_False.png}
     \caption{Potential energy surfaces for H$_2$O in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The geometries vary the interatomic bond length, the angle between the bonds are kept constant. The active space is the same for all calculations with 10 electrons and 6 virtual orbitals (75\% of the full virtual space). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries.}
     \label{fig:H2O_VQE_false.png}
 \end{figure}

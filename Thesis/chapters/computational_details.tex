@@ -65,6 +65,8 @@ The choice of basis set determines the size of the virtual orbital space and hen
 
 Running OVOS concerns two main steps: the \code{OVOS} object and the \code{OVOS.run()} method. The \code{OVOS} object is initialised with arguments that specify the molecule, the SCF object, the Fock matrix in the AO basis, the number of active virtual spin-orbitals to optimize, the initial MO coefficients from SCF, the type of initial orbitals (RHF or UHF), verbosity level, maximum number of iterations, energy and gradient convergence thresholds, and the number of iterations to keep track of for consistent convergence checks. The initialisation is shown in Code~\ref{lst:ovos_init}.
 
+\newpage
+
 \begin{lstlisting}[style=python, caption={OVOS Object}, label=lst:ovos_init]
 ovos = OVOS(
     mol=mol,
@@ -92,6 +94,8 @@ For initialisation strategies see Section~\ref{sec:method_initialisation_strateg
 We would like to express that the specific hyperparameters chosen for the OVOS optimisation, such as the energy convergence threshold of 10\textsuperscript{-8} Hartree and the maximum number of iterations, were selected based on preliminary tests to ensure a balance between computational cost and convergence reliability, see Figure~\ref{fig:convergence_landscape}. The choice of these parameters can significantly affect the performance of the OVOS method, and they were kept consistent across all calculations to allow for a fair comparison between different orbital optimisation strategies.
 
 The Hessian indefiniteness checks can be turned on or off with verbosity level 1, and the specific implementation of these checks is shown in Code~\ref{lst:hessian_checks}. These checks are crucial for ensuring that the optimisation is proceeding in a direction that leads to a minimum energy solution, they help to prevent convergence to saddle points or maxima, and identify potential issues with the optimisation landscape in forms of negative eigenvalues and condition numbers. The checks are performed at each iteration, and the results are printed to the console when verbosity level 1 is set. It was found that when convergence issues arise, they are often associated with a highly indefinite Hessian. The block-diagonal approximation of the Hessian helped reduce negative eigenvalues, which could be identified through these checks.
+
+The T1 diagnostic, also enable by setting verbosity level 1, is calculated at each iteration to monitor the quality of the reference wavefunction and checked against the HF reference.
 
 \section{VQE Calculation Settings}
 \label{sec:comp_calc_set_vqe}
