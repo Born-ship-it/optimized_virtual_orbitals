@@ -426,7 +426,7 @@ class OVOS:
             for e in range(ninact):
                 # Absolute spin-orbital indices
                 abs_a = n_occ + a                           # Active virtual position
-                abs_e = n_occ + nvir_act + e               # Inactive virtual position
+                abs_e = n_occ + nvir_act + e                # Inactive virtual position
                 
                 # Antisymmetric placement
                 R_ae = R_local[a, e]
@@ -982,9 +982,6 @@ class OVOS:
             fock_hist[best_idx],
             stop_reasons[best_idx]
         ]
-
-        # if stop_reasons[best_idx] != "Initial":
-        #     self._print(f"Final ||grad|| = {grad_norm:.2e}, ||T1|| = {t1_norm:.2e}")
 
         return result
 
