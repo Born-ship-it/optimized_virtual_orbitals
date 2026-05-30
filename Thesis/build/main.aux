@@ -7,6 +7,7 @@
 \AC@reset@newl@bel
 \babel@aux{british}{}
 \@writefile{toc}{\contentsline {chapter}{Abstract}{i}{chapter*.1}\protected@file@percent }
+\citation{T}
 \@writefile{toc}{\contentsline {chapter}{Acknowledgements}{ii}{chapter*.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {chapter}{List of Abbreviations}{iii}{chapter*.3}\protected@file@percent }
 \newacro{HF}[\AC@hyperlink{HF}{HF}]{Hartree-Fock}
@@ -145,7 +146,7 @@
 \newlabel{sec:theory_wavefunction_methods}{{2.2}{8}{Wavefunction Methods}{section.2.2}{}}
 \newlabel{sec:theory_wavefunction_methods@cref}{{[section][2][2]2.2}{[1][7][]8}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Hartree-Fock Theory}{8}{subsection.2.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Restricted and Unrestricted Formalism}{8}{figure.caption.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Restricted and Unrestricted Formalism}{8}{subsection.2.2.1}\protected@file@percent }
 \citation{Helgaker2000}
 \citation{Jensen2017}
 \citation{Helgaker2000}
@@ -156,20 +157,22 @@
 \citation{Helgaker2000}
 \citation{Helgaker2000}
 \citation{Helgaker2000}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Canonical MO energy level diagram visualization. Highlight the occupied and virtual orbitals by ...}}{9}{figure.caption.6}\protected@file@percent }
-\newlabel{fig:MO_level_diagram}{{2.1}{9}{Canonical MO energy level diagram visualization. Highlight the occupied and virtual orbitals by ..}{figure.caption.6}{}}
-\newlabel{fig:MO_level_diagram@cref}{{[figure][1][2]2.1}{[1][8][]9}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Limitations of Hartree-Fock and the Need for Correlation}{9}{figure.caption.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Møller-Plesset Perturbation Theory}{9}{subsection.2.2.2}\protected@file@percent }
-\newlabel{subsec:mp2}{{2.2.2}{9}{Møller-Plesset Perturbation Theory}{subsection.2.2.2}{}}
-\newlabel{subsec:mp2@cref}{{[subsection][2][2,2]2.2.2}{[1][9][]9}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Limitations of Hartree-Fock and the Need for Correlation}{9}{subsection.2.2.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Potential energy curves for the Hydrogen atom illustrating the failure of HF near dissociation and the importance of electron correlation. The HF curve deviates significantly from the exact FCI curve as the bond is stretched, while MP2 captures much of the correlation energy and follows the FCI curve more closely around the equilibrium bond length. (Adapted from Helgaker et al. \cite  {Helgaker2000} Figs. 5.20 and 5.12.)}}{9}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:hf_pes}{{2.1}{9}{Potential energy curves for the Hydrogen atom illustrating the failure of HF near dissociation and the importance of electron correlation. The HF curve deviates significantly from the exact FCI curve as the bond is stretched, while MP2 captures much of the correlation energy and follows the FCI curve more closely around the equilibrium bond length. (Adapted from Helgaker et al. \cite {Helgaker2000} Figs. 5.20 and 5.12.)}{figure.caption.6}{}}
+\newlabel{fig:hf_pes@cref}{{[figure][1][2]2.1}{[1][9][]9}{}{}{}}
 \citation{Helgaker2000}
 \citation{Helgaker2000,Jensen2017}
 \citation{Helgaker2000,Jensen2017}
 \citation{Helgaker2000}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Potential energy curves for the Hydrogen atom illustrating the failure of HF near dissociation and the importance of electron correlation. The HF curve deviates significantly from the exact FCI curve as the bond is stretched, while MP2 captures much of the correlation energy and follows the FCI curve more closely around the equilibrium bond length. (Adapted from Helgaker et al. \cite  {Helgaker2000} Figs. 5.20 and 5.12.)}}{10}{figure.caption.7}\protected@file@percent }
-\newlabel{fig:hf_pes}{{2.2}{10}{Potential energy curves for the Hydrogen atom illustrating the failure of HF near dissociation and the importance of electron correlation. The HF curve deviates significantly from the exact FCI curve as the bond is stretched, while MP2 captures much of the correlation energy and follows the FCI curve more closely around the equilibrium bond length. (Adapted from Helgaker et al. \cite {Helgaker2000} Figs. 5.20 and 5.12.)}{figure.caption.7}{}}
-\newlabel{fig:hf_pes@cref}{{[figure][2][2]2.2}{[1][9][]10}{}{}{}}
+\citation{Helgaker2000}
+\citation{Lee2018,Handy1989}
+\citation{Helgaker2000}
+\citation{Brueckner1954}
+\citation{Adamowicz1987}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Møller-Plesset Perturbation Theory}{10}{subsection.2.2.2}\protected@file@percent }
+\newlabel{subsec:mp2}{{2.2.2}{10}{Møller-Plesset Perturbation Theory}{subsection.2.2.2}{}}
+\newlabel{subsec:mp2@cref}{{[subsection][2][2,2]2.2.2}{[1][9][]10}{}{}{}}
 \@writefile{toc}{\contentsline {subsubsection}{MP2 Correlation Energy}{10}{subsection.2.2.2}\protected@file@percent }
 \newlabel{eq:mp1_amps}{{2.4}{10}{MP2 Correlation Energy}{equation.2.4}{}}
 \newlabel{eq:mp1_amps@cref}{{[equation][4][2]2.4}{[1][10][]10}{}{}{}}
@@ -177,46 +180,41 @@
 \newlabel{eq:mp2_full_a@cref}{{[subequation][1][2,5]2.5a}{[1][10][]10}{}{}{}}
 \newlabel{eq:mp2_full_b}{{2.5b}{10}{MP2 Correlation Energy}{equation.2.5b}{}}
 \newlabel{eq:mp2_full_b@cref}{{[subequation][2][2,5]2.5b}{[1][10][]10}{}{}{}}
-\citation{Helgaker2000}
-\citation{Lee2018,Handy1989}
-\citation{Helgaker2000}
-\citation{Brueckner1954}
-\citation{Adamowicz1987}
+\@writefile{toc}{\contentsline {subsubsection}{Lower-Order Amplitudes}{10}{equation.2.5b}\protected@file@percent }
 \citation{Helgaker2000}
 \citation{Jensen2017}
 \citation{Helgaker2000,Cao2019}
 \citation{Sherrill1999}
 \citation{Jensen2017,Cao2019}
 \citation{Adamowicz1987}
-\@writefile{toc}{\contentsline {subsubsection}{Lower-Order Amplitudes}{11}{equation.2.5b}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{MP2 Limitations and Applicability}{11}{equation.2.5b}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Computational Scaling Motivation}{11}{equation.2.5b}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Background for understanding OVOS}{11}{section.2.3}\protected@file@percent }
+\newlabel{sec:theory_background_ovos}{{2.3}{11}{Background for understanding OVOS}{section.2.3}{}}
+\newlabel{sec:theory_background_ovos@cref}{{[section][3][2]2.3}{[1][11][]11}{}{}{}}
 \citation{Adamowicz1987}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Background for understanding OVOS}{12}{section.2.3}\protected@file@percent }
-\newlabel{sec:theory_background_ovos}{{2.3}{12}{Background for understanding OVOS}{section.2.3}{}}
-\newlabel{sec:theory_background_ovos@cref}{{[section][3][2]2.3}{[1][12][]12}{}{}{}}
+\citation{Adamowicz1987}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Orbital Rotations and Stationarity}{12}{subsection.2.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Partitioning and Index Notation -> notation here or only in introduction?}{12}{subsection.2.3.1}\protected@file@percent }
-\citation{Adamowicz1987}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Partitioning of spin-orbital space for OVOS into occupied (blue), active virtual (purple), and inactive virtual subspaces (red). (1) No partitioning. (2) Occupied and unoccupied orbitals. (3) Active and inactive subsets.}}{12}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:orbital_partitioning}{{2.2}{12}{Partitioning of spin-orbital space for OVOS into occupied (blue), active virtual (purple), and inactive virtual subspaces (red). (1) No partitioning. (2) Occupied and unoccupied orbitals. (3) Active and inactive subsets}{figure.caption.7}{}}
+\newlabel{fig:orbital_partitioning@cref}{{[figure][2][2]2.2}{[1][12][]12}{}{}{}}
 \citation{Helgaker2000}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Partitioning of spin-orbital space for OVOS into occupied (blue), active virtual (purple), and inactive virtual subspaces (red). (1) No partitioning. (2) Occupied and unoccupied orbitals. (3) Active and inactive subsets.}}{13}{figure.caption.8}\protected@file@percent }
-\newlabel{fig:orbital_partitioning}{{2.3}{13}{Partitioning of spin-orbital space for OVOS into occupied (blue), active virtual (purple), and inactive virtual subspaces (red). (1) No partitioning. (2) Occupied and unoccupied orbitals. (3) Active and inactive subsets}{figure.caption.8}{}}
-\newlabel{fig:orbital_partitioning@cref}{{[figure][3][2]2.3}{[1][12][]13}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces Orbital subspace notation used throughout this thesis.}}{13}{table.caption.9}\protected@file@percent }
-\newlabel{tab:index_notation}{{2.2}{13}{Orbital subspace notation used throughout this thesis}{table.caption.9}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces Orbital subspace notation used throughout this thesis.}}{13}{table.caption.8}\protected@file@percent }
+\newlabel{tab:index_notation}{{2.2}{13}{Orbital subspace notation used throughout this thesis}{table.caption.8}{}}
 \newlabel{tab:index_notation@cref}{{[table][2][2]2.2}{[1][12][]13}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}The Second-Order Hylleraas Functional}{13}{subsection.2.3.2}\protected@file@percent }
 \newlabel{subsec:2nd_hylleraas}{{2.3.2}{13}{The Second-Order Hylleraas Functional}{subsection.2.3.2}{}}
-\newlabel{subsec:2nd_hylleraas@cref}{{[subsection][2][2,3]2.3.2}{[1][13][]13}{}{}{}}
+\newlabel{subsec:2nd_hylleraas@cref}{{[subsection][2][2,3]2.3.2}{[1][12][]13}{}{}{}}
 \@writefile{toc}{\contentsline {subsubsection}{From Perturbation Theory to the Hylleraas Principle}{13}{subsection.2.3.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Pair Decomposition and Explicit Form of $J_2$}{14}{equation.2.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{The Zero-Order Term}{14}{equation.2.15}\protected@file@percent }
 \citation{Adamowicz1987}
-\@writefile{toc}{\contentsline {subsubsection}{The Zero-Order Term}{15}{equation.2.15}\protected@file@percent }
+\citation{Helgaker2000}
+\citation{Helgaker2000}
 \@writefile{toc}{\contentsline {subsubsection}{Evaluation of the Perturbative Coupling}{15}{equation.2.20}\protected@file@percent }
-\citation{Helgaker2000}
-\citation{Helgaker2000}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Orbital Rotation Parameterisation}{16}{subsection.2.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Orbital Rotation}{16}{subsection.2.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Orbital Rotation Parameterisation}{15}{subsection.2.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Orbital Rotation}{15}{subsection.2.3.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Active and Inactive Virtual Subspaces}{16}{subsection.2.3.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Unitary Transformation via Matrix Exponential}{16}{equation.2.26}\protected@file@percent }
 \citation{Adamowicz1987}
@@ -225,15 +223,15 @@
 \@writefile{toc}{\contentsline {subsubsection}{Gradient Expression}{17}{equation.2.30}\protected@file@percent }
 \newlabel{subsubsec:gradient}{{2.3.4}{17}{Gradient Expression}{equation.2.30}{}}
 \newlabel{subsubsec:gradient@cref}{{[subsection][4][2,3]2.3.4}{[1][17][]17}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{The Stationarity Principle}{18}{equation.2.41}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Hessian Expression}{18}{subsection.2.3.5}\protected@file@percent }
 \citation{Adamowicz1987}
-\@writefile{toc}{\contentsline {subsubsection}{The Stationarity Principle}{19}{equation.2.41}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Hessian Expression}{19}{subsection.2.3.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Derivation of the Hessian Expression}{19}{equation.2.44}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Two-electron integrals:}{19}{equation.2.47}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Fock matrix (canonical orbitals):}{20}{equation.2.48}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Amplitudes:}{20}{equation.2.49}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Fock matrix (canonical orbitals):}{19}{equation.2.48}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Amplitudes:}{19}{equation.2.49}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Step 1: Differentiate First Gradient Term}{20}{equation.2.51}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Step 2: Differentiate Second Gradient Term}{21}{equation.2.58}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Step 2: Differentiate Second Gradient Term}{20}{equation.2.58}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Final Hessian}{21}{equation.2.64}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Block Structure of the Hessian}{21}{equation.2.67}\protected@file@percent }
 \citation{Helgaker2000}
@@ -245,12 +243,12 @@
 \newlabel{subsec:scaling}{{2.3.8}{23}{Computational Cost and Scaling}{subsection.2.3.8}{}}
 \newlabel{subsec:scaling@cref}{{[subsection][8][2,3]2.3.8}{[1][23][]23}{}{}{}}
 \@writefile{toc}{\contentsline {subsubsection}{Per-Iteration Cost of OVOS Optimisation}{23}{subsection.2.3.8}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2.3}{\ignorespaces Dominant computational steps in OVOS iterations as a function of the active space size $N'$. *MP2 close 2nd.}}{24}{table.caption.10}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Comparison: Full Virtual Space vs OVOS-Reduced}{24}{table.caption.10}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Downstream Speedup Factors}{24}{table.caption.10}\protected@file@percent }
-\newlabel{subsubsec:downstream_speedup}{{2.3.8}{24}{Downstream Speedup Factors}{table.caption.10}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.3}{\ignorespaces Dominant computational steps in OVOS iterations as a function of the active space size $N'$. *MP2 close 2nd.}}{24}{table.caption.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Comparison: Full Virtual Space vs OVOS-Reduced}{24}{table.caption.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Downstream Speedup Factors}{24}{table.caption.9}\protected@file@percent }
+\newlabel{subsubsec:downstream_speedup}{{2.3.8}{24}{Downstream Speedup Factors}{table.caption.9}{}}
 \newlabel{subsubsec:downstream_speedup@cref}{{[subsection][8][2,3]2.3.8}{[1][24][]24}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Breakeven Analysis and Practical Realisation}{24}{table.caption.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Breakeven Analysis and Practical Realisation}{24}{table.caption.9}\protected@file@percent }
 \citation{Brueckner1954}
 \citation{Helgaker2000}
 \citation{Handy1989}
@@ -306,9 +304,9 @@
 \newlabel{alg:ovos}{{1}{30}{OVOS Iterative Optimisation}{algorithm.1}{}}
 \newlabel{alg:ovos@cref}{{[algorithm][1][]1}{[1][30][]30}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Integral Transformation}{31}{subsection.3.1.1}\protected@file@percent }
-\newlabel{lst:integral_transform}{{3.1}{31}{AO-to-MO integral transformation with spin-orbital antisymmetrization}{lstlisting.3.1}{}}
+\newlabel{lst:integral_transform}{{3.1}{31}{AO-to-MO integral transformation with spin-orbital antisymmetrisation}{lstlisting.3.1}{}}
 \newlabel{lst:integral_transform@cref}{{[lstlisting][1][3]3.1}{[1][31][]31}{}{}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}{\ignorespaces AO-to-MO integral transformation with spin-orbital antisymmetrization}}{31}{lstlisting.3.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}{\ignorespaces AO-to-MO integral transformation with spin-orbital antisymmetrisation}}{31}{lstlisting.3.1}\protected@file@percent }
 \citation{Adamowicz1987}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Initial Active Space Selection}{32}{subsection.3.1.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}MP1 Amplitudes and MP2 Energy}{32}{subsection.3.1.3}\protected@file@percent }
@@ -339,8 +337,8 @@
 \newlabel{lst:convergence}{{3.9}{38}{Convergence checking loop}{lstlisting.3.9}{}}
 \newlabel{lst:convergence@cref}{{[lstlisting][9][3]3.9}{[1][38][]38}{}{}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {3.9}{\ignorespaces Convergence checking loop}}{38}{lstlisting.3.9}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Convergence iteration count landscape for OVOS with convergence criteria gradient norm and MP2 correlation energy. Explored for the HF molecule in the 6--31G basis with initial RHF orbitals. Active space of 7 molecular orbitals. The red point indicates the final converged solution with the default criteria. }}{39}{figure.caption.11}\protected@file@percent }
-\newlabel{fig:convergence_landscape}{{3.1}{39}{Convergence iteration count landscape for OVOS with convergence criteria gradient norm and MP2 correlation energy. Explored for the HF molecule in the 6--31G basis with initial RHF orbitals. Active space of 7 molecular orbitals. The red point indicates the final converged solution with the default criteria}{figure.caption.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Convergence iteration count landscape for OVOS with convergence criteria gradient norm and MP2 correlation energy. Explored for the HF molecule in the 6--31G basis with initial RHF orbitals. Active space of 7 molecular orbitals. The red point indicates the final converged solution with the default criteria. }}{39}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:convergence_landscape}{{3.1}{39}{Convergence iteration count landscape for OVOS with convergence criteria gradient norm and MP2 correlation energy. Explored for the HF molecule in the 6--31G basis with initial RHF orbitals. Active space of 7 molecular orbitals. The red point indicates the final converged solution with the default criteria}{figure.caption.10}{}}
 \newlabel{fig:convergence_landscape@cref}{{[figure][1][3]3.1}{[1][38][]39}{}{}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}Initialisation Strategies}{39}{section.3.2}\protected@file@percent }
 \newlabel{sec:method_initialisation_strategies}{{3.2}{39}{Initialisation Strategies}{section.3.2}{}}
@@ -372,8 +370,8 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.0.1}Software and Libraries}{43}{subsection.4.0.1}\protected@file@percent }
 \newlabel{subsec:comp_calc_set_software}{{4.0.1}{43}{Software and Libraries}{subsection.4.0.1}{}}
 \newlabel{subsec:comp_calc_set_software@cref}{{[subsection][1][4,0]4.0.1}{[1][43][]43}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Software packages used in this work.}}{43}{table.caption.12}\protected@file@percent }
-\newlabel{tab:software}{{4.1}{43}{Software packages used in this work}{table.caption.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Software packages used in this work.}}{43}{table.caption.11}\protected@file@percent }
+\newlabel{tab:software}{{4.1}{43}{Software packages used in this work}{table.caption.11}{}}
 \newlabel{tab:software@cref}{{[table][1][4]4.1}{[1][43][]43}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.0.2}Molecular Geometries}{43}{subsection.4.0.2}\protected@file@percent }
 \newlabel{subsec:comp_mo_geometries}{{4.0.2}{43}{Molecular Geometries}{subsection.4.0.2}{}}
@@ -381,9 +379,9 @@
 \citation{pritchard2019a}
 \citation{ditchfield1971a,dill1975a,hehre1972a}
 \citation{dunning1989}
-\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Molecular geometries and electronic structure parameters used in this work.}}{44}{table.caption.13}\protected@file@percent }
-\newlabel{tab:geometries}{{4.2}{44}{Molecular geometries and electronic structure parameters used in this work}{table.caption.13}{}}
-\newlabel{tab:geometries@cref}{{[table][2][4]4.2}{[1][44][]44}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Molecular geometries and electronic structure parameters used in this work.}}{44}{table.caption.12}\protected@file@percent }
+\newlabel{tab:geometries}{{4.2}{44}{Molecular geometries and electronic structure parameters used in this work}{table.caption.12}{}}
+\newlabel{tab:geometries@cref}{{[table][2][4]4.2}{[1][43][]44}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.0.3}Basis Sets}{44}{subsection.4.0.3}\protected@file@percent }
 \newlabel{subsec:comp_basis_sets}{{4.0.3}{44}{Basis Sets}{subsection.4.0.3}{}}
 \newlabel{subsec:comp_basis_sets@cref}{{[subsection][3][4,0]4.0.3}{[1][44][]44}{}{}{}}
@@ -400,191 +398,192 @@
 \@writefile{toc}{\contentsline {section}{\numberline {4.2}VQE Calculation Settings}{45}{section.4.2}\protected@file@percent }
 \newlabel{sec:comp_calc_set_vqe}{{4.2}{45}{VQE Calculation Settings}{section.4.2}{}}
 \newlabel{sec:comp_calc_set_vqe@cref}{{[section][2][4]4.2}{[1][45][]45}{}{}{}}
-\newlabel{lst:vqe_wf}{{4.3}{45}{VQE Wavefunction}{lstlisting.4.3}{}}
-\newlabel{lst:vqe_wf@cref}{{[lstlisting][3][4]4.3}{[1][45][]45}{}{}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.3}{\ignorespaces VQE Wavefunction}}{45}{lstlisting.4.3}\protected@file@percent }
+\newlabel{lst:vqe_wf}{{4.3}{46}{VQE Wavefunction}{lstlisting.4.3}{}}
+\newlabel{lst:vqe_wf@cref}{{[lstlisting][3][4]4.3}{[1][46][]46}{}{}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4.3}{\ignorespaces VQE Wavefunction}}{46}{lstlisting.4.3}\protected@file@percent }
 \newlabel{lst:run_vqe}{{4.4}{46}{Running VQE}{lstlisting.4.4}{}}
 \newlabel{lst:run_vqe@cref}{{[lstlisting][4][4]4.4}{[1][46][]46}{}{}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {4.4}{\ignorespaces Running VQE}}{46}{lstlisting.4.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces ...}}{46}{figure.caption.14}\protected@file@percent }
-\newlabel{fig:vqe_flowchart}{{4.1}{46}{..}{figure.caption.14}{}}
-\newlabel{fig:vqe_flowchart@cref}{{[figure][1][4]4.1}{[1][46][]46}{}{}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Results}{47}{chapter.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Flowchart of VQE calculation settings. The flowchart illustrates the different combinations of orbital optimisation (OVOS, no optimisation, and canonical HF orbitals) used in the VQE calculations.}}{47}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:vqe_flowchart}{{4.1}{47}{Flowchart of VQE calculation settings. The flowchart illustrates the different combinations of orbital optimisation (OVOS, no optimisation, and canonical HF orbitals) used in the VQE calculations}{figure.caption.13}{}}
+\newlabel{fig:vqe_flowchart@cref}{{[figure][1][4]4.1}{[1][46][]47}{}{}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Results}{48}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:results}{{5}{47}{Results}{chapter.5}{}}
-\newlabel{ch:results@cref}{{[chapter][5][]5}{[1][47][]47}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}OVOS}{47}{section.5.1}\protected@file@percent }
-\newlabel{sec:results_ovos}{{5.1}{47}{OVOS}{section.5.1}{}}
-\newlabel{sec:results_ovos@cref}{{[section][1][5]5.1}{[1][47][]47}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}correlation energy of OVOS}{47}{subsection.5.1.1}\protected@file@percent }
-\newlabel{subsec:results_ovos_mp2}{{5.1.1}{47}{correlation energy of OVOS}{subsection.5.1.1}{}}
-\newlabel{subsec:results_ovos_mp2@cref}{{[subsection][1][5,1]5.1.1}{[1][47][]47}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces Convergence of the MP2 correlation energy for CO in the cc--pVDZ basis at each number of active unoccupied orbitals ($N'_{\rm  act.unocc}$). The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{49}{figure.caption.15}\protected@file@percent }
-\newlabel{fig:CO_cc-pVDZ_ovos}{{5.1}{49}{Convergence of the MP2 correlation energy for CO in the cc--pVDZ basis at each number of active unoccupied orbitals ($N'_{\rm act.unocc}$). The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.15}{}}
-\newlabel{fig:CO_cc-pVDZ_ovos@cref}{{[figure][1][5]5.1}{[1][48][]49}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces Convergence of the MP2 correlation energy for H$_2$O in the cc--pVDZ basis at each number of active unoccupied orbitals ($N'_{\rm  act.unocc}$). The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{50}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:H2O_cc-pVDZ_ovos}{{5.2}{50}{Convergence of the MP2 correlation energy for H$_2$O in the cc--pVDZ basis at each number of active unoccupied orbitals ($N'_{\rm act.unocc}$). The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.16}{}}
-\newlabel{fig:H2O_cc-pVDZ_ovos@cref}{{[figure][2][5]5.2}{[1][50][]50}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces Convergence of the MP2 correlation energy for HF in the cc--pVDZ basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{51}{figure.caption.17}\protected@file@percent }
-\newlabel{fig:HF_cc-pVDZ_ovos}{{5.3}{51}{Convergence of the MP2 correlation energy for HF in the cc--pVDZ basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.17}{}}
-\newlabel{fig:HF_cc-pVDZ_ovos@cref}{{[figure][3][5]5.3}{[1][51][]51}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces Convergence of the MP2 correlation energy for NH$_3$ in the cc--pVDZ basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{52}{figure.caption.18}\protected@file@percent }
-\newlabel{fig:NH3_cc-pVDZ_ovos}{{5.4}{52}{Convergence of the MP2 correlation energy for NH$_3$ in the cc--pVDZ basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.18}{}}
-\newlabel{fig:NH3_cc-pVDZ_ovos@cref}{{[figure][4][5]5.4}{[1][52][]52}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.5}{\ignorespaces Convergence of the MP2 correlation energy for Li$_2$ in the cc--pVDZ basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{53}{figure.caption.19}\protected@file@percent }
-\newlabel{fig:Li2_cc-pVDZ_ovos}{{5.5}{53}{Convergence of the MP2 correlation energy for Li$_2$ in the cc--pVDZ basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.19}{}}
-\newlabel{fig:Li2_cc-pVDZ_ovos@cref}{{[figure][5][5]5.5}{[1][53][]53}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}Basis Set Dependence}{54}{subsection.5.1.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5.6}{\ignorespaces Basis set dependence of energy recovery for CO. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}}{54}{figure.caption.20}\protected@file@percent }
-\newlabel{fig:CO_basis_comparison}{{5.6}{54}{Basis set dependence of energy recovery for CO. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line}{figure.caption.20}{}}
-\newlabel{fig:CO_basis_comparison@cref}{{[figure][6][5]5.6}{[1][54][]54}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.7}{\ignorespaces Basis set dependence of energy recovery for H$_2$O. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}}{55}{figure.caption.21}\protected@file@percent }
-\newlabel{fig:H2O_basis_comparison}{{5.7}{55}{Basis set dependence of energy recovery for H$_2$O. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line}{figure.caption.21}{}}
-\newlabel{fig:H2O_basis_comparison@cref}{{[figure][7][5]5.7}{[1][55][]55}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.8}{\ignorespaces Basis set dependence of energy recovery for HF. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}}{56}{figure.caption.22}\protected@file@percent }
-\newlabel{fig:HF_basis_comparison}{{5.8}{56}{Basis set dependence of energy recovery for HF. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line}{figure.caption.22}{}}
-\newlabel{fig:HF_basis_comparison@cref}{{[figure][8][5]5.8}{[1][55][]56}{}{}{}}
+\newlabel{ch:results}{{5}{48}{Results}{chapter.5}{}}
+\newlabel{ch:results@cref}{{[chapter][5][]5}{[1][48][]48}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}OVOS}{48}{section.5.1}\protected@file@percent }
+\newlabel{sec:results_ovos}{{5.1}{48}{OVOS}{section.5.1}{}}
+\newlabel{sec:results_ovos@cref}{{[section][1][5]5.1}{[1][48][]48}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}correlation energy of OVOS}{48}{subsection.5.1.1}\protected@file@percent }
+\newlabel{subsec:results_ovos_mp2}{{5.1.1}{48}{correlation energy of OVOS}{subsection.5.1.1}{}}
+\newlabel{subsec:results_ovos_mp2@cref}{{[subsection][1][5,1]5.1.1}{[1][48][]48}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces Convergence of the MP2 correlation energy for CO in the cc--pVDZ basis at each number of active unoccupied orbitals ($N'_{\rm  act.unocc}$). The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{50}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:CO_cc-pVDZ_ovos}{{5.1}{50}{Convergence of the MP2 correlation energy for CO in the cc--pVDZ basis at each number of active unoccupied orbitals ($N'_{\rm act.unocc}$). The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.14}{}}
+\newlabel{fig:CO_cc-pVDZ_ovos@cref}{{[figure][1][5]5.1}{[1][49][]50}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces Convergence of the MP2 correlation energy for H$_2$O in the cc--pVDZ basis at each number of active unoccupied orbitals ($N'_{\rm  act.unocc}$). The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{51}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:H2O_cc-pVDZ_ovos}{{5.2}{51}{Convergence of the MP2 correlation energy for H$_2$O in the cc--pVDZ basis at each number of active unoccupied orbitals ($N'_{\rm act.unocc}$). The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.15}{}}
+\newlabel{fig:H2O_cc-pVDZ_ovos@cref}{{[figure][2][5]5.2}{[1][51][]51}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces Convergence of the MP2 correlation energy for HF in the cc--pVDZ basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{52}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:HF_cc-pVDZ_ovos}{{5.3}{52}{Convergence of the MP2 correlation energy for HF in the cc--pVDZ basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.16}{}}
+\newlabel{fig:HF_cc-pVDZ_ovos@cref}{{[figure][3][5]5.3}{[1][52][]52}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces Convergence of the MP2 correlation energy for NH$_3$ in the cc--pVDZ basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{53}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:NH3_cc-pVDZ_ovos}{{5.4}{53}{Convergence of the MP2 correlation energy for NH$_3$ in the cc--pVDZ basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.17}{}}
+\newlabel{fig:NH3_cc-pVDZ_ovos@cref}{{[figure][4][5]5.4}{[1][53][]53}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.5}{\ignorespaces Convergence of the MP2 correlation energy for Li$_2$ in the cc--pVDZ basis at each $N'_{\rm  act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{54}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:Li2_cc-pVDZ_ovos}{{5.5}{54}{Convergence of the MP2 correlation energy for Li$_2$ in the cc--pVDZ basis at each $N'_{\rm act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full‑space MP2 (red) and OO‑MP2 (blue) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.18}{}}
+\newlabel{fig:Li2_cc-pVDZ_ovos@cref}{{[figure][5][5]5.5}{[1][54][]54}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}Basis Set Dependence}{55}{subsection.5.1.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5.6}{\ignorespaces Basis set dependence of energy recovery for CO. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}}{55}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:CO_basis_comparison}{{5.6}{55}{Basis set dependence of energy recovery for CO. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line}{figure.caption.19}{}}
+\newlabel{fig:CO_basis_comparison@cref}{{[figure][6][5]5.6}{[1][55][]55}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.7}{\ignorespaces Basis set dependence of energy recovery for H$_2$O. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}}{56}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:H2O_basis_comparison}{{5.7}{56}{Basis set dependence of energy recovery for H$_2$O. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line}{figure.caption.20}{}}
+\newlabel{fig:H2O_basis_comparison@cref}{{[figure][7][5]5.7}{[1][56][]56}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.8}{\ignorespaces Basis set dependence of energy recovery for HF. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}}{57}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:HF_basis_comparison}{{5.8}{57}{Basis set dependence of energy recovery for HF. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line}{figure.caption.21}{}}
+\newlabel{fig:HF_basis_comparison@cref}{{[figure][8][5]5.8}{[1][56][]57}{}{}{}}
 \citation{Adamowicz1987}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.9}{\ignorespaces Basis set dependence of energy recovery for NH$_3$. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}}{57}{figure.caption.23}\protected@file@percent }
-\newlabel{fig:NH3_basis_comparison}{{5.9}{57}{Basis set dependence of energy recovery for NH$_3$. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line}{figure.caption.23}{}}
-\newlabel{fig:NH3_basis_comparison@cref}{{[figure][9][5]5.9}{[1][56][]57}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.10}{\ignorespaces Basis set dependence of energy recovery for Li$_2$. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}}{57}{figure.caption.24}\protected@file@percent }
-\newlabel{fig:Li2_basis_comparison}{{5.10}{57}{Basis set dependence of energy recovery for Li$_2$. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line}{figure.caption.24}{}}
-\newlabel{fig:Li2_basis_comparison@cref}{{[figure][10][5]5.10}{[1][56][]57}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Comparison with Adamowicz and Bartlett (1987)}{57}{figure.caption.24}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5.9}{\ignorespaces Basis set dependence of energy recovery for NH$_3$. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}}{58}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:NH3_basis_comparison}{{5.9}{58}{Basis set dependence of energy recovery for NH$_3$. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line}{figure.caption.22}{}}
+\newlabel{fig:NH3_basis_comparison@cref}{{[figure][9][5]5.9}{[1][57][]58}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.10}{\ignorespaces Basis set dependence of energy recovery for Li$_2$. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line.}}{58}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:Li2_basis_comparison}{{5.10}{58}{Basis set dependence of energy recovery for Li$_2$. The MP2 energy correlation is plotted against the active virtual orbitals for the basis sets: 6--31G (stripped) and cc--pVDZ (full) line}{figure.caption.23}{}}
+\newlabel{fig:Li2_basis_comparison@cref}{{[figure][10][5]5.10}{[1][57][]58}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Comparison with Adamowicz and Bartlett (1987)}{58}{figure.caption.23}\protected@file@percent }
 \citation{Adamowicz1987}
 \citation{Adamowicz1987}
 \citation{Adamowicz1987}
-\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Comparison of my implementation of OVOS for other molecules in cc-pvCVZ basis set against the values from Adamowicz \& Bartlett \cite  {Adamowicz1987} (noted by a $\dagger $). The energies are in percentages of the full space correlation energy for each molecule, of which in parentheses their active virtual orbital counts are given.}}{58}{table.caption.25}\protected@file@percent }
-\newlabel{tab:comparison_AB}{{5.1}{58}{Comparison of my implementation of OVOS for other molecules in cc-pvCVZ basis set against the values from Adamowicz \& Bartlett \cite {Adamowicz1987} (noted by a $\dagger $). The energies are in percentages of the full space correlation energy for each molecule, of which in parentheses their active virtual orbital counts are given}{table.caption.25}{}}
-\newlabel{tab:comparison_AB@cref}{{[table][1][5]5.1}{[1][58][]58}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}VQE}{58}{section.5.2}\protected@file@percent }
-\newlabel{sec:results_veq}{{5.2}{58}{VQE}{section.5.2}{}}
-\newlabel{sec:results_veq@cref}{{[section][2][5]5.2}{[1][58][]58}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}VQE potential energy surfaces plot}{58}{subsection.5.2.1}\protected@file@percent }
-\newlabel{sec:results_vqe}{{5.2.1}{58}{VQE potential energy surfaces plot}{subsection.5.2.1}{}}
-\newlabel{sec:results_vqe@cref}{{[subsection][1][5,2]5.2.1}{[1][58][]58}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.11}{\ignorespaces Potential energy surfaces for H$_2$O in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 10 electrons and 6 virtual orbitals (75\% of the full virtual space). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries.}}{60}{figure.caption.26}\protected@file@percent }
-\newlabel{fig:H2O_VQE_false.png}{{5.11}{60}{Potential energy surfaces for H$_2$O in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 10 electrons and 6 virtual orbitals (75\% of the full virtual space). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries}{figure.caption.26}{}}
-\newlabel{fig:H2O_VQE_false.png@cref}{{[figure][11][5]5.11}{[1][59][]60}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.12}{\ignorespaces Potential energy surfaces for HF in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 10 electrons and 5 virtual orbitals (75\% of the full virtual space rounded up). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries.}}{61}{figure.caption.27}\protected@file@percent }
-\newlabel{fig:HF_VQE_false.png}{{5.12}{61}{Potential energy surfaces for HF in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 10 electrons and 5 virtual orbitals (75\% of the full virtual space rounded up). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries}{figure.caption.27}{}}
-\newlabel{fig:HF_VQE_false.png@cref}{{[figure][12][5]5.12}{[1][60][]61}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.13}{\ignorespaces Potential energy surfaces for Li$_2$ in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 6 electrons and 12 virtual orbitals (75\% of the full virtual space rounded up). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries.}}{62}{figure.caption.28}\protected@file@percent }
-\newlabel{fig:Li2_VQE_false.png}{{5.13}{62}{Potential energy surfaces for Li$_2$ in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 6 electrons and 12 virtual orbitals (75\% of the full virtual space rounded up). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries}{figure.caption.28}{}}
-\newlabel{fig:Li2_VQE_false.png@cref}{{[figure][13][5]5.13}{[1][61][]62}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}ooVQE}{62}{section.5.3}\protected@file@percent }
-\newlabel{sec:results_veq}{{5.3}{62}{ooVQE}{section.5.3}{}}
-\newlabel{sec:results_veq@cref}{{[section][3][5]5.3}{[1][62][]62}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.14}{\ignorespaces Convergence iteration count for H$_2$O in 6-31G basis set, (10e, 11o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state.}}{63}{figure.caption.29}\protected@file@percent }
-\newlabel{fig:H2O_convergence_statistics}{{5.14}{63}{Convergence iteration count for H$_2$O in 6-31G basis set, (10e, 11o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state}{figure.caption.29}{}}
-\newlabel{fig:H2O_convergence_statistics@cref}{{[figure][14][5]5.14}{[1][63][]63}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.15}{\ignorespaces Convergence iteration count for HF in 6-31G basis set, (10e, 10o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state.}}{64}{figure.caption.30}\protected@file@percent }
-\newlabel{fig:HF_convergence_statistics}{{5.15}{64}{Convergence iteration count for HF in 6-31G basis set, (10e, 10o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state}{figure.caption.30}{}}
-\newlabel{fig:HF_convergence_statistics@cref}{{[figure][15][5]5.15}{[1][64][]64}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5.16}{\ignorespaces Convergence iteration count for Li$_2$ in 6-31G basis set, (6e, 15o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state.}}{65}{figure.caption.31}\protected@file@percent }
-\newlabel{fig:Li2_convergence_statistics}{{5.16}{65}{Convergence iteration count for Li$_2$ in 6-31G basis set, (6e, 15o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state}{figure.caption.31}{}}
-\newlabel{fig:Li2_convergence_statistics@cref}{{[figure][16][5]5.16}{[1][65][]65}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Comparison of my implementation of OVOS for other molecules in cc-pvCVZ basis set against the values from Adamowicz \& Bartlett \cite  {Adamowicz1987} (noted by a $\dagger $). The energies are in percentages of the full space correlation energy for each molecule, of which in parentheses their active virtual orbital counts are given.}}{59}{table.caption.24}\protected@file@percent }
+\newlabel{tab:comparison_AB}{{5.1}{59}{Comparison of my implementation of OVOS for other molecules in cc-pvCVZ basis set against the values from Adamowicz \& Bartlett \cite {Adamowicz1987} (noted by a $\dagger $). The energies are in percentages of the full space correlation energy for each molecule, of which in parentheses their active virtual orbital counts are given}{table.caption.24}{}}
+\newlabel{tab:comparison_AB@cref}{{[table][1][5]5.1}{[1][59][]59}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}VQE}{59}{section.5.2}\protected@file@percent }
+\newlabel{sec:results_veq}{{5.2}{59}{VQE}{section.5.2}{}}
+\newlabel{sec:results_veq@cref}{{[section][2][5]5.2}{[1][59][]59}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}VQE potential energy surfaces plot}{59}{subsection.5.2.1}\protected@file@percent }
+\newlabel{sec:results_vqe}{{5.2.1}{59}{VQE potential energy surfaces plot}{subsection.5.2.1}{}}
+\newlabel{sec:results_vqe@cref}{{[subsection][1][5,2]5.2.1}{[1][59][]59}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.11}{\ignorespaces Potential energy surfaces for H$_2$O in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The geometries vary the interatomic bond length, the angle between the bonds are kept constant. The active space is the same for all calculations with 10 electrons and 6 virtual orbitals (75\% of the full virtual space). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries.}}{61}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:H2O_VQE_false.png}{{5.11}{61}{Potential energy surfaces for H$_2$O in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The geometries vary the interatomic bond length, the angle between the bonds are kept constant. The active space is the same for all calculations with 10 electrons and 6 virtual orbitals (75\% of the full virtual space). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries}{figure.caption.25}{}}
+\newlabel{fig:H2O_VQE_false.png@cref}{{[figure][11][5]5.11}{[1][60][]61}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.12}{\ignorespaces Potential energy surfaces for HF in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 10 electrons and 5 virtual orbitals (75\% of the full virtual space rounded up). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries.}}{62}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:HF_VQE_false.png}{{5.12}{62}{Potential energy surfaces for HF in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 10 electrons and 5 virtual orbitals (75\% of the full virtual space rounded up). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries}{figure.caption.26}{}}
+\newlabel{fig:HF_VQE_false.png@cref}{{[figure][12][5]5.12}{[1][61][]62}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.13}{\ignorespaces Potential energy surfaces for Li$_2$ in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 6 electrons and 12 virtual orbitals (75\% of the full virtual space rounded up). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries.}}{63}{figure.caption.27}\protected@file@percent }
+\newlabel{fig:Li2_VQE_false.png}{{5.13}{63}{Potential energy surfaces for Li$_2$ in 6-31G basis set, using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The active space is the same for all calculations with 6 electrons and 12 virtual orbitals (75\% of the full virtual space rounded up). The dashed lines represent the reference energies from PySCF. The plot shows the energy convergence across different geometries}{figure.caption.27}{}}
+\newlabel{fig:Li2_VQE_false.png@cref}{{[figure][13][5]5.13}{[1][62][]63}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}ooVQE}{63}{section.5.3}\protected@file@percent }
+\newlabel{sec:results_veq}{{5.3}{63}{ooVQE}{section.5.3}{}}
+\newlabel{sec:results_veq@cref}{{[section][3][5]5.3}{[1][63][]63}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.14}{\ignorespaces Convergence iteration count for H$_2$O in 6-31G basis set, (10e, 11o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state.}}{64}{figure.caption.28}\protected@file@percent }
+\newlabel{fig:H2O_convergence_statistics}{{5.14}{64}{Convergence iteration count for H$_2$O in 6-31G basis set, (10e, 11o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state}{figure.caption.28}{}}
+\newlabel{fig:H2O_convergence_statistics@cref}{{[figure][14][5]5.14}{[1][64][]64}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.15}{\ignorespaces Convergence iteration count for HF in 6-31G basis set, (10e, 10o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state.}}{65}{figure.caption.29}\protected@file@percent }
+\newlabel{fig:HF_convergence_statistics}{{5.15}{65}{Convergence iteration count for HF in 6-31G basis set, (10e, 10o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state}{figure.caption.29}{}}
+\newlabel{fig:HF_convergence_statistics@cref}{{[figure][15][5]5.15}{[1][65][]65}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.16}{\ignorespaces Convergence iteration count for Li$_2$ in 6-31G basis set, (6e, 15o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state.}}{66}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:Li2_convergence_statistics}{{5.16}{66}{Convergence iteration count for Li$_2$ in 6-31G basis set, (6e, 15o), using the OVOS optimised orbitals (blue), UHF orbitals (purple), and UMP2 natural orbitals (green) as reference states in VQE calculations. The boxplots represent the distribution of convergence iteration counts across different geometries along the potential energy surface, with the red lines representing the mean convergence iteration count for each reference state}{figure.caption.30}{}}
+\newlabel{fig:Li2_convergence_statistics@cref}{{[figure][16][5]5.16}{[1][66][]66}{}{}{}}
 \citation{Adamowicz1987}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Conclusion and Outlook}{66}{chapter.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Conclusion and Outlook}{67}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:conclusion}{{6}{66}{Conclusion and Outlook}{chapter.6}{}}
-\newlabel{ch:conclusion@cref}{{[chapter][6][]6}{[1][66][]66}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}Conclusion}{66}{section.6.1}\protected@file@percent }
-\newlabel{sec:con_out_conclusion}{{6.1}{66}{Conclusion}{section.6.1}{}}
-\newlabel{sec:con_out_conclusion@cref}{{[section][1][6]6.1}{[1][66][]66}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Summary of Findings}{66}{subsection.6.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}Critical Assessment}{67}{subsection.6.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}Outlook}{68}{section.6.2}\protected@file@percent }
-\newlabel{sec:con_out_outlook}{{6.2}{68}{Outlook}{section.6.2}{}}
-\newlabel{sec:con_out_outlook@cref}{{[section][2][6]6.2}{[1][68][]68}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}Algorithmic Improvements}{68}{subsection.6.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}Method Extensions}{68}{subsection.6.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.3}Quantum Computing Applications}{69}{subsection.6.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.4}Larger Molecular Systems}{69}{subsection.6.2.4}\protected@file@percent }
+\newlabel{ch:conclusion}{{6}{67}{Conclusion and Outlook}{chapter.6}{}}
+\newlabel{ch:conclusion@cref}{{[chapter][6][]6}{[1][67][]67}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Conclusion}{67}{section.6.1}\protected@file@percent }
+\newlabel{sec:con_out_conclusion}{{6.1}{67}{Conclusion}{section.6.1}{}}
+\newlabel{sec:con_out_conclusion@cref}{{[section][1][6]6.1}{[1][67][]67}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.1}Summary of Findings}{67}{subsection.6.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1.2}Critical Assessment}{68}{subsection.6.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Outlook}{69}{section.6.2}\protected@file@percent }
+\newlabel{sec:con_out_outlook}{{6.2}{69}{Outlook}{section.6.2}{}}
+\newlabel{sec:con_out_outlook@cref}{{[section][2][6]6.2}{[1][69][]69}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}Algorithmic Improvements}{69}{subsection.6.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}Method Extensions}{70}{subsection.6.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.3}Quantum Computing Applications}{70}{subsection.6.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2.4}Larger Molecular Systems}{70}{subsection.6.2.4}\protected@file@percent }
 \bibstyle{unsrtnat}
 \bibdata{bibliography}
-\bibcite{SzaboOstlund1989}{{1}{1989}{{Szabo and Ostlund}}{{}}}
-\bibcite{Sherrill1999}{{2}{1999}{{Sherrill and Schaefer}}{{}}}
-\bibcite{Moller1934}{{3}{1934}{{M{\o }ller and Plesset}}{{}}}
-\bibcite{Helgaker2000}{{4}{2000}{{Helgaker et~al.}}{{Helgaker, Jørgensen, and Olsen}}}
-\bibcite{Peruzzo2014}{{5}{2014}{{Peruzzo et~al.}}{{Peruzzo, McClean, Shadbolt, Yung, Zhou, Love, Aspuru-Guzik, and O'Brien}}}
-\bibcite{Cao2019}{{6}{2019}{{Cao et~al.}}{{Cao, Romero, Olson, Degroote, Johnson, Kieferova, Kivlichan, Menke, Peropadre, Sawaya, Sim, Veis, and Aspuru-Guzik}}}
-\bibcite{Adamowicz1987}{{7}{1987}{{Adamowicz and Bartlett}}{{}}}
-\bibcite{Lowdin1955}{{8}{1955}{{L{\"o}wdin}}{{}}}
-\bibcite{Taube2005}{{9}{2005}{{Taube and Bartlett}}{{}}}
-\bibcite{Sun2020}{{10}{2020}{{Sun et~al.}}{{Sun, Zhang, Banerjee, Bao, Barbry, Blunt, Bogdanov, Booth, Chen, Cui, Eriksen, Gao, Guo, Hermann, Hermes, Koh, Koval, Lehtola, Li, Liu, Mardirossian, McClain, Motta, Mussard, Pham, Pulkin, Purwanto, Robinson, Ronca, Sayfutyarova, Scheurer, Schurkus, Smith, Sun, Sun, Upadhyay, Wagner, Wang, White, Whitfield, Williamson, Wouters, Yang, Yu, Zhu, Berkelbach, Sharma, Sokolov, and Chan}}}
-\@writefile{toc}{\contentsline {chapter}{Bibliography}{71}{subsection.6.2.4}\protected@file@percent }
-\bibcite{Seeley2012}{{11}{2012}{{Seeley et~al.}}{{Seeley, Richard, and Love}}}
-\bibcite{Lee2018}{{12}{2018}{{Lee and Head-Gordon}}{{}}}
-\bibcite{Jensen2017}{{13}{2017}{{Jensen}}{{}}}
-\bibcite{ditchfield1971a}{{14}{1971}{{Ditchfield et~al.}}{{Ditchfield, Hehre, and Pople}}}
-\bibcite{hehre1972a}{{15}{1972}{{Hehre et~al.}}{{Hehre, Ditchfield, and Pople}}}
-\bibcite{dill1975a}{{16}{1975}{{Dill and Pople}}{{}}}
-\bibcite{dunning1989}{{17}{1989}{{Dunning}}{{}}}
-\bibcite{Handy1989}{{18}{1989}{{Handy et~al.}}{{Handy, Pople, Head-Gordon, Raghavachari, and Trucks}}}
-\bibcite{Brueckner1954}{{19}{1954}{{Brueckner}}{{}}}
-\bibcite{Purvis1982}{{20}{1982}{{Purvis and Bartlett}}{{}}}
-\bibcite{Kjellgren2026}{{21}{2026}{{Kjellgren et~al.}}{{Kjellgren, Ziems, and Volsgaard}}}
-\bibcite{pritchard2019a}{{22}{2019}{{Pritchard et~al.}}{{Pritchard, Altarawy, Didier, Gibsom, and Windus}}}
+\bibcite{T}{{1}{2025}{{Clausen}}{{}}}
+\bibcite{SzaboOstlund1989}{{2}{1989}{{Szabo and Ostlund}}{{}}}
+\bibcite{Sherrill1999}{{3}{1999}{{Sherrill and Schaefer}}{{}}}
+\bibcite{Moller1934}{{4}{1934}{{M{\o }ller and Plesset}}{{}}}
+\bibcite{Helgaker2000}{{5}{2000}{{Helgaker et~al.}}{{Helgaker, Jørgensen, and Olsen}}}
+\bibcite{Peruzzo2014}{{6}{2014}{{Peruzzo et~al.}}{{Peruzzo, McClean, Shadbolt, Yung, Zhou, Love, Aspuru-Guzik, and O'Brien}}}
+\bibcite{Cao2019}{{7}{2019}{{Cao et~al.}}{{Cao, Romero, Olson, Degroote, Johnson, Kieferova, Kivlichan, Menke, Peropadre, Sawaya, Sim, Veis, and Aspuru-Guzik}}}
+\bibcite{Adamowicz1987}{{8}{1987}{{Adamowicz and Bartlett}}{{}}}
+\bibcite{Lowdin1955}{{9}{1955}{{L{\"o}wdin}}{{}}}
+\bibcite{Taube2005}{{10}{2005}{{Taube and Bartlett}}{{}}}
+\bibcite{Sun2020}{{11}{2020}{{Sun et~al.}}{{Sun, Zhang, Banerjee, Bao, Barbry, Blunt, Bogdanov, Booth, Chen, Cui, Eriksen, Gao, Guo, Hermann, Hermes, Koh, Koval, Lehtola, Li, Liu, Mardirossian, McClain, Motta, Mussard, Pham, Pulkin, Purwanto, Robinson, Ronca, Sayfutyarova, Scheurer, Schurkus, Smith, Sun, Sun, Upadhyay, Wagner, Wang, White, Whitfield, Williamson, Wouters, Yang, Yu, Zhu, Berkelbach, Sharma, Sokolov, and Chan}}}
+\@writefile{toc}{\contentsline {chapter}{Bibliography}{73}{subsection.6.2.4}\protected@file@percent }
+\bibcite{Seeley2012}{{12}{2012}{{Seeley et~al.}}{{Seeley, Richard, and Love}}}
+\bibcite{Lee2018}{{13}{2018}{{Lee and Head-Gordon}}{{}}}
+\bibcite{Jensen2017}{{14}{2017}{{Jensen}}{{}}}
+\bibcite{ditchfield1971a}{{15}{1971}{{Ditchfield et~al.}}{{Ditchfield, Hehre, and Pople}}}
+\bibcite{hehre1972a}{{16}{1972}{{Hehre et~al.}}{{Hehre, Ditchfield, and Pople}}}
+\bibcite{dill1975a}{{17}{1975}{{Dill and Pople}}{{}}}
+\bibcite{dunning1989}{{18}{1989}{{Dunning}}{{}}}
+\bibcite{Handy1989}{{19}{1989}{{Handy et~al.}}{{Handy, Pople, Head-Gordon, Raghavachari, and Trucks}}}
+\bibcite{Brueckner1954}{{20}{1954}{{Brueckner}}{{}}}
+\bibcite{Purvis1982}{{21}{1982}{{Purvis and Bartlett}}{{}}}
+\bibcite{Kjellgren2026}{{22}{2026}{{Kjellgren and Ziems}}{{}}}
+\bibcite{pritchard2019a}{{23}{2019}{{Pritchard et~al.}}{{Pritchard, Altarawy, Didier, Gibsom, and Windus}}}
 \@writefile{toc}{\setcounter {tocdepth}{0}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}Implementation Validation}{74}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Implementation Validation}{76}{appendix.A}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{appa:implementation_validation}{{A}{74}{Implementation Validation}{appendix.A}{}}
-\newlabel{appa:implementation_validation@cref}{{[chapter][1][]A}{[1][74][]74}{}{}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces Validation of the OVOS implementation against PySCF \lstinline [language=Python]|mp.MP2|. Deviations $\Delta E$ are within numerical precision ($|\delta E| <\eqsim 10^{-8}$~Hartree). All molecules are of the cc--pVDZ basis for this validation.}}{74}{table.caption.33}\protected@file@percent }
-\newlabel{tab:validation}{{A.1}{74}{Validation of the OVOS implementation against PySCF \code {mp.MP2}. Deviations $\Delta E$ are within numerical precision ($|\delta E| <\eqsim 10^{-8}$~Hartree). All molecules are of the cc--pVDZ basis for this validation}{table.caption.33}{}}
-\newlabel{tab:validation@cref}{{[table][1][1]A.1}{[1][74][]74}{}{}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {B}Additional Data and Figures}{75}{appendix.B}\protected@file@percent }
+\newlabel{appa:implementation_validation}{{A}{76}{Implementation Validation}{appendix.A}{}}
+\newlabel{appa:implementation_validation@cref}{{[chapter][1][]A}{[1][76][]76}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces Validation of the OVOS implementation against PySCF \lstinline [language=Python]|mp.MP2|. Deviations $\Delta E$ are within numerical precision ($|\delta E| <\eqsim 10^{-8}$~Hartree). All molecules are of the cc--pVDZ basis for this validation.}}{76}{table.caption.32}\protected@file@percent }
+\newlabel{tab:validation}{{A.1}{76}{Validation of the OVOS implementation against PySCF \code {mp.MP2}. Deviations $\Delta E$ are within numerical precision ($|\delta E| <\eqsim 10^{-8}$~Hartree). All molecules are of the cc--pVDZ basis for this validation}{table.caption.32}{}}
+\newlabel{tab:validation@cref}{{[table][1][1]A.1}{[1][76][]76}{}{}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {B}Additional Data and Figures}{77}{appendix.B}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{appb:data}{{B}{75}{Additional Data and Figures}{appendix.B}{}}
-\newlabel{appb:data@cref}{{[chapter][2][]B}{[1][75][]75}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{75}{section.B.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {B.1}{\ignorespaces Convergence of the MP2 correlation energy for CO, H$_2$, HF, NH$_3$, and Li$_2$ in 6--31G basis, at each number of active unoccupied orbitals $N'_{act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{75}{figure.caption.34}\protected@file@percent }
-\newlabel{fig:appb_MP2_6-31G_ovos}{{B.1}{75}{Convergence of the MP2 correlation energy for CO, H$_2$, HF, NH$_3$, and Li$_2$ in 6--31G basis, at each number of active unoccupied orbitals $N'_{act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.34}{}}
-\newlabel{fig:appb_MP2_6-31G_ovos@cref}{{[figure][1][2]B.1}{[1][75][]75}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {B.2}Convergence Plots for All Systems}{76}{section.B.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {B.2}{\ignorespaces CO/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{76}{figure.caption.35}\protected@file@percent }
-\newlabel{fig:appb_conv_CO_6-31G_ovos}{{B.2}{76}{CO/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.35}{}}
-\newlabel{fig:appb_conv_CO_6-31G_ovos@cref}{{[figure][2][2]B.2}{[1][76][]76}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {B.3}{\ignorespaces CO/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{77}{figure.caption.36}\protected@file@percent }
-\newlabel{fig:appb_conv_CO_cc-pVDZ_ovos}{{B.3}{77}{CO/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.36}{}}
-\newlabel{fig:appb_conv_CO_cc-pVDZ_ovos@cref}{{[figure][3][2]B.3}{[1][77][]77}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {B.4}{\ignorespaces H$_2$O/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{78}{figure.caption.37}\protected@file@percent }
-\newlabel{fig:appb_conv_H2O_6-31G_ovos}{{B.4}{78}{H$_2$O/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.37}{}}
-\newlabel{fig:appb_conv_H2O_6-31G_ovos@cref}{{[figure][4][2]B.4}{[1][78][]78}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {B.5}{\ignorespaces H$_2$O/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{79}{figure.caption.38}\protected@file@percent }
-\newlabel{fig:appb_conv_H2O_cc-pVDZ_ovos}{{B.5}{79}{H$_2$O/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.38}{}}
-\newlabel{fig:appb_conv_H2O_cc-pVDZ_ovos@cref}{{[figure][5][2]B.5}{[1][79][]79}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {B.6}{\ignorespaces HF/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{80}{figure.caption.39}\protected@file@percent }
-\newlabel{fig:appb_conv_HF_6-31G_ovos}{{B.6}{80}{HF/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.39}{}}
-\newlabel{fig:appb_conv_HF_6-31G_ovos@cref}{{[figure][6][2]B.6}{[1][80][]80}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {B.7}{\ignorespaces HF/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{81}{figure.caption.40}\protected@file@percent }
-\newlabel{fig:appb_conv_HF_cc-pVDZ_ovos}{{B.7}{81}{HF/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.40}{}}
-\newlabel{fig:appb_conv_HF_cc-pVDZ_ovos@cref}{{[figure][7][2]B.7}{[1][81][]81}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {B.8}{\ignorespaces Li$_2$/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{82}{figure.caption.41}\protected@file@percent }
-\newlabel{fig:appb_conv_Li2_6-31G_ovos}{{B.8}{82}{Li$_2$/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.41}{}}
-\newlabel{fig:appb_conv_Li2_6-31G_ovos@cref}{{[figure][8][2]B.8}{[1][82][]82}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {B.9}{\ignorespaces Li$_2$/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{83}{figure.caption.42}\protected@file@percent }
-\newlabel{fig:appb_conv_Li2_cc-pVDZ_ovos}{{B.9}{83}{Li$_2$/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.42}{}}
-\newlabel{fig:appb_conv_Li2_cc-pVDZ_ovos@cref}{{[figure][9][2]B.9}{[1][83][]83}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {B.10}{\ignorespaces NH$_3$/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{84}{figure.caption.43}\protected@file@percent }
-\newlabel{fig:appb_conv_NH3_6-31G_ovos}{{B.10}{84}{NH$_3$/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.43}{}}
-\newlabel{fig:appb_conv_NH3_6-31G_ovos@cref}{{[figure][10][2]B.10}{[1][84][]84}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {B.11}{\ignorespaces NH$_3$/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{85}{figure.caption.44}\protected@file@percent }
-\newlabel{fig:appb_conv_NH3_cc-pVDZ_ovos}{{B.11}{85}{NH$_3$/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.44}{}}
-\newlabel{fig:appb_conv_NH3_cc-pVDZ_ovos@cref}{{[figure][11][2]B.11}{[1][85][]85}{}{}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{86}{appendix.C}\protected@file@percent }
+\newlabel{appb:data}{{B}{77}{Additional Data and Figures}{appendix.B}{}}
+\newlabel{appb:data@cref}{{[chapter][2][]B}{[1][77][]77}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{77}{section.B.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {B.1}{\ignorespaces Convergence of the MP2 correlation energy for CO, H$_2$, HF, NH$_3$, and Li$_2$ in 6--31G basis, at each number of active unoccupied orbitals $N'_{act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated.}}{77}{figure.caption.33}\protected@file@percent }
+\newlabel{fig:appb_MP2_6-31G_ovos}{{B.1}{77}{Convergence of the MP2 correlation energy for CO, H$_2$, HF, NH$_3$, and Li$_2$ in 6--31G basis, at each number of active unoccupied orbitals $N'_{act.unocc}$. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed red line marks the MP2 correlation energy at full space, PySCF reference. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references. A gray line is drawn to connect the best points of the start guesses. A line for each OVOS connects initial and final correlation energies, at which the number of iterations to convergence is annotated}{figure.caption.33}{}}
+\newlabel{fig:appb_MP2_6-31G_ovos@cref}{{[figure][1][2]B.1}{[1][77][]77}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B.2}Convergence Plots for All Systems}{78}{section.B.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {B.2}{\ignorespaces CO/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{78}{figure.caption.34}\protected@file@percent }
+\newlabel{fig:appb_conv_CO_6-31G_ovos}{{B.2}{78}{CO/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.34}{}}
+\newlabel{fig:appb_conv_CO_6-31G_ovos@cref}{{[figure][2][2]B.2}{[1][78][]78}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {B.3}{\ignorespaces CO/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{79}{figure.caption.35}\protected@file@percent }
+\newlabel{fig:appb_conv_CO_cc-pVDZ_ovos}{{B.3}{79}{CO/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.35}{}}
+\newlabel{fig:appb_conv_CO_cc-pVDZ_ovos@cref}{{[figure][3][2]B.3}{[1][79][]79}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {B.4}{\ignorespaces H$_2$O/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{80}{figure.caption.36}\protected@file@percent }
+\newlabel{fig:appb_conv_H2O_6-31G_ovos}{{B.4}{80}{H$_2$O/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.36}{}}
+\newlabel{fig:appb_conv_H2O_6-31G_ovos@cref}{{[figure][4][2]B.4}{[1][80][]80}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {B.5}{\ignorespaces H$_2$O/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{81}{figure.caption.37}\protected@file@percent }
+\newlabel{fig:appb_conv_H2O_cc-pVDZ_ovos}{{B.5}{81}{H$_2$O/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.37}{}}
+\newlabel{fig:appb_conv_H2O_cc-pVDZ_ovos@cref}{{[figure][5][2]B.5}{[1][81][]81}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {B.6}{\ignorespaces HF/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{82}{figure.caption.38}\protected@file@percent }
+\newlabel{fig:appb_conv_HF_6-31G_ovos}{{B.6}{82}{HF/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.38}{}}
+\newlabel{fig:appb_conv_HF_6-31G_ovos@cref}{{[figure][6][2]B.6}{[1][82][]82}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {B.7}{\ignorespaces HF/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{83}{figure.caption.39}\protected@file@percent }
+\newlabel{fig:appb_conv_HF_cc-pVDZ_ovos}{{B.7}{83}{HF/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.39}{}}
+\newlabel{fig:appb_conv_HF_cc-pVDZ_ovos@cref}{{[figure][7][2]B.7}{[1][83][]83}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {B.8}{\ignorespaces Li$_2$/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{84}{figure.caption.40}\protected@file@percent }
+\newlabel{fig:appb_conv_Li2_6-31G_ovos}{{B.8}{84}{Li$_2$/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.40}{}}
+\newlabel{fig:appb_conv_Li2_6-31G_ovos@cref}{{[figure][8][2]B.8}{[1][84][]84}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {B.9}{\ignorespaces Li$_2$/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{85}{figure.caption.41}\protected@file@percent }
+\newlabel{fig:appb_conv_Li2_cc-pVDZ_ovos}{{B.9}{85}{Li$_2$/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.41}{}}
+\newlabel{fig:appb_conv_Li2_cc-pVDZ_ovos@cref}{{[figure][9][2]B.9}{[1][85][]85}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {B.10}{\ignorespaces NH$_3$/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{86}{figure.caption.42}\protected@file@percent }
+\newlabel{fig:appb_conv_NH3_6-31G_ovos}{{B.10}{86}{NH$_3$/6--31G OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.42}{}}
+\newlabel{fig:appb_conv_NH3_6-31G_ovos@cref}{{[figure][10][2]B.10}{[1][86][]86}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {B.11}{\ignorespaces NH$_3$/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references.}}{87}{figure.caption.43}\protected@file@percent }
+\newlabel{fig:appb_conv_NH3_cc-pVDZ_ovos}{{B.11}{87}{NH$_3$/cc--pVDZ OVOS convergence history for each active unoccupied orbitals, colour coded to fit the OVOS convergence plot in Figure~\ref {fig:appb_MP2_6-31G_ovos} and in Section~\ref {subsec:results_ovos_mp2}. The OVOS algorithm takes RHF (diamond), previous (square), and random (triangle) as start guesses. Dashed lines: full-space MP2 (red), OO-MP2 (blue), FCI (green) references}{figure.caption.43}{}}
+\newlabel{fig:appb_conv_NH3_cc-pVDZ_ovos@cref}{{[figure][11][2]B.11}{[1][87][]87}{}{}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{88}{appendix.C}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{appc:code}{{C}{86}{Implementation Details and Source Code}{appendix.C}{}}
-\newlabel{appc:code@cref}{{[chapter][3][]C}{[1][86][]86}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {C.1}Repository and Version Information}{86}{section.C.1}\protected@file@percent }
-\newlabel{lst:full_code}{{C.1}{86}{..}{lstlisting.C.1}{}}
-\newlabel{lst:full_code@cref}{{[lstlisting][1][3]C.1}{[1][86][]86}{}{}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {C.1}{\ignorespaces ...}}{86}{lstlisting.C.1}\protected@file@percent }
-\gdef \@abspage@last{115}
+\newlabel{appc:code}{{C}{88}{Implementation Details and Source Code}{appendix.C}{}}
+\newlabel{appc:code@cref}{{[chapter][3][]C}{[1][88][]88}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C.1}Repository and Version Information}{88}{section.C.1}\protected@file@percent }
+\newlabel{lst:full_code}{{C.1}{88}{..}{lstlisting.C.1}{}}
+\newlabel{lst:full_code@cref}{{[lstlisting][1][3]C.1}{[1][88][]88}{}{}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {C.1}{\ignorespaces ...}}{88}{lstlisting.C.1}\protected@file@percent }
+\gdef \@abspage@last{117}

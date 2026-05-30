@@ -116,18 +116,18 @@ This section introduces the wavefunction methods that form the basis for the OVO
 Hartree-Fock (HF) theory approximates the N-electron wavefunction as a single Slater determinant of N orthonormal spin-orbitals, treating electron-electron repulsion in a mean-field sense \cite{Helgaker2000}. Despite its simplicity, HF underpins virtually all post-HF correlated methods.
 
 Slater determinants are described by the Pauli exclusion principle, ensuring that no two electrons can occupy the same quantum state. This antisymmetry is crucial for accurately describing fermionic systems. The variational principle leads to the Fock equations, which can be expressed in matrix form as the Roothaan-Hall equations\cite{Helgaker2000}: \(FC = SC\epsilon\), where \(F\) is the Fock matrix, \(S\) is the overlap matrix, \(C\) is the coefficient matrix for the molecular orbitals, and \(\epsilon\) is the diagonal matrix of orbital energies. The Fock matrix incorporates the Coulomb ($J$) and exchange ($K$) operators, which represent the average electron-electron repulsion and the antisymmetry of the wavefunction, respectively. It is this equation that is solved iteratively in the self-consistent field (SCF) procedure. The Fock matrix depends on the molecular orbital coefficients (the solution itself), creating a circular dependency, the coefficients are needed to construct the Fock matrix, but solving the Fock matrix produces the coefficients. This self-consistent iteration continues until convergence, meaning the coefficients no longer change between iterations, hence the name "self-consistent field." (SCF). %, often accelerated by techniques that expedite convergence, like DIIS. %Footnote: "DIIS (Direct Inversion in the Iterative Subspace) is a common method for accelerating SCF convergence by extrapolating from previous iterations."
-The variational principle ensures that the HF energy is an upper bound to the exact ground state energy, \(E_{HF} = \langle \Phi_{HF} | \hat{H} | \Phi_{HF} \rangle \geq E_{exact}\) \cite{SzaboOstlund1989}. This allows us to define that the correlation energy is negative: \(E_{corr} = E_{exact} - E_{HF} < 0\). The resulting orbital energies $\epsilon_p$ provide insight into the electronic structure, with occupied orbitals typically having negative energies and virtual orbitals having positive energies, as per Koopmans' theorem \cite{Helgaker2000}, see Figure~\ref{fig:MO_level_diagram}. % \cite{Jensen2017} – Koopmans' theorem and orbital energy interpretation 
+The variational principle ensures that the HF energy is an upper bound to the exact ground state energy, \(E_{HF} = \langle \Phi_{HF} | \hat{H} | \Phi_{HF} \rangle \geq E_{exact}\) \cite{SzaboOstlund1989}. This allows us to define that the correlation energy is negative: \(E_{corr} = E_{exact} - E_{HF} < 0\). The resulting orbital energies $\epsilon_p$ provide insight into the electronic structure, with occupied orbitals typically having negative energies and virtual orbitals having positive energies, as per Koopmans' theorem \cite{Helgaker2000}. % \cite{Jensen2017} – Koopmans' theorem and orbital energy interpretation 
 
 % Figure: Canonical MO energy level diagram for a small molecule, showing the occupied and virtual orbitals.
 
 % placeholder for figure: canonical MO energy level diagram for a small molecule, showing the occupied / virtual gap (HOMO-LUMO gap). x-axis: MO index | y-axis: ε_p (Hartree)
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/Placeholder.png} % Replace with actual figure file
-    \caption{Canonical MO energy level diagram visualization. Highlight the occupied and virtual orbitals by ...}
-    \label{fig:MO_level_diagram}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/Placeholder.png} % Replace with actual figure file
+%     \caption{Canonical MO energy level diagram visualization. Highlight the occupied and virtual orbitals by ...}
+%     \label{fig:MO_level_diagram}
+% \end{figure}
 
 \subsubsection{Restricted and Unrestricted Formalism}
 

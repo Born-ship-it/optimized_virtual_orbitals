@@ -21,36 +21,36 @@
 \contentsline {subsection}{\numberline {2.1.3}Spin-Orbital Formalism}{7}{subsection.2.1.3}%
 \contentsline {section}{\numberline {2.2}Wavefunction Methods}{8}{section.2.2}%
 \contentsline {subsection}{\numberline {2.2.1}Hartree-Fock Theory}{8}{subsection.2.2.1}%
-\contentsline {subsubsection}{Restricted and Unrestricted Formalism}{8}{figure.caption.6}%
-\contentsline {subsubsection}{Limitations of Hartree-Fock and the Need for Correlation}{9}{figure.caption.6}%
-\contentsline {subsection}{\numberline {2.2.2}Møller-Plesset Perturbation Theory}{9}{subsection.2.2.2}%
+\contentsline {subsubsection}{Restricted and Unrestricted Formalism}{8}{subsection.2.2.1}%
+\contentsline {subsubsection}{Limitations of Hartree-Fock and the Need for Correlation}{9}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Møller-Plesset Perturbation Theory}{10}{subsection.2.2.2}%
 \contentsline {subsubsection}{MP2 Correlation Energy}{10}{subsection.2.2.2}%
-\contentsline {subsubsection}{Lower-Order Amplitudes}{11}{equation.2.5b}%
+\contentsline {subsubsection}{Lower-Order Amplitudes}{10}{equation.2.5b}%
 \contentsline {subsubsection}{MP2 Limitations and Applicability}{11}{equation.2.5b}%
 \contentsline {subsubsection}{Computational Scaling Motivation}{11}{equation.2.5b}%
-\contentsline {section}{\numberline {2.3}Background for understanding OVOS}{12}{section.2.3}%
+\contentsline {section}{\numberline {2.3}Background for understanding OVOS}{11}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}Orbital Rotations and Stationarity}{12}{subsection.2.3.1}%
 \contentsline {subsubsection}{Partitioning and Index Notation -> notation here or only in introduction?}{12}{subsection.2.3.1}%
 \contentsline {subsection}{\numberline {2.3.2}The Second-Order Hylleraas Functional}{13}{subsection.2.3.2}%
 \contentsline {subsubsection}{From Perturbation Theory to the Hylleraas Principle}{13}{subsection.2.3.2}%
 \contentsline {subsubsection}{Pair Decomposition and Explicit Form of $J_2$}{14}{equation.2.14}%
-\contentsline {subsubsection}{The Zero-Order Term}{15}{equation.2.15}%
+\contentsline {subsubsection}{The Zero-Order Term}{14}{equation.2.15}%
 \contentsline {subsubsection}{Evaluation of the Perturbative Coupling}{15}{equation.2.20}%
-\contentsline {subsection}{\numberline {2.3.3}Orbital Rotation Parameterisation}{16}{subsection.2.3.3}%
-\contentsline {subsubsection}{Orbital Rotation}{16}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.3}Orbital Rotation Parameterisation}{15}{subsection.2.3.3}%
+\contentsline {subsubsection}{Orbital Rotation}{15}{subsection.2.3.3}%
 \contentsline {subsubsection}{Active and Inactive Virtual Subspaces}{16}{subsection.2.3.3}%
 \contentsline {subsubsection}{Unitary Transformation via Matrix Exponential}{16}{equation.2.26}%
 \contentsline {subsection}{\numberline {2.3.4}Gradient Expression}{17}{subsection.2.3.4}%
 \contentsline {subsubsection}{MP2 Virtual-Virtual Density Matrix}{17}{subsection.2.3.4}%
 \contentsline {subsubsection}{Gradient Expression}{17}{equation.2.30}%
-\contentsline {subsubsection}{The Stationarity Principle}{19}{equation.2.41}%
-\contentsline {subsection}{\numberline {2.3.5}Hessian Expression}{19}{subsection.2.3.5}%
+\contentsline {subsubsection}{The Stationarity Principle}{18}{equation.2.41}%
+\contentsline {subsection}{\numberline {2.3.5}Hessian Expression}{18}{subsection.2.3.5}%
 \contentsline {subsubsection}{Derivation of the Hessian Expression}{19}{equation.2.44}%
 \contentsline {paragraph}{Two-electron integrals:}{19}{equation.2.47}%
-\contentsline {paragraph}{Fock matrix (canonical orbitals):}{20}{equation.2.48}%
-\contentsline {paragraph}{Amplitudes:}{20}{equation.2.49}%
+\contentsline {paragraph}{Fock matrix (canonical orbitals):}{19}{equation.2.48}%
+\contentsline {paragraph}{Amplitudes:}{19}{equation.2.49}%
 \contentsline {subsubsection}{Step 1: Differentiate First Gradient Term}{20}{equation.2.51}%
-\contentsline {subsubsection}{Step 2: Differentiate Second Gradient Term}{21}{equation.2.58}%
+\contentsline {subsubsection}{Step 2: Differentiate Second Gradient Term}{20}{equation.2.58}%
 \contentsline {subsubsection}{Final Hessian}{21}{equation.2.64}%
 \contentsline {subsubsection}{Block Structure of the Hessian}{21}{equation.2.67}%
 \contentsline {subsubsection}{Negative Eigenvalues and Level-Shift Stabilisation}{22}{equation.2.69}%
@@ -58,9 +58,9 @@
 \contentsline {subsection}{\numberline {2.3.7}Orbital Canonicalisation}{22}{subsection.2.3.7}%
 \contentsline {subsection}{\numberline {2.3.8}Computational Cost and Scaling}{23}{subsection.2.3.8}%
 \contentsline {subsubsection}{Per-Iteration Cost of OVOS Optimisation}{23}{subsection.2.3.8}%
-\contentsline {subsubsection}{Comparison: Full Virtual Space vs OVOS-Reduced}{24}{table.caption.10}%
-\contentsline {subsubsection}{Downstream Speedup Factors}{24}{table.caption.10}%
-\contentsline {subsubsection}{Breakeven Analysis and Practical Realisation}{24}{table.caption.10}%
+\contentsline {subsubsection}{Comparison: Full Virtual Space vs OVOS-Reduced}{24}{table.caption.9}%
+\contentsline {subsubsection}{Downstream Speedup Factors}{24}{table.caption.9}%
+\contentsline {subsubsection}{Breakeven Analysis and Practical Realisation}{24}{table.caption.9}%
 \contentsline {section}{\numberline {2.4}Relevance to Quantum Computing}{25}{section.2.4}%
 \contentsline {subsection}{\numberline {2.4.1}Brueckner Orbitals and Connection to OVOS}{25}{subsection.2.4.1}%
 \contentsline {subsubsection}{Connection to Orbital-Optimised MP2 methods}{26}{subsection.2.4.1}%
@@ -90,28 +90,28 @@
 \contentsline {subsection}{\numberline {4.0.3}Basis Sets}{44}{subsection.4.0.3}%
 \contentsline {section}{\numberline {4.1}OVOS Calculation Settings}{44}{section.4.1}%
 \contentsline {section}{\numberline {4.2}VQE Calculation Settings}{45}{section.4.2}%
-\contentsline {chapter}{\numberline {5}Results}{47}{chapter.5}%
-\contentsline {section}{\numberline {5.1}OVOS}{47}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}correlation energy of OVOS}{47}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}Basis Set Dependence}{54}{subsection.5.1.2}%
-\contentsline {subsubsection}{Comparison with Adamowicz and Bartlett (1987)}{57}{figure.caption.24}%
-\contentsline {section}{\numberline {5.2}VQE}{58}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}VQE potential energy surfaces plot}{58}{subsection.5.2.1}%
-\contentsline {section}{\numberline {5.3}ooVQE}{62}{section.5.3}%
-\contentsline {chapter}{\numberline {6}Conclusion and Outlook}{66}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Conclusion}{66}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}Summary of Findings}{66}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}Critical Assessment}{67}{subsection.6.1.2}%
-\contentsline {section}{\numberline {6.2}Outlook}{68}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Algorithmic Improvements}{68}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Method Extensions}{68}{subsection.6.2.2}%
-\contentsline {subsection}{\numberline {6.2.3}Quantum Computing Applications}{69}{subsection.6.2.3}%
-\contentsline {subsection}{\numberline {6.2.4}Larger Molecular Systems}{69}{subsection.6.2.4}%
-\contentsline {chapter}{Bibliography}{71}{subsection.6.2.4}%
+\contentsline {chapter}{\numberline {5}Results}{48}{chapter.5}%
+\contentsline {section}{\numberline {5.1}OVOS}{48}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}correlation energy of OVOS}{48}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Basis Set Dependence}{55}{subsection.5.1.2}%
+\contentsline {subsubsection}{Comparison with Adamowicz and Bartlett (1987)}{58}{figure.caption.23}%
+\contentsline {section}{\numberline {5.2}VQE}{59}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}VQE potential energy surfaces plot}{59}{subsection.5.2.1}%
+\contentsline {section}{\numberline {5.3}ooVQE}{63}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Conclusion and Outlook}{67}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Conclusion}{67}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Summary of Findings}{67}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Critical Assessment}{68}{subsection.6.1.2}%
+\contentsline {section}{\numberline {6.2}Outlook}{69}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Algorithmic Improvements}{69}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Method Extensions}{70}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}Quantum Computing Applications}{70}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}Larger Molecular Systems}{70}{subsection.6.2.4}%
+\contentsline {chapter}{Bibliography}{73}{subsection.6.2.4}%
 \setcounter {tocdepth}{0}
-\contentsline {chapter}{\numberline {A}Implementation Validation}{74}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Additional Data and Figures}{75}{appendix.B}%
-\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{75}{section.B.1}%
-\contentsline {section}{\numberline {B.2}Convergence Plots for All Systems}{76}{section.B.2}%
-\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{86}{appendix.C}%
-\contentsline {section}{\numberline {C.1}Repository and Version Information}{86}{section.C.1}%
+\contentsline {chapter}{\numberline {A}Implementation Validation}{76}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Additional Data and Figures}{77}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{77}{section.B.1}%
+\contentsline {section}{\numberline {B.2}Convergence Plots for All Systems}{78}{section.B.2}%
+\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{88}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Repository and Version Information}{88}{section.C.1}%

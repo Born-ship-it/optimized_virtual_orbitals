@@ -1,9 +1,15 @@
-\begin{thebibliography}{22}
+\begin{thebibliography}{23}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Clausen(2025)]{T}
+Tobias~B. Clausen.
+\newblock Theory of correlated optimized virtual orbitals (covo) and a preliminary implementation of the method.
+\newblock 2025.
+\newblock Preliminary PREP project, University of Copenhagen.
 
 \bibitem[Szabo and Ostlund(1989)]{SzaboOstlund1989}
 Attila Szabo and Neil~S. Ostlund.
@@ -126,9 +132,9 @@ George~D. Purvis and Rodney~J. Bartlett.
 \newblock \emph{J. Chem. Phys.}, 76:\penalty0 1910--1918, 1982.
 \newblock \doi{10.1063/1.443164}.
 
-\bibitem[Kjellgren et~al.(2026)Kjellgren, Ziems, and Volsgaard]{Kjellgren2026}
-E.~Kjellgren, K.~M. Ziems, and P.~Volsgaard.
-\newblock Slowquant unrestricted vqe, 2026.
+\bibitem[Kjellgren and Ziems(2026)]{Kjellgren2026}
+E.~Kjellgren and K.~M Ziems.
+\newblock Slowquant, 2026.
 
 \bibitem[Pritchard et~al.(2019)Pritchard, Altarawy, Didier, Gibsom, and Windus]{pritchard2019a}
 Benjamin~P. Pritchard, Doaa Altarawy, Brett Didier, Tara~D. Gibsom, and Theresa~L. Windus.

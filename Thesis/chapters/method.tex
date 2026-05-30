@@ -36,7 +36,7 @@ Below we provide a detailed description of each step in the algorithm.
 
 Transforming the two-electron integrals from the atomic orbital (AO) basis to the molecular orbital (MO) basis is a critical step in the OVOS algorithm. This transformation is necessary to compute the MP1 amplitudes and the gradient of the MP2 energy with respect to orbital rotations. However, performing a full 4-index transformation of all integrals would be computationally prohibitive. To mitigate this, we only transform the subset of integrals that are required for the MP2 amplitude equations, specifically those of the form $\langle ij|ab\rangle$ where $i,j$ are occupied orbitals and $a,b$ are active virtual orbitals, as these are the only ones that contribute directly to the correlation energy and its gradient. The transformation is performed using the \texttt{ao2mo.kernel()} function from the PySCF library, which efficiently computes the required blocks of integrals. After obtaining the spatial integral blocks for $\alpha\alpha$, $\beta\beta$, and $\alpha\beta$ spin combinations, we construct the full spin-orbital ERI tensor by interleaving the $\alpha$ and $\beta$ contributions according to the index mapping. Finally, we convert the chemists' notation integrals output by PySCF to the physicists' antisymmetrised form used in our formulas, ensuring consistency between the code and the theoretical expressions. These steps are detailed in Code~\ref{lst:integral_transform}.
 
-\begin{lstlisting}[style=python, caption={AO-to-MO integral transformation with spin-orbital antisymmetrization}, label=lst:integral_transform]
+\begin{lstlisting}[style=python, caption={AO-to-MO integral transformation with spin-orbital antisymmetrisation}, label=lst:integral_transform]
 def _eri_vovo_antisym(self, mo_coeffs: List[np.ndarray]) -> np.ndarray:
     """Transform AO integrals -> spin-orbital."""
     nocc_a, nocc_b = self.mol.nelec
@@ -62,7 +62,7 @@ def _eri_vovo_antisym(self, mo_coeffs: List[np.ndarray]) -> np.ndarray:
     vovo_spin[0::2, 0::2, 1::2, 1::2] = vovo_aabb      
     vovo_spin[1::2, 1::2, 0::2, 0::2] = vovo_aabb.T    
     
-# Convert to physicist notation and antisymmetrize:
+# Convert to physicist notation and antisymmetrise:
     eri_phys = vovo_spin.transpose(0, 2, 1, 3)
     return eri_phys - eri_phys.transpose(0, 1, 3, 2)
 \end{lstlisting}
@@ -87,7 +87,7 @@ def _mp1_amplitudes(self, fock_diag: np.ndarray,
     return -eri_as[:nvir_act, :nvir_act, :, :] / denom
 \end{lstlisting}
 
-The MP2 correlation energy is then evaluated using these amplitudes and the antisymmetrized integrals, see Appendix~\ref{appc:code} for the full implementation. 
+The MP2 correlation energy is then evaluated using these amplitudes and the antisymmetrised integrals, see Appendix~\ref{appc:code} for the full implementation. 
 
 \begin{lstlisting}[style=python, caption={MP2 correlation energy}, label=lst:mp2_energy]
 def _mp2_energy(self, fock_spin: np.ndarray, t_abij: np.ndarray,
@@ -120,7 +120,7 @@ Alongside the MP2 energy, the gradient and Hessian matrices required for the New
 
 \subsection{Gradient and Hessian Assembly}
 
-The gradient vector $\mathbf{G}$ and Hessian matrix $\mathbf{H}$ of the MP2 energy functional $J_2$ are computed at each iteration using the stored MP1 amplitudes and the antisymmetrized integrals. The gradient $G_{ea}$, as detailed in Section~\ref{subsubsec:gradient}, is implemented by looping over the inactive orbital index $e$ and the active orbital index $a$, summing contributions from the amplitudes and integrals, see Code~\ref{lst:gradient}. 
+The gradient vector $\mathbf{G}$ and Hessian matrix $\mathbf{H}$ of the MP2 energy functional $J_2$ are computed at each iteration using the stored MP1 amplitudes and the antisymmetrised integrals. The gradient $G_{ea}$, as detailed in Section~\ref{subsubsec:gradient}, is implemented by looping over the inactive orbital index $e$ and the active orbital index $a$, summing contributions from the amplitudes and integrals, see Code~\ref{lst:gradient}. 
 
 \begin{lstlisting}[style=python, caption={Gradient computation}, label=lst:gradient]
 def _gradient(self, t_abij: np.ndarray, eri_as: np.ndarray,

@@ -513,11 +513,6 @@ INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/lmmib10.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/lmbsy10.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/tex-gyre/ec-qhvb.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/tex-gyre/ec-qhvr.tfm
-INPUT ./figures/Placeholder.png
-INPUT ./figures/Placeholder.png
-INPUT ./figures/Placeholder.png
-INPUT ./figures/Placeholder.png
-INPUT ./figures/Placeholder.png
 INPUT ./figures/Ekstra/PES_HF.png
 INPUT ./figures/Ekstra/PES_HF.png
 INPUT ./figures/Ekstra/PES_HF.png
@@ -556,10 +551,11 @@ INPUT ./chapters/computational_details.tex
 INPUT ./chapters/computational_details.tex
 INPUT ./chapters/computational_details.tex
 INPUT chapters/computational_details.tex
-INPUT ./figures/Placeholder.png
-INPUT ./figures/Placeholder.png
-INPUT ./figures/Placeholder.png
-INPUT ./figures/Placeholder.png
+INPUT ./figures/Ekstra/vqe_flowchart.png
+INPUT ./figures/Ekstra/vqe_flowchart.png
+INPUT ./figures/Ekstra/vqe_flowchart.png
+INPUT ./figures/Ekstra/vqe_flowchart.png
+INPUT ./figures/Ekstra/vqe_flowchart.png
 INPUT ./chapters/results.tex
 INPUT ./chapters/results.tex
 INPUT ./chapters/results.tex

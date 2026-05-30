@@ -7,7 +7,7 @@ In this chapter, we provide a comprehensive account of the computational details
 \subsection{Software and Libraries}
 \label{subsec:comp_calc_set_software}
 
-In this section we detail the software environment used for all calculations in this thesis. The primary quantum chemistry calculations were performed using PySCF version 2.10 \cite{Sun2020}, and SlowQuant branch Unrestricted VQE \cite{Kjellgren2026}. Numerical operations were carried out using NumPy version 1.26.4 and SciPy version 1.17, a complete list of which is provided in Table~\ref{tab:software}.
+In this section we detail the software environment used for all calculations in this thesis. The primary quantum chemistry calculations were performed using PySCF version 2.10 \cite{Sun2020}, and the SlowQuant branch Unrestricted VQE \cite{Kjellgren2026}. Numerical operations were carried out using NumPy version 1.26.4 and SciPy version 1.17, a complete list of which is provided in Table~\ref{tab:software}.
 
 \begin{table}[H]
     \centering
@@ -25,10 +25,7 @@ In this section we detail the software environment used for all calculations in 
     \end{tabular}
 \end{table}
 
-The OVOS method was implemented as a standalone Python class, with source code provided in Appendix~\ref{appc:code}. All calculations were executed in a single-threaded mode to ensure reproducibility, with the environment variables \texttt{OPENBLAS\_NUM\_THREADS} and \texttt{OMP\_NUM\_THREADS} set to 1. The operating system used was Windows in Microsoft Visual Studio Code's WSL ubuntu virtual machine, as PySCF needs a Unix-like environment, and the Python distribution was standard Python version 3.11.
-
-The hardware environment on which all calculations were run is described in the following section.
-
+The OVOS method was implemented as a standalone Python class, with source code provided in Appendix~\ref{appc:code}. All calculations were executed in a single-threaded mode to ensure reproducibility, with the environment variables \texttt{OPENBLAS\_NUM\_THREADS} and \texttt{OMP\_NUM\_THREADS} set to 1. The operating system used was Windows, running in Microsoft Visual Studio Code's WSL Ubuntu virtual machine, as PySCF requires a Unix-like environment, and the Python distribution was the standard Python 3.11.
 
 \subsection{Molecular Geometries}
 \label{subsec:comp_mo_geometries}
@@ -59,14 +56,14 @@ The basis-set-specific orbital space dimensions for each molecule are given in t
 
 The choice of basis set determines the size of the virtual orbital space and hence the difficulty and accuracy of the OVOS calculation. This section describes the basis sets employed and provides the resulting orbital space dimensions for each molecule. See Basis Set Exchange \cite{pritchard2019a} for the source of all basis sets used in this work.
 
-\textbf{6--31G:} A split-valence double-zeta basis set developed by Pople et. al. \cite{ditchfield1971a, dill1975a, hehre1972a}. It consists of a minimal basis for core electrons and a double-zeta basis for valence electrons, allowing for improved flexibility in describing electron correlation compared to minimal basis sets.
+\textbf{6--31G:} A split-valence double-zeta basis set developed by Pople et. al. \cite{ditchfield1971a, dill1975a, hehre1972a}. It consists of a minimal basis for core electrons and a double-zeta basis for valence electrons, providing greater flexibility in describing electron correlation than minimal basis sets.
 
-\textbf{cc--pVDZ:} The correlation-consistent polarized valence double-zeta basis set developed by Dunning \cite{dunning1989}. It includes polarization functions that allow for a better description of electron correlation effects, particularly important for accurate energy calculations.
+\textbf{cc--pVDZ:} The correlation-consistent polarised valence double-zeta basis set developed by Dunning \cite{dunning1989}. It includes polarisation functions that allow for a better description of electron correlation effects, particularly important for accurate energy calculations.
 
 \section{OVOS Calculation Settings}
 \label{sec:comp_calc_set_ovos}
 
-Running OVOS concerns two main steps: the \code{OVOS} object and the \code{OVOS.run()} method. The \code{OVOS} object is initialized with arguments that specify the molecule, the SCF object, the Fock matrix in the AO basis, the number of active virtual spin-orbitals to optimize, the initial MO coefficients from SCF, the type of initial orbitals (RHF or UHF), verbosity level, maximum number of iterations, energy and gradient convergence thresholds, and the number of iterations to keep track of for consistent convergence checks. The initialization is shown in Code~\ref{lst:ovos_init}.
+Running OVOS concerns two main steps: the \code{OVOS} object and the \code{OVOS.run()} method. The \code{OVOS} object is initialised with arguments that specify the molecule, the SCF object, the Fock matrix in the AO basis, the number of active virtual spin-orbitals to optimize, the initial MO coefficients from SCF, the type of initial orbitals (RHF or UHF), verbosity level, maximum number of iterations, energy and gradient convergence thresholds, and the number of iterations to keep track of for consistent convergence checks. The initialisation is shown in Code~\ref{lst:ovos_init}.
 
 \begin{lstlisting}[style=python, caption={OVOS Object}, label=lst:ovos_init]
 ovos = OVOS(
@@ -92,10 +89,14 @@ ovos.run("initial MO coefficients from SCF", fock_spin="optional Fock matrix for
 
 For initialisation strategies see Section~\ref{sec:method_initialisation_strategies}. 
 
+We would like to express that the specific hyperparameters chosen for the OVOS optimisation, such as the energy convergence threshold of 10\textsuperscript{-8} Hartree and the maximum number of iterations, were selected based on preliminary tests to ensure a balance between computational cost and convergence reliability, see Figure~\ref{fig:convergence_landscape}. The choice of these parameters can significantly affect the performance of the OVOS method, and they were kept consistent across all calculations to allow for a fair comparison between different orbital optimisation strategies.
+
+The Hessian indefiniteness checks can be turned on or off with verbosity level 1, and the specific implementation of these checks is shown in Code~\ref{lst:hessian_checks}. These checks are crucial for ensuring that the optimisation is proceeding in a direction that leads to a minimum energy solution, they help to prevent convergence to saddle points or maxima, and identify potential issues with the optimisation landscape in forms of negative eigenvalues and condition numbers. The checks are performed at each iteration, and the results are printed to the console when verbosity level 1 is set. It was found that when convergence issues arise, they are often associated with a highly indefinite Hessian. The block-diagonal approximation of the Hessian helped reduce negative eigenvalues, which could be identified through these checks.
+
 \section{VQE Calculation Settings}
 \label{sec:comp_calc_set_vqe}
 
-All VQE calculations were performed using the SlowQuant branch for unrestricted VQE \cite{Kjellgren2026}, coded up by Pernille Volsgaard Christensen Ph.D. student at Sauer Group UCPH. The VQE wavefunction is defined as an unrestricted wavefunction with a specific ansatz, here we use tiled unitary product states (tUPS) with 1 layer, and no active kappa parameters. These settings were chosen to ensure a manageable computational cost while still providing a meaningful comparison between different orbital optimisation strategies. 1 layer means that the ansatz consists of a single layer of unitary operations, which is a common choice for initial VQE studies. The decision to exclude active kappa parameters was made to simplify the wavefunction and focus on the effects of orbital optimisation. We change the number of electrons, the active space, the MO coefficients, and the integrals for each molecule/basis set combination, but keep the ansatz and hyperparameters fixed across all calculations. The specific implementation of the wavefunction is shown in Code~\ref{lst:vqe_wf}.
+All VQE calculations were performed using the SlowQuant branch for unrestricted VQE \cite{Kjellgren2026}, coded up by Pernille Volsgaard Christensen Ph.D. student at the Sauer Group at UCPH. The VQE wavefunction is an unrestricted wavefunction with a specific ansatz. Here, we use tiled unitary product states (tUPS) with 1 layer and no active kappa parameters. These settings were chosen to ensure a manageable computational cost while still providing a meaningful comparison between different orbital optimisation strategies. 1 layer means the ansatz consists of a single layer of unitary operations, a common choice for initial VQE studies. The decision to exclude active kappa parameters was made to simplify the wavefunction and focus on the effects of orbital optimisation. We vary the number of electrons, the active space, the MO coefficients, and the integrals for each molecule/basis set combination, while keeping the ansatz and hyperparameters fixed across all calculations. The specific implementation of the wavefunction is shown in Code~\ref{lst:vqe_wf}.
 
 \begin{lstlisting}[style=python, caption={VQE Wavefunction}, label=lst:vqe_wf]
 UnrestrictedWaveFunctionUPS(
@@ -121,11 +122,11 @@ def run_ucc_and_get_stats(wf, str_, oo, atol):
     ...
 \end{lstlisting}
 
-In results, we run VQE for different settings to better clarify these combinations of orbital optimisation and initialisation strategies, based on the following Flowchart~\ref{fig:vqe_flowchart}.
+In the results, we run VQE for different settings to better clarify these combinations of orbital optimisation and initialisation strategies, based on the following Flowchart~\ref{fig:vqe_flowchart}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/Placeholder.png}
-    \caption{...}
+    \includegraphics[width=0.65\textwidth]{figures/Ekstra/vqe_flowchart.png}
+    \caption{Flowchart of VQE calculation settings. The flowchart illustrates the different combinations of orbital optimisation (OVOS, no optimisation, and canonical HF orbitals) used in the VQE calculations.}
     \label{fig:vqe_flowchart}
 \end{figure}

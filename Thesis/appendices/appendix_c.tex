@@ -14,9 +14,9 @@ Here we give the full code implementation for OVOS in Pyhton, also see the GitHu
 
 \begin{lstlisting}[style=python, caption={...}, label=lst:full_code]
 """
-OVOS (Optimized Virtual Orbital Space) method
+OVOS (Optimised Virtual Orbital Space) method
 
-Minimizes the second-order correlation energy (MP2) by rotating virtual orbitals.
+Minimises the second-order correlation energy (MP2) by rotating virtual orbitals.
 
 Spaces:
     Active occupied   (I,J): "Inactive"
@@ -48,7 +48,7 @@ np.set_printoptions(precision=4, suppress=False, linewidth=200)
 
 class OVOS:
     """
-    Minimizes the MP2 correlation energy via orbital rotations (OVOS algorithm).
+    Minimises the MP2 correlation energy via orbital rotations (OVOS algorithm).
 
     Parameters
     ----------
@@ -57,7 +57,7 @@ class OVOS:
     Fao : list of np.ndarray
         AO Fock matrices [alpha, beta].
     num_opt_virtual_orbs : int
-        Number of optimized virtual spin orbitals (active virtuals).
+        Number of optimised virtual spin orbitals (active virtuals).
     mo_coeff : list of np.ndarray
         Initial MO coefficients [alpha, beta].
     init_orbs : str, optional
@@ -79,7 +79,7 @@ class OVOS:
     trust_radius : float, optional
         Initial trust radius for step size control.
     hessian_reg : float, optional
-        Regularization added to Hessian diagonal when singular.
+        Regularisation added to Hessian diagonal when singular.
     """
 
     def __init__(self, mol, scf, Fao, num_opt_virtual_orbs, mo_coeff,
@@ -188,7 +188,7 @@ class OVOS:
     def _eri_vovo_antisym(self, mo_coeffs: List[np.ndarray]) -> np.ndarray:
         """
         Transform (vir,occ|vir,occ) AO integrals to MO basis, assemble spin orbital
-        and antisymmetrize. Returns <ab||ij> in physicist notation (a,b,i,j).
+        and antisymmetrise. Returns <ab||ij> in physicist notation (a,b,i,j).
         """
         nocc_a, nocc_b = self.mol.nelec
         C_occ_a = mo_coeffs[0][:, :nocc_a]
