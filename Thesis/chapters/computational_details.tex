@@ -63,7 +63,7 @@ The choice of basis set determines the size of the virtual orbital space and hen
 \section{OVOS Calculation Settings}
 \label{sec:comp_calc_set_ovos}
 
-Running OVOS concerns two main steps: the \code{OVOS} object and the \code{OVOS.run()} method. The \code{OVOS} object is initialised with arguments that specify the molecule, the SCF object, the Fock matrix in the AO basis, the number of active virtual spin-orbitals to optimize, the initial MO coefficients from SCF, the type of initial orbitals (RHF or UHF), verbosity level, maximum number of iterations, energy and gradient convergence thresholds, and the number of iterations to keep track of for consistent convergence checks. The initialisation is shown in Code~\ref{lst:ovos_init}.
+Running OVOS concerns two main steps: the \code{OVOS} object and the \code{OVOS.run()} method. The \code{OVOS} object is initialised with arguments that specify the molecule, the SCF object, the Fock matrix in the AO basis, the number of active virtual spin-orbitals to optimise, the initial MO coefficients from SCF, the type of initial orbitals (RHF or UHF), verbosity level, maximum number of iterations, energy and gradient convergence thresholds, and the number of iterations to keep track of for consistent convergence checks. The initialisation is shown in Code~\ref{lst:ovos_init}.
 
 \newpage
 
@@ -72,7 +72,7 @@ ovos = OVOS(
     mol=mol,
     scf="scf",          
     Fao="Fock matrix in AO basis", 
-    num_opt_virtual_orbs="number of active virtual spin-orbitals to optimize",  
+    num_opt_virtual_orbs="number of active virtual spin-orbitals to optimise",  
     mo_coeff="initial MO coefficients from SCF",   
     init_orbs="RHF",         
     verbose="verbosity level (0, 1)",

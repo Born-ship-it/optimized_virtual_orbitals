@@ -7,7 +7,7 @@ In this chapter, we present what the OVOS implementation achieved, critically as
 \section{Conclusion}
 \label{sec:con_out_conclusion}
 
-In this thesis, we have implemented the Optimised Virtual Orbital Space (OVOS) method of Adamowicz \& Bartlett \cite{Adamowicz1987} by coding it up in Python. The following conclusions can be drawn from the results presented in Chapter~\ref{ch:results}. Below we further discuss the implications of these conclusions for quantum computing applications.
+In this thesis, we have implemented the Optimized Virtual Orbital Space (OVOS) method of Adamowicz \& Bartlett \cite{Adamowicz1987} by coding it up in Python. The following conclusions can be drawn from the results presented in Chapter~\ref{ch:results}. Below we further discuss the implications of these conclusions for quantum computing applications.
 
 
 \subsection{Summary of Findings}
@@ -49,7 +49,7 @@ The current OVOS implementation serves as a proof-of-concept, but there are seve
 
 \subsection{Method Extensions}
 
-The OVOS framework developed in this thesis is formulated at the MP2 level within an unrestricted reference, but there are several promising extensions to higher levels of theory and alternative electronic structure contexts. Extending OVOS to CCSD or CCSD(T) would allow for a more accurate description of correlation effects, and could be achieved by minimising the CCSD energy with respect to orbital rotations. Implementing a restricted (RHF) formalism for closed-shell molecules would provide a cleaner approach that avoids UHF spin contamination and reduces the number of virtual orbitals by half. Additionally, extending OVOS to excited states, such as through EOM-CCSD or TDDFT response theory, would enable the optimisation of virtual spaces for excited-state properties. For systems with near-degeneracies, a state-averaged OVOS approach could be developed to optimise orbitals across multiple states simultaneously.
+The OVOS framework developed in this thesis is formulated at the MP2 level within an unrestricted reference, but there are several promising extensions to higher levels of theory and alternative electronic structure contexts. Extending OVOS to CCSD or CCSD(T) would allow for a more accurate description of correlation effects, and could be achieved by minimising the CCSD energy with respect to orbital rotations. Implementing a restricted (RHF) formalism for closed-shell molecules would provide a cleaner approach that avoids UHF spin contamination and reduces the number of virtual orbitals by half.
 
 
 \subsection{Quantum Computing Applications}

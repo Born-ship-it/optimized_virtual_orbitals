@@ -28,6 +28,8 @@ The OVOS method takes a different approach by directly optimising a subset of th
 
 Quantum computing has emerged as a promising paradigm for simulating quantum systems, including molecular electronic structure. Algorithms such as VQE can efficiently find ground state energies by preparing a parameterised quantum state and optimising the parameters using a classical optimiser \cite{Peruzzo2014}. However, current NISQ devices are severely limited in the number of qubits and the depth of quantum circuits they can reliably execute, primarily due to noise \cite{Cao2019}. This makes the connection between orbital-space reduction and quantum resource requirements directly relevant to this thesis.
 
+\newpage
+
 In quantum chemistry, the electronic structure problem is typically mapped onto qubits using transformations such as the Jordan-Wigner \cite{Seeley2012}, which requires $Q = 2N_{\rm orb}$ qubits for $N_{\rm orb}$ spatial orbitals. Given the limited number of qubits and the need for shallow circuits, reducing the number of virtual orbitals directly translates to a reduction in qubit requirements and circuit depth \cite{Cao2019}. The OVOS method, by optimising a subset of the virtual orbitals, can significantly reduce the number of qubits needed for a given level of accuracy, $Q = 2N'_{\rm orb}$, where $N'_{\rm orb} < N_{\rm orb}$ is the number of orbitals retained after OVOS optimisation \cite{Adamowicz1987}.
 
 \section{Objectives}

@@ -23,7 +23,7 @@ Here we outline the full OVOS algorithm as implemented in this work, following t
     \State Solve Newton-Raphson equation: $\Delta\mathbf{R} = -\mathbf{H}^{-1}\mathbf{G}$
     \State Generate unitary matrix $\mathbf{U} = \exp(\mathbf{R})$
     \State Update MO coefficients: $\mathbf{C} \leftarrow \mathbf{C}\,\mathbf{U}$
-    \State Canonicalise active Fock block
+    \State Canonicalize active Fock block
     \State Evaluate new $J_2$
   \Until{$|J_2^{(n)} - J_2^{(n-1)}| < \epsilon_{\mathrm{conv}}$}
 \end{algorithmic}
@@ -128,7 +128,7 @@ def _gradient(self, t_abij: np.ndarray, eri_as: np.ndarray,
     t_ij = t_abij[:, :, i_idx, j_idx]
     
     # Term 1: gradient from integrals
-    G = 2.0 * np.einsum('abp,ebp->ae', t_ij, eri_eb, optimize=True)
+    G = 2.0 * np.einsum('abp,ebp->ae', t_ij, eri_eb, optimise=True)
     
     # Term 2: density contribution
     F_be = fock_spin[np.ix_(vir, inactive)]
@@ -151,11 +151,11 @@ def _hessian(self, t_abij: np.ndarray, eri_as: np.ndarray,
     eri_ef = eri_as[nvir:, nvir:, i_idx, j_idx]
     eri_ab = eri_as[:nvir, :nvir, i_idx, j_idx]
     # Term 1: 2 * t_ab^p <ef||ij>^p
-    term1 = 2.0 * np.einsum('abp,efp->aebf', t_ij, eri_ef, optimize=True)
+    term1 = 2.0 * np.einsum('abp,efp->aebf', t_ij, eri_ef, optimise=True)
     H = term1.reshape(nvir * ninact, nvir * ninact)
     # Terms 2-4: Fock matrix contributions (diagonal in e=f and mixed)
-    term2 = -(np.einsum('acp,bcp->ab', t_ij, eri_ab, optimize=True) +
-              np.einsum('cbp,cap->ab', t_ij, eri_ab, optimize=True))
+    term2 = -(np.einsum('acp,bcp->ab', t_ij, eri_ab, optimise=True) +
+              np.einsum('cbp,cap->ab', t_ij, eri_ab, optimise=True))
     term3 = D_ab * (fock_vir_diag[:, None] + fock_vir_diag[None, :])
     H += np.kron(term2 + term3, np.eye(ninact)).reshape(...)
     # Term 4: off-diagonal Fock terms (e != f)
@@ -235,7 +235,7 @@ def _rotate_orbitals(self, mo_coeffs: List[np.ndarray],
     return mo_rot, fock_rot, U_spin
 \end{lstlisting}
 
-After applying the orbital rotation, we re-canonicalise the active Fock block by diagonalising it to obtain new orbital energies $\varepsilon_a$ for the active virtual orbitals. This step ensures that the orbitals remain orthogonal and that the Fock matrix is properly represented in the new basis, see Code~\ref{lst:lst_canonicalize}.
+After applying the orbital rotation, we re-canonicalize the active Fock block by diagonalising it to obtain new orbital energies $\varepsilon_a$ for the active virtual orbitals. This step ensures that the orbitals remain orthogonal and that the Fock matrix is properly represented in the new basis, see Code~\ref{lst:lst_canonicalize}.
 
 \begin{lstlisting}[style=python, caption={Re-canonicalization of active virtual block}, label=lst_canonicalize]
 def _canonicalize_active(self, mo_coeffs: List[np.ndarray],
@@ -286,9 +286,7 @@ The OVOS iteration continues until convergence is achieved or the maximum number
 \begin{lstlisting}[style=python, caption={Convergence checking loop}, label=lst:convergence]
 while iter_count < self.max_iter:
     iter_count += 1
-    
     # ... compute MP2 energy and gradient (as above) ...
-    
     if iter_count > 1:
         # Check convergence criteria
         dE = abs(energy_hist[-1] - energy_hist[-2])
@@ -299,7 +297,6 @@ while iter_count < self.max_iter:
         if (dE < self.conv_energy and 
             grad_norm < self.conv_grad and 
             t1_norm < self.t1_conv):
-            
             keep_track += 1
             if keep_track >= self.keep_track_max and iter_count > 100:
                 converged = True
@@ -312,7 +309,7 @@ The rate and value of convergence will vary depending on the initial orbital gue
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/Ekstra/ovos_convergence_landscape.png}
+    \includegraphics[width=0.8\textwidth]{figures/Ekstra/ovos_convergence_landscape.png}
     \caption{Convergence iteration count landscape for OVOS with convergence criteria gradient norm and MP2 correlation energy. Explored for the HF molecule in the 6--31G basis with initial RHF orbitals. Active space of 7 molecular orbitals. The red point indicates the final converged solution with the default criteria. }
     \label{fig:convergence_landscape}
 \end{figure}
@@ -327,8 +324,6 @@ Here we detail the three distinct initialisation strategies implemented for the 
 \subsection{Default SCF Initialisation}
 
 We can utilise the canonical MO coefficients obtained from a preceding RHF or UHF SCF calculation as the initial guess for the OVOS iteration, like PySCF \code{scf.RHF()}. This is the default strategy and is computationally efficient, as it leverages the existing SCF machinery to provide a reasonable starting point. As seen in Code~\ref{lst:scf_init}, the initial MO coefficients, the SCF object, and the Fock matrices are passed directly to the OVOS constructor, and the iteration proceeds from there. 
-
-\newpage
 
 \begin{lstlisting}[style=python, caption={OVOS initialization with RHF/UHF starting guess}, label=lst:scf_init]
 ovos = OVOS(
@@ -375,7 +370,7 @@ For a systematic scan over different numbers of active virtual orbitals $N'_{\rm
 ovos_prev = OVOS(mol, scf, Fao, num_opt_virtual_orbs=2, mo_coeff=..., ...)
 E_2, _, _, mo_prev, fock_prev, _ = ovos_prev.run(mo_coeff_scf, fock_spin=None)
 
-# Use optimized orbitals as starting guess for N'_{\rm virt}=4
+# Use optimised orbitals as starting guess for N'_{\rm virt}=4
 ovos_curr = OVOS(mol, scf, Fao, num_opt_virtual_orbs=4, 
                  mo_coeff=mo_prev,  # Start from previous optimum
                  ...)
