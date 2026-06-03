@@ -112,5 +112,6 @@
 \contentsline {chapter}{\numberline {B}Additional Data and Figures}{72}{appendix.B}%
 \contentsline {section}{\numberline {B.1}Full MP2 Reference Energies}{72}{section.B.1}%
 \contentsline {section}{\numberline {B.2}Convergence Plots for All Systems}{73}{section.B.2}%
-\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{83}{appendix.C}%
-\contentsline {section}{\numberline {C.1}Repository and Version Information}{83}{section.C.1}%
+\contentsline {section}{\numberline {B.3}OVOS Figures}{83}{section.B.3}%
+\contentsline {chapter}{\numberline {C}Implementation Details and Source Code}{84}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Repository and Version Information}{84}{section.C.1}%
