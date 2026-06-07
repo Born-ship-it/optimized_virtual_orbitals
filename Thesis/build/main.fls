@@ -1,8 +1,8 @@
-PWD c:/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/Thesis
+PWD c:/Users/tobia/Desktop/Clones/QIS/optimized_virtual_orbitals/Thesis
 INPUT c:/texlive/2025/texmf.cnf
 INPUT c:/texlive/2025/texmf-dist/web2c/texmf.cnf
 INPUT c:/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT c:/Users/tobia/Desktop/Clones/optimized_virtual_orbitals/Thesis/main.tex
+INPUT c:/Users/tobia/Desktop/Clones/QIS/optimized_virtual_orbitals/Thesis/main.tex
 OUTPUT build/main.log
 INPUT c:/texlive/2025/texmf-dist/tex/latex/base/report.cls
 INPUT c:/texlive/2025/texmf-dist/tex/latex/base/report.cls
