@@ -73,7 +73,6 @@ Speaker Notes: ...
 <div class="subtitle">Theory</div>
 <div class="meta">Partitioning - Optimisation</div>
 
-
 <!--
 Speaker Notes: Title card for theory section, which covers the partitioning of the virtual orbital space and the optimisation procedure/math to find the optimal virtual subspace for correlation.
 -->
@@ -169,8 +168,6 @@ Speaker Notes: ...
 -->
 <!-- paginate: True -->
 
-<!-- ## Theory: Partitioning -->
-
 - **Goal:** Find the optimal virtual subspace for capturing electron correlation.
 
 <br>
@@ -191,8 +188,6 @@ Speaker Notes:
     </span> 
 -->
 <!-- paginate: hold -->
-
-<!-- ## Theory: Partitioning -->
 
 - **Goal:** Find the optimal virtual subspace for capturing electron correlation.
 
@@ -217,8 +212,6 @@ Speaker Notes: A simple approach was to select the first few virtual orbitals ba
 -->
 <!-- paginate: hold -->
 
-<!-- ## Theory: Partitioning -->
-
 - **Goal:** Find the optimal virtual subspace for capturing electron correlation.
 
 <br>
@@ -241,8 +234,6 @@ Speaker Notes: ...
     </span> 
 -->
 <!-- paginate: hold -->
-
-<!-- ## Theory: Partitioning -->
 
 - **Goal:** Find the optimal virtual subspace for capturing electron correlation.
 
@@ -432,7 +423,7 @@ Speaker Notes: ... (Can rewrite NR to solve for python implementation... and e^R
     <span class="header-right">
         OVOS
     </span> 
---> 
+-->
 
 <!-- ## Theory: Optimisation -->
 ### Canonicalization
@@ -480,7 +471,7 @@ Speaker Notes: ...
 
 ## Method: Implementation
 
-**Software:** Implemented and benchmarked OVOS w. PySCF ***[1]***, and SlowQuant (VQE) ***[2]***.
+**Software:** Implemented and benchmarked OVOS w. PySCF ***[1]***, and SlowQuant ***[2]***.
 
 <div class="reference">
   <div class="reference-item">
@@ -535,6 +526,7 @@ Notes: Algorithm for the implementation of the OVOS method, which outlines the s
 Speaker Notes: ...
 - Implemented both restricted and unrestricted orbitals...
 -->
+
 ---
 
 <!-- header: 
@@ -699,6 +691,7 @@ Speaker Notes: ...
 <!--
 Notes: The run method of the OVOS class, which contains the main optimisation loop. The loop includes the computation of MP1 amplitudes, MP2 energy, gradient and Hessian, and the Newton step for orbital rotation. Comment in the code, #, should be talked about and comment on... # Convergence check, and the different steps in the loop... (# Convergence check - criteria and keep_track_max...)
 Speaker Notes: ...
+- Convergence over OVOS solutions implementation...
 -->
 
 ---
@@ -724,9 +717,12 @@ Speaker Notes: ...
   <div class="algorithm-step"><span class="keyword">Select </span> Active space </div>
   <div class="algorithm-step"><span class="keyword">Set </span> Orbital optimization True/False</div>
   <div class="algorithm-step"><span class="keyword">Initialise </span> Theta parameters from previous or random </div>
-  <div class="algorithm-step"><span class="keyword">Run </span> Unrestricted wavefunction unitary product space </div>
+  <div class="algorithm-step"><span class="keyword">Run </span> Unrestricted wavefunction unitary product space†
+ </div>
   <div class="algorithm-step"><span class="keyword">Optimise </span> Theta parameters w. classical optimiser BFGS</div>
 </div>
+
+$^\dagger$ UPS: $|\Psi(\theta)\rangle = e^{T(\theta) - T^\dagger(\theta)} |\Phi_{\text{ref}}\rangle$, where $|\Phi_{\text{ref}}\rangle$ is the reference state (UHF, OVOS, UMP2) and $T(\theta)$ is the cluster operator parameterized by $\theta$.
 
 <div class="reference">
   <div class="reference-item">
@@ -737,7 +733,7 @@ Speaker Notes: ...
 </div>
 
 <!--
-Notes: ...
+Notes: BFGS stands for Broyden–Fletcher–Goldfarb–Shanno algorithm, which is a quasi-Newton method for optimization. It uses an approximation to the Hessian matrix to find the search direction for optimization, and updates this approximation at each iteration based on the gradient information. This allows for efficient optimization without needing to compute the full Hessian matrix, which can be computationally expensive.
 Speaker Notes: ...
 -->
 
@@ -839,6 +835,7 @@ Speaker Notes: ...
 <!--
 Notes: ...
 Speaker Notes: ...
+Molecules: H2O -> Water ,CO -> Carbon Monoxide, HF -> Hydrogen Fluoride, NH3 -> Ammonia, Li2 -> Dilithiuma. (Different sizes...)
 -->
 
 ---
@@ -855,11 +852,9 @@ Speaker Notes: ...
 
 ## Results: OVOS
 
-**OVOS plots**
-- *Points:* MP2 correlation energy at each iteration.
-- *Lines:* Amount of recovered correlation energy from initial point to final OVOS solution.
-- *Grey Line:* Best of start Guesses (canonical HF, previous OVOS, random).
-- *Dashed Lines:* Reference MP2, and orbital optimised MP2 (both with full virtual space).
+<br>
+
+![center w:800px](images/figures/Ekstra/ovos_convergence_landscape.png)
 
 <!--
 Notes: ...
@@ -889,6 +884,11 @@ Speaker Notes: ...
 - We can clearly see differences between start guesses... will keep being prominent in the following molecules.
 - Most recovered correlation energy is captured in the the early to middle numbering of OVOS solutions, which is a key takeaway from the plot (4,5,9,10).
 - All cases except full space converges to a UHF solution...
+- *Points:* MP2 correlation energy at each iteration.
+- *Lines:* Amount of recovered correlation energy from initial point to final OVOS solution.
+- *Grey Line:* Best of start Guesses (canonical HF, previous OVOS, random).
+- *Dashed Lines:* Reference MP2, and orbital optimised MP2 (both with full virtual space).
+
 -->
 
 ---
@@ -979,9 +979,6 @@ Speaker Notes: ...
 -->
 <!-- paginate: True -->
 
-<!-- ## Results: OVOS -->
-<!-- **PLOTS - CO/cc-pVDZ** -->
-
 ![center w:1100px](images/figures/OVOS_PLOTS/CO/cc-pVDZ/ovos_convergence_CO_cc-pVDZ.png)
 
 <!--
@@ -1000,9 +997,6 @@ Speaker Notes: ...
     </span> 
 -->
 <!-- paginate: hold -->
-
-<!-- ## Results: OVOS -->
-<!-- **PLOTS - CO/cc-pVDZ** -->
 
 ![center w:1100px](images/figures/OVOS_PLOTS/CO/cc-pVDZ/ovos_convergence_CO_cc-pVDZ_zoom.png)
 
@@ -1023,13 +1017,10 @@ Speaker Notes: ...
 -->
 <!-- paginate: hold -->
 
-<!-- ## Results: OVOS -->
-<!-- **PLOTS - CO/cc-pVDZ** -->
-
 ![center w:950px](images/figures/Ekstra/OVOS_conv_CO_cc-pVDZ_zoom.png)
 
 <!--
-Notes: Figure showing the convergence of OVOS for CO in cc-pVDZ basis for 11-17 active unoccupied orbitals... keep_track_max = 50 not included in iterations...
+Notes: Figure showing the convergence of OVOS for CO in cc-pVDZ basis for 11-17 active unoccupied orbitals... keep_track_max = 50 not included in iterations... Bad convergence: Hessian ill conditioned... 
 Speaker Notes: ...
 -->
 
@@ -1082,9 +1073,6 @@ Speaker Notes: ...
     </span> 
 -->
 <!-- paginate: True -->
-
-<!-- ## Results: OVOS -->
-<!-- **PLOTS - HF/cc-pVDZ** -->
 
 ![center w:1100px](images/figures/OVOS_PLOTS/HF/cc-pVDZ/ovos_convergence_HF_cc-pVDZ.png)
 
@@ -1143,13 +1131,10 @@ Speaker Notes: ...
 -->
 <!-- paginate: True -->
 
-<!-- ## Results: OVOS -->
-<!-- **PLOTS - NH3/cc-pVDZ** -->
-
 ![center w:1100px](images/figures/OVOS_PLOTS/NH3/cc-pVDZ/ovos_convergence_NH3_cc-pVDZ.png)
 
 <!--
-Notes: ...
+Notes: Figure shows consistent results between start guesses, till it does not around 14-20 active unoccupied orbitals...
 Speaker Notes: ...
 -->
 
@@ -1203,13 +1188,10 @@ Speaker Notes: ...
 -->
 <!-- paginate: True -->
 
-<!-- ## Results: OVOS -->
-<!-- **PLOTS - Li2/cc-pVDZ** -->
-
 ![center w:1100px](images/figures/OVOS_PLOTS/Li2/cc-pVDZ/ovos_convergence_Li2_cc-pVDZ.png)
 
 <!--
-Notes: ...
+Notes: Looks awful at 12-23 active unoccupied orbitals...
 Speaker Notes: ...
 -->
 
@@ -1265,15 +1247,16 @@ Speaker Notes: ...
 
 ## Results: OVOS Summarized
 
-| Molecule | Fullspace* | $N'_{\text{virt}}$ (90% MP2) | % of full space |
+| Molecule | Fullspace | $N'_{\text{virt}}$ (90% MP2) | % of full space |
 |----------|----------- |------------------------------|-----------------|
 | H₂O      | 19                | 13                           | 68%             |
 | CO       | 21                | 13                           | 62%             |
 | HF       | 14                | 9                            | 64%             |
 | NH₃      | 24                | 12                           | 50%             |
 | **Li₂**  | **25**                | **7**                        | **28%**         |
+| CH₂$^\dagger$ | 70                | ~21                           | ~30%             |
 
-*Virtual space size in cc-pVDZ basis.
+$^\dagger$ Adamowicz & Bartlett (1992) J. Chem. Phys., 86, 1987.
 
 **Key Takeaway:** The first 50-68% of orbitals capture the bulk of the correlation. 
 All converged orbitals are unrestricted.
@@ -1293,12 +1276,15 @@ Speaker Notes: ...
         OVOS
     </span> 
 -->
+<!-- paginate: True -->
 
 ## VQE
 
 - **Goal:** Assess how OVOS orbitals improve VQE performance.
-<!-- All active space is occupied + 75% of virtual space -->
-<!-- VQE Diagram... -->
+
+<br>
+
+![center w:700px](images/figures/Ekstra/PES_HF.png)
 
 <!--
 Notes: ...
@@ -1309,51 +1295,34 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, VQE/ooVQE
+        Results, VQE - H2O
     </span>
     <span class="header-right">
         OVOS
     </span> 
 -->
+<!-- paginate: True -->
 
-## Results: VQE/ooVQE
-VQE plots
+![center w:1050px](images/figures/VQE_PLOTS/H2O/VQE_H2O_6-31G_best_of_zoom_oo_False.png)
 
+<div class="slide-comment">
+Active space: 5 occupied + 11 virtual orbitals (75% of virtual space).
+</div>
+
+<!--
+Notes: ...
+Speaker Notes: ...
 - *Points:* VQE energy at each iteration (Previous and Random).
 - *Lines:* VQE energy convergence from initial point to final OVOS solution (UHF OVOS, UHF, and UMP2).
 - *Dashed Line:* Reference UHF VQE.
-- *ooVQE:* VQE with orbital optimisation of the virtual space.
-
-<!--
-Notes: ...
-Speaker Notes: ...
+- Best of previous and random initial theta parameters
 -->
 
 ---
 
 <!-- header: 
     <span class="header-left">
-        Results, VQE
-    </span>
-    <span class="header-right">
-        OVOS
-    </span> 
--->
-
-<!-- ## Results: VQE -->
-
-![center w:1100px](images/figures/VQE_PLOTS/H2O/VQE_H2O_6-31G_best_of_zoom_oo_False.png)
-
-<!--
-Notes: ...
-Speaker Notes: ...
--->
-
----
-
-<!-- header: 
-    <span class="header-left">
-        Results, ooVQE
+        Results, VQE - H2O
     </span>
     <span class="header-right">
         OVOS
@@ -1361,20 +1330,23 @@ Speaker Notes: ...
 -->
 <!-- paginate: Hold -->
 
-<!-- ## Results: VQE -->
+![center w:1050px](images/figures/VQE_PLOTS/H2O/VQE_H2O_6-31G_best_of_zoom_oo_True.png)
 
-![center w:1100px](images/figures/VQE_PLOTS/H2O/VQE_H2O_6-31G_best_of_zoom_oo_True.png)
+<div class="slide-comment">
+Active space: 5 occupied + 11 virtual orbitals (75% of virtual space).
+</div>
 
 <!--
 Notes: ...
 Speaker Notes: ...
+- Best of previous and random initial theta parameters
 -->
 
 ---
 
 <!-- header: 
     <span class="header-left">
-        Results, ooVQE
+        Results, VQE - H2O
     </span>
     <span class="header-right">
         OVOS
@@ -1382,20 +1354,23 @@ Speaker Notes: ...
 -->
 <!-- paginate: Hold -->
 
-<!-- ## Results: VQE -->
+![center w:1050px](images/figures/VQE_PLOTS/H2O/VQE_H2O_iterations_to_convergence_statistics%20copy.png)
 
-![center w:1100px](images/figures/VQE_PLOTS/H2O/VQE_H2O_iterations_to_convergence_statistics%20copy.png)
+<div class="slide-comment">
+Active space: 5 occupied + 11 virtual orbitals (75% of virtual space).
+</div>
 
 <!--
 Notes: ...
 Speaker Notes: ...
+- The off poing above, is then the 1 iteration in this plot!
 -->
 
 ---
 
 <!-- header: 
     <span class="header-left">
-        Results, VQE
+        Results, VQE - HF
     </span>
     <span class="header-right">
         OVOS
@@ -1403,20 +1378,23 @@ Speaker Notes: ...
 -->
 <!-- paginate: True -->
 
-<!-- ## Results: VQE -->
+![center w:1050px](images/figures/VQE_PLOTS/HF/VQE_HF_6-31G_best_of_zoom_oo_False.png)
 
-![center w:1100px](images/figures/VQE_PLOTS/HF/VQE_HF_6-31G_best_of_zoom_oo_False.png)
+<div class="slide-comment">
+Active space: 5 occupied + 10 virtual orbitals (75% of virtual space).
+</div>
 
 <!--
 Notes: ...
 Speaker Notes: ...
+- Best of previous and random initial theta parameters
 -->
 
 ---
 
 <!-- header: 
     <span class="header-left">
-        Results, ooVQE
+        Results, VQE - HF
     </span>
     <span class="header-right">
         OVOS
@@ -1424,21 +1402,23 @@ Speaker Notes: ...
 -->
 <!-- paginate: Hold -->
 
+![center w:1050px](images/figures/VQE_PLOTS/HF/VQE_HF_6-31G_best_of_zoom_oo_True.png)
 
-<!-- ## Results: VQE -->
-
-![center w:1100px](images/figures/VQE_PLOTS/HF/VQE_HF_6-31G_best_of_zoom_oo_True.png)
+<div class="slide-comment">
+Active space: 5 occupied + 10 virtual orbitals (75% of virtual space).
+</div>
 
 <!--
 Notes: ...
 Speaker Notes: ...
+- Best of previous and random initial theta parameters
 -->
 
 ---
 
 <!-- header: 
     <span class="header-left">
-        Results, ooVQE
+        Results, VQE - HF
     </span>
     <span class="header-right">
         OVOS
@@ -1446,9 +1426,11 @@ Speaker Notes: ...
 -->
 <!-- paginate: Hold -->
 
-<!-- ## Results: VQE -->
+![center w:1050px](images/figures/VQE_PLOTS/HF/VQE_HF_iterations_to_convergence_statistics%20copy.png)
 
-![center w:1100px](images/figures/VQE_PLOTS/HF/VQE_HF_iterations_to_convergence_statistics%20copy.png)
+<div class="slide-comment">
+Active space: 5 occupied + 10 virtual orbitals (75% of virtual space).
+</div>
 
 <!--
 Notes: ...
@@ -1459,7 +1441,7 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, VQE
+        Results, VQE - Li2
     </span>
     <span class="header-right">
         OVOS
@@ -1467,20 +1449,23 @@ Speaker Notes: ...
 -->
 <!-- paginate: True -->
 
-<!-- ## Results: VQE -->
+![center w:1050px](images/figures/VQE_PLOTS/Li2/VQE_Li2_6-31G_best_of_zoom_oo_False.png)
 
-![center w:1100px](images/figures/VQE_PLOTS/Li2/VQE_Li2_6-31G_best_of_zoom_oo_False.png)
+<div class="slide-comment">
+Active space: 3 occupied + 15 virtual orbitals (75% of virtual space).
+</div>
 
 <!--
 Notes: ...
 Speaker Notes: ...
+- Best of previous and random initial theta parameters
 -->
 
 ---
 
 <!-- header: 
     <span class="header-left">
-        Results, ooVQE
+        Results, VQE - Li2
     </span>
     <span class="header-right">
         OVOS
@@ -1488,20 +1473,23 @@ Speaker Notes: ...
 -->
 <!-- paginate: hold -->
 
-<!-- ## Results: VQE -->
+![center w:1050px](images/figures/VQE_PLOTS/Li2/VQE_Li2_6-31G_best_of_zoom_oo_True.png)
 
-![center w:1100px](images/figures/VQE_PLOTS/Li2/VQE_Li2_6-31G_best_of_zoom_oo_True.png)
+<div class="slide-comment">
+Active space: 3 occupied + 15 virtual orbitals (75% of virtual space).
+</div>
 
 <!--
 Notes: ...
 Speaker Notes: ...
+- Best of previous and random initial theta parameters
 -->
 
 ---
 
 <!-- header: 
     <span class="header-left">
-        Results, ooVQE
+        Results, VQE - Li2
     </span>
     <span class="header-right">
         OVOS
@@ -1509,9 +1497,11 @@ Speaker Notes: ...
 -->
 <!-- paginate: Hold -->
 
-<!-- ## Results: VQE -->
+![center w:1050px](images/figures/VQE_PLOTS/Li2/VQE_Li2_iterations_to_convergence_statistics.png)
 
-![center w:1100px](images/figures/VQE_PLOTS/Li2/VQE_Li2_iterations_to_convergence_statistics.png)
+<div class="slide-comment">
+Active space: 3 occupied + 15 virtual orbitals (75% of virtual space).
+</div>
 
 <!--
 Notes: ...
@@ -1522,7 +1512,7 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, VQE/ooVQE
+        Results, VQE
     </span>
     <span class="header-right">
         OVOS
@@ -1532,12 +1522,12 @@ Speaker Notes: ...
 
 ## Results: VQE Summarized
 
-![width:600px](figures/PES_HF.png)
-
 - **VQE Bottleneck:** Canonical HF is a poor trial state.
-- **OVOS Advantage:** Provides a superior trial state $\rightarrow$ better groundstate, lower energy convergence.
-- **OVOS Disadvantage:** Provides an inferior trial state $\rightarrow$ worse groundstate, higher energy convergence.
-- **Metric:** Reduced mean iterations for ooVQE.
+- **OVOS Advantage over UHF:** Superior trial state 
+$\qquad \qquad \qquad \rightarrow$ better groundstate, lower energy convergence.
+- **OVOS Disadvantage over UMP2:** Inferior trial state 
+$\qquad \qquad \qquad \rightarrow$ worse groundstate, higher energy convergence.
+- **Metric:** Similar mean, big spread, in iterations for ooVQE.
 - **Conclusion:** Classical optimisation of virtual orbitals directly reduces quantum circuit depth.
 
 <!--
@@ -1547,6 +1537,24 @@ Speaker Notes: ...
 
 ---
 
+<!-- class: title-card -->
+<!-- header: 
+    <span class="header-left">
+    </span>
+    <span class="header-right">
+    </span>
+-->
+<!-- paginate: Skip -->
+
+<div class="subtitle">Conclusion & Outlook</div>
+
+<!--
+Notes: ...
+Speaker Notes: ...
+-->
+
+---
+<!-- class: False -->
 <!-- header: 
     <span class="header-left">
         Conclusion
@@ -1555,13 +1563,14 @@ Speaker Notes: ...
         OVOS
     </span> 
 -->
+<!-- paginate: True -->
 
 ## Conclusion
 
-✅ **Successful implementation** of OVOS.  
-✅ **~90% MP2 correlation** recovered with **50–68% of virtual orbitals**.  
-✅ OVOS orbitals provide **superior VQE reference states** compared to UHF.  
-✅ Practical path to **reducing qubit count and circuit depth** for NISQ chemistry.  
+- **Successful implementation** of OVOS.  
+- **~90% MP2 correlation** recovered with **50–68% of virtual orbitals**.  
+- OVOS orbitals provide **superior VQE reference states** compared to UHF.  
+- Practical path to **reducing qubit count and circuit depth** for NISQ chemistry.  
 
 <!--
 Notes: ...
@@ -1586,14 +1595,14 @@ Speaker Notes: ...
 <div>
 <strong>Algorithmic improvements:</strong>
 
-- Initial choice of virtual orbitals
-- Trust‑region / line‑search for Newton‑Raphson
-- GPU acceleration, level‑shifting for indefinite Hessian
+- Initial choice of virtual orbitals (MP2)
+- Convergence fix for Newton‑Raphson
+
+<br>
 
 <strong>Method extensions:</strong>
 
-- OVOS for CCSD(T) and RHF reference
-- Combine with natural orbital truncation
+- OVOS for CCSD and CCSD(T)
 
 </div>
 
@@ -1601,8 +1610,8 @@ Speaker Notes: ...
 <strong>Quantum computing:</strong>
 
 - Run VQE on quantum hardware using OVOS orbitals
-- Explore reduced T1 → UCCD ansatz, shorter circuits
- 
+- Explore reduced T1, UUCSD → UCCD ansatz, shorter circuits
+
 <strong>Larger systems:</strong>
 
 - Transition metals
@@ -1620,16 +1629,35 @@ Speaker Notes: ...
 
 ---
 
+<!-- class: title-card -->
 <!-- header: 
     <span class="header-left">
     </span>
     <span class="header-right">
     </span>
 -->
+<!-- paginate: Skip -->
 
-# Thank You!
-### Questions?
+<div class="subtitle">Thank You!</div>
 
+<!--
+Notes: ...
+Speaker Notes: ...
+-->
+
+---
+
+<!-- class: title-card -->
+<!-- header: 
+    <span class="header-left">
+    </span>
+    <span class="header-right">
+    </span>
+-->
+<!-- paginate: Skip -->
+
+<div class="subtitle">Thank You!</div>
+<div class="meta">Questions?</div>
 
 <!--
 Notes: ...

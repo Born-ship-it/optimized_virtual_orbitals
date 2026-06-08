@@ -745,3 +745,24 @@ section.title-card::before {
   right: 30px;
   pointer-events: none;
 }
+
+/* ===== SLIDE COMMENT (bottom, labeled) ===== */
+
+.slide-comment {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  right: 48px;
+  font-size: 0.80em;
+  color: var(--color-muted);
+  padding-top: 8px;
+  margin-top: 12px;
+  line-height: 1.5em;
+  background-color: transparent;
+}
+
+.slide-comment::before {
+content: "|";
+  font-weight: 600;
+  color: var(--color-accent);
+}

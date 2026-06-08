@@ -1,20 +1,20 @@
 # Fdb version 4
-["bibtex build/main"] 1780169189.51487 "build/main.aux" "build/main.bbl" "build/main" 1780668483.07088 0
+["bibtex build/main"] 1780169189.51487 "build/main.aux" "build/main.bbl" "build/main" 1780865620.34504 0
   "./bibliography.bib" 1780103823 13211 b6fb2975d30205d74435f396c5e86cce ""
-  "build/main.aux" 1780668482 74000 1fc2776f4bb864001dadd4884decfd29 "pdflatex"
+  "build/main.aux" 1780865619 74000 1fc2776f4bb864001dadd4884decfd29 "pdflatex"
   "c:/texlive/2025/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1758275322 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
   (generated)
   "build/main.bbl"
   "build/main.blg"
   (rewritten before read)
-["pdflatex"] 1780668462.95699 "c:/Users/tobia/Desktop/Clones/QIS/optimized_virtual_orbitals/Thesis/main.tex" "build/main.pdf" "main" 1780668483.07143 0
+["pdflatex"] 1780865599.94427 "c:/Users/tobia/Desktop/Clones/QIS/optimized_virtual_orbitals/Thesis/main.tex" "build/main.pdf" "main" 1780865620.34568 0
   "appendices/appendix_a.tex" 1780091049 1917 84e09536eb157fb05d54b2dee6a91a7a ""
   "appendices/appendix_b.tex" 1780169166 7657 18198a8e60082f77d2af15b20fb6e99a ""
   "appendices/appendix_c.tex" 1780091301 44596 728fa7be3d9192f3403b5d4f3edf9e59 ""
-  "build/main.aux" 1780668482 74000 1fc2776f4bb864001dadd4884decfd29 "pdflatex"
+  "build/main.aux" 1780865619 74000 1fc2776f4bb864001dadd4884decfd29 "pdflatex"
   "build/main.bbl" 1780169189 8573 d77c3306a0612287144aec06eac9c840 "bibtex build/main"
-  "build/main.out" 1780668482 1788 3db6e8b27e4aee8afb8aa1b17ffca7c4 "pdflatex"
-  "build/main.toc" 1780668482 10043 f4c727a3a1ae58e1516095a3f0aff219 "pdflatex"
+  "build/main.out" 1780865619 1788 3db6e8b27e4aee8afb8aa1b17ffca7c4 "pdflatex"
+  "build/main.toc" 1780865619 10043 f4c727a3a1ae58e1516095a3f0aff219 "pdflatex"
   "c:/Users/tobia/Desktop/Clones/QIS/optimized_virtual_orbitals/Thesis/main.tex" 1780167082 1470 3834eab9bccd41b1824b01a2bbec4104 ""
   "c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1758275015 2375 baa924870cfb487815765f9094cf3728 ""
   "c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc" 1758275015 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
@@ -300,7 +300,7 @@
   "chapters/introduction.tex" 1780165474 11810 953c93a07ee96b7964647c43671686b4 ""
   "chapters/method.tex" 1780169166 27105 d7f0023e1673dff73a1c329d3a343306 ""
   "chapters/results.tex" 1780167044 41927 cb52403849c46502efd8d1f079ae77e0 ""
-  "chapters/theory.tex" 1780668461 76084 8d3cfeb113f315bfc12ecffdeb4c61a0 ""
+  "chapters/theory.tex" 1780865598 76083 ef1b1cca3e76e0899f204023c056ae23 ""
   "figures//OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ.png" 1779093888 236177 e971f0855b40dd3f274a80863fb81685 ""
   "figures/Ekstra/OVOS_6-31G.png" 1780051123 1029987 796273a856b40d4e19c22fe8e481242a ""
   "figures/Ekstra/OVOS_conv_CO_6-31G.png" 1780053985 863268 4768697dab9027dcc7bba18b5ba52ec7 ""
