@@ -471,20 +471,9 @@ pre code {
   white-space: pre;    /* prevents wrapping → enables horizontal scroll */
 }
 
-/* Override Marp's interaction lock to allow scrolling */
-.bespoke-marp-osc {
-  pointer-events: auto !important;
-}
-
-.bespoke-marp-osc .presenter .bespoke-marp-next-view {
-  pointer-events: auto !important;
-  overflow: auto !important;
-}
-
-/* Optional: Re-enable text selection if desired */
-.bespoke-marp-osc .presenter {
-  user-select: text !important;
-  -webkit-user-select: text !important;
+code .hl {
+  color: var(--color-highlight);
+  font-weight: 500;
 }
 
 /* ===== TABLES ===== */

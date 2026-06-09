@@ -14,6 +14,7 @@ fit: False
 ## Master's Thesis Defense
 **Author:** Tobias Born Clausen
 **Supervisors:** Asst. Prof. Phillip W. K. Jensen and Prof. Stephan P. A. Sauer
+**Date:** 11. June 2026
 
 <br>
 <br>
@@ -25,7 +26,7 @@ fit: False
 ![bottom-right w:350px](images/logo.png)
 
 <!--
-Notes: Present for 30 mins!!! 
+Notes: Welcome!
 -->
 
 ---
@@ -41,8 +42,8 @@ Notes: Present for 30 mins!!!
 
 ## Motivation: The Quantum Bottleneck
 
+- **NISQ Constraint:** Noisy intermediate-scale quantum (NISQ) devices are limited by qubit count and circuit depth.
 - **The Challenge:** Post-HF methods (MP2, CCSD) scale steeply $\mathcal{O}(O^2 V^2)$ due to the virtual orbital space $V$.
-- **NISQ Constraint:** Near-term quantum devices (VQE) are limited by qubit count and circuit depth.
 - **The Insight:** Most virtual orbitals contribute negligibly to electron correlation.
 - **Thesis Goal:** Implement the *Optimized Virtual Orbital Space (OVOS)* method (Adamowicz & Bartlett, 1987) to reduce virtual orbitals while preserving correlation energy. Benchmark these orbitals for VQE performance.
 
@@ -56,7 +57,20 @@ DOI: [10.1063/1.452468](https://doi.org/10.1063/1.452468)</span>
 </div>
 
 <!--
-Speaker Notes: ...
+Speaker Notes: 
+- "Let’s begin with the **computational bottleneck** that motivates everything we do in this thesis." 
+- "First, look at the **classical side**... Accurate methods like ...
+- "Second, consider **quantum computing on today’s NISQ devices**...
+- "Here’s the crucial **insight**: ...
+- "That is exactly what the **OVOS method** does...
+- "In this thesis, I implement OVOS and then ask...
+
+- BIG BASIS SET -> LARGE VIRTUAL SPACE -> HIGH COST
+- OVOS -> REDUCED VIRTUAL SPACE -> LOWER COST
+
+**Transition to next slide:**  
+"With that motivation in mind, let me now walk you through the **theory** behind OVOS
+– how it defines the active virtual space and how we optimise it."
 -->
 
 ---
@@ -100,8 +114,9 @@ Speaker Notes: Title card for theory section, which covers the partitioning of t
 
 <!--
 Notes: In figure (1) the orbital space is partitioned into three subspaces: the active occupied space, active unoccupied space, and a virtual space.
-Speaker Notes: The active occupied space contains the occupied orbitals, the active unoccupied space contains the virtual orbitals that are optimised, and the virtual space contains the remaining virtual orbitals that are not optimised.
-- Here the orbitals are unrestricted, which is the most general case, we do not restrict the orbitals to be the same for alpha and beta electrons, which allows for more flexibility in the orbital optimisation, but also means that we have to consider both alpha and beta orbitals in the partitioning.
+Speaker Notes: 
+- OVOS partitions the full spin‑orbital basis into three subspaces...
+- Here the orbitals are unrestricted...
 -->
 
 ---
@@ -175,6 +190,7 @@ Speaker Notes: ...
 <!--
 Notes: No plot... Introduce Goal...
 Speaker Notes: 
+- The goal of OVOS is to find the optimal virtual subspace for capturing electron correlation...
 -->
 
 ---
@@ -197,7 +213,9 @@ Speaker Notes:
 
 <!--
 Notes: In figure, shown one active unoccupied orbital and the remaining virtual orbitals -> OVOS 1.
-Speaker Notes: A simple approach was to select the first few virtual orbitals based on their orbital energies, but this does not guarantee optimal correlation capture...
+Speaker Notes: 
+- A simple naive approach...
+- A&B, Overhead from pre-MP2 calc...
 -->
 
 ---
@@ -241,17 +259,23 @@ Speaker Notes: ...
 
 ![center w:1080px](images/figures/Ekstra/OVOS_number_c.png)
 
+<div class="slide-comment">
+N' = N - 1, N - 2, ..., 1 active unoccupied orbital, N' < N
+</div>
+
 <!--
 Notes: In figure, N (full space - 1) active unoccupied orbital and the remaining one virtual orbital are shown -> OVOS N.
-Speaker Notes: We can continue to add more active unoccupied orbitals until just before we reach the full virtual space, at full space - 1, which is the last possible OVOS solution before we reach the full virtual space.
-At full space, no orbitals are optimised, and we have the canonical HF virtual orbitals, which is the starting point for the OVOS optimisation (No orbital to optimise with...) -> This becomes clear with the following slide... within each OVOS solution we perform an optimisation...
+Speaker Notes: 
+- Add to N' = N-1 ...
+- AT N' = N ...
+- Optimization...
 -->
 
 ---
 
 <!-- header: 
     <span class="header-left">
-        Theory
+        Theory, Optimisation
     </span>
     <span class="header-right">
         OVOS
@@ -274,7 +298,7 @@ Speaker Notes: To give the overveiw of this optimisation loop...
 
 <!-- header: 
     <span class="header-left">
-        Theory
+        Theory, Optimisation
     </span>
     <span class="header-right">
         OVOS
@@ -291,13 +315,14 @@ Speaker Notes: To give the overveiw of this optimisation loop...
 <!--
 Notes: In the figure (2), we optimise the unoccupied orbitals by performing a unitary rotation of the virtual orbitals, A -> A'...
 Speaker Notes: ...
+- A broad overview of the optimisation loop...
 -->
 
 ---
 
 <!-- header: 
     <span class="header-left">
-        Theory
+        Theory, Optimisation
     </span>
     <span class="header-right">
         OVOS
@@ -330,11 +355,43 @@ Speaker Notes: ...
 
 ### The Hylleraas Functional
 
-- **Framework:** The **Hylleraas functional** is the mathematical target for second-order correlation energy:
+- **Framework:** The **Hylleraas functional**
+<!-- is the mathematical target for second-order correlation energy: -->
 
-$$E^{(2)} \leq \langle\Psi^{(1)}|H_0 - E^{(0)}|\Psi^{(1)}\rangle + 2\langle\Psi^{(1)}|V - E^{(1)}|\Psi^{(0)}\rangle = J_2$$
+$$E^{(2)} \leq \langle\Psi^{(1)}|H_0 - E^{(0)}|\Psi^{(1)}\rangle + 2\langle\Psi^{(1)}|V - E^{(1)}|\Psi^{(0)}\rangle = J^{(2)}$$
 
-- **Functional Form:** Each unique pairs of occupied orbital indices $(i,j)$ defines a functional $J_{ij}^{(2)}$ that depends on the virtual space through the amplitudes $t_{ij}^{ab}$:
+<!--
+Notes: Equations for the Hylleraas functional, and MP2 correlation energy...
+Speaker Notes: ...
+- The second-order Hylleraas functional is used to find an optimal 
+rotation of the active virtual space against the nonactive 
+space, to minimize the second-order correlation energy.
+- The Theory behind the OVOS optimisation ... 
+- The second‑order Hylleraas functional J^{(2)} is the variational target that OVOS minimises 
+- Orthonormal condition <\Psi^{(1)}|\Psi^{(0)}> = 0
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Theory, Optimisation
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: True -->
+
+### The Hylleraas Functional
+
+- **Framework:** The **Hylleraas functional**
+<!-- is the mathematical target for second-order correlation energy: -->
+
+$$E^{(2)} \leq \langle\Psi^{(1)}|H_0 - E^{(0)}|\Psi^{(1)}\rangle + 2\langle\Psi^{(1)}|V - E^{(1)}|\Psi^{(0)}\rangle = J^{(2)}$$
+
+- **Functional Form:**
+<!-- Each unique pairs of occupied orbital indices $(i,j)$ defines a functional $J_{ij}^{(2)}$ that depends on the virtual space through the amplitudes $t_{ij}^{ab}$: -->
 
 $$
 \begin{align*}
@@ -345,7 +402,11 @@ $$
 <!--
 Notes: Equations for the Hylleraas functional, and MP2 correlation energy...
 Speaker Notes: ...
+- The second‑order Hylleraas functional J^{(2)} is the variational target that OVOS minimises 
+- Upperbound to MP2
+- Pair separaible functional...
 -->
+
 
 ---
 
@@ -357,33 +418,23 @@ Speaker Notes: ...
         OVOS
     </span> 
 -->
+<!-- paginate: True -->
 
 ### Derivatives
 
-- **Gradient:** The gradient of $J_{ij}^{(2)}$ with respect to the virtual orbital rotation parameters $\kappa_{ab}$ is computed analytically.
+- **Gradient:**
+<!-- The gradient of $J_{ij}^{(2)}$ with respect to the virtual orbital rotation parameters $R_{ab}$ is computed analytically. -->
 
 $$
 \begin{align*}
-    G_{ae} = \frac{\partial J_2}{\partial R_{ae}} 
-    &= 2\sum_{i>j}\sum_{b} t_{ij}^{ab} \langle ij\|eb\rangle + 2 \sum_{b} D_{ab} f_{eb}
-\end{align*}
-$$
-
-- **Hessian:** The Hessian matrix is approximated using the orbital energy differences, enabling efficient optimisation.
-
-$$
-\begin{align*}
-    H_{ae,bf} &= 2\sum_{i>j} t_{ij}^{ab}\langle ij\|ef\rangle
-               - \sum_{i>j}\sum_c \Big[t_{ij}^{ac}\langle ij\|bc\rangle
-               + t_{ij}^{bc}\langle ij\|ca\rangle\Big] \delta_{ef}
-               \\ &\qquad + D_{ab}(f_{aa} - f_{bb}) \delta_{ef}
-               + D_{ab} f_{ef}(1-\delta_{ef})
+    G_{ae} = \frac{\partial J^{(2)}}{\partial R_{ae}} \qquad (N' N_{\text{inact.}})
 \end{align*}
 $$
 
 <!--
 Notes: Gradient and Hessian expression for the Hylleraas functional...
-Speaker Notes: ... (Want to say something about the terms and what they represent, but also want to keep it high level...)
+Speaker Notes: ... 
+- ...
 -->
 
 ---
@@ -396,45 +447,252 @@ Speaker Notes: ... (Want to say something about the terms and what they represen
         OVOS
     </span> 
 -->
+<!-- paginate: True -->
 
-<!-- ## Theory: Optimisation -->
+### Derivatives
+
+- **Hessian:** 
+<!-- The Hessian matrix is approximated using the orbital energy differences, enabling efficient optimisation. -->
+
+$$
+\begin{align*}
+    H_{ae,bf} &= \frac{\partial^2 J^{(2)}}{\partial R_{ae}\ \partial R_{bf}} \qquad (N' N_{\text{inact.}}) \times (N' N_{\text{inact.}})
+\end{align*}
+$$
+
+<!--
+Notes: Gradient and Hessian expression for the Hylleraas functional...
+Speaker Notes: ... 
+- H: Block structure...
+- H: Diag block (N' X N')
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Theory, Optimisation
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+### Derivatives
+
+- **Hessian:**
+<!-- The Hessian matrix is approximated using the orbital energy differences, enabling efficient optimisation. -->
+
+$$
+\begin{align*}
+    H_{ae,bf} &= \frac{\partial^2 J^{(2)}}{\partial R_{ae}\ \partial R_{bf}} \qquad (N' N_{\text{inact.}}) \times (N' N_{\text{inact.}})
+\end{align*}
+$$
+
+*Block structure:*
+$$
+H =
+    \begin{bmatrix}
+        H^e        & 0           & \cdots & 0         \\
+        0          & H^f         & \cdots & 0         \\
+        \vdots     & \vdots      & \ddots & \vdots    \\
+        0          & 0           & \cdots & H^{N_{\text{inact.}}}
+    \end{bmatrix},
+\qquad
+H^e = 
+    \begin{bmatrix}
+        H_{ae,ae}  & H_{ae,be} & \cdots & H_{ae,N'e}   \\
+        H_{be,ae}  & H_{be,be} & \cdots & H_{be,N'e}   \\
+        \vdots     & \vdots    & \ddots & \vdots       \\
+        H_{N'e,ae} & 0         & \cdots & H_{N'e,N'e}
+    \end{bmatrix}
+$$
+
+<!--
+Notes: Gradient and Hessian expression for the Hylleraas functional...
+Speaker Notes: ... 
+- H: Block structure...
+- H: Diag block (N' X N')
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Theory, Optimisation
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: True -->
+
 ### Newton–Raphson
-**Rotation:** We use the Newton–Raphson method to solve for the optimal rotation parameters $R$ that minimize the Hylleraas functional.
 
-$$R = - G \cdot H^{-1} \quad \longrightarrow \quad H\cdot R = - G$$
+**Rotation:**
+<!-- We use the Newton–Raphson method to solve for the optimal rotation parameters $R$ that minimize the Hylleraas functional. -->
+
+$$
+\begin{align*}
+    R = - G \cdot H^{-1} \quad \longrightarrow \quad H\cdot R = - G
+\end{align*}
+$$
+
+<!--
+Notes: Equation for the canonicalization of the active unoccupied Fock block...
+Speaker Notes: ...
+- NR: Obtain rotation parameters R...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Theory, Optimisation
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+### Newton–Raphson
+
+**Rotation:**
+<!-- We use the Newton–Raphson method to solve for the optimal rotation parameters $R$ that minimize the Hylleraas functional. -->
+
+$$
+\begin{align*}
+    R = - G \cdot H^{-1} \quad \longrightarrow \quad H\cdot R = - G
+\end{align*}
+$$
+
+*Block structure:*
+$$
+R =
+    \begin{bmatrix}
+        0  & -R_{ea} \\
+        R_{ae} & 0
+    \end{bmatrix}, \qquad R_{ae} = -R_{ea} \qquad  (N' \times N_{\text{inact.}})
+$$
+
+<!--
+Notes: Equation for the canonicalization of the active unoccupied Fock block...
+Speaker Notes: ...
+- Act-Act orbital != MP2
+- Only Act-Inact. orbital rotations...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Theory, Optimisation
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+### Newton–Raphson
+
+**Rotation:**
+<!-- We use the Newton–Raphson method to solve for the optimal rotation parameters $R$ that minimize the Hylleraas functional. -->
+
+$$
+\begin{align*}
+    R = - G \cdot H^{-1} \quad \longrightarrow \quad H\cdot R = - G
+\end{align*}
+$$
+
+*Block structure:*
+$$
+R =
+    \begin{bmatrix}
+        0  & -R_{ea} \\
+        R_{ae} & 0
+    \end{bmatrix}, \qquad R_{ae} = -R_{ea} \qquad  (N' \times N_{\text{inact.}})
+$$
+
+*Rotation:*
+$$
+\phi_a \rightarrow \phi_a' = \phi_a + \sum_e R_{ae} \phi_e - \frac{1}{2} \sum_{b,e} R_{ea} R_{eb} \phi_b + \cdots
+$$
+
+<!--
+Notes: Equation for the canonicalization of the active unoccupied Fock block...
+Speaker Notes: ...
+- Add onto MO ...
+- R_ae: Rotation parameters for active-inactive orbital pairs...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Theory, Optimisation
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: True -->
 
 ### Unitary Rotation
 
-**Coefficients:** We perform a unitary rotation of the virtual orbitals using the computed rotation parameters $R$ to generate the new orbital coefficients.
+**Coefficients:**
+<!-- We perform a unitary rotation of the virtual orbitals using the computed rotation parameters $R$ to generate the new orbital coefficients. -->
 
 $$U = e^{R} \quad \longrightarrow \quad UCU^\dagger = C'\qquad (U^\dagger U = I) $$
 
-<!--
-Notes: Equations for the Newton–Raphson (NR) update and the unitary rotation of the orbitals...
-Speaker Notes: ... (Can rewrite NR to solve for python implementation... and e^R also in python code...)
--->
-
----
-
-<!-- header: 
-    <span class="header-left">
-        Theory, Optimisation
-    </span>
-    <span class="header-right">
-        OVOS
-    </span> 
--->
-
-<!-- ## Theory: Optimisation -->
 ### Canonicalization
 
-**Orbital Canonicalization:** After a rotation, we canonicalize the active unoccupied Fock block to maintain the orbital energies and ensure stability of the optimisation.
+**Orbital Canonicalization:**
+<!-- After a rotation, we canonicalize the active unoccupied Fock block to maintain the orbital energies and ensure stability of the optimisation. -->
 
 $$F^{\text{active}}_{\text{ab}} = {C'}_{\text{ab}}^\dagger F C'_{\text{ab}} \quad \longrightarrow \quad \text{Diag}(F^{\text{active}}_{\text{ab}})=C''$$
 
 <!--
 Notes: Equation for the canonicalization of the active unoccupied Fock block...
 Speaker Notes: ...
+- NR: Obtain rotation parameters R...
+- UR: Apply rotation to virtual orbitals to get new coefficients C'... 
+- UR: Mixes the virtual orbitals, preserving orthonormality...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Theory, Optimisation
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+### Unitary Rotation
+
+**Coefficients:**
+<!-- We perform a unitary rotation of the virtual orbitals using the computed rotation parameters $R$ to generate the new orbital coefficients. -->
+
+$$U = e^{R} \quad \longrightarrow \quad UCU^\dagger = C'\qquad (U^\dagger U = I) $$
+
+### Canonicalization
+
+**Orbital Canonicalization:**
+<!-- After a rotation, we canonicalize the active unoccupied Fock block to maintain the orbital energies and ensure stability of the optimisation. -->
+
+$$F^{\text{active}}_{\text{ab}} = {C'}_{\text{ab}}^\dagger F C'_{\text{ab}} \quad \longrightarrow \quad \text{Diag}(F^{\text{active}}_{\text{ab}})=C''$$
+
+<!--
+Notes: Equation for the canonicalization of the active unoccupied Fock block...
+Speaker Notes: ...
+- OC: Ater UR, canonicalize the virtual orbitals
+- OC: Maintain orbital energies, ensure stability of optimisation...
 -->
 
 ---
@@ -471,8 +729,8 @@ Speaker Notes: ...
 
 ## Method: Implementation
 
-**Software:** Implemented and benchmarked OVOS w. PySCF ***[1]***, and SlowQuant ***[2]***.
-
+**Software:** Implemented and benchmarked OVOS w. PySCF, and SlowQuant.
+<!-- 
 <div class="reference">
   <div class="reference-item">
     <span class="reference-author">[1] Qiming Sun, Xing Zhang, Samragni Banerjee, et al.</span>
@@ -483,7 +741,7 @@ Speaker Notes: ...
     <span class="reference-title">SlowQuant: A molecular quantum chemistry program written in Python for classic and quantum computing (2026)</span>
   </div>
   </div>
-</div>
+</div> -->
 
 <!--
 Notes: ...
@@ -511,7 +769,7 @@ Speaker Notes: ...
   <div class="algorithm-step"><span class="keyword">Select </span> Initial virtual orbital space</div>
   <div class="algorithm-step"><span class="keyword">Transform </span> AO integrals to MO basis</div>
   <div class="algorithm-step"><span class="keyword">Repeat </span></div>
-  <div class="algorithm-step indent-2"> Compute MP1 amplitudes and MP2 </div>
+  <div class="algorithm-step indent-2">Compute MP1 amplitudes and MP2 </div>
   <div class="algorithm-step indent-2">Assemble gradient and Hessian </div>
   <div class="algorithm-step indent-2">Solve Newton–Raphson</div>
   <div class="algorithm-step indent-2">Generate Unitary Matrix</div>
@@ -537,64 +795,23 @@ Speaker Notes: ...
         OVOS
     </span> 
 -->
+<!-- paginate: True -->
 
-**Perform** SCF calculation to obtain canonical orbitals. 
+<br>
 
-<pre><code class="language-python">   # Water molecule, minimal basis
-mol = pyscf.gto.Mole()
-mol.atom = 'C 0 0 0; O 0 0 1.128'
-mol.basis = '6-31G'
-mol.unit = 'Angstrom'
-mol.spin = 0
-mol.charge = 0
-mol.symmetry = False
-mol.verbose = 0
-mol.build()
-
-   # RHF reference
-mf = pyscf.scf.RHF(mol)
-mf.verbose = 0
-mf.kernel()
-
-   # Initial data (RHF orbitals)
-Fao = [mf.get_fock(), mf.get_fock()]
-mo_coeffs = [mf.mo_coeff, mf.mo_coeff]
-</code></pre>
-
-<!--
-Notes: Example code for performing the initial SCF calculation to obtain the orbitals and Fock matrices...
-Speaker Notes: ...
--->
-
----
-
-<!-- header: 
-    <span class="header-left">
-        Method, Implementation - OVOS
-    </span>
-    <span class="header-right">
-        OVOS
-    </span> 
--->
-
-**Select** initial virtual orbital space (canonical HF, previous OVOS, or random).
-
-<pre><code class="language-python">   # Create OVOS object
-ovos = OVOS(mol=mol,
-            scf=mf,
+<pre><code class="language-python">   # OVOS
+ovos = OVOS(<span class="hl">mol=mol,                 # Molecule object</span>  
+            scf=mf,                  
             Fao=Fao,
-            num_opt_virtual_orbs=2,  # Number of active unoccupied orbitals
+            num_opt_virtual_orbs=2,  
             mo_coeff=mo_coeffs,
             init_orbs="RHF",
             verbose=1,
             max_iter=1000,
             conv_energy=1e-8,
             conv_grad=1e-6,
-            keep_track_max=50)
-
-   # Run the OVOS optimisation loop
-E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason
-     = ovos.run(mo_coeffs,fock_spin=None)
+            keep_track_max=50
+            ).run()
 </code></pre>
 
 <!--
@@ -612,10 +829,182 @@ Speaker Notes: ...
         OVOS
     </span> 
 -->
+<!-- paginate: True -->
 
-**Repeat** until convergence: ...
+**Perform** SCF calculation to obtain initial orbitals and Fock matrix
 
-<pre><code class="language-python">def run(self, mo_coeffs: List[np.ndarray],
+<pre><code class="language-python">   # OVOS
+ovos = OVOS(<span class="hl">mol=mol,                 # Molecule object
+            scf=mf,                  # SCF object
+            Fao=Fao,                 # AO Fock matrix</span>
+            num_opt_virtual_orbs=2,  
+            <span class="hl">mo_coeff=mo_coeffs,      # Initial MO coefficients</span>
+            init_orbs="RHF",
+            verbose=1,
+            max_iter=1000,
+            conv_energy=1e-8,
+            conv_grad=1e-6,
+            keep_track_max=50
+            ).run()
+</code></pre>
+
+<!--
+Notes: Example code for creating the OVOS object and running the optimisation loop...
+Speaker Notes: ...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Method, Implementation - OVOS
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+**Select** initial virtual orbital space (canonical HF, previous OVOS, or random)
+
+<pre><code class="language-python">   # OVOS
+ovos = OVOS(mol=mol,
+            scf=mf,
+            Fao=Fao,
+            <span class="hl">num_opt_virtual_orbs=2,  # Number of active unoccupied orbitals</span>
+            mo_coeff=mo_coeffs,
+            init_orbs="RHF",
+            verbose=1,
+            max_iter=1000,
+            conv_energy=1e-8,
+            conv_grad=1e-6,
+            keep_track_max=50
+            ).run()
+</code></pre>
+
+<!--
+Notes: Example code for creating the OVOS object and running the optimisation loop...
+Speaker Notes: ...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Method, Implementation - OVOS
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+**Select** initial virtual orbital space (canonical HF, previous OVOS, or random)
+
+<pre><code class="language-python">   # OVOS
+ovos = OVOS(mol=mol,
+            scf=mf,
+            Fao=Fao,
+            <span class="hl">num_opt_virtual_orbs=2,  # Number of active unoccupied orbitals
+            mo_coeff=mo_coeffs,      # Initial MO coefficients</span>
+            init_orbs="RHF",
+            verbose=1,
+            max_iter=1000,
+            conv_energy=1e-8,
+            conv_grad=1e-6,
+            keep_track_max=50
+            ).run()
+</code></pre>
+
+<!--
+Notes: Example code for creating the OVOS object and running the optimisation loop...
+Speaker Notes: ...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Method, Implementation - OVOS
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+**Select** initial virtual orbital space (canonical HF, previous OVOS, or random)
+
+<pre><code class="language-python">   # OVOS
+ovos = OVOS(mol=mol,
+            scf=mf,
+            Fao=Fao,
+            <span class="hl">num_opt_virtual_orbs=2,  # Number of active unoccupied orbitals
+            mo_coeff=mo_coeffs,      # Initial MO coefficients
+            init_orbs="RHF",         # Unrestricted/restricted orbitals</span>
+            verbose=1,
+            max_iter=1000,
+            conv_energy=1e-8,
+            conv_grad=1e-6,
+            keep_track_max=50
+            ).run()
+</code></pre>
+
+<!--
+Notes: Example code for creating the OVOS object and running the optimisation loop...
+Speaker Notes: ...
+- Restricted: mo_coeffs[0] = mo_coeffs[1] = mf.mo_coeff
+- Unrestricted: mo_coeffs[0] = mf.mo_coeff_alpha, mo_coeffs[1] = mf.mo_coeff_beta
+- Twice the orbitals... alpha/beta...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Method, Implementation - OVOS
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+**Select** initial virtual orbital space (canonical HF, previous OVOS, or random)
+
+<pre><code class="language-python">   # OVOS
+ovos = OVOS(...).run(<span class="hl">mo_coeff=mo_coeffs,      # MO coefficients
+                     fock_spin=fock_spin      # Fock matrix in spin</span>
+                     )
+</code></pre>
+
+<!--
+Notes: Example code for creating the OVOS object and running the optimisation loop...
+Speaker Notes: ...
+- Restricted: mo_coeffs[0] = mo_coeffs[1] = mf.mo_coeff
+- Unrestricted: mo_coeffs[0] = mf.mo_coeff_alpha, mo_coeffs[1] = mf.mo_coeff_beta
+- Twice the orbitals... alpha/beta...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Method, Implementation - OVOS
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: True -->
+
+**Repeat** until convergence
+
+<br>
+
+![center w:1350px](images/figures/Ekstra/OVOS_flowchart.png)
+
+<!-- <pre><code class="language-python">def run(self, mo_coeffs: List[np.ndarray],
         fock_spin: Optional[np.ndarray] = None) -> dict:
     ...
 
@@ -685,8 +1074,7 @@ Speaker Notes: ...
                 self._print(f"Reached maximum iterations ({self.max_iter})")
             break
     ...
-
-</code></pre>
+</code></pre> -->
 
 <!--
 Notes: The run method of the OVOS class, which contains the main optimisation loop. The loop includes the computation of MP1 amplitudes, MP2 energy, gradient and Hessian, and the Newton step for orbital rotation. Comment in the code, #, should be talked about and comment on... # Convergence check, and the different steps in the loop... (# Convergence check - criteria and keep_track_max...)
@@ -709,20 +1097,18 @@ Speaker Notes: ...
 
 ### VQE
 
-<br>
-
 <div class="algorithm">
   <div class="algorithm-caption">Algorithm 2: VQE Workflow (Classical)</div>
   <div class="algorithm-step"><span class="keyword">Perform </span> Orbital reference state (UHF, OVOS, UMP2) </div>
   <div class="algorithm-step"><span class="keyword">Select </span> Active space </div>
   <div class="algorithm-step"><span class="keyword">Set </span> Orbital optimization True/False</div>
   <div class="algorithm-step"><span class="keyword">Initialise </span> Theta parameters from previous or random </div>
-  <div class="algorithm-step"><span class="keyword">Run </span> Unrestricted wavefunction unitary product space†
+  <div class="algorithm-step"><span class="keyword">Run </span> Unrestricted wavefunction unitary product state †
  </div>
-  <div class="algorithm-step"><span class="keyword">Optimise </span> Theta parameters w. classical optimiser BFGS</div>
+  <div class="algorithm-step"><span class="keyword">Optimise </span> Theta parameters with classical optimiser BFGS</div>
 </div>
 
-$^\dagger$ UPS: $|\Psi(\theta)\rangle = e^{T(\theta) - T^\dagger(\theta)} |\Phi_{\text{ref}}\rangle$, where $|\Phi_{\text{ref}}\rangle$ is the reference state (UHF, OVOS, UMP2) and $T(\theta)$ is the cluster operator parameterized by $\theta$.
+$^\dagger$ $|\Psi\rangle = \prod_P \hat{U}_P |\Phi_{\text{ref}}\rangle$
 
 <div class="reference">
   <div class="reference-item">
@@ -735,6 +1121,10 @@ $^\dagger$ UPS: $|\Psi(\theta)\rangle = e^{T(\theta) - T^\dagger(\theta)} |\Phi_
 <!--
 Notes: BFGS stands for Broyden–Fletcher–Goldfarb–Shanno algorithm, which is a quasi-Newton method for optimization. It uses an approximation to the Hessian matrix to find the search direction for optimization, and updates this approximation at each iteration based on the gradient information. This allows for efficient optimization without needing to compute the full Hessian matrix, which can be computationally expensive.
 Speaker Notes: ...
+- Q-Gates -> Unitary operators...
+- NON-Classical
+- Quantum HYBRID algorithm...
+- Exact, Compact, Conserve properties of Hamiltonian...
 -->
 
 ---
@@ -752,9 +1142,9 @@ Speaker Notes: ...
 
 <pre><code class="language-python">wf = UnrestrictedWaveFunctionUPS(
         mol.nelectron,
-        ((mol.nelectron//2, mol.nelectron//2),
+        <span class="hl">((mol.nelectron//2, mol.nelectron//2),
         num_electrons//2+num_opt_virtual_orbs),       # Active space
-        mo_coeffs,                                    # Orbtial coefficients
+        mo_coeffs,                                    # Orbtial coefficients</span>
         h_core,
         g_eri,
         "utups",
@@ -778,11 +1168,81 @@ Speaker Notes: ...
     </span> 
 -->
 
+**Run** Unrestricted wavefunction unitary product space.
+
+<pre><code class="language-python">wf = UnrestrictedWaveFunctionUPS(
+        mol.nelectron,
+        ((mol.nelectron//2, mol.nelectron//2),
+        num_electrons//2+num_opt_virtual_orbs),       # Active space
+        mo_coeffs,                                    # Orbtial coefficients
+        h_core,
+        g_eri,
+        <span class="hl">"utups",
+        {"n_layers": 1},</span>
+        include_active_kappa=False)
+</code></pre>
+
+<!--
+Notes: ...
+Speaker Notes: ...
+- Circuit !!!
+- Layers improve accuracy, but increase cost...
+- Tiled means \hat{U} tiles...
+- Accuracy, move qubits by spin...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Method, Implementation - VQE
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+
+**Run** Unrestricted wavefunction unitary product space.
+
+<pre><code class="language-python">wf = UnrestrictedWaveFunctionUPS(
+        mol.nelectron,
+        ((mol.nelectron//2, mol.nelectron//2),
+        num_electrons//2+num_opt_virtual_orbs),       # Active space
+        mo_coeffs,                                    # Orbtial coefficients
+        h_core,
+        g_eri,
+        <span class="hl">"utups",
+        {"n_layers": 1},</span>
+        include_active_kappa=False)
+</code></pre>
+
+![bottom-right w:550px](images/figures/Ekstra/VQE_layers.png)
+
+<!--
+Notes: ...
+Speaker Notes: ...
+- Circuit !!!
+- Layers improve accuracy, but increase cost...
+- Tiled means \hat{U} tiles...
+- Accuracy, move qubits by spin...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Method, Implementation - VQE
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+
 **Optimise:** Theta parameters w. classical optimiser BFGS.
 
 <pre><code class="language-python">wf.run_wf_optimization_1step(
         "BFGS",
-        orbital_optimization,
+        <span class="hl">orbital_optimization,</span>
         atol=1e-6,
         maxiter)
 </code></pre>
@@ -790,6 +1250,7 @@ Speaker Notes: ...
 <!--
 Notes: ...
 Speaker Notes: ...
+- quasi-Newton-Raphson method for optimization...
 -->
 
 ---
@@ -852,10 +1313,6 @@ Molecules: H2O -> Water ,CO -> Carbon Monoxide, HF -> Hydrogen Fluoride, NH3 -> 
 
 ## Results: OVOS
 
-<br>
-
-![center w:800px](images/figures/Ekstra/ovos_convergence_landscape.png)
-
 <!--
 Notes: ...
 Speaker Notes: ...
@@ -865,7 +1322,7 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, OVOS - H2O
+        Results, OVOS - H2O ***HF*** ***Li2***
     </span>
     <span class="header-right">
         OVOS
@@ -876,14 +1333,34 @@ Speaker Notes: ...
 <!-- ## Results: OVOS -->
 <!-- **PLOTS - H2O/cc-pVDZ** -->
 
-![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ.png)
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ_empty.png)
 
 <!--
 - Notes: Full OVOS convergence plot for H2O in cc-pVDZ basis.
-- Speaker Notes: OVOS performance in H2O with cc-pVDZ basis. The plot shows the convergence of the MP2 correlation energy as we iteratively optimise the virtual orbitals. The points represent the MP2 energy at each iteration, while the lines show the cumulative correlation energy recovered from the initial guess to the final OVOS solution. The grey line indicates the best starting guess among canonical HF, previous OVOS, and random. The dashed lines represent the reference MP2 energy with the full virtual space and the orbital optimised MP2 energy, which serves as an upper bound for correlation recovery.
-- We can clearly see differences between start guesses... will keep being prominent in the following molecules.
-- Most recovered correlation energy is captured in the the early to middle numbering of OVOS solutions, which is a key takeaway from the plot (4,5,9,10).
-- All cases except full space converges to a UHF solution...
+- Speaker Notes: ...
+
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - H2O ***HF*** ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+<!-- ## Results: OVOS -->
+<!-- **PLOTS - H2O/cc-pVDZ** -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ_start_guess_a_RHF.png)
+
+<!--
+- Notes: Full OVOS convergence plot for H2O in cc-pVDZ basis.
+- Speaker Notes: ...
 - *Points:* MP2 correlation energy at each iteration.
 - *Lines:* Amount of recovered correlation energy from initial point to final OVOS solution.
 - *Grey Line:* Best of start Guesses (canonical HF, previous OVOS, random).
@@ -895,7 +1372,242 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, OVOS - H2O
+        Results, OVOS - H2O ***HF*** ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+<!-- ## Results: OVOS -->
+<!-- **PLOTS - H2O/cc-pVDZ** -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ_start_guess_a_prev.png)
+
+<!--
+- Notes: Full OVOS convergence plot for H2O in cc-pVDZ basis.
+- Speaker Notes: ...
+- *Points:* MP2 correlation energy at each iteration.
+- *Lines:* Amount of recovered correlation energy from initial point to final OVOS solution.
+- *Grey Line:* Best of start Guesses (canonical HF, previous OVOS, random).
+- *Dashed Lines:* Reference MP2, and orbital optimised MP2 (both with full virtual space).
+
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - H2O ***HF*** ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+<!-- ## Results: OVOS -->
+<!-- **PLOTS - H2O/cc-pVDZ** -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ_start_guess_a.png)
+
+<!--
+- Notes: Full OVOS convergence plot for H2O in cc-pVDZ basis.
+- Speaker Notes: ...
+- *Points:* MP2 correlation energy at each iteration.
+- *Lines:* Amount of recovered correlation energy from initial point to final OVOS solution.
+- *Grey Line:* Best of start Guesses (canonical HF, previous OVOS, random).
+- *Dashed Lines:* Reference MP2, and orbital optimised MP2 (both with full virtual space).
+
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - H2O ***HF*** ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+<!-- ## Results: OVOS -->
+<!-- **PLOTS - H2O/cc-pVDZ** -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ_start_guess_c.png)
+
+<!--
+- Notes: Full OVOS convergence plot for H2O in cc-pVDZ basis.
+- Speaker Notes: ...
+- *Points:* MP2 correlation energy at each iteration.
+- *Lines:* Amount of recovered correlation energy from initial point to final OVOS solution.
+- *Grey Line:* Best of start Guesses (canonical HF, previous OVOS, random).
+- *Dashed Lines:* Reference MP2, and orbital optimised MP2 (both with full virtual space).
+
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - H2O ***HF*** ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+<!-- ## Results: OVOS -->
+<!-- **PLOTS - H2O/cc-pVDZ** -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ_start_guess_b.png)
+
+<!--
+- Notes: Full OVOS convergence plot for H2O in cc-pVDZ basis.
+- Speaker Notes: ...
+- *Points:* MP2 correlation energy at each iteration.
+- *Lines:* Amount of recovered correlation energy from initial point to final OVOS solution.
+- *Grey Line:* Best of start Guesses (canonical HF, previous OVOS, random).
+- *Dashed Lines:* Reference MP2, and orbital optimised MP2 (both with full virtual space).
+
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - H2O ***HF*** ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+<!-- ## Results: OVOS -->
+<!-- **PLOTS - H2O/cc-pVDZ** -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ_start_guess_d.png)
+
+<!--
+- Notes: Full OVOS convergence plot for H2O in cc-pVDZ basis.
+- Speaker Notes: ...
+- *Points:* MP2 correlation energy at each iteration.
+- *Lines:* Amount of recovered correlation energy from initial point to final OVOS solution.
+- *Grey Line:* Best of start Guesses (canonical HF, previous OVOS, random).
+- *Dashed Lines:* Reference MP2, and orbital optimised MP2 (both with full virtual space).
+
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - H2O ***HF*** ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+<!-- ## Results: OVOS -->
+<!-- **PLOTS - H2O/cc-pVDZ** -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ_start_guess_e.png)
+
+<!--
+- Notes: Full OVOS convergence plot for H2O in cc-pVDZ basis.
+- Speaker Notes: ...
+- *Points:* MP2 correlation energy at each iteration.
+- *Lines:* Amount of recovered correlation energy from initial point to final OVOS solution.
+- *Grey Line:* Best of start Guesses (canonical HF, previous OVOS, random).
+- *Dashed Lines:* Reference MP2, and orbital optimised MP2 (both with full virtual space).
+
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - H2O ***HF*** ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+<!-- ## Results: OVOS -->
+<!-- **PLOTS - H2O/cc-pVDZ** -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ_to_low.png)
+
+<!--
+- Notes: Full OVOS convergence plot for H2O in cc-pVDZ basis.
+- Speaker Notes: ...
+- Hessian blocks start getting bigger
+- 4,5 big recovery...
+- iteration counts...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - H2O ***HF*** ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+<!-- ## Results: OVOS -->
+<!-- **PLOTS - H2O/cc-pVDZ** -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ_to_middle.png)
+
+<!--
+- Notes: Full OVOS convergence plot for H2O in cc-pVDZ basis.
+- Speaker Notes: ...
+- Hessian blocks start getting bigger
+- 4,5 big recovery...
+- iteration counts...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - H2O ***HF*** ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+<!-- ## Results: OVOS -->
+<!-- **PLOTS - H2O/cc-pVDZ** -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/cc-pVDZ/ovos_convergence_H2O_cc-pVDZ.png)
+
+<!--
+- Notes: Full OVOS convergence plot for H2O in cc-pVDZ basis.
+- Speaker Notes: ...
+- 9,10 big recovery...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - H2O ***HF*** ***Li2***
     </span>
     <span class="header-right">
         OVOS
@@ -914,7 +1626,26 @@ Speaker Notes: We clearly see that we do not go below MP2... with RHF OVOS, find
 
 <!-- header: 
     <span class="header-left">
-        Results, OVOS - H2O
+        Results, OVOS - H2O ***HF*** ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/H2O/ovos_basis_set_H2O_empty.png)
+
+<!--
+Notes: ...
+Speaker Notes: ...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - H2O ***HF*** ***Li2***
     </span>
     <span class="header-right">
         OVOS
@@ -927,13 +1658,14 @@ Speaker Notes: We clearly see that we do not go below MP2... with RHF OVOS, find
 <!--
 Notes: ...
 Speaker Notes: ...
+- Convergence in OVOS solutions -> 90% !!!
 -->
 
 ---
 
 <!-- header: 
     <span class="header-left">
-        Results, OVOS - H2O
+        Results, OVOS - H2O ***HF*** ***Li2***
     </span>
     <span class="header-right">
         OVOS
@@ -952,7 +1684,7 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, OVOS - H2O
+        Results, OVOS - H2O ***HF*** ***Li2***
     </span>
     <span class="header-right">
         OVOS
@@ -971,102 +1703,7 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, OVOS - CO
-    </span>
-    <span class="header-right">
-        OVOS
-    </span> 
--->
-<!-- paginate: True -->
-
-![center w:1100px](images/figures/OVOS_PLOTS/CO/cc-pVDZ/ovos_convergence_CO_cc-pVDZ.png)
-
-<!--
-Notes: ...
-Speaker Notes: ...
--->
-
----
-
-<!-- header: 
-    <span class="header-left">
-        Results, OVOS - CO
-    </span>
-    <span class="header-right">
-        OVOS
-    </span> 
--->
-<!-- paginate: hold -->
-
-![center w:1100px](images/figures/OVOS_PLOTS/CO/cc-pVDZ/ovos_convergence_CO_cc-pVDZ_zoom.png)
-
-<!--
-Notes: ...
-Speaker Notes: ...
--->
-
----
-
-<!-- header: 
-    <span class="header-left">
-        Results, OVOS - CO
-    </span>
-    <span class="header-right">
-        OVOS
-    </span> 
--->
-<!-- paginate: hold -->
-
-![center w:950px](images/figures/Ekstra/OVOS_conv_CO_cc-pVDZ_zoom.png)
-
-<!--
-Notes: Figure showing the convergence of OVOS for CO in cc-pVDZ basis for 11-17 active unoccupied orbitals... keep_track_max = 50 not included in iterations... Bad convergence: Hessian ill conditioned... 
-Speaker Notes: ...
--->
-
----
-
-<!-- header: 
-    <span class="header-left">
-        Results, OVOS - CO
-    </span>
-    <span class="header-right">
-        OVOS
-    </span> 
--->
-<!-- paginate: hold -->
-
-![center w:1100px](images/figures/OVOS_PLOTS/CO/ovos_basis_set_CO.png)
-
-<!--
-Notes: ...
-Speaker Notes: ...
--->
-
----
-
-<!-- header: 
-    <span class="header-left">
-        Results, OVOS - CO
-    </span>
-    <span class="header-right">
-        OVOS
-    </span> 
--->
-<!-- paginate: hold -->
-
-![center w:1100px](images/figures/OVOS_PLOTS/CO/ovos_basis_set_CO_zoom.png)
-
-<!--
-Notes: ...
-Speaker Notes: ...
--->
-
----
-
-<!-- header: 
-    <span class="header-left">
-        Results, OVOS - HF
+        Results, OVOS - ***H2O*** HF ***Li2***
     </span>
     <span class="header-right">
         OVOS
@@ -1085,7 +1722,26 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, OVOS - HF
+        Results, OVOS - ***H2O*** HF ***Li2***
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/HF/ovos_basis_set_HF_unmarked.png)
+
+<!--
+Notes: ...
+Speaker Notes: ...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - ***H2O*** HF ***Li2***
     </span>
     <span class="header-right">
         OVOS
@@ -1104,7 +1760,7 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, OVOS - HF
+        Results, OVOS - ***H2O*** HF ***Li2***
     </span>
     <span class="header-right">
         OVOS
@@ -1123,64 +1779,7 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, OVOS - NH3
-    </span>
-    <span class="header-right">
-        OVOS
-    </span> 
--->
-<!-- paginate: True -->
-
-![center w:1100px](images/figures/OVOS_PLOTS/NH3/cc-pVDZ/ovos_convergence_NH3_cc-pVDZ.png)
-
-<!--
-Notes: Figure shows consistent results between start guesses, till it does not around 14-20 active unoccupied orbitals...
-Speaker Notes: ...
--->
-
----
-
-<!-- header: 
-    <span class="header-left">
-        Results, OVOS - NH3
-    </span>
-    <span class="header-right">
-        OVOS
-    </span> 
--->
-<!-- paginate: hold -->
-
-![center w:1100px](images/figures/OVOS_PLOTS/NH3/ovos_basis_set_NH3.png)
-
-<!--
-Notes: ...
-Speaker Notes: ...
--->
-
----
-
-<!-- header: 
-    <span class="header-left">
-        Results, OVOS - NH3
-    </span>
-    <span class="header-right">
-        OVOS
-    </span> 
--->
-<!-- paginate: hold -->
-
-![center w:1100px](images/figures/OVOS_PLOTS/NH3/ovos_basis_set_NH3_zoom.png)
-
-<!--
-Notes: ...
-Speaker Notes: ...
--->
-
----
-
-<!-- header: 
-    <span class="header-left">
-        Results, OVOS - Li2
+        Results, OVOS - ***H2O*** ***HF*** Li2
     </span>
     <span class="header-right">
         OVOS
@@ -1199,7 +1798,106 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, OVOS - Li2
+        Results, OVOS - ***H2O*** ***HF*** Li2
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/Li2/cc-pVDZ/ovos_convergence_Li2_cc-pVDZ_zoom_bad.png)
+
+<!--
+Notes: Looks awful at 12-23 active unoccupied orbitals...
+Speaker Notes: ...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - ***H2O*** ***HF*** Li2
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/Li2/cc-pVDZ/ovos_convergence_Li2_cc-pVDZ_zoom_bad_15.png)
+
+<!--
+Notes: Looks awful at 12-23 active unoccupied orbitals...
+Speaker Notes: ...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - ***H2O*** ***HF*** Li2
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+![center w:975px](images/figures/Ekstra/ovos_iterations_Li2_cc-pVDZ_30.png)
+
+<!--
+Notes: Looks awful at 12-23 active unoccupied orbitals...
+Speaker Notes: ...
+- Iteration counts...
+- Hessian blocks... 
+- Ill-conditioned Hessian...
+- Negative values -> saddle point...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - ***H2O*** ***HF*** Li2
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/Li2/ovos_basis_set_Li2_unmarked.png)
+
+<!--
+Notes: ...
+Speaker Notes: ...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - ***H2O*** ***HF*** Li2
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: hold -->
+
+![center w:1100px](images/figures/OVOS_PLOTS/Li2/ovos_basis_set_Li2_unmarked.png)
+
+<!--
+Notes: ...
+Speaker Notes: ...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Results, OVOS - ***H2O*** ***HF*** Li2
     </span>
     <span class="header-right">
         OVOS
@@ -1218,7 +1916,7 @@ Speaker Notes: ...
 
 <!-- header: 
     <span class="header-left">
-        Results, OVOS - Li2
+        Results, OVOS - ***H2O*** ***HF*** Li2
     </span>
     <span class="header-right">
         OVOS
@@ -1249,7 +1947,7 @@ Speaker Notes: ...
 
 | Molecule | Fullspace | $N'_{\text{virt}}$ (90% MP2) | % of full space |
 |----------|----------- |------------------------------|-----------------|
-| H₂O      | 19                | 13                           | 68%             |
+| H₂O      | 19                | 13                           | 47%             |
 | CO       | 21                | 13                           | 62%             |
 | HF       | 14                | 9                            | 64%             |
 | NH₃      | 24                | 12                           | 50%             |
@@ -1258,12 +1956,14 @@ Speaker Notes: ...
 
 $^\dagger$ Adamowicz & Bartlett (1992) J. Chem. Phys., 86, 1987.
 
-**Key Takeaway:** The first 50-68% of orbitals capture the bulk of the correlation. 
-All converged orbitals are unrestricted.
+**Key Takeaway:** The first 28-64% of orbitals capture the bulk of the correlation. 
 
 <!--
 Notes: ...
 Speaker Notes: ...
+- All molecules
+- Bartlett paper...
+- Li2 is best!!! 
 -->
 
 ---
@@ -1316,6 +2016,7 @@ Speaker Notes: ...
 - *Lines:* VQE energy convergence from initial point to final OVOS solution (UHF OVOS, UHF, and UMP2).
 - *Dashed Line:* Reference UHF VQE.
 - Best of previous and random initial theta parameters
+- JUMP POT. SURFACE...
 -->
 
 ---
@@ -1568,7 +2269,7 @@ Speaker Notes: ...
 ## Conclusion
 
 - **Successful implementation** of OVOS.  
-- **~90% MP2 correlation** recovered with **50–68% of virtual orbitals**.  
+- **~90% MP2 correlation** recovered with **28-64% of virtual orbitals**.  
 - OVOS orbitals provide **superior VQE reference states** compared to UHF.  
 - Practical path to **reducing qubit count and circuit depth** for NISQ chemistry.  
 
@@ -1600,17 +2301,14 @@ Speaker Notes: ...
 
 <br>
 
-<strong>Method extensions:</strong>
+<strong>Quantum computing:</strong>
 
-- OVOS for CCSD and CCSD(T)
+- Run VQE on quantum hardware using OVOS orbitals
+- Explore reduced T1, UCCSD → UCCD ansatz, shorter circuits
 
 </div>
 
 <div>
-<strong>Quantum computing:</strong>
-
-- Run VQE on quantum hardware using OVOS orbitals
-- Explore reduced T1, UUCSD → UCCD ansatz, shorter circuits
 
 <strong>Larger systems:</strong>
 
