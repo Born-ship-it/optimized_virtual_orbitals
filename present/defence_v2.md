@@ -345,7 +345,7 @@ Speaker Notes: ...
 
 ### The Hylleraas Functional
 
-- **Framework:** The **Hylleraas functional**
+- **Framework:**
 
 $$E^{(2)} \leq \langle\Psi^{(1)}|H_0 - E^{(0)}|\Psi^{(1)}\rangle + 2\langle\Psi^{(1)}|V - E^{(1)}|\Psi^{(0)}\rangle = J^{(2)}$$
 
@@ -355,6 +355,37 @@ rotation of the active virtual space against the nonactive
 space, to minimize the second-order correlation energy.
 - The Theory behind the OVOS optimisation ... 
 - The second‑order Hylleraas functional J^{(2)} is the variational target that OVOS minimises 
+- Orthogonal condition <\Psi^{(1)}|\Psi^{(0)}> = 0
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Theory, Optimisation
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: True -->
+
+### The Hylleraas Functional
+
+- **Framework:**
+
+$$E^{(2)} \leq \langle\Psi^{(1)}|H_0 - E^{(0)}|\Psi^{(1)}\rangle + 2\langle\Psi^{(1)}|V - E^{(1)}|\Psi^{(0)}\rangle = J^{(2)}$$
+
+<div class="slide-comment">
+Perturbation theory framework: H = H₀ + V, Eₕ = E₀ + E₁ | Orthogonal: <Ψ¹|Ψ⁰> = 0
+</div>
+
+<!--
+- The second-order Hylleraas functional is used to find an optimal 
+rotation of the active virtual space against the nonactive 
+space, to minimize the second-order correlation energy.
+- V!!!!
+- Energy HF !!!
 - Orthonormal condition <\Psi^{(1)}|\Psi^{(0)}> = 0
 -->
 
@@ -372,13 +403,52 @@ space, to minimize the second-order correlation energy.
 
 ### The Hylleraas Functional
 
-- **Framework:** The **Hylleraas functional**
-<!-- is the mathematical target for second-order correlation energy: -->
+- **Framework:**
+
+$$E^{(2)} \leq \langle\Psi^{(1)}|H_0 - E^{(0)}|\Psi^{(1)}\rangle + 2\langle\Psi^{(1)}|V - E^{(1)}|\Psi^{(0)}\rangle = J^{(2)}$$
+
+- **MP1 amplitude:**
+
+$$
+\begin{align*}
+    \frac{\partial J^{(2)}}{\partial \Psi^{(1)}} = 0, \quad \Phi^{(1)} = \sum_{i>j,a>b} t_{ij}^{ab} |_{ij}^{ab}\rangle \quad \longrightarrow \quad t_{ij}^{ab} = \frac{\langle ab\|ij\rangle}{\epsilon_i + \epsilon_j - \epsilon_a - \epsilon_b}
+\end{align*}
+$$
+
+
+<div class="slide-comment">
+Perturbation theory framework: H = H₀ + V, Eₕ = E₀ + E₁ | Orthogonal: <Ψ¹|Ψ⁰> = 0
+</div>
+
+<!--
+- The second-order Hylleraas functional is used to find an optimal 
+rotation of the active virtual space against the nonactive 
+space, to minimize the second-order correlation energy.
+- Get to MP1 amplitudes by setting the derivative of J^{(2)} w.r.t. Ψ^{(1)} to zero...
+- >Ψ¹ is a linear combination of 
+- two-electron excited determinants...
+- Ψ⁰ SCF reference...
+-->
+
+---
+
+<!-- header: 
+    <span class="header-left">
+        Theory, Optimisation
+    </span>
+    <span class="header-right">
+        OVOS
+    </span> 
+-->
+<!-- paginate: True -->
+
+### The Hylleraas Functional
+
+- **Framework:**
 
 $$E^{(2)} \leq \langle\Psi^{(1)}|H_0 - E^{(0)}|\Psi^{(1)}\rangle + 2\langle\Psi^{(1)}|V - E^{(1)}|\Psi^{(0)}\rangle = J^{(2)}$$
 
 - **Functional Form:**
-<!-- Each unique pairs of occupied orbital indices $(i,j)$ defines a functional $J_{ij}^{(2)}$ that depends on the virtual space through the amplitudes $t_{ij}^{ab}$: -->
 
 $$
 \begin{align*}
@@ -387,11 +457,9 @@ $$
 $$
 
 <!--
-Notes: Equations for the Hylleraas functional, and MP2 correlation energy...
 Speaker Notes: ...
-- The second‑order Hylleraas functional J^{(2)} is the variational target that OVOS minimises 
-- Upperbound to MP2
 - Pair separaible functional...
+- Unique pairs...
 -->
 
 ---
@@ -425,9 +493,9 @@ $$
 <!--
 Notes: Equations for the Hylleraas functional, and MP2 correlation energy...
 Speaker Notes: ...
-- The second‑order Hylleraas functional J^{(2)} is the variational target that OVOS minimises 
-- Upperbound to MP2
-- Pair separaible functional...
+- Unique Pairs...
+- Rotated MO's ... 
+- Space...
 -->
 
 ---
