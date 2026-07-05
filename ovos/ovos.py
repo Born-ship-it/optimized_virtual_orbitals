@@ -98,6 +98,9 @@ class OVOS:
         self.trust_radius = trust_radius
         self.hessian_reg = hessian_reg
 
+        # Initialize history attributes (used in _newton_step)
+        self._grad_norm_history = []   # <-- FIX: ensure attribute exists
+
         # AO integrals
         self.S = mol.intor('int1e_ovlp')
         self.hcore_ao = mol.intor("int1e_kin") + mol.intor("int1e_nuc")
@@ -1028,4 +1031,3 @@ if __name__ == "__main__":
     E_corr, E_corr_hist, E_corr_iter, E_corr_mo, E_corr_fock, stop_reason = ovos.run(mo_coeffs, fock_spin=None)
 
     print("\nOptimization finished. Final MP2 energy =", E_corr, "Hartree (Stopping reason:", stop_reason, ")")
-    

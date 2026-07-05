@@ -9,6 +9,8 @@ ovos/__init__.py
 ovos/covo.py
 ovos/energy_levels.py
 ovos/ovos.py
+ovos/ovos_gradient.py
+ovos/ovos_trust_region.py
 ovos/ovos_vqe_uups.py
 ovos/vqe_worker.py
 test/test_ovos_random.py
