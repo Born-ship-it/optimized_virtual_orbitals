@@ -756,31 +756,25 @@ class OVOS:
     # Main driver
     # -------------------------------------------------------------------------
     def run(self, mo_coeffs: List[np.ndarray],
-            fock_spin: Optional[np.ndarray] = None) -> dict:
+        fock_spin: Optional[np.ndarray] = None) -> dict:
         """
         Run the OVOS optimization loop.
 
-        Parameters
-        ----------
-        mo_coeffs : list of np.ndarray
-            Initial MO coefficients [alpha, beta].
-        fock_spin : np.ndarray or None
-            Initial spin‑orbital Fock matrix. If None, built from mo_coeffs.
-
-        Returns
-        -------
-        dict with keys:
-            energy_history : list of float
-            converged_energy_history : list of float (only converged part)
-            iteration_history : list of int
-            final_mo_coeffs : list of np.ndarray
-            final_fock_spin : np.ndarray
-            stop_reasons : list of str
+        Convergence logic:
+        - When convergence criteria are met, start counting (keep_track)
+        - If convergence is lost (criteria not met), reset keep_track and record the iteration
+        - When keep_track reaches keep_track_max, stop and use the iteration BEFORE keep_track started
+        - If keep_track_max is reached but convergence criteria are still met, stop at that point
         """
         converged = False
         start_counting = False
         iter_count = 0
         keep_track = 0
+        converged_iteration = None  # Store the iteration when convergence was first detected
+        last_converged_iteration = None  # Store the last iteration that met criteria
+        convergence_started = False
+        converged_turned_off = False
+        last_turn_off_iteration = None
 
         # Storage
         energy_hist = []
@@ -805,6 +799,9 @@ class OVOS:
         eri_as_initial = self._eri_vovo_antisym(mo_coeffs)
         t1_initial = self._mp1_t1_amplitudes(self.eps, eri_as_initial)
         t1_norm_initial = self._t1_norm(t1_initial)
+
+        # Track the last non-converged iteration
+        last_non_converged_idx = 0
 
         while iter_count < self.max_iter:
             iter_count += 1
@@ -831,12 +828,7 @@ class OVOS:
                 self._t1_norm_history = []
             self._t1_norm_history.append(t1_norm)
 
-            # if self.verbose:
-            #     nact = len(self.active_inocc_indices)
-            #     ntot = nact + len(self.inactive_indices)
-                # self._print(f"    [{nact}/{ntot}]: MP2 energy = {E_corr:.12f}, T1 norm = {t1_norm:.2e}")
-
-            # Track energy difference, ...
+            # Track energy difference
             if not hasattr(self, '_step_history'):
                 self._step_history = []
             if iter_count > 1:
@@ -873,55 +865,68 @@ class OVOS:
                     grad_norm_hist.pop(0)
                 dgrad = abs(grad_norm_hist[-1] - grad_norm_hist[-2]) if len(grad_norm_hist) > 1 else None
 
-                if self.verbose and dgrad is not None:
+                if self.verbose:
                     flag = "(energy increased!)" if self.dE > 0 else ""
                     self._print(f"            ΔE = {self.dE:.2e}  ‖grad‖ = {grad_norm:.2e} {flag}")
                     self._print(f"            ‖T1‖ = {t1_norm:.2e}  OVOS < HF = {t1_norm<t1_norm_initial}  (||T1||^HF = {t1_norm_initial:.2e})")
                 
-                if (dE < self.conv_energy and grad_norm < self.conv_grad and t1_norm < self.t1_conv):
+                # Check if convergence criteria are met
+                criteria_met = (dE < self.conv_energy and grad_norm < self.conv_grad and t1_norm < self.t1_conv)
+                
+                if criteria_met:
                     stop_reasons.append("Convergence")
+                    
+                    # If this is the first time convergence is detected, store the iteration
+                    if not convergence_started:
+                        convergence_started = True
+                        converged_iteration = iter_count
+                        if self.verbose:
+                            self._print(f"            Convergence detected at iteration {iter_count}")
+                    
                     start_counting = True
+                    keep_track += 1
+                    
+                    if self.verbose:
+                        self._print(f"            Keep track: {keep_track}/{self.keep_track_max}")
+                    
+                    # Check if we've reached keep_track_max
+                    if isinstance(self.keep_track_max, int):
+                        if keep_track >= self.keep_track_max:
+                            # Determine the iteration to use as the converged result
+                            # Use the iteration BEFORE convergence started (converged_iteration - 1)
+                            # but ensure we have at least one iteration before convergence
+                            if converged_iteration is not None and converged_iteration > 1:
+                                result_idx = converged_iteration - 1  # Use the iteration before convergence started
+                            else:
+                                result_idx = 0  # Fallback to first iteration
+                            
+                            if self.verbose:
+                                self._print(f"OVOS converged after {result_idx} iterations (convergence first detected at {converged_iteration})")
+                            
+                            # Trim to the result_idx
+                            energy_hist = energy_hist[:result_idx+1]
+                            iter_hist = iter_hist[:result_idx+1]
+                            mo_hist = mo_hist[:result_idx+1]
+                            fock_hist = fock_hist[:result_idx+1]
+                            stop_reasons = stop_reasons[:result_idx+1]
+                            converged = True
+                            break
                 else:
                     stop_reasons.append("Non‑converged")
                     start_counting = False
+                    
+                    # If convergence was previously detected but now lost, record this turn-off
+                    if convergence_started:
+                        converged_turned_off = True
+                        last_turn_off_iteration = iter_count
+                        # Reset the convergence detection flag so we detect the next convergence
+                        convergence_started = False
+                        if self.verbose:
+                            self._print(f"            Convergence lost at iteration {iter_count}")
+                    
                     keep_track = 0
-
-                if start_counting: # (dE < self.conv_energy and grad_norm < self.conv_grad) or dE < 1e-12:
-                    keep_track += 1
-                    if self.verbose:
-                     # Make sure self.keep_track_max is not string
-                        if isinstance(self.keep_track_max, str):
-                            self._print(f"    Keep track: {keep_track}/{self.keep_track_max}")
-                    if isinstance(self.keep_track_max, int):
-                        if keep_track >= self.keep_track_max and iter_count > 100:
-                            if self.verbose:
-                                self._print(f"OVOS converged after {iter_count-keep_track} iterations")
-                            # Trim the extra tracked steps
-                            trim = self.keep_track_max - 1
-                            energy_hist = energy_hist[:-trim]
-                            iter_hist = iter_hist[:-trim]
-                            mo_hist = mo_hist[:-trim]
-                            fock_hist = fock_hist[:-trim]
-                            stop_reasons = stop_reasons[:-trim]
-                            converged = True
-                            break
-                    elif isinstance(self.keep_track_max, str):
-                        if self.keep_track_max.lower() == "none":
-                            # Let it run untill iter_count reaches max_iter, but we are in the converged state
-                            if keep_track >= 1 and iter_count == 1000:
-                                if self.verbose:
-                                    self._print(f"OVOS converged after {iter_count-keep_track} iterations (keep_track_max=None)")
-                                # Trim the extra tracked steps
-                                trim = keep_track - 1
-                                energy_hist = energy_hist[:-trim]
-                                iter_hist = iter_hist[:-trim]
-                                mo_hist = mo_hist[:-trim]
-                                fock_hist = fock_hist[:-trim]
-                                stop_reasons = stop_reasons[:-trim]
-                                converged = True
-                                break
-                else:
-                    keep_track = 0
+                    # Track the last non-converged iteration for fallback
+                    last_non_converged_idx = iter_count
 
             # Compute gradient and Hessian for Newton step
             D_ab = self._compute_density(t_abij)
@@ -942,7 +947,7 @@ class OVOS:
             # Re‑canonicalize the active virtual block
             mo_coeffs, fock_spin, evals = self._canonicalize_active(mo_coeffs, fock_spin, U_spin)
 
-            # Update diagonal elements for next MP1 denominator (approximate, but ok)
+            # Update diagonal elements for next MP1 denominator
             self.eps = np.diag(fock_spin)
 
             if iter_count >= self.max_iter:
@@ -962,18 +967,19 @@ class OVOS:
                 self._print("OVOS lowered the correlation energy.")
             else:
                 self._print("WARNING: OVOS increased the correlation energy.")
-            # Unrestricted or restricted final orbitals
+            
             if np.allclose(mo_coeffs[0], mo_coeffs[1], atol=1e-6):
                 self._print("Final orbitals are effectively restricted.")
             else:
                 self._print("Final orbitals are unrestricted.")
-            self._print(f"Total iterations: {iter_count-keep_track} (converged: {converged})")
-            # Difference in prev_mo_coeffs vs final mo_coeffs
+            
+            self._print(f"Total iterations: {len(energy_hist)} (converged: {converged})")
+            
             mo_diff_a = np.linalg.norm(mo_coeffs[0] - prev_mo_coeffs[0])
             mo_diff_b = np.linalg.norm(mo_coeffs[1] - prev_mo_coeffs[1])
             self._print(f"Change in MO coefficients (Frobenius norm): "
                     f"alpha: {mo_diff_a:.2e}, beta: {mo_diff_b:.2e}")
-            self._print(f"Stopping reason: {stop_reasons[-1]}")
+            self._print(f"Stopping reason: {stop_reasons[-1] if stop_reasons else 'Unknown'}")
 
         # Select best result (lowest energy)
         best_idx = int(np.argmin(energy_hist)) 
@@ -983,7 +989,7 @@ class OVOS:
             iter_hist[:best_idx+1],
             mo_hist[best_idx],
             fock_hist[best_idx],
-            stop_reasons[best_idx]
+            stop_reasons[best_idx] if best_idx < len(stop_reasons) else "Unknown"
         ]
 
         return result

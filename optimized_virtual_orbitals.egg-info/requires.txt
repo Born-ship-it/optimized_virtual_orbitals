@@ -10,6 +10,10 @@ llvmlite==0.46.0
 psutil>=7.2.2
 keyboard>=0.13.5
 cvxpy>=1.7.5
+qiskit>=2.4.2
+qiskit-aer>=0.17.2
+qiskit-nature>=0.7.2
+qiskit-algorithms>=0.4.0
 
 [dev]
 pytest>=7.4.0
